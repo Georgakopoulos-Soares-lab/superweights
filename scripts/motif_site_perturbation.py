@@ -28,13 +28,13 @@ from loguru import logger
 from scipy.stats import wilcoxon
 from scipy.stats import spearmanr
 
-from superweights.activation_maps import ActivationMapCapturer
-from superweights.borzoi import default_device, detect_seq_len, detect_seq_len_from_crop, load_borzoi, score_expression
-from superweights.genome import Genome, bin_size_bp, window_start0
-from superweights.io import ensure_dir, write_parquet, write_text
-from superweights.variants import parse_variant_id_any
-from superweights_borzoi.encoding import one_hot_encode_batch
-from superweights_borzoi.genome import make_ref_alt_sequence
+from borzoi.activations import ActivationMapCapturer
+from borzoi.model import default_device, detect_seq_len, detect_seq_len_from_crop, load_borzoi, score_expression
+from borzoi.genome import Genome, bin_size_bp, window_start0
+from borzoi.io import ensure_dir, write_parquet, write_text
+from borzoi.data import parse_variant_id_any
+from borzoi.encode import one_hot_encode_batch
+from borzoi.genome import make_ref_alt_sequence
 
 
 def parse_args() -> argparse.Namespace:

@@ -9,8 +9,8 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 
-from superweights.genome import Genome, fetch_with_padding
-from superweights.io import ensure_dir, safe_slug
+from borzoi.genome import Genome, fetch_with_padding
+from borzoi.io import ensure_dir, safe_slug
 
 
 def parse_args() -> argparse.Namespace:

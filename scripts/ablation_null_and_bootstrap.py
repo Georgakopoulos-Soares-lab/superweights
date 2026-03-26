@@ -32,18 +32,18 @@ from loguru import logger
 from sklearn.metrics import roc_auc_score
 from tqdm import tqdm
 
-from superweights.io import write_parquet
-from superweights_borzoi.data import (
+from borzoi.io import write_parquet
+from borzoi.data import (
     ensure_variant_id,
     load_eqtl_parquet,
     load_posneg,
     parse_canonical_variant_id,
     sample_posneg_ids,
 )
-from superweights_borzoi.encoding import one_hot_encode_batch
-from superweights_borzoi.genome import Genome, make_ref_alt_sequence
-from superweights_borzoi.interpret.ablation import ChannelAblator
-from superweights_borzoi.models.borzoi_pt import (
+from borzoi.encode import one_hot_encode_batch
+from borzoi.genome import Genome, make_ref_alt_sequence
+from borzoi.ablation import ChannelAblator
+from borzoi.model import (
     detect_seq_len,
     detect_seq_len_from_crop,
     forward_score,

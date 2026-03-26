@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 
-from superweights.io import write_parquet
+from borzoi.io import write_parquet
 
 
 def parse_args() -> argparse.Namespace:

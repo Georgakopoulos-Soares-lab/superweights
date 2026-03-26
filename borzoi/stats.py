@@ -178,3 +178,6 @@ def compute_channel_correlations(
 
     out = pd.DataFrame(rows)
     return out
+
+
+__all__ = ["compute_channel_correlations"]

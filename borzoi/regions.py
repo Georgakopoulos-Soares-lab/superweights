@@ -8,7 +8,7 @@ from typing import Iterable, List, Optional, Sequence
 import numpy as np
 from loguru import logger
 
-from superweights_borzoi.genome import Genome
+from borzoi.genome import Genome
 
 
 @dataclass(frozen=True)

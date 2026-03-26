@@ -12,13 +12,13 @@ import torch
 from loguru import logger
 from tqdm import tqdm
 
-from superweights.activation_maps import ActivationMapCapturer, topk_indices
-from superweights.borzoi import default_device, detect_seq_len, detect_seq_len_from_crop, load_borzoi
-from superweights.genome import Genome, bin_size_bp, bin_to_genome_coords, variant_center0_in_window, window_start0
-from superweights.io import ensure_dir, safe_slug, write_parquet
-from superweights.variants import parse_variant_id_any
-from superweights_borzoi.encoding import one_hot_encode_batch
-from superweights_borzoi.genome import make_ref_alt_sequence
+from borzoi.activations import ActivationMapCapturer, topk_indices
+from borzoi.model import default_device, detect_seq_len, detect_seq_len_from_crop, load_borzoi
+from borzoi.genome import Genome, bin_size_bp, bin_to_genome_coords, variant_center0_in_window, window_start0
+from borzoi.io import ensure_dir, safe_slug, write_parquet
+from borzoi.data import parse_variant_id_any
+from borzoi.encode import one_hot_encode_batch
+from borzoi.genome import make_ref_alt_sequence
 
 
 def parse_args() -> argparse.Namespace:

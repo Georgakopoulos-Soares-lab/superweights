@@ -75,6 +75,14 @@ def parse_canonical_variant_id(variant_id: str) -> Tuple[str, int, str, str]:
     return normalize_chrom_str(chrom), int(pos), str(ref), str(alt)
 
 
+def parse_variant_id_any(variant_id: str) -> Tuple[str, int, str, str]:
+    """Parse a variant id in any supported format.
+
+    Returns canonicalized (chrom_no_chr, pos1, ref, alt).
+    """
+    return parse_canonical_variant_id(canonicalize_variant_id(variant_id))
+
+
 @dataclass(frozen=True)
 class PosNegSplit:
     pos_ids: set[str]
@@ -209,3 +217,20 @@ def sample_posneg_ids(
     df_neg = pd.DataFrame({"variant_id": neg, "label": 0})
     out = pd.concat([df_pos, df_neg], axis=0).sample(frac=1.0, random_state=seed).reset_index(drop=True)
     return out
+
+
+__all__ = [
+    "normalize_chrom_str",
+    "make_variant_id",
+    "canonicalize_variant_id",
+    "parse_canonical_variant_id",
+    "parse_variant_id_any",
+    "PosNegSplit",
+    "load_id_list",
+    "load_posneg",
+    "load_eqtl_parquet",
+    "ensure_variant_id",
+    "attach_labels",
+    "sample_posneg",
+    "sample_posneg_ids",
+]

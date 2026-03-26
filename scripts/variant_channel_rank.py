@@ -27,11 +27,11 @@ from sklearn.metrics import roc_auc_score
 from statsmodels.stats.multitest import multipletests
 from tqdm import tqdm
 
-from superweights_borzoi.data import ensure_variant_id, load_eqtl_parquet, load_posneg, parse_canonical_variant_id, sample_posneg_ids
-from superweights_borzoi.encoding import one_hot_encode_batch
-from superweights_borzoi.genome import Genome, make_ref_alt_sequence
-from superweights_borzoi.interpret.activations import ActivationMultiWindowCapturer
-from superweights_borzoi.models.borzoi_pt import BorzoiWrapper, detect_seq_len, detect_seq_len_from_crop, load_borzoi
+from borzoi.data import ensure_variant_id, load_eqtl_parquet, load_posneg, parse_canonical_variant_id, sample_posneg_ids
+from borzoi.encode import one_hot_encode_batch
+from borzoi.genome import Genome, make_ref_alt_sequence
+from borzoi.activations import ActivationMultiWindowCapturer
+from borzoi.model import BorzoiWrapper, detect_seq_len, detect_seq_len_from_crop, load_borzoi
 
 
 DEFAULT_LAYERS = [

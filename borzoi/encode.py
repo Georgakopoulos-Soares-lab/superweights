@@ -43,3 +43,6 @@ def one_hot_encode_batch(seqs: List[str], device: torch.device) -> torch.Tensor:
     out.scatter_(1, idx.clamp(max=3).unsqueeze(1), 1.0)
     out *= valid.unsqueeze(1).to(out.dtype)
     return out
+
+
+__all__ = ["one_hot_encode_batch"]

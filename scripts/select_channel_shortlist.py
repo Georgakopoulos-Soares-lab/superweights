@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 
-from superweights.io import df_to_markdown_table, ensure_parent_dir, read_parquet, write_parquet, write_text
+from borzoi.io import df_to_markdown_table, ensure_parent_dir, read_parquet, write_parquet, write_text
 
 
 def _best_by_abs(df: pd.DataFrame, value_col: str, group_cols: list[str]) -> pd.DataFrame:

@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import roc_auc_score
 
-from superweights.io import df_to_markdown_table, ensure_parent_dir, read_parquet, write_parquet, write_text
+from borzoi.io import df_to_markdown_table, ensure_parent_dir, read_parquet, write_parquet, write_text
 
 
 def parse_args() -> argparse.Namespace:

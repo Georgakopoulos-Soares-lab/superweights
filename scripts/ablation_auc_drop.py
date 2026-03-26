@@ -54,16 +54,16 @@ import torch
 from loguru import logger
 from sklearn.metrics import roc_auc_score
 
-from superweights_borzoi.data import (
+from borzoi.data import (
     canonicalize_variant_id,
     normalize_chrom_str,
     parse_canonical_variant_id,
     sample_posneg_ids,
 )
-from superweights_borzoi.encoding import one_hot_encode_batch
-from superweights_borzoi.genome import Genome, make_ref_alt_sequence
-from superweights_borzoi.interpret.ablation import ChannelAblator
-from superweights_borzoi.models.borzoi_pt import (
+from borzoi.encode import one_hot_encode_batch
+from borzoi.genome import Genome, make_ref_alt_sequence
+from borzoi.ablation import ChannelAblator
+from borzoi.model import (
     BorzoiWrapper,
     detect_seq_len,
     detect_seq_len_from_crop,

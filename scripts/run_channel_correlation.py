@@ -11,18 +11,18 @@ import torch
 from loguru import logger
 from tqdm import tqdm
 
-from superweights_borzoi.analysis.channel_stats import compute_channel_correlations
-from superweights_borzoi.data import (
+from borzoi.stats import compute_channel_correlations
+from borzoi.data import (
     ensure_variant_id,
     load_eqtl_parquet,
     load_posneg,
     parse_canonical_variant_id,
     sample_posneg_ids,
 )
-from superweights_borzoi.encoding import one_hot_encode_batch
-from superweights_borzoi.genome import Genome, make_ref_alt_sequence
-from superweights_borzoi.interpret.activations import ActivationCapturer
-from superweights_borzoi.models.borzoi_pt import detect_seq_len, detect_seq_len_from_crop, forward_score, load_borzoi
+from borzoi.encode import one_hot_encode_batch
+from borzoi.genome import Genome, make_ref_alt_sequence
+from borzoi.activations import ActivationCapturer
+from borzoi.model import detect_seq_len, detect_seq_len_from_crop, forward_score, load_borzoi
 
 
 DEFAULT_LAYERS = [

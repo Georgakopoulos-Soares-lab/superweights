@@ -6,7 +6,7 @@ from typing import Iterable, List, Optional, Sequence, Tuple
 import torch
 from loguru import logger
 
-from superweights_borzoi.models.borzoi_pt import get_module_by_name
+from borzoi.model import get_module_by_name
 
 
 def _as_tensor(x):
@@ -115,3 +115,6 @@ class ChannelAblator:
     def __exit__(self, exc_type, exc, tb):
         self.close()
         return False
+
+
+__all__ = ["ChannelAblator"]

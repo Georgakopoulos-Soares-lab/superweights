@@ -40,6 +40,10 @@ def load_borzoi(model_name: str, device: torch.device, output_key: Optional[str]
     return BorzoiWrapper(model=model, device=device, output_key=output_key)
 
 
+def default_device() -> torch.device:
+    return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+
 def detect_seq_len(model: torch.nn.Module) -> Optional[int]:
     """Best-effort seq_len detection from model/config."""
     cfg = getattr(model, "config", None)
@@ -130,3 +134,15 @@ def get_module_by_name(model: torch.nn.Module, module_name: str) -> torch.nn.Mod
         if name == module_name:
             return module
     raise KeyError(f"Module not found: {module_name}")
+
+
+__all__ = [
+    "BorzoiWrapper",
+    "load_borzoi",
+    "default_device",
+    "detect_seq_len",
+    "detect_seq_len_from_crop",
+    "score_expression",
+    "forward_score",
+    "get_module_by_name",
+]
