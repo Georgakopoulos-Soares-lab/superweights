@@ -9,9 +9,17 @@ Given a set of causal GTEx Whole Blood eQTL SNPs, the pipeline identifies which 
 
 ```
 SuperWeights/
-├── superweights/            # Thin utility library (variant parsing, FASTA, activation hooks)
-├── superweights_borzoi/     # Deep-learning backend (model wrapper, encoding, statistics)
-├── scripts/                 # Runnable pipeline scripts (one per stage)
+├── borzoi/                  # Core library (model, data, genome, activations, ablation, I/O)
+│   ├── model.py             #   Borzoi wrapper, loading, scoring, module lookup
+│   ├── data.py              #   Variant ID parsing, eQTL loading, pos/neg sampling
+│   ├── genome.py            #   FASTA-backed genome, ref/alt sequence construction
+│   ├── encode.py            #   One-hot DNA encoding
+│   ├── regions.py           #   BED parsing, region resize/filter/sample
+│   ├── activations.py       #   Forward-hook activation capturers (summary, window, map)
+│   ├── ablation.py          #   Channel zeroing via forward hooks
+│   ├── stats.py             #   Pearson/Spearman/AUC channel correlation statistics
+│   └── io.py                #   Parquet/text I/O helpers, markdown tables
+├── scripts/                 # Runnable pipeline scripts (20 scripts, one per stage)
 ├── data/                    # Input data — see "Data setup" below (large files are gitignored)
 │   ├── eqtl/                # GTEx eQTL VCFs and derived parquets
 │   ├── regions/hg38/        # BED files for promoter/enhancer/random regions (committed)
@@ -59,8 +67,8 @@ Weights download automatically from Hugging Face on first run. To pre-cache them
 
 ```bash
 PYTHONPATH=. python - <<'EOF'
-from superweights_borzoi.models.borzoi_pt import BorzoiModel
-BorzoiModel.from_pretrained("johahi/borzoi-replicate-0")
+from borzoi.model import load_borzoi, default_device
+load_borzoi("johahi/borzoi-replicate-0", device=default_device())
 EOF
 ```
 
