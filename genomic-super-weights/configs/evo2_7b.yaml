@@ -1,0 +1,14 @@
+model_id: "arcinstitute/evo2_7b_262k"
+model_type: "evo2"
+hf_trust_remote_code: true
+# Evo 2 is a StripedHyena2 hybrid (convolution + attention blocks).
+# Only the attention sublayer MLPs contain a down_proj equivalent.
+# Hyena/conv layers have no MLP — skip them entirely.
+down_proj_pattern: "backbone.blocks.{i}.mlp.l2"   # UPDATE after inspection
+num_layers: 32                                      # attention blocks only — UPDATE
+dtype: "float16"
+device: "cuda"
+causal: true
+note: >
+  Only index attention-type blocks. Inspect block types with:
+  [n for n, m in model.named_modules() if "mlp" in n and hasattr(m, "weight")]

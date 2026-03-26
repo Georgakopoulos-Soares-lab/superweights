@@ -1,0 +1,10 @@
+model_id: "InstaDeepAI/nucleotide-transformer-v3-50m-multi-species"
+model_type: "ntv3"
+hf_trust_remote_code: false
+# NTv3 is a bidirectional masked LM (encoder).
+# Standard transformer MLP: the down-projection is the second dense layer in each FFN block.
+down_proj_pattern: "esm.layers.{i}.ffn.fc2"   # UPDATE after inspection
+num_layers: 6                                   # UPDATE after inspection
+dtype: "float32"
+device: "cuda"
+causal: false

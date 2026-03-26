@@ -1,0 +1,10 @@
+model_id: "zhihan1996/DNABERT-2-117M"
+model_type: "dnabert2"
+hf_trust_remote_code: true
+# DNABERT-2 is a bidirectional masked LM (BERT-style encoder).
+# Down-projection is the output dense layer in each encoder block.
+down_proj_pattern: "bert.encoder.layer.{i}.output.dense"   # UPDATE after inspection
+num_layers: 12                                              # UPDATE after inspection
+dtype: "float32"
+device: "cuda"
+causal: false
