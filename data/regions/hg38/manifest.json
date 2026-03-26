@@ -1,0 +1,66 @@
+{
+  "timestamp": "2026-02-04 18:09:50",
+  "genome_fasta": "data/hg38.fa",
+  "raw_inputs": {
+    "gencode_v44_gtf_gz": {
+      "path": "data/regions/hg38/raw/gencode.v44.annotation.gtf.gz",
+      "sha256": "01f817afed65feee863361b4baf30a95e722ee5c5d508ff77b04106ef7ba20d3"
+    },
+    "ccres_bed": {
+      "path": "data/regions/hg38/raw/GRCh38-cCREs.bed",
+      "sha256": "d53dd192912eee5ac8f37ab39daf0dde3e81d8b95d2d9b4d54edceb971872ebc"
+    }
+  },
+  "params": {
+    "seq_len_bp": 262144,
+    "seed": 1,
+    "n_random": 50000,
+    "exclude_chroms": "chrM",
+    "chrom_prefix_mode": "auto"
+  },
+  "sources": {
+    "gencode_gtf_url": "https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/gencode.v44.annotation.gtf.gz",
+    "ccre_url": "(auto mirror list)"
+  },
+  "outputs": {
+    "promoters_262kb": {
+      "path": "data/regions/hg38/promoters_262kb.bed",
+      "sha256": "0cd533dc2ea6a7521ce96f295e349aa2970d699f5a5f4a4082606b883004c4bd",
+      "stats": {
+        "n_parsed_features": 252835,
+        "n_in_bounds": 218702,
+        "n_written": 218702,
+        "seq_len_bp": 262144,
+        "feature": "transcript",
+        "dedup": true
+      }
+    },
+    "enhancers_ccre_262kb": {
+      "path": "data/regions/hg38/enhancers_ccre_262kb.bed",
+      "sha256": "d89dd76624b798f6f21b74e4fd6e6466d2731eb110faf72d6f1c9b80b3d2c7d4",
+      "stats": {
+        "n_parsed_rows": 961227,
+        "n_in_bounds": 960225,
+        "n_written": 960225,
+        "seq_len_bp": 262144,
+        "keep_classes": "ELS,dELS,pELS",
+        "dedup": true,
+        "download_url_used": "(auto list)"
+      }
+    },
+    "random_262kb": {
+      "path": "data/regions/hg38/random_262kb.bed",
+      "sha256": "d60cc7c867d3042e42c132e6f1254feeeb52698993c93c3f5b3961f5f35f0233",
+      "stats": {
+        "n_requested": 50000,
+        "n_written": 50000,
+        "seq_len_bp": 262144,
+        "seed": 1,
+        "exclude_chroms": [
+          "chrM"
+        ],
+        "n_chroms_eligible": 97
+      }
+    }
+  }
+}

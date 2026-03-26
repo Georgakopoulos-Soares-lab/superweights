@@ -1,0 +1,25 @@
+# Core scientific Python
+numpy>=2.1
+pandas>=2.2
+pyarrow>=16
+scipy>=1.13
+statsmodels>=0.14
+scikit-learn>=1.5
+tqdm>=4.66
+
+# Deep learning (PyTorch)
+torch>=2.3
+captum>=0.7
+
+# Genomics / bioinformatics
+pyfaidx>=0.8
+biopython>=1.84
+
+# IO / utils
+h5py>=3.11
+einops>=0.8
+loguru>=0.7
+
+# Plotting (used later in analysis)
+matplotlib>=3.9
+seaborn>=0.13

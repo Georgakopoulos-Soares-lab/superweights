@@ -1,0 +1,68 @@
+# ─── Reference genome ────────────────────────────────────────────────────────
+data/hg38.fa
+data/hg38.fa.fai
+data/**/*.fa
+data/**/*.fasta
+data/**/*.fa.gz
+data/**/*.fasta.gz
+
+# ─── Large genomic data files ─────────────────────────────────────────────────
+data/**/*.vcf.gz
+data/**/*.vcf.gz.tbi
+data/**/*.bcf
+data/**/*.bam
+data/**/*.bai
+data/**/*.cram
+data/**/*.bigwig
+data/**/*.bw
+data/**/*.bigBed
+data/**/*.bb
+data/regions/**/raw/
+
+# ─── Derived / computed data  ─────────────────────────────────────────────────
+# Keep data/eqtl/derived/posneg/*.txt (small variant ID lists) and manifest.json
+data/eqtl/derived/*.parquet
+data/eqtl/tables/
+
+# ─── Pipeline outputs (results, motifs) ───────────────────────────────────────
+results/
+motifs/
+
+# ─── Python artefacts ─────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ─── Virtual environments ─────────────────────────────────────────────────────
+venv/
+.venv/
+env/
+.env
+conda-env/
+# (cluster conda env is outside the repo — see README)
+
+# ─── Jupyter ──────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ─── Editor / OS artefacts ────────────────────────────────────────────────────
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ─── Logs & misc large outputs ────────────────────────────────────────────────
+*.log
+*.out
+*.err
+slurm-*.out
+nohup.out
