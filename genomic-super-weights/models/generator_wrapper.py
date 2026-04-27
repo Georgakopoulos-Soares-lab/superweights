@@ -1,12 +1,12 @@
 # models/generator_wrapper.py
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
 from .base_wrapper import BaseGenomicWrapper
 
 
 class GeneratorWrapper(BaseGenomicWrapper):
 
     def load(self):
+        from transformers import AutoModelForCausalLM, AutoTokenizer
         self.tokenizer = AutoTokenizer.from_pretrained(
             self.config["model_id"],
             trust_remote_code=self.config.get("hf_trust_remote_code", True),

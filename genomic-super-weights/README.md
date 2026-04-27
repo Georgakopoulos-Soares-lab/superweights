@@ -1,93 +1,180 @@
-# genomic-super-weights
+# Super Weights in Genomic Language Models
 
-Local module for detecting and validating super weights/super rows in genomic language models (GENERator, Evo2, NTv3, DNABERT2), inspired by Yu et al. (2024).
+Locating super weights in transformer-based genomic LMs following the data-free,
+single-forward-pass method from Yu et al. (2024) *"The Super Weight in Large Language Models"*
+(arXiv 2411.07191). Detection only — no quantization.
 
-## Folder structure
+---
 
-- `configs/`: model-specific config files (`generator.yaml`, `evo2_7b.yaml`, `ntv3.yaml`, `dnabert2.yaml`)
-- `models/`: wrapper classes that standardize model loading, forward pass, and target-module access
-- `hooks/`: activation recorder hooks for per-layer input/output maxima
-- `detection/`: sweep + spike-layer identification + iterative SW/SR discovery loop
-- `analysis/`: ablation metrics and activation visualization utilities
-- `probes/`: DNA probe sequences used for sweeps and destruction tests
-- `scripts/`: runnable experiment entry points and SLURM launchers
-- `tests/`: smoke tests for detection and hooks
-- `debug_*.py`: focused diagnostics for specific hypotheses around the GENERator super row
-- `run.sh`: convenience shell entrypoint for running detection/ablation workflows
-- `logs/`, `results/`, `analysis/`: runtime artifacts (typically local outputs)
+## Models Studied
 
-## Core scripts and what they do
+| Model | Type | Params | HF ID |
+|-------|------|--------|-------|
+| GENERator eukaryote | Causal decoder | 3B | `GenerTeam/GENERator-eukaryote-3b-base` |
+| GENERator prokaryote | Causal decoder | ~200M | `GenerTeam/GENERator-prokaryote-*` |
+| GENERator prokaryote 1B | Causal decoder | 1B | `GenerTeam/GENERator-prokaryote-1b-base` |
+| Evo 2 7B | StripedHyena2 SSM | 7B | `arcinstitute/evo2_7b` |
+| NTv3 | Encoder (masked LM) | 50M | `InstaDeepAI/nucleotide-transformer-v3-50m-multi-species` |
+| DNABERT-2 | Encoder (masked LM) | 117M | `zhihan1996/DNABERT-2-117M` |
+| MegaDNA | Causal decoder | — | — |
+| HybridNa | Hybrid SSM/Attn | — | — |
+| GenomeOcean | Causal decoder | — | — |
 
-### Top-level scripts
+---
 
-- `run.sh`: shell launcher that runs the main pipeline commands with project defaults.
-- `inspect_generator.py`: inspects GENERator module names to locate MLP/down-proj candidates and layer count.
+## Results
 
-### Debug scripts
+### Super Weight Detection (perplexity / entropy ablation)
 
-- `debug_super_row.py`: compares pruning row 2371 vs random rows and checks probe-invariance of the detected spike row.
-- `debug_stop_codon.py`: tests whether removing the candidate super row inflates stop-codon next-token probability mass.
-- `debug_sw_verify.py`: targeted verification around `(layer=4, row=2371, col=2536)` with scalar/row/layer ablations.
-- `debug_gate_up.py`: diagnostic around gate/up-proj behavior and contribution to the detected anomaly.
-- `debug_generator.py`: GENERator-focused sanity/debug utility (model loading + activation behavior checks).
-- `debug_layer4.py`: layer-4-focused checks for suspected super-row localization.
-- `debug_layer_persistence.py`: tests whether layer-level spike behavior persists under repeated forward passes/contexts.
-- `debug_row2371.py`: row-2371-specific instrumentation and ablation diagnostics.
+| Model | SW location (layer, row, col) | in_max | out_max | δ% pruned SW | δ% random (mean) |
+|-------|-------------------------------|--------|---------|--------------|------------------|
+| GENERator eukaryote | L4, r2371, c2536 | 67 551 | 375 361 | **+23 026%** | +0.01% |
+| GENERator prokaryote | L2, r1927, c1769 | 7 383 | 506 014 | **+25 975%** | +0.03% |
+| GENERator prokaryote 1B | L2, r1397, c63 | 12 526 | 85 983 | **+30.5%** | +0.03% |
+| NTv3 | L11, r1472, c1579 | 145 | 1 582 | +4.8% | +0.03% |
+| DNABERT-2 | L5, r603, c1062 (+ 9 more) | 240 | 945 | +1.5% | +0.009% |
+| Evo 2 7B | — (no effect) | — | — | **+0.0007%** | +0.001% |
+| MegaDNA | L1, r152, c225 | 43 | 1 873 | +0.34% | −0.09% |
+| HybridNa | L31, r2893, c6187 | 508 | 61 | −1.3% | −0.003% |
 
-### scripts/
+Detection mode is "superrow" for all transformer models (max-activation row zero-out).
 
-- `scripts/run_detection.py`: main CLI for running sweep-based super-weight/super-row detection.
-- `scripts/run_ablation.py`: runs destruction/ablation experiments after candidate detection.
-- `scripts/run_detection.sbatch`: SLURM batch wrapper for detection jobs.
-- `scripts/debug_layer4.sbatch`: SLURM job for layer-4 debugging runs.
-- `scripts/debug_generator.sbatch`: SLURM job for GENERator debugging runs.
+**Key finding**: Transformer-based genomic models (GENERator family, DNABERT-2, NTv3) exhibit
+super weights with the Yu et al. phenotype. SSM-based models (Evo 2, MegaDNA, HybridNa) do not —
+large activation outliers exist but zeroing them has no perplexity effect.
 
-### detection/
+### GUE Downstream Task Ablation (DNABERT-2 and NTv3)
 
-- `detection/sweep.py`: one forward pass across layers with hook-based activation statistics.
-- `detection/identify_spikes.py`: picks earliest anomalous output spike layer and extracts `(layer, row, col)`.
-- `detection/iterative_finder.py`: iterative loop that zeros scalar or full row and repeats sweep until suppression.
-- `detection/__init__.py`: package marker.
+| Model | Task | Baseline acc | Pruned SW acc | Δacc | Δmcc |
+|-------|------|-------------|---------------|------|------|
+| DNABERT-2 | prom_core_notata | 83.5% | 72.3% | **−13.3%** | −29.4% |
+| DNABERT-2 | EMP/H3K4me3 | 60.2% | 53.9% | **−10.4%** | −69.6% |
+| DNABERT-2 | splice/reconstructed | 92.8% | 81.9% | **−11.7%** | −21.9% |
+| NTv3 | prom_core_notata | 70.0% | 69.9% | −0.05% | −0.28% |
+| NTv3 | splice/reconstructed | 53.4% | 56.5% | +5.8% | **−86.2%** |
+| NTv3 | EMP/H3K4me3 | 47.0% | 47.0% | 0.0% | 0.0% |
 
-### hooks/
+Random-weight controls are consistently within ±0.05% — the SW effect is specific.
 
-- `hooks/activation_hooks.py`: forward pre/post hooks that record `in_max/in_channel` and `out_max/out_channel`.
-- `hooks/__init__.py`: package marker.
+---
 
-### models/
+## Directory Structure
 
-- `models/base_wrapper.py`: abstract model wrapper API and in-place zeroing helpers.
-- `models/generator_wrapper.py`: GENERator loader + 6-mer sequence preparation.
-- `models/evo2_wrapper.py`: Evo2 causal LM wrapper.
-- `models/ntv3_wrapper.py`: NTv3 masked-model wrapper.
-- `models/dnabert2_wrapper.py`: DNABERT-2 wrapper.
-- `models/__init__.py`: wrapper registry (`WRAPPER_MAP`).
+```
+genomic-super-weights/
+├── configs/               # Per-model YAML configs
+│   ├── generator.yaml
+│   ├── generator_prokaryote.yaml
+│   ├── generator_prokaryote_1b.yaml
+│   ├── evo2.yaml / evo2_7b.yaml
+│   ├── ntv3.yaml
+│   ├── dnabert2.yaml
+│   ├── megadna.yaml
+│   ├── hybridna.yaml
+│   └── genomeocean.yaml
+├── models/                # HuggingFace wrappers (one per model)
+│   ├── base_wrapper.py
+│   ├── generator_wrapper.py
+│   ├── evo2_wrapper.py
+│   ├── ntv3_wrapper.py
+│   ├── dnabert2_wrapper.py
+│   ├── megadna_wrapper.py
+│   ├── hybridna_wrapper.py
+│   └── genomeocean_wrapper.py
+├── hooks/
+│   └── activation_hooks.py   # Forward hooks recording per-layer max activations
+├── detection/
+│   ├── sweep.py              # Single-pass activation sweep
+│   ├── identify_spikes.py    # Spike layer + coordinate extraction
+│   └── iterative_finder.py   # Iterative zero-out loop (Algorithm 1 of Yu et al.)
+├── probes/
+│   └── dna_probes.py         # 48-bp probe sequences (GENERator-compatible)
+├── analysis/
+│   ├── visualize_activations.py   # Per-layer activation profile plots
+│   └── ablation.py               # Perplexity / masked-token entropy destruction test
+├── scripts/
+│   ├── run_detection.py           # CLI: detect super weights
+│   ├── run_ablation.py            # CLI: ablation test
+│   ├── run_gue_ablation.py        # GUE fine-tune + ablation
+│   ├── run_gue_per_row_ablation.py
+│   └── *.sbatch                   # SLURM job scripts
+├── results/
+│   ├── super_weight_index.json    # Detected SW coordinates (all models)
+│   ├── ablation_results.json      # Perplexity delta results
+│   ├── gue_ablation_results.json  # GUE task ablation (full fine-tune)
+│   ├── gue_per_row_ablation.json  # GUE ablation (per SW row)
+│   └── *_activation_profile.png  # Layer-wise activation plots
+├── inspect_*.py           # One-off model inspection / debug scripts
+├── probe_ablation.py      # Interactive ablation playground
+├── stubs/                 # Type stubs for models without type annotations
+└── tests/
+    ├── test_hooks.py
+    └── test_detection.py
+```
 
-### analysis/
+---
 
-- `analysis/ablation.py`: causal perplexity and masked-token entropy metrics + control-selection utilities.
-- `analysis/visualize_activations.py`: plotting helpers for per-layer activation maxima.
-- `analysis/__init__.py`: package marker.
+## Quick Start
 
-### probes/
+### 1. Detect super weights
 
-- `probes/dna_probes.py`: curated ACTB-based probe sequences and probe accessor.
-- `probes/__init__.py`: package marker.
+```bash
+python scripts/run_detection.py --model generator
+python scripts/run_detection.py --model dnabert2 --probe poly_a
+python scripts/run_detection.py --model ntv3 --threshold 0.05
+```
 
-### tests/
+Results are written to `results/super_weight_index.json` and an activation profile PNG.
 
-- `tests/test_detection.py`: end-to-end smoke test for sweep + spike extraction on tiny fake model.
-- `tests/test_hooks.py`: smoke test that hooks attach/record/detach correctly.
+### 2. Run ablation (perplexity / entropy)
 
-## Typical usage
+```bash
+python scripts/run_ablation.py --model generator
+python scripts/run_ablation.py --model dnabert2
+```
 
-1. Pick a config in `configs/`.
-2. Run detection via `scripts/run_detection.py` (or `run.sh`).
-3. Validate candidate with `scripts/run_ablation.py` and/or `debug_sw_verify.py`.
-4. Use debug scripts for focused checks (`debug_super_row.py`, `debug_stop_codon.py`, etc.).
+Reads super weight coordinates from `super_weight_index.json` and writes deltas to
+`results/ablation_results.json`.
 
-## Notes
+### 3. GUE downstream ablation (DNABERT-2 / NTv3)
 
-- Some scripts assume HF model access and GPU availability.
-- GENERator wrapper enforces 6-mer-compatible sequence length handling.
-- This folder is intended to be self-contained inside the parent repository.
+```bash
+python scripts/run_gue_ablation.py --model dnabert2 --task prom/prom_core_notata
+python scripts/run_gue_per_row_ablation.py --model ntv3 --task splice/reconstructed
+```
+
+Requires the GUE dataset directory on `$GUE_DATA_PATH`.
+
+---
+
+## Config Setup Note
+
+Before running on a new model, inspect its module names:
+
+```python
+model = ...   # load the model
+print([n for n, _ in model.named_modules()])
+```
+
+Then update `down_proj_pattern` in the corresponding YAML to match the actual
+down-projection linear layer inside each MLP/FFN block.
+
+---
+
+## Method
+
+1. **Single forward pass** on a 48-bp probe sequence.
+2. **Activation recording** via forward hooks on every MLP down-projection layer,
+   capturing `max|input|` and `max|output|` per layer.
+3. **Spike identification**: the layer with the globally largest `max|input|` is the
+   spike layer; its `out_channel` is the SW row and `in_channel` is the SW col.
+4. **Iterative zeroing**: zero out `weight[row, col]`, re-run, repeat until
+   `max|input| < 10%` of the initial max (or 10 iterations).
+5. **Validation**: re-run perplexity (causal models) or masked-token entropy (encoder
+   models) before and after zeroing. Compare against 10 random-weight controls.
+
+---
+
+## Reference
+
+> Yu, T. et al. (2024). *The Super Weight in Large Language Models.* arXiv:2411.07191.

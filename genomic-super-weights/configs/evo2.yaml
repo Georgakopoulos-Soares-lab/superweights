@@ -7,6 +7,7 @@ hf_trust_remote_code: true
 # l3: in=11264, out=4096 — this is the down-proj (equivalent to MLP down_proj in GPT-style).
 down_proj_pattern: "blocks.{i}.mlp.l3"
 num_layers: 32
+hidden_dim: 4096
 dtype: "float16"
 device: "cuda"
 causal: true

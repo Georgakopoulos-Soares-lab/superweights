@@ -1,20 +1,22 @@
 # models/dnabert2_wrapper.py
 import torch
-from transformers import AutoModel, AutoTokenizer
 from .base_wrapper import BaseGenomicWrapper
 
 
 class DNABERT2Wrapper(BaseGenomicWrapper):
 
     def load(self):
+        from transformers import AutoModelForMaskedLM, AutoTokenizer
         self.tokenizer = AutoTokenizer.from_pretrained(
             self.config["model_id"],
             trust_remote_code=True,
+            revision="main",
         )
-        self.model = AutoModel.from_pretrained(
+        self.model = AutoModelForMaskedLM.from_pretrained(
             self.config["model_id"],
-            torch_dtype=torch.float32,
+            dtype=torch.float32,
             trust_remote_code=True,
+            revision="main",
         )
         self.model.eval()
         if self.config.get("device") == "cuda":

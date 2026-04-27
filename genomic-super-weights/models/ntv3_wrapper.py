@@ -1,12 +1,12 @@
 # models/ntv3_wrapper.py
 import torch
-from transformers import AutoModel, AutoTokenizer
 from .base_wrapper import BaseGenomicWrapper
 
 
 class NTv3Wrapper(BaseGenomicWrapper):
 
     def load(self):
+        from transformers import AutoModel, AutoTokenizer
         self.tokenizer = AutoTokenizer.from_pretrained(self.config["model_id"])
         self.model = AutoModel.from_pretrained(
             self.config["model_id"],

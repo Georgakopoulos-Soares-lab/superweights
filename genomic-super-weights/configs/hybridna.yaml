@@ -1,0 +1,13 @@
+model_id: "Mishamq/HybriDNA-7B"
+model_type: "hybridna"
+hf_trust_remote_code: true
+# HybriDNA-7B is a causal Mamba2/SSM hybrid (32 layers).
+# Attention layers at indices 4,12,20,28 (period=8, offset=4); all others are Mamba.
+# Both layer types share the same MLP structure: feed_forward.down_proj
+# Tokenizer: byte-level DNA vocab=12 (A,C,G,T + specials), HybriDNATokenizer.
+# use_mamba_kernels overridden to False at load time (triton kernels not required).
+down_proj_pattern: "model.layers.{i}.feed_forward.down_proj"  # confirmed from modeling_hybridna.py
+num_layers: 32                                                   # confirmed: num_hidden_layers=32
+dtype: "bfloat16"
+device: "cuda"
+causal: true

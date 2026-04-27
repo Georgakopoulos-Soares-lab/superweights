@@ -22,6 +22,9 @@ logs/
 results/
 analysis/
 
+# Weights & Biases
+wandb/
+
 # OS/editor files
 .DS_Store
 Thumbs.db

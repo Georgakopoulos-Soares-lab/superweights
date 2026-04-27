@@ -25,23 +25,31 @@ def main():
     config = yaml.safe_load(open(f"configs/{args.model}.yaml"))
     sw_index = json.loads(Path(args.sw_index).read_text())
 
-    if args.model not in sw_index or not sw_index[args.model]:
+    if args.model not in sw_index:
         print(f"No super weights found for {args.model} in index. Run run_detection.py first.")
         return
 
-        
+    # Support both old format (bare list) and new format ({"mode": ..., "results": [...]})
+    entry = sw_index[args.model]
+    sw_list = entry["results"] if isinstance(entry, dict) else entry
+
+    if not sw_list:
+        print(f"Empty super weight list for {args.model}.")
+        return
 
     WrapperClass = WRAPPER_MAP[args.model]
     wrapper = WrapperClass(config)
     wrapper.load()
 
-    result = run_destruction_test(wrapper, sw_index[args.model], get_probe(args.probe))
+    detection_mode = entry.get("mode", "superrow") if isinstance(entry, dict) else "superrow"
+    result = run_destruction_test(wrapper, sw_list, get_probe(args.probe), detection_mode=detection_mode)
 
+    mode_label = "super weight" if detection_mode == "superweight" else "super row"
     print(f"\n{'Condition':<26} | {'Perplexity/Entropy':>18} | {'Delta':>10}")
     print("-" * 62)
     print(f"{'Original':<26} | {result['baseline']:>18.4f} | {'—':>10}")
-    print(f"{'Prune super row':<26} | {result['pruned_row']:>18.4f} | {result['delta_row_pct']:>+9.1f}%")
-    print(f"{'Prune random rows (mean)':<26} | {result['pruned_rand_mean']:>18.4f} | {result['delta_rand_pct']:>+9.1f}%")
+    print(f"{f'Prune {mode_label}':<26} | {result['pruned']:>18.4f} | {result['delta_pct']:>+9.1f}%")
+    print(f"{'Prune random (mean)':<26} | {result['pruned_rand_mean']:>18.4f} | {result['delta_rand_pct']:>+9.1f}%")
 
     ablation = {}
     out_path = Path(args.out)

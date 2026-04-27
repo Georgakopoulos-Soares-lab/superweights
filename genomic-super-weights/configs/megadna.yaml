@@ -1,0 +1,16 @@
+model_id: "megaDNA_phage_145M"
+model_path: "/work/11034/atzanakak/ls6/megaDNA/megaDNA_phage_145M.pt"
+megadna_src: "/work/11034/atzanakak/ls6/megaDNA"
+# MEGABYTE hierarchical architecture: transformers is a ModuleList of stages.
+# Each Transformer has .layers = ModuleList of [attn, ff] pairs.
+# FF is nn.Sequential: [0]=RMSNorm, [1]=Linear(up), [2]=GELU, [3]=Dropout, [4]=Linear(down)
+# Down-proj pattern: transformers.{stage}.layers.{i}.1.4
+# Target: stage 0 (coarsest / most powerful transformer stage)
+down_proj_pattern: "transformers.0.layers.{i}.1.4"
+num_layers: null        # resolved at load time from model.transformers[0].layers
+target_stage: 0         # which MEGABYTE stage to sweep (0 = coarse/global stage)
+causal: true
+device: "cuda"
+# megaDNA uses a 6-token char vocabulary: [pad, A, T, C, G, #]
+# Tokens: A=1, T=2, C=3, G=4
+vocab: ["**", "A", "T", "C", "G", "#"]
