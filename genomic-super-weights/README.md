@@ -45,16 +45,65 @@ large activation outliers exist but zeroing them has no perplexity effect.
 
 ### GUE Downstream Task Ablation (DNABERT-2 and NTv3)
 
-| Model | Task | Baseline acc | Pruned SW acc | Δacc | Δmcc |
-|-------|------|-------------|---------------|------|------|
-| DNABERT-2 | prom_core_notata | 83.5% | 72.3% | **−13.3%** | −29.4% |
-| DNABERT-2 | EMP/H3K4me3 | 60.2% | 53.9% | **−10.4%** | −69.6% |
-| DNABERT-2 | splice/reconstructed | 92.8% | 81.9% | **−11.7%** | −21.9% |
-| NTv3 | prom_core_notata | 70.0% | 69.9% | −0.05% | −0.28% |
-| NTv3 | splice/reconstructed | 53.4% | 56.5% | +5.8% | **−86.2%** |
-| NTv3 | EMP/H3K4me3 | 47.0% | 47.0% | 0.0% | 0.0% |
+All 10 detected DNABERT-2 super rows zeroed simultaneously vs. 10 random-row controls (mean of 10 repeats).
+
+| Model | Task | Baseline acc | Pruned SW acc (all rows) | Δacc | Δmcc | Rand ctrl Δacc |
+|-------|------|-------------|--------------------------|------|------|----------------|
+| DNABERT-2 | prom/prom_core_notata | 83.81% | 52.10% | **−37.84%** | −88.49% | ~0% |
+| DNABERT-2 | EMP/H3K4me3 | 67.09% | 66.63% | −0.69% | −1.95% | ~0% |
+| DNABERT-2 | splice/reconstructed | 92.46% | 59.12% | **−36.06%** | −77.57% | ~0% |
+| NTv3 | prom_core_notata | 70.0% | 69.9% | −0.05% | −0.28% | ~0% |
+| NTv3 | splice/reconstructed | 53.4% | 56.5% | +5.8% | **−86.2%** | ~0% |
+| NTv3 | EMP/H3K4me3 | 47.0% | 47.0% | 0.0% | 0.0% | ~0% |
 
 Random-weight controls are consistently within ±0.05% — the SW effect is specific.
+
+**Finding**: Prom and splice tasks show catastrophic collapse (−35–38% accuracy) when all DNABERT-2
+super rows are zeroed. The histone mark task (H3K4me3) is unaffected, consistent with epigenomic
+signals being encoded diffusely rather than concentrated in MLP row clusters.
+
+### DNABERT-2 Per-Row Ablation
+
+Each of the 10 super rows zeroed individually on the fine-tuned checkpoint.
+
+| Task | Row | out_max | Δacc (single row) | Δmcc |
+|------|-----|---------|-------------------|------|
+| prom_core_notata | L3 r603 | 618.1 | −0.11% | −0.23% |
+| prom_core_notata | L5 r603 (detected top) | 944.6 | +0.06% | +0.14% |
+| splice/reconstructed | **L3 r603** | 618.1 | **−1.45%** | **−2.47%** |
+| splice/reconstructed | L5 r603 (detected top) | 944.6 | −0.15% | −0.31% |
+| EMP/H3K4me3 | L3 r641 | 413.5 | +0.46% | +0.71% |
+| EMP/H3K4me3 | L5 r603 (detected top) | 944.6 | +0.19% | +0.36% |
+
+Key observations:
+- **No individual row is a bottleneck** — maximum single-row effect is −1.45% (splice, L3r603).
+  Removing all 10 together causes −36%: the rows function as a redundant ensemble.
+- **The activation-detected top row (L5r603, out_max=944.6) is not the most functionally
+  critical.** L3r603 (out_max=618.1) causes larger damage on splice, and L5r603 individually
+  causes zero or positive effect on promoter/histone tasks. Activation magnitude ≠ functional
+  importance.
+- GENERator's single super row causes immediate +23,000% perplexity loss — a qualitatively
+  different concentration level compared to DNABERT-2's distributed ensemble.
+
+### DNABERT-2 Mechanistic Characterisation (`debug_dnabert2_*.py`)
+
+Five targeted diagnostic scripts (`debug_dnabert2_profile.py`, `debug_dnabert2_multi_probe.py`,
+`debug_dnabert2_persistence.py`, `debug_dnabert2_masked_token.py`) were run to compare
+DNABERT-2 against the GENERator super weight phenotype.
+
+| Property | GENERator (causal) | DNABERT-2 (masked encoder) |
+|---|---|---|
+| Super activation magnitude | out_max = 375,361 | out_max = 945 |
+| Detection probe-stability (iterative) | Same rows every probe | L5r603 stable; secondary rows vary by probe |
+| Intermediate channel persistence | Persists L4→L30 via skip connections | Decays to <0.1% at L6 (local spike only) |
+| Degenerate token inflation after SW removal | Strong (stop-word analogue) | 1.04× vs 1.00× random (no effect) |
+| Single-row functional damage | +23,026% perplexity | ≤1.45% accuracy drop |
+
+**Architecture interpretation**: The super activation in causal decoders (Llama-style) propagates
+through residual connections and is globally present at every layer, enabling a single row to
+destroy generation. In DNABERT-2's encoder, the spike is confined to L5 MLP output and decays
+immediately — the BERT bidirectional attention and MLM objective result in a more distributed
+representation, requiring ensemble removal for functional damage.
 
 ---
 
@@ -104,9 +153,14 @@ genomic-super-weights/
 │   ├── gue_ablation_results.json  # GUE task ablation (full fine-tune)
 │   ├── gue_per_row_ablation.json  # GUE ablation (per SW row)
 │   └── *_activation_profile.png  # Layer-wise activation plots
-├── inspect_*.py           # One-off model inspection / debug scripts
-├── probe_ablation.py      # Interactive ablation playground
-├── stubs/                 # Type stubs for models without type annotations
+├── debug_generator.py          # GENERator activation profile + SW validation
+├── debug_dnabert2_profile.py   # DNABERT-2: full 12-layer activation profile
+├── debug_dnabert2_multi_probe.py # DNABERT-2: row importance + probe consistency
+├── debug_dnabert2_persistence.py # DNABERT-2: skip-connection propagation test
+├── debug_dnabert2_masked_token.py # DNABERT-2: degenerate token inflation test
+├── inspect_*.py                # One-off model inspection / debug scripts
+├── probe_ablation.py           # Interactive ablation playground
+├── stubs/                      # Type stubs for models without type annotations
 └── tests/
     ├── test_hooks.py
     └── test_detection.py
@@ -172,6 +226,28 @@ down-projection linear layer inside each MLP/FFN block.
    `max|input| < 10%` of the initial max (or 10 iterations).
 5. **Validation**: re-run perplexity (causal models) or masked-token entropy (encoder
    models) before and after zeroing. Compare against 10 random-weight controls.
+
+---
+
+## Compatibility Notes
+
+**transformers ≥ 5.x + DNABERT-2**: The DNABERT-2 custom `bert_layers.py` relies on
+`BertConfig.is_decoder` and `BertConfig.pad_token_id` which were removed as defaults in
+transformers 5.x. Two fixes are required:
+
+1. `models/dnabert2_wrapper.py` loads `AutoConfig` separately and injects missing defaults before
+   passing `config=` to `from_pretrained`. It also uses `device_map={"":"cpu"}` to avoid the
+   meta-device / ALiBi tensor conflict that arises during `__init__` with transformers ≥ 5.
+
+2. For GUE scripts that load the model directly (without the wrapper), patch the cached
+   `configuration_bert.py` in your HF cache:
+   ```python
+   # After super().__init__() in BertConfig.__init__:
+   if not hasattr(self, "is_decoder"): self.is_decoder = False
+   if not hasattr(self, "pad_token_id"): self.pad_token_id = 0
+   ```
+   Cache path: `~/.cache/huggingface/modules/transformers_modules/zhihan1996/
+   DNABERT_hyphen_2_hyphen_117M/<revision>/configuration_bert.py`
 
 ---
 
