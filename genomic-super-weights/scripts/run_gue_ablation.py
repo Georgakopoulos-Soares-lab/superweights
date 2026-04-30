@@ -35,7 +35,6 @@ Results are merged into --out JSON under key "<model>/<task>".
 """
 
 import argparse
-import copy
 import csv
 import json
 import os
@@ -147,6 +146,56 @@ class GUEDataset(torch.utils.data.Dataset):
 
 def collate_fn(batch):
     return {k: torch.stack([b[k] for b in batch]) for k in batch[0]}
+
+
+# ── HybriDNA classification wrapper ─────────────────────────────────────────
+
+class _HybriDNAClassifier(nn.Module):
+    """Wraps a HybriDNA-7B causal-LM backbone with a mean-pool + linear head."""
+
+    class _Output:
+        def __init__(self, logits, loss=None):
+            self.logits = logits
+            self.loss   = loss
+
+    def __init__(self, backbone, hidden_size: int, num_labels: int):
+        super().__init__()
+        self.backbone   = backbone
+        self.classifier = nn.Linear(hidden_size, num_labels)
+        self.num_labels = num_labels
+
+    def forward(self, input_ids=None, attention_mask=None, labels=None, **kwargs):
+        out = self.backbone(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            output_hidden_states=True,
+        )
+        if hasattr(out, "hidden_states") and out.hidden_states is not None:
+            hidden = out.hidden_states[-1]
+        elif hasattr(out, "last_hidden_state"):
+            hidden = out.last_hidden_state
+        else:
+            raise RuntimeError("Cannot find hidden states in HybriDNA output")
+
+        if attention_mask is not None:
+            mask   = attention_mask.unsqueeze(-1).float()
+            pooled = (hidden * mask).sum(1) / mask.sum(1).clamp(min=1)
+        else:
+            pooled = hidden.mean(1)
+
+        # Lazily move the classifier head to match the backbone output device/dtype.
+        # With device_map="auto" the head is created on CPU; hidden lands on cuda:0.
+        if (self.classifier.weight.device != pooled.device
+                or self.classifier.weight.dtype != pooled.dtype):
+            self.classifier = self.classifier.to(
+                device=pooled.device, dtype=pooled.dtype
+            )
+
+        logits = self.classifier(pooled)
+        loss   = None
+        if labels is not None:
+            loss = nn.functional.cross_entropy(logits, labels)
+        return self._Output(logits=logits, loss=loss)
 
 
 # ── NTv3 classification wrapper ───────────────────────────────────────────────
@@ -276,7 +325,7 @@ def fine_tune(
         return max(0.0, (total_steps - step) / (total_steps - warmup_steps))
     scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda)
 
-    best_mcc, best_state = -1.0, None
+    best_mcc, best_ckpt = -1.0, None
 
     for ep in range(epochs):
         total_loss = 0.0
@@ -292,20 +341,21 @@ def fine_tune(
             total_loss += out.loss.item()
 
         val_m = evaluate(model, val_ds, device=device)
+        torch.cuda.empty_cache()
         print(
             f"  Epoch {ep+1}/{epochs}  loss={total_loss/len(loader):.4f}"
             f"  val_acc={val_m['accuracy']:.4f}  val_mcc={val_m['mcc']:.4f}"
         )
         if val_m["mcc"] > best_mcc:
-            best_mcc   = val_m["mcc"]
-            best_state = copy.deepcopy(model.state_dict())
+            best_mcc  = val_m["mcc"]
+            best_ckpt = os.path.join(ckpt_dir, "model_state.pt")
+            torch.save(model.state_dict(), best_ckpt)
+            print(f"  ↑ New best val_mcc={best_mcc:.4f} — checkpoint saved.")
 
-    # Restore best checkpoint and save with torch.save (avoids deepspeed import)
-    if best_state is not None:
-        model.load_state_dict(best_state)
-    ckpt_path = os.path.join(ckpt_dir, "model_state.pt")
-    torch.save(model.state_dict(), ckpt_path)
-    print(f"  Saved best checkpoint (val_mcc={best_mcc:.4f}) → {ckpt_path}")
+    # Restore best weights into the live model
+    if best_ckpt and os.path.exists(best_ckpt):
+        model.load_state_dict(torch.load(best_ckpt, map_location="cpu"), strict=False)
+    print(f"  Saved best checkpoint (val_mcc={best_mcc:.4f}) → {best_ckpt}")
 
 
 # ── Module resolution (same logic as BaseGenomicWrapper._resolve_module) ─────
@@ -313,7 +363,7 @@ def fine_tune(
 def _resolve_module(model, pattern: str, layer_idx: int):
     path = pattern.replace("{i}", str(layer_idx))
     # Unwrap classifier wrappers so the pattern navigates the actual backbone.
-    obj = model.backbone if isinstance(model, _NTv3Classifier) else model
+    obj = model.backbone if isinstance(model, (_NTv3Classifier, _HybriDNAClassifier)) else model
     for attr in path.split("."):
         obj = getattr(obj, attr)
     return obj
@@ -338,6 +388,44 @@ def _restore_row(model, pattern: str, layer_idx: int, row: int, saved: torch.Ten
         m.weight.data[row, :] = saved
 
 
+# ── Structured-random sampler ─────────────────────────────────────────────────
+
+def _structured_rand_sample(sw_list: list, num_rows_per_layer: int, rng) -> list:
+    """
+    Returns a list of (layer, row) pairs that mirror the *structure* of sw_list:
+      - same layer distribution (how many rows come from each layer)
+      - same row-repetition pattern (if SW row X appears in 4 layers, the randomly
+        chosen substitute row also appears in those exact same 4 layers)
+
+    Algorithm
+    ---------
+    1. Group sw_list entries by their row index → each group records which layers
+       that row appears in.
+    2. Sort groups by size descending to form a "template"
+       e.g. [[3,5,6,7], [3,5], [3], [3], [9], [9]]
+    3. Sample len(groups) distinct random row indices (avoiding actual SW rows).
+    4. Assign each random row to the same layer list as its template group.
+    """
+    from collections import defaultdict
+    row_to_layers: dict = defaultdict(list)
+    for sw in sw_list:
+        row_to_layers[sw["row"]].append(sw["layer"])
+
+    # Template: sorted by repetition count desc so sampling is deterministic in structure
+    groups = sorted(row_to_layers.values(), key=len, reverse=True)
+    n_unique = len(groups)
+
+    sw_rows = {sw["row"] for sw in sw_list}
+    pool = [r for r in range(num_rows_per_layer) if r not in sw_rows]
+    chosen_rows = rng.sample(pool, n_unique)
+
+    result = []
+    for row_idx, layer_list in zip(chosen_rows, groups):
+        for layer in layer_list:
+            result.append((layer, row_idx))
+    return result
+
+
 # ── Three-condition ablation ──────────────────────────────────────────────────
 
 def run_ablation(
@@ -348,6 +436,7 @@ def run_ablation(
     num_layers: int,
     device: str,
     n_control: int = 10,
+    n_structured_control: int = 0,
 ) -> dict:
     """
     Mirrors run_destruction_test() from analysis/ablation.py but uses
@@ -355,6 +444,10 @@ def run_ablation(
 
     sw_list: list of {"layer": int, "row": int} dicts (from super_weight_index.json).
              May be empty — in that case condition 2 is skipped.
+
+    n_structured_control: if > 0, run an additional structured-random condition
+             that samples rows with the same layer distribution and row-repetition
+             pattern as the detected super-rows (see _structured_rand_sample).
     """
     baseline = evaluate(model, test_ds, device=device)
     print(f"  Baseline: acc={baseline['accuracy']:.4f}  mcc={baseline['mcc']:.4f}")
@@ -416,6 +509,33 @@ def run_ablation(
 
     result["pruned_rand_mean"] = {"accuracy": rand_mean_acc, "mcc": rand_mean_mcc}
     result["pruned_rand_all"]  = rand_results
+
+    # ── Condition 4: structured-random control ────────────────────────────
+    if n_structured_control > 0 and sw_list:
+        # Determine number of rows in the target layer (same for all layers in mlp.wo)
+        num_rows_per_layer = _resolve_module(model, pattern, 0).weight.data.shape[0]
+
+        struct_rng     = random.Random(42)
+        struct_results = []
+        for rep in range(n_structured_control):
+            chosen = _structured_rand_sample(sw_list, num_rows_per_layer, struct_rng)
+            # Filter out any accidental SW coord collisions
+            chosen = [(l, r) for l, r in chosen if (l, r) not in sw_coords]
+            saves  = [(l, r, _save_row(model, pattern, l, r)) for l, r in chosen]
+            for l, r in chosen:
+                _zero_row(model, pattern, l, r)
+            m = evaluate(model, test_ds, device=device)
+            struct_results.append(m)
+            for l, r, saved in saves:
+                _restore_row(model, pattern, l, r, saved)
+
+        struct_mean_acc = float(np.mean([m["accuracy"] for m in struct_results]))
+        struct_mean_mcc = float(np.mean([m["mcc"]      for m in struct_results]))
+        print(f"  Struct rand ctrl (n={n_structured_control} mean): "
+              f"acc={struct_mean_acc:.4f}  mcc={struct_mean_mcc:.4f}")
+        result["pruned_struct_rand_mean"] = {"accuracy": struct_mean_acc, "mcc": struct_mean_mcc}
+        result["pruned_struct_rand_all"]  = struct_results
+
     return result
 
 
@@ -476,7 +596,7 @@ def layer_sweep(
 def main():
     parser = argparse.ArgumentParser(description="GUE task ablation for genomic masked LMs")
     parser.add_argument("--model",    required=True,
-                        choices=["dnabert2", "ntv3"],
+                        choices=["dnabert2", "ntv3", "hybridna"],
                         help="Model key — must match a configs/<model>.yaml")
     parser.add_argument("--task",     required=True,
                         help="GUE task path relative to gue_root, e.g. prom/prom_core_notata")
@@ -495,6 +615,9 @@ def main():
     parser.add_argument("--out",      default="results/gue_ablation_results.json")
     parser.add_argument("--sweep",    action="store_true",
                         help="Run layer sweep to find task-specific super rows")
+    parser.add_argument("--structured_rand", type=int, default=0, metavar="N",
+                        help="Run N structured-random controls matching the superrow "
+                             "layer distribution and row-repetition pattern (default: 0 = off)")
     parser.add_argument("--no_finetune", action="store_true",
                         help="Skip fine-tuning (requires existing checkpoint at --ckpt_dir)")
     parser.add_argument("--hf_token",  default=None,
@@ -548,12 +671,20 @@ def main():
         tok_kwargs["code_revision"] = "0ecff3637f0d3ba5b686d1095083218157c2ca34"
     if hf_token:
         tok_kwargs["token"] = hf_token
-    tokenizer = transformers.AutoTokenizer.from_pretrained(
-        model_id, model_max_length=max_length, **tok_kwargs
-    )
+    is_hybridna = "Mishamq" in model_id or args.model == "hybridna"
+    if is_hybridna:
+        tokenizer = transformers.AutoTokenizer.from_pretrained(
+            model_id, model_max_length=max_length, padding_side="left", **tok_kwargs
+        )
+    else:
+        tokenizer = transformers.AutoTokenizer.from_pretrained(
+            model_id, model_max_length=max_length, **tok_kwargs
+        )
     if "InstaDeepAI" in model_id:
         if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
+    if is_hybridna and tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
 
     # ── Datasets ─────────────────────────────────────────────────────────────
     print("Loading datasets ...")
@@ -571,7 +702,22 @@ def main():
     print(f"Loading base model from {model_id} ...")
     # NTv3 only registers AutoModelForMaskedLM (not AutoModelForSequenceClassification).
     # Load the backbone and attach a linear classification head manually.
-    if "InstaDeepAI" in model_id and "NTv3" in model_id:
+    # HybriDNA is a causal LM — load via AutoModelForCausalLM + mean-pool head.
+    if is_hybridna:
+        _repo_root = Path(__file__).resolve().parents[1]
+        _stubs = str(_repo_root / "stubs")
+        if _stubs not in sys.path:
+            sys.path.insert(0, _stubs)
+        backbone = transformers.AutoModelForCausalLM.from_pretrained(
+            model_id,
+            use_mamba_kernels=False,
+            torch_dtype=torch.bfloat16,
+            device_map="auto",
+            **tok_kwargs,
+        )
+        hidden_size = backbone.config.hidden_size
+        model = _HybriDNAClassifier(backbone, hidden_size, num_labels)
+    elif "InstaDeepAI" in model_id and "NTv3" in model_id:
         backbone = transformers.AutoModelForMaskedLM.from_pretrained(
             model_id, **tok_kwargs
         )
@@ -590,7 +736,8 @@ def main():
             torch.load(ckpt_state_path, map_location="cpu"), strict=False
         )
 
-    model = model.to(args.device)
+    if not is_hybridna:  # device_map="auto" already placed hybridna across devices
+        model = model.to(args.device)
 
     # ── Fine-tuning ───────────────────────────────────────────────────────────
     if not ckpt_exists and not args.no_finetune:
@@ -615,7 +762,8 @@ def main():
     # ── Three-condition ablation ──────────────────────────────────────────────
     print("\n── Three-condition ablation ──────────────────────────────────────")
     ablation_result = run_ablation(
-        model, sw_list, test_ds, pattern, num_layers, args.device
+        model, sw_list, test_ds, pattern, num_layers, args.device,
+        n_structured_control=args.structured_rand,
     )
 
     # ── Layer sweep (optional) ────────────────────────────────────────────────
@@ -637,6 +785,10 @@ def main():
               f"  Δmcc={ablation_result['delta_mcc_sw_pct']:+.2f}%")
     rm = ablation_result["pruned_rand_mean"]
     print(f"  Rand ctrl   acc={rm['accuracy']:.4f}  mcc={rm['mcc']:.4f}")
+    if "pruned_struct_rand_mean" in ablation_result:
+        sr = ablation_result["pruned_struct_rand_mean"]
+        print(f"  Struct rand acc={sr['accuracy']:.4f}  mcc={sr['mcc']:.4f}"
+              f"  (layer+row-pattern matched, n={args.structured_rand})")
     if sweep_result:
         top = sweep_result[0]
         print(f"  Worst sweep layer={top['layer']}  row={top['row']}"

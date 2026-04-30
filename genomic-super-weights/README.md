@@ -105,6 +105,105 @@ destroy generation. In DNABERT-2's encoder, the spike is confined to L5 MLP outp
 immediately — the BERT bidirectional attention and MLM objective result in a more distributed
 representation, requiring ensemble removal for functional damage.
 
+### Fairness of the Random Control: Super-Row Proximity Analysis
+
+To verify the random ablation baseline is fair, we analysed whether the 10 detected
+DNABERT-2 super-rows are spatially clustered relative to a random set of 10 rows.
+
+Key structural properties of the 10 super-rows:
+- Only **6 unique row indices** across 10 entries — row 603 appears at layers 3, 5, 6, 7;
+  row 86 at layers 3 and 5.
+- Only **5 unique layers** used (3, 5, 6, 7, 9) out of 12.
+
+50 000 Monte-Carlo random sets of 10 (layer, row) pairs were compared using mean
+pairwise Euclidean distance in normalised coordinate space:
+
+| | Mean pairwise dist (normalised) |
+|--|--|
+| Random sets (mean ± std) | 0.545 ± 0.065 |
+| Super-rows | 0.468 |
+| z-score | −1.19 (12th percentile) |
+
+**Conclusion**: the super-rows are only mildly more clustered than chance (z = −1.19),
+well within the normal range. The random control is geometrically fair.
+
+### Structured-Random Control
+
+Because the super-rows share row indices across layers (a property random sampling
+almost never produces), a *structured-random* control was added that mirrors:
+- the same **layer distribution** (`{3:4, 5:2, 6:1, 7:1, 9:2}`)
+- the same **row-repetition pattern** (one row repeated 4×, one 2×, four singletons)
+
+Results on `prom_core_notata`:
+
+| Condition | Accuracy | MCC | Δacc |
+|-----------|----------|-----|------|
+| Baseline | 83.46% | 0.6697 | — |
+| Pruned SW (10 rows) | 72.34% | 0.4728 | **−13.3%** |
+| Random control (n=10 mean) | 83.40% | 0.6687 | −0.07% |
+| Structured-random control (n=10 mean) | 83.44% | 0.6695 | −0.02% |
+
+The structured control is indistinguishable from purely random, confirming the
+super-row effect is not a clustering or repetition artifact — *which* rows they are
+matters, not *where* they cluster.
+
+Run with:
+```bash
+python scripts/run_gue_ablation.py --model dnabert2 --task prom/prom_core_notata \
+    --gue_root $GUE_DATA_PATH --structured_rand 10
+```
+
+### Progressive Compression Sweep (DNABERT-2, `prom_core_notata`)
+
+A pruning sensitivity analysis was run with four ranking criteria over fractions
+0.5%–30% of the 9 206 non-SW rows (12 layers × 768 rows − 10 SW rows):
+
+| Criterion | What it removes first |
+|-----------|----------------------|
+| `l1_low` | Smallest L1-norm rows (standard magnitude pruning) |
+| `l1_high` | Largest L1-norm rows (sanity upper-bound) |
+| `prox_far` | Rows furthest from any super-row in (layer, row) space |
+| `prox_near` | Rows closest to any super-row |
+| `random` | Uniform random (10 seeds, mean ± std) |
+
+Selected Δacc results:
+
+| Frac | n rows | l1_low | l1_high | prox_far | prox_near | random |
+|------|--------|--------|---------|----------|-----------|--------|
+| 1% | 92 | −0.25% | −0.14% | −0.09% | −0.07% | −0.21% |
+| 5% | 460 | −3.41% | −0.63% | −0.36% | −0.32% | −0.41% |
+| 10% | 921 | −3.59% | −0.63% | −0.47% | **−0.32%** | −0.69% |
+| 15% | 1 381 | −3.00% | −0.72% | −3.97% | −1.63% | −0.82% |
+| 20% | 1 841 | −3.12% | −1.29% | **−9.39%** | −1.60% | −0.82% |
+| 30% | 2 762 | −3.93% | −1.20% | **−8.15%** | −1.65% | −1.38% |
+
+**Key findings:**
+
+1. **`prox_near` is the most stable curve** — removing up to 921 rows (10%) from the
+   super-row neighbourhood causes only −0.32% accuracy loss. The SW region is the
+   *safest* part of the model to compress.
+
+2. **`prox_far` collapses catastrophically at 20%** (−9.4% acc, −23.3% MCC), worse
+   than pruning the 10 super-rows themselves. Important rows are distributed throughout
+   the rest of the model, not co-located with the super-rows.
+
+3. **`l1_low` (magnitude pruning) breaks early** — −1.1% at just 2%, plateauing
+   at ~−3.5% thereafter. Small-norm rows are not safely prunable.
+
+4. **Shadow redundancy hypothesis**: the super-row is so disproportionately strong
+   in its local region that neighbouring rows become redundant during training
+   (their gradients are dominated by the super-row's output). This makes the SW
+   neighbourhood appear safe to compress — but only because the super-row itself is
+   intact. Removing it alone causes −13.3% accuracy.
+
+Run the sweep with:
+```bash
+python scripts/run_compression_sweep.py --model dnabert2 --task prom/prom_core_notata \
+    --gue_root $GUE_DATA_PATH --ckpt_dir results/gue_checkpoints/dnabert2_prom_core_notata
+```
+
+Results: `results/compression_sweep_dnabert2_prom_core_notata.{json,png}`
+
 ---
 
 ## Directory Structure
@@ -142,17 +241,22 @@ genomic-super-weights/
 │   ├── visualize_activations.py   # Per-layer activation profile plots
 │   └── ablation.py               # Perplexity / masked-token entropy destruction test
 ├── scripts/
-│   ├── run_detection.py           # CLI: detect super weights
-│   ├── run_ablation.py            # CLI: ablation test
-│   ├── run_gue_ablation.py        # GUE fine-tune + ablation
-│   ├── run_gue_per_row_ablation.py
-│   └── *.sbatch                   # SLURM job scripts
+│   ├── run_detection.py                # CLI: detect super weights
+│   ├── run_ablation.py                 # CLI: ablation test (perplexity)
+│   ├── run_gue_ablation.py             # GUE fine-tune + 3/4-condition ablation
+│   ├── run_gue_per_row_ablation.py     # GUE ablation per individual SW row
+│   ├── analyze_superrow_proximity.py   # Monte-Carlo clustering analysis of SW coordinates
+│   ├── run_compression_sweep.py        # Progressive pruning sweep (5 criteria)
+│   └── *.sbatch                        # SLURM job scripts
 ├── results/
-│   ├── super_weight_index.json    # Detected SW coordinates (all models)
-│   ├── ablation_results.json      # Perplexity delta results
-│   ├── gue_ablation_results.json  # GUE task ablation (full fine-tune)
-│   ├── gue_per_row_ablation.json  # GUE ablation (per SW row)
-│   └── *_activation_profile.png  # Layer-wise activation plots
+│   ├── super_weight_index.json                          # Detected SW coordinates (all models)
+│   ├── ablation_results.json                            # Perplexity delta results
+│   ├── gue_ablation_results.json                        # GUE task ablation (full fine-tune)
+│   ├── gue_per_row_ablation.json                        # GUE ablation (per SW row)
+│   ├── compression_sweep_dnabert2_prom_core_notata.json # Compression sweep results
+│   ├── compression_sweep_dnabert2_prom_core_notata.png  # Compression sweep plot
+│   ├── superrow_proximity.png                           # SW clustering analysis plot
+│   └── *_activation_profile.png                        # Layer-wise activation plots
 ├── debug_generator.py          # GENERator activation profile + SW validation
 ├── debug_dnabert2_profile.py   # DNABERT-2: full 12-layer activation profile
 ├── debug_dnabert2_multi_probe.py # DNABERT-2: row importance + probe consistency
@@ -190,9 +294,35 @@ python scripts/run_ablation.py --model dnabert2
 Reads super weight coordinates from `super_weight_index.json` and writes deltas to
 `results/ablation_results.json`.
 
-### 3. GUE downstream ablation (DNABERT-2 / NTv3)
+
+# with structured-random control (matches SW layer distribution + row-repetition pattern)
+python scripts/run_gue_ablation.py --model dnabert2 --task prom/prom_core_notata \
+    --structured_rand 10
+```
+
+Requires the GUE dataset directory on `$GUE_DATA_PATH`.
+
+### 4. Progressive compression sweep
 
 ```bash
+python scripts/run_compression_sweep.py \
+    --model dnabert2 --task prom/prom_core_notata \
+    --gue_root $GUE_DATA_PATH \
+    --ckpt_dir results/gue_checkpoints/dnabert2_prom_core_notata \
+    --fracs 0.5 1 2 5 10 15 20 30
+```
+
+Ranks all non-SW rows by five criteria and sweeps pruning fractions, producing
+a sensitivity curve and JSON + PNG output.
+
+### 5. Super-row proximity analysis
+
+```bash
+python scripts/analyze_superrow_proximity.py
+```
+
+Monte-Carlo clustering analysis of SW coordinates. Produces
+`results/superrow_proximity.png
 python scripts/run_gue_ablation.py --model dnabert2 --task prom/prom_core_notata
 python scripts/run_gue_per_row_ablation.py --model ntv3 --task splice/reconstructed
 ```
