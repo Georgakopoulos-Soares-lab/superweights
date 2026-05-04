@@ -204,6 +204,71 @@ python scripts/run_compression_sweep.py --model dnabert2 --task prom/prom_core_n
 
 Results: `results/compression_sweep_dnabert2_prom_core_notata.{json,png}`
 
+### Quantization Sensitivity Ablation (INT4 / INT8)
+
+Simulated round-to-nearest (RTN) quantization applied selectively to `mlp.wo` rows
+to test whether the shadow-redundancy finding from the compression sweep extends to
+precision loss. Four conditions:
+
+| Condition | Description |
+|---|---|
+| `baseline` | No quantization |
+| `yu_all` | INT{4,8} all non-SW rows (SW-exempt, after Yu et al.) |
+| `sw_fragility` | INT{4,8} only the detected SW rows themselves |
+| `near_sw` | INT{4,8} rows closest to SW coordinates (most redundant per compression sweep) |
+| `random` | INT{4,8} same count of random non-SW rows (10 seeds, mean ± std) |
+
+#### GENERator (perplexity, INT4) — positive result
+
+| Condition | Δ PPL | p vs random (t-test) |
+|---|---|---|
+| `yu_all` INT4 (all non-SW rows) | +0.159 | — |
+| `sw_fragility` INT4 (2 SW rows) | −0.013 | n.s. |
+| `near_sw` 30% (27 647 rows) | **−0.023** | **p = 0.0003** |
+| `random` 30% (27 647 rows) | +0.044 ± 0.037 | — |
+
+At INT4, **shadow-redundant (near-SW) rows tolerate lower precision better than random
+rows** — near_sw PPL holds flat or slightly decreases while random causes measurable
+degradation. The effect is consistent from 10%–30% (p ≤ 0.016) and absent at INT8
+(all Δ < 0.001), confirming that INT8 is too mild to reveal differential sensitivity
+in a 3B model. The SW rows themselves are insensitive to INT4 quantization when taken
+in isolation (n = 2, effect negligible), consistent with the model distributing the
+SW signal through the residual stream at all downstream layers.
+
+#### DNABERT-2 (GUE classification, INT4) — negative result
+
+INT4 quantization ablation across three GUE tasks (prom/prom_core_notata,
+splice/reconstructed, EMP/H3K4me3) shows no consistent signal:
+
+- All Δacc values are within ±0.002 (i.e. within test-set noise for a 117M model).
+- Scattered p < 0.05 values appear but with **inconsistent directionality** — near_sw
+  is sometimes worse than random, sometimes better, with no monotonic trend.
+- The cause is structural: DNABERT-2's 5 307–4 562 test-set samples yield accuracy
+  resolution of ~0.02%; INT4 RTN error (~1.5% relative per weight) cannot move the
+  classification boundary enough to differentiate row sensitivity at this granularity.
+
+**Interpretation**: classification accuracy on GUE tasks is too coarse a metric to
+detect differential quantization sensitivity. The GENERator perplexity result is the
+primary finding; these DNABERT-2 results are a documented negative.
+
+Run with:
+```bash
+# GENERator (perplexity mode, INT4)
+python scripts/run_quantization_ablation.py \
+    --model generator --bits 4 \
+    --out results/quant_ablation_generator_int4.json
+
+# DNABERT-2 (GUE classification, INT4)
+python scripts/run_quantization_ablation.py \
+    --model dnabert2 --task prom/prom_core_notata \
+    --gue_root $GUE_DATA_PATH \
+    --ckpt_dir results/gue_checkpoints/dnabert2_prom_core_notata \
+    --bits 4 \
+    --out results/quant_ablation_dnabert2_prom_core_notata_int4.json
+```
+
+Output files: `results/quant_ablation_{model}_{task}_int{bits}.{json,png}`
+
 ---
 
 ## Directory Structure
@@ -247,6 +312,7 @@ genomic-super-weights/
 │   ├── run_gue_per_row_ablation.py     # GUE ablation per individual SW row
 │   ├── analyze_superrow_proximity.py   # Monte-Carlo clustering analysis of SW coordinates
 │   ├── run_compression_sweep.py        # Progressive pruning sweep (5 criteria)
+│   ├── run_quantization_ablation.py    # RTN INT4/INT8 quantization sensitivity ablation
 │   └── *.sbatch                        # SLURM job scripts
 ├── results/
 │   ├── super_weight_index.json                          # Detected SW coordinates (all models)
@@ -255,6 +321,8 @@ genomic-super-weights/
 │   ├── gue_per_row_ablation.json                        # GUE ablation (per SW row)
 │   ├── compression_sweep_dnabert2_prom_core_notata.json # Compression sweep results
 │   ├── compression_sweep_dnabert2_prom_core_notata.png  # Compression sweep plot
+│   ├── quant_ablation_generator_int4.json               # Generator INT4 quant ablation
+│   ├── quant_ablation_dnabert2_*_int4.json              # DNABERT-2 INT4 quant ablation
 │   ├── superrow_proximity.png                           # SW clustering analysis plot
 │   └── *_activation_profile.png                        # Layer-wise activation plots
 ├── debug_generator.py          # GENERator activation profile + SW validation
@@ -315,7 +383,27 @@ python scripts/run_compression_sweep.py \
 Ranks all non-SW rows by five criteria and sweeps pruning fractions, producing
 a sensitivity curve and JSON + PNG output.
 
-### 5. Super-row proximity analysis
+### 5. Quantization sensitivity ablation
+
+```bash
+# GENERator — perplexity mode (INT4 recommended for visible signal)
+python scripts/run_quantization_ablation.py \
+    --model generator --bits 4 \
+    --out results/quant_ablation_generator_int4.json
+
+# DNABERT-2 — GUE classification mode (requires fine-tuned checkpoint)
+python scripts/run_quantization_ablation.py \
+    --model dnabert2 --task prom/prom_core_notata \
+    --gue_root $GUE_DATA_PATH \
+    --ckpt_dir results/gue_checkpoints/dnabert2_prom_core_notata \
+    --bits 4
+```
+
+Sweeps five conditions (baseline, yu_all, sw_fragility, near_sw, random) at increasing
+quantization fractions. Use `--bits 8` for INT8; default fracs are 1, 5, 10, 20, 30%.
+See Results section for interpretation.
+
+### 6. Super-row proximity analysis
 
 ```bash
 python scripts/analyze_superrow_proximity.py
