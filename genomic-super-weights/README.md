@@ -271,6 +271,77 @@ Output files: `results/quant_ablation_{model}_{task}_int{bits}.{json,png}`
 
 ---
 
+### Mechanistic Interpretability: Gradient Saliency + Causal Ablation
+
+Two complementary analyses targeting GENERator's layer-4 SW rows (2371 and 1522)
+over real genomic sequences from hg38 (promoters, enhancers, random regions).
+
+#### Gradient saliency (`run_sw_gradient_attribution.py`)
+
+Computes per-token saliency maps by backpropagating from the SW row activation
+back to the input embeddings:
+
+```
+saliency[t] = || d( |sw_act[..., sw_row]|.sum() ) / d(embed[t]) ||₂
+```
+
+Each token covers 6 bp (GENERator k-mer tokenizer). Saliency profiles are
+interpolated to a common fractional-position axis and averaged by genomic context.
+
+Run:
+```bash
+python scripts/run_sw_gradient_attribution.py \
+    --n_seqs 30 \
+    --promoters ../data/regions/hg38/promoters_262kb.bed \
+    --enhancers ../data/regions/hg38/enhancers_ccre_262kb.bed \
+    --random    ../data/regions/hg38/random_262kb.bed \
+    --out results/sw_grad_attribution.json \
+    --plot results/sw_grad_attribution.png
+```
+
+Output: per-token saliency JSON + saliency profile PNG (mean ± std by context).
+
+#### Causal ablation + activation shift (`run_sw_causal_tracing.py`)
+
+Two mechanistic sub-experiments:
+
+**A. SW row ablation (primary)**
+
+For each clean genomic sequence, zeros the SW rows at the MLP `down_proj` output
+and measures the perplexity increase vs. zeroing matched-count random rows:
+
+| Condition | ΔPPL (n=6 smoke test) | t-test vs random |
+|---|---|---|
+| SW rows zeroed (2 rows) | **+2.40 ± 0.75** | t=7.19, p=0.0008 |
+| Random rows zeroed (same count) | +0.000 ± 0.0003 | — |
+
+Zeroing 2 out of 3 072 MLP rows — the two SW rows — raises perplexity by ~2.4 nats,
+while zeroing any other 2 rows has zero measurable effect. The SW rows are causally
+necessary for prediction.
+
+**B. Activation distribution shift**
+
+Compares the SW row activation distributions between real genomic sequences and their
+dinucleotide-shuffled counterparts (shuffling preserves di-nucleotide frequency but
+destroys higher-order sequence context). Under smoke-test conditions the shift was
+near zero — consistent with GENERator's 6-mer tokenizer making the model highly
+sensitive to local k-mer composition, which dinucleotide shuffling preserves.
+
+Run:
+```bash
+python scripts/run_sw_causal_tracing.py \
+    --n_seqs 30 \
+    --promoters ../data/regions/hg38/promoters_262kb.bed \
+    --enhancers ../data/regions/hg38/enhancers_ccre_262kb.bed \
+    --random    ../data/regions/hg38/random_262kb.bed \
+    --out results/sw_causal_tracing.json \
+    --plot results/sw_causal_tracing.png
+```
+
+Output: ablation ΔPPL + activation shift JSON + dual-panel PNG.
+
+---
+
 ## Directory Structure
 
 ```
@@ -313,6 +384,8 @@ genomic-super-weights/
 │   ├── analyze_superrow_proximity.py   # Monte-Carlo clustering analysis of SW coordinates
 │   ├── run_compression_sweep.py        # Progressive pruning sweep (5 criteria)
 │   ├── run_quantization_ablation.py    # RTN INT4/INT8 quantization sensitivity ablation
+│   ├── run_sw_gradient_attribution.py  # Gradient saliency maps for SW rows (hg38 sequences)
+│   ├── run_sw_causal_tracing.py        # SW row ablation + activation-shift vs shuffled
 │   └── *.sbatch                        # SLURM job scripts
 ├── results/
 │   ├── super_weight_index.json                          # Detected SW coordinates (all models)
@@ -323,6 +396,8 @@ genomic-super-weights/
 │   ├── compression_sweep_dnabert2_prom_core_notata.png  # Compression sweep plot
 │   ├── quant_ablation_generator_int4.json               # Generator INT4 quant ablation
 │   ├── quant_ablation_dnabert2_*_int4.json              # DNABERT-2 INT4 quant ablation
+│   ├── sw_grad_attribution.json / .png                  # SW gradient saliency (hg38)
+│   ├── sw_causal_tracing.json / .png                    # SW ablation + activation shift
 │   ├── superrow_proximity.png                           # SW clustering analysis plot
 │   └── *_activation_profile.png                        # Layer-wise activation plots
 ├── debug_generator.py          # GENERator activation profile + SW validation
@@ -403,7 +478,29 @@ Sweeps five conditions (baseline, yu_all, sw_fragility, near_sw, random) at incr
 quantization fractions. Use `--bits 8` for INT8; default fracs are 1, 5, 10, 20, 30%.
 See Results section for interpretation.
 
-### 6. Super-row proximity analysis
+### 6. Mechanistic interpretability (gradient saliency + causal ablation)
+
+Requires hg38 FASTA and the BED region files under `../data/regions/hg38/`.
+
+```bash
+# Gradient saliency: which token positions drive the SW activation?
+python scripts/run_sw_gradient_attribution.py \
+    --n_seqs 30 \
+    --promoters ../data/regions/hg38/promoters_262kb.bed \
+    --enhancers ../data/regions/hg38/enhancers_ccre_262kb.bed \
+    --random    ../data/regions/hg38/random_262kb.bed
+
+# Causal ablation: are the SW rows necessary? Do they differentiate real vs. shuffled seqs?
+python scripts/run_sw_causal_tracing.py \
+    --n_seqs 30 \
+    --promoters ../data/regions/hg38/promoters_262kb.bed \
+    --enhancers ../data/regions/hg38/enhancers_ccre_262kb.bed \
+    --random    ../data/regions/hg38/random_262kb.bed
+```
+
+Smoke test with `--n_seqs 2` first to confirm FASTA/BED paths are accessible.
+
+### 7. Super-row proximity analysis
 
 ```bash
 python scripts/analyze_superrow_proximity.py
