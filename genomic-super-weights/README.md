@@ -288,6 +288,20 @@ saliency[t] = || d( |sw_act[..., sw_row]|.sum() ) / d(embed[t]) ||₂
 Each token covers 6 bp (GENERator k-mer tokenizer). Saliency profiles are
 interpolated to a common fractional-position axis and averaged by genomic context.
 
+Full run on 30 sequences per context (hg38, 3 072 bp windows):
+
+| Context | n | Peak saliency (mean ± std) | Mean saliency |
+|---|---|---|---|
+| Enhancer | 30 | 1 311 584 ± 896 735 | 2 763 ± 1 838 |
+| Promoter | 30 | 1 093 148 ± 788 296 | 2 284 ± 1 508 |
+| Random   | 30 |   883 867 ± 595 994 | 1 876 ± 1 150 |
+
+Enhancer saliency is significantly higher than random (t=2.14, p=0.037).
+Promoter vs random is not significant (p=0.26).
+High within-context variance: the SW row responds heterogeneously,
+suggesting sensitivity depends on specific k-mer content rather than
+gross region class.
+
 Run:
 ```bash
 python scripts/run_sw_gradient_attribution.py \
@@ -310,22 +324,25 @@ Two mechanistic sub-experiments:
 For each clean genomic sequence, zeros the SW rows at the MLP `down_proj` output
 and measures the perplexity increase vs. zeroing matched-count random rows:
 
-| Condition | ΔPPL (n=6 smoke test) | t-test vs random |
-|---|---|---|
-| SW rows zeroed (2 rows) | **+2.40 ± 0.75** | t=7.19, p=0.0008 |
-| Random rows zeroed (same count) | +0.000 ± 0.0003 | — |
+Full run (n=90 sequences: 30 per context, hg38 3 072 bp windows):
 
-Zeroing 2 out of 3 072 MLP rows — the two SW rows — raises perplexity by ~2.4 nats,
-while zeroing any other 2 rows has zero measurable effect. The SW rows are causally
-necessary for prediction.
+| Condition | ΔPPL (mean ± std) | t-test vs random |
+|---|---|---|
+| SW rows zeroed (2 rows, rows 1522+2371) | **+2.92 ± 1.33** | t=20.74, p<0.0001 |
+| Random rows zeroed (same count, 10 seeds) | +0.000 ± 0.0003 | — |
+
+Zeroing 2 out of 3 072 MLP rows — the two SW rows — raises perplexity by ~2.9 nats
+on average (ranging from +1.0 to +7.8 depending on sequence), while zeroing any other
+pair of rows has zero measurable effect. The SW rows are causally necessary for prediction.
 
 **B. Activation distribution shift**
 
 Compares the SW row activation distributions between real genomic sequences and their
 dinucleotide-shuffled counterparts (shuffling preserves di-nucleotide frequency but
-destroys higher-order sequence context). Under smoke-test conditions the shift was
-near zero — consistent with GENERator's 6-mer tokenizer making the model highly
-sensitive to local k-mer composition, which dinucleotide shuffling preserves.
+destroys higher-order sequence context). Full-run result: mean shift = +0.0002 (p = 0.15, n.s.,
+n=90 sequences) — the SW rows fire with equal intensity on real and shuffled sequences.
+This is consistent with GENERator's 6-mer tokenizer limiting sensitivity to local k-mer
+composition, which dinucleotide shuffling largely preserves.
 
 Run:
 ```bash
