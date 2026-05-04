@@ -359,6 +359,139 @@ Output: ablation ΔPPL + activation shift JSON + dual-panel PNG.
 
 ---
 
+### Stronger Shuffle Controls (`run_sw_shuffle_controls.py`)
+
+The original Experiment B (dinucleotide shuffle) found no significant SW activation shift
+(p = 0.15). The null was attributed to GENERator's 6-mer tokenizer: dinucleotide shuffling
+preserves 2-mer frequencies and therefore largely preserves local 6-mer composition — the
+primary feature the model sees. This script tests three progressively stronger shuffles:
+
+| Shuffle type | What it preserves | What it destroys |
+|---|---|---|
+| `dinuc` | Per-dinucleotide frequency | k-mer order and composition above 2-mers |
+| `mono` | Per-base GC composition only | All k>1 context, 6-mer frequencies |
+| `kmer_block` | Per-token identity distribution (same bag of 6-mers) | Token order and all inter-token context |
+
+**Prediction**: if the SW is sensitive to any sequence context above the 2-mer level, the
+mono shuffle should yield a significant shift. If it is sensitive to token *order* but not
+*identity*, the kmer_block shuffle should diverge from mono.
+
+Run:
+```bash
+python scripts/run_sw_shuffle_controls.py \
+    --n_seqs 30 \
+    --promoters data/regions/hg38/promoters_262kb.bed \
+    --enhancers data/regions/hg38/enhancers_ccre_262kb.bed \
+    --random    data/regions/hg38/random_262kb.bed \
+    --n_shuffles 5 \
+    --out  results/sw_shuffle_controls.json \
+    --plot results/sw_shuffle_controls.png
+```
+
+Output: per-sequence activation shift by shuffle type, t-tests, and comparison bar chart.
+
+---
+
+### K-mer Motif Cross-Reference (`analyze_sw_kmer_motifs.py`)
+
+After running `run_sw_kmer_scan.py`, cross-references the top-K SW-activating 6-mers
+against a curated dictionary of known regulatory DNA motifs (11 classes):
+
+| Motif class | Description |
+|---|---|
+| `TATA_box` | TATAAA and common variants |
+| `Kozak` | GCC[R]CC and ATG-context k-mers |
+| `splice_donor` | GT-containing exon-intron junction k-mers |
+| `splice_acceptor` | Pyrimidine-rich + AG junction k-mers |
+| `Shine_Dalgarno` | AGG/AGGAGG (prokaryote ribosome binding) |
+| `CCAAT_box` | Eukaryotic −80 promoter element |
+| `GC_box_Sp1` | GGGCGG / Sp1 binding site |
+| `E_box` | CA[ACGT][ACGT]TG — bHLH binding |
+| `AP1_TRE` | TGA[C/G]TC |
+| `NFkB` | GGG[R]NN family |
+| `CpG_rich` | ≥ 2 CpG dinucleotides in the 6-mer |
+| `AT_rich` | ≥ 5/6 A or T bases |
+| `homopolymer_run` | ≥ 4 consecutive identical bases |
+
+Enrichment is computed via one-sided Fisher's exact test with Benjamini-Hochberg correction.
+Also reports per-position nucleotide log₂FC (foreground vs background) to identify structural
+biases in SW-activating k-mers.
+
+Run:
+```bash
+python scripts/analyze_sw_kmer_motifs.py \
+    --kmer_scan results/sw_kmer_scan.json \
+    --top_k 200 \
+    --out  results/sw_kmer_motifs.json \
+    --plot results/sw_kmer_motifs.png
+```
+
+No GPU required. Output: enrichment table JSON + 4-panel figure.
+
+---
+
+### Attribution Method Comparison (`compare_attribution_methods.py`)
+
+Measures per-sequence agreement between gradient saliency (from
+`run_sw_gradient_attribution.py`) and token omission (from `run_sw_token_omission.py`)
+by computing Spearman ρ, Kendall τ, and Pearson r between the two attribution vectors
+on matched sequences.
+
+Both methods ask "which positions drive the SW activation?" but differ fundamentally:
+gradient saliency backpropagates linear sensitivity; token omission measures functional
+perturbation impact. High agreement validates both; divergence reveals gradient saturation
+or non-local synergy effects.
+
+Run:
+```bash
+python scripts/compare_attribution_methods.py \
+    --grad results/sw_grad_attribution.json \
+    --omit results/sw_token_omission.json \
+    --out  results/attribution_comparison.json \
+    --plot results/attribution_comparison.png
+```
+
+No GPU required. Requires both attribution result files to exist.
+Output: per-sequence Spearman ρ, aggregate t-tests by genomic context, overlay profile plots.
+
+---
+
+## Overall Synthesis — GENERator 3B SW Row 2371
+
+Six interpretability experiments consistently characterise SW row 2371 (layer 4,
+out_max = 375 361) as a **context-insensitive housekeeping super-weight**.
+
+### Per-experiment findings
+
+| Step | Experiment | Key result |
+|------|-----------|-----------|
+| 1 | K-mer scan | Nearly all 4 096 6-mers activate the SW (IQR 387K–409K). Only poly-A (AAAAAA) ≈ 0. Top-5: CCT/CAG-family GC-rich k-mers. GC correlation r = +0.19. |
+| 2 | Token omission | No significant context specificity (enhancer vs random p = 0.087, promoter p = 0.29). Peak omission tokens cluster at sequence start — likely a 384 bp window edge artifact. |
+| 3 | Shuffle controls | **All three shuffles (mono, dinuc, kmer_block) produce zero mean activation shift (p > 0.35).** The SW is completely insensitive to nucleotide composition and k-mer order at the 3 072 bp scale. |
+| 4 | Motif enrichment | No motif reaches FDR < 0.05 (Fisher exact, BH-corrected). Strongest hint: NF-κB (OR = 3.1, p_adj = 0.16). AT-rich, CpG-rich, TATA-box, splice donor all depleted (OR ≈ 0). |
+| 5 | Attribution comparison | Gradient vs omission agreement: mean Spearman ρ = +0.043 (p = 0.040), 46.7% of sequences ρ < 0. Enhancers show the best agreement (ρ = +0.10). Gradient saliency is unreliable for this neuron, likely due to activation saturation. |
+| 6 | Ablation regression | Sequence composition explains only R² = 0.158 of variance in ΔSW. Complexity (β = −1.48) and k-mer entropy (β = +1.05) are the dominant predictors. Ablation disrupts perplexity by +2.7–3.3 log-PPL units equally across all genomic contexts. |
+
+### Biological interpretation
+
+SW row 2371 functions as a **global gain-control neuron**. Its impact derives from its
+extreme magnitude (max activation ~437 K), not from sequence selectivity. Ablating it
+disrupts the model regardless of what sequence is being processed. This contrasts with
+what one would expect from a biologically tuned regulatory-element detector.
+
+The mild NF-κB k-mer enrichment (OR = 3.1) is a weak but interesting signal that warrants
+re-testing with a larger foreground set (top-500) and direct comparison to CTCF ChIP-seq data,
+as the CCT/CAG dominant k-mers partially overlap the CTCF/CCCTC binding grammar.
+
+### Recommended next steps
+
+1. Re-run token omission with `--window_bp 3072` to eliminate the start-of-sequence edge artifact.
+2. Scan additional SW rows (not only row 2371) to find context-specific neurons.
+3. Test NF-κB enrichment at larger k (top-500 foreground) and cross-reference with CTCF ChIP-seq.
+4. Run causal tracing on matched random neurons to confirm the SW uniqueness phenotype.
+
+---
+
 ## Directory Structure
 
 ```
@@ -403,6 +536,9 @@ genomic-super-weights/
 │   ├── run_quantization_ablation.py    # RTN INT4/INT8 quantization sensitivity ablation
 │   ├── run_sw_gradient_attribution.py  # Gradient saliency maps for SW rows (hg38 sequences)
 │   ├── run_sw_causal_tracing.py        # SW row ablation + activation-shift vs shuffled
+│   ├── run_sw_shuffle_controls.py      # Stronger shuffle controls (mono, kmer-block)
+│   ├── analyze_sw_kmer_motifs.py       # Motif enrichment in top SW-activating k-mers
+│   ├── compare_attribution_methods.py  # Spearman ρ between gradient saliency + token omission
 │   └── *.sbatch                        # SLURM job scripts
 ├── results/
 │   ├── super_weight_index.json                          # Detected SW coordinates (all models)
