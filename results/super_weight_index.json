@@ -1,0 +1,122 @@
+{
+  "dnabert2": {
+    "mode": "superrow",
+    "results": [
+      {
+        "layer": 5,
+        "row": 603,
+        "col": 1062,
+        "in_max": 240.1565704345703,
+        "out_max": 944.5556030273438
+      },
+      {
+        "layer": 3,
+        "row": 86,
+        "col": 2056,
+        "in_max": 221.65956115722656,
+        "out_max": 732.0044555664062
+      },
+      {
+        "layer": 3,
+        "row": 399,
+        "col": 2056,
+        "in_max": 221.65956115722656,
+        "out_max": 703.0081787109375
+      },
+      {
+        "layer": 9,
+        "row": 264,
+        "col": 1758,
+        "in_max": 93.55359649658203,
+        "out_max": 652.98046875
+      },
+      {
+        "layer": 9,
+        "row": 294,
+        "col": 1758,
+        "in_max": 93.55359649658203,
+        "out_max": 620.5692138671875
+      },
+      {
+        "layer": 3,
+        "row": 603,
+        "col": 2056,
+        "in_max": 221.65956115722656,
+        "out_max": 618.130859375
+      },
+      {
+        "layer": 3,
+        "row": 641,
+        "col": 2056,
+        "in_max": 221.65956115722656,
+        "out_max": 413.516357421875
+      },
+      {
+        "layer": 7,
+        "row": 603,
+        "col": 2638,
+        "in_max": 36.6240119934082,
+        "out_max": 284.98370361328125
+      },
+      {
+        "layer": 6,
+        "row": 603,
+        "col": 979,
+        "in_max": 40.26342010498047,
+        "out_max": 204.93359375
+      },
+      {
+        "layer": 5,
+        "row": 86,
+        "col": 1062,
+        "in_max": 89.93877410888672,
+        "out_max": 137.55137634277344
+      }
+    ]
+  },
+  "generator": {
+    "mode": "superrow",
+    "results": [
+      {
+        "layer": 4,
+        "row": 2371,
+        "col": 2536,
+        "in_max": 67550.9296875,
+        "out_max": 375361.3125
+      },
+      {
+        "layer": 4,
+        "row": 1522,
+        "col": 2536,
+        "in_max": 67550.9296875,
+        "out_max": 143880.203125
+      }
+    ]
+  },
+  "generator_prokaryote": {
+    "mode": "superrow",
+    "source": "detection_run_sbatch",
+    "results": [
+      {
+        "layer": 2,
+        "row": 1927,
+        "col": 1769,
+        "out_max": 506014.0,
+        "in_max": null
+      }
+    ]
+  },
+  "generator_prokaryote_1b": {
+    "mode": "superrow",
+    "source": "detection_run_sbatch",
+    "results": [
+      {
+        "layer": 2,
+        "row": 1397,
+        "col": 63,
+        "out_max": 85983.0,
+        "in_max": null
+      }
+    ]
+  }
+}

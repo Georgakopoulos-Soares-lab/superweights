@@ -1,0 +1,10 @@
+model_id: "InstaDeepAI/NTv3_650M_pre"
+model_type: "ntv3"
+hf_trust_remote_code: true
+# NTv3 is a bidirectional masked LM (encoder).
+# Standard transformer MLP: the down-projection is the second dense layer in each FFN block.
+down_proj_pattern: "core.transformer_blocks.{i}.fc2"   # confirmed by inspect_ntv3.py
+num_layers: 12                                          # 12 transformer blocks (indices 0–11)
+dtype: "float32"
+device: "cuda"
+causal: false

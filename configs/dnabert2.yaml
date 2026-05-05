@@ -1,0 +1,10 @@
+model_id: "zhihan1996/DNABERT-2-117M"
+model_type: "dnabert2"
+hf_trust_remote_code: true
+# DNABERT-2 uses a Gated Linear Unit MLP per layer.
+# Down-projection: BertGatedLinearUnitMLP.wo  (in=3072, out=768)
+down_proj_pattern: "bert.encoder.layer.{i}.mlp.wo"
+num_layers: 12
+dtype: "float32"
+device: "cuda"
+causal: false

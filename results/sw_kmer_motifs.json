@@ -1,0 +1,290 @@
+{
+  "kmer_scan_file": "genomic-super-weights/results/sw_kmer_scan.json",
+  "top_k": 200,
+  "total_kmers": 4096,
+  "motif_results": [
+    {
+      "motif": "NFkB",
+      "obs_in_top_k": 7,
+      "expected": 2.54,
+      "motif_size": 52,
+      "odds_ratio": 3.1039,
+      "p_value": 0.012282,
+      "p_adj": 0.159668,
+      "top_k_members": [
+        "ACTCCC",
+        "GATCCC",
+        "GGGAGT",
+        "GGGGAC",
+        "GGGGAT",
+        "GGGGCT",
+        "GGTCCC"
+      ]
+    },
+    {
+      "motif": "CCAAT_box",
+      "obs_in_top_k": 2,
+      "expected": 0.39,
+      "motif_size": 8,
+      "odds_ratio": 6.5488,
+      "p_value": 0.054689,
+      "p_adj": 0.355479,
+      "top_k_members": [
+        "CCAATG",
+        "CCAATT"
+      ]
+    },
+    {
+      "motif": "TATA_box",
+      "obs_in_top_k": 0,
+      "expected": 0.39,
+      "motif_size": 8,
+      "odds_ratio": 0.0,
+      "p_value": 1.0,
+      "p_adj": 1.0,
+      "top_k_members": []
+    },
+    {
+      "motif": "Kozak",
+      "obs_in_top_k": 4,
+      "expected": 3.32,
+      "motif_size": 68,
+      "odds_ratio": 1.2219,
+      "p_value": 0.426404,
+      "p_adj": 1.0,
+      "top_k_members": [
+        "CAATGT",
+        "CCATGA",
+        "CCATGG",
+        "CCATGT"
+      ]
+    },
+    {
+      "motif": "splice_donor",
+      "obs_in_top_k": 0,
+      "expected": 1.9,
+      "motif_size": 39,
+      "odds_ratio": 0.0,
+      "p_value": 1.0,
+      "p_adj": 1.0,
+      "top_k_members": []
+    },
+    {
+      "motif": "splice_acceptor",
+      "obs_in_top_k": 1,
+      "expected": 1.12,
+      "motif_size": 23,
+      "odds_ratio": 0.8849,
+      "p_value": 0.684808,
+      "p_adj": 1.0,
+      "top_k_members": [
+        "CCTAAG"
+      ]
+    },
+    {
+      "motif": "Shine_Dalgarno",
+      "obs_in_top_k": 0,
+      "expected": 0.29,
+      "motif_size": 6,
+      "odds_ratio": 0.0,
+      "p_value": 1.0,
+      "p_adj": 1.0,
+      "top_k_members": []
+    },
+    {
+      "motif": "GC_box_Sp1",
+      "obs_in_top_k": 0,
+      "expected": 0.34,
+      "motif_size": 7,
+      "odds_ratio": 0.0,
+      "p_value": 1.0,
+      "p_adj": 1.0,
+      "top_k_members": []
+    },
+    {
+      "motif": "E_box",
+      "obs_in_top_k": 1,
+      "expected": 0.78,
+      "motif_size": 16,
+      "odds_ratio": 1.3002,
+      "p_value": 0.551782,
+      "p_adj": 1.0,
+      "top_k_members": [
+        "CACCTG"
+      ]
+    },
+    {
+      "motif": "AP1_TRE",
+      "obs_in_top_k": 0,
+      "expected": 0.29,
+      "motif_size": 6,
+      "odds_ratio": 0.0,
+      "p_value": 1.0,
+      "p_adj": 1.0,
+      "top_k_members": []
+    },
+    {
+      "motif": "CpG_rich",
+      "obs_in_top_k": 0,
+      "expected": 4.59,
+      "motif_size": 94,
+      "odds_ratio": 0.0,
+      "p_value": 1.0,
+      "p_adj": 1.0,
+      "top_k_members": []
+    },
+    {
+      "motif": "AT_rich",
+      "obs_in_top_k": 0,
+      "expected": 21.88,
+      "motif_size": 448,
+      "odds_ratio": 0.0,
+      "p_value": 1.0,
+      "p_adj": 1.0,
+      "top_k_members": []
+    },
+    {
+      "motif": "homopolymer_run",
+      "obs_in_top_k": 10,
+      "expected": 7.81,
+      "motif_size": 160,
+      "odds_ratio": 1.3144,
+      "p_value": 0.25367,
+      "p_adj": 1.0,
+      "top_k_members": [
+        "AGCCCC",
+        "CCCCAT",
+        "CCCCGT",
+        "CGGGGA",
+        "GCCCCT",
+        "GGCCCC",
+        "GGGGAC",
+        "GGGGAT",
+        "GGGGCT",
+        "TGGGGC"
+      ]
+    }
+  ],
+  "position_enrichment": {
+    "fg_freq": [
+      [
+        0.125,
+        0.53,
+        0.235,
+        0.11
+      ],
+      [
+        0.155,
+        0.635,
+        0.175,
+        0.035
+      ],
+      [
+        0.225,
+        0.375,
+        0.075,
+        0.325
+      ],
+      [
+        0.175,
+        0.245,
+        0.3,
+        0.28
+      ],
+      [
+        0.17,
+        0.21,
+        0.445,
+        0.175
+      ],
+      [
+        0.15,
+        0.16,
+        0.185,
+        0.505
+      ]
+    ],
+    "bg_freq": [
+      [
+        0.25641683778234087,
+        0.23562628336755648,
+        0.2507700205338809,
+        0.2571868583162218
+      ],
+      [
+        0.2548767967145791,
+        0.23023613963039014,
+        0.2538501026694045,
+        0.2610369609856263
+      ],
+      [
+        0.2512833675564682,
+        0.24358316221765913,
+        0.2589835728952772,
+        0.24614989733059547
+      ],
+      [
+        0.2538501026694045,
+        0.25025667351129366,
+        0.24743326488706366,
+        0.24845995893223818
+      ],
+      [
+        0.25410677618069816,
+        0.25205338809034905,
+        0.23998973305954827,
+        0.2538501026694045
+      ],
+      [
+        0.2551334702258727,
+        0.2546201232032854,
+        0.25333675564681724,
+        0.23690965092402463
+      ]
+    ],
+    "log2fc": [
+      [
+        -1.0365569905511893,
+        1.1694884827232221,
+        -0.09370374191715344,
+        -1.2253058964103782
+      ],
+      [
+        -0.7175281775052768,
+        1.463638289979324,
+        -0.5366193608029166,
+        -2.898791576996767
+      ],
+      [
+        -0.1593895102986013,
+        0.6224741101733693,
+        -1.7878844259782656,
+        0.40090115834205453
+      ],
+      [
+        -0.5366193608029166,
+        -0.030626668524874345,
+        0.27792201003038286,
+        0.17241280302593806
+      ],
+      [
+        -0.5798972924964161,
+        -0.2633388730246306,
+        0.8908298790327238,
+        -0.5366193608029166
+      ],
+      [
+        -0.7662857103680754,
+        -0.6702711873207299,
+        -0.45352903295000907,
+        1.0919431846031855
+      ]
+    ],
+    "nt_order": [
+      "A",
+      "C",
+      "G",
+      "T"
+    ]
+  }
+}

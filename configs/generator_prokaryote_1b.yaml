@@ -1,0 +1,10 @@
+model_id: "GenerTeam/GENERator-v2-prokaryote-1.2b-base"
+model_type: "generator"
+hf_trust_remote_code: true
+# GENERator prokaryote 1.2b variant — same LlamaForCausalLM architecture.
+# Sequences must be multiples of 6 bp (6-mer tokenizer) — handled in wrapper.
+down_proj_pattern: "model.layers.{i}.mlp.down_proj"
+num_layers: 26
+dtype: "float32"
+device: "cuda"
+causal: true

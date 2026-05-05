@@ -1,0 +1,15 @@
+model_id: "evo2_7b"
+model_type: "evo2"
+hf_trust_remote_code: true
+# Evo 2 is StripedHyena2: 32 blocks total (27 x ParallelGatedConvBlock + 5 x AttentionBlock).
+# ALL blocks have a ParallelGatedMLP with l1/l2 (up, GLU) and l3 (down-proj).
+# Root is evo2.model (StripedHyena) — no backbone. prefix.
+# l3: in=11264, out=4096 — this is the down-proj (equivalent to MLP down_proj in GPT-style).
+down_proj_pattern: "blocks.{i}.mlp.l3"
+num_layers: 32
+hidden_dim: 4096
+dtype: "float16"
+device: "cuda"
+causal: true
+# Attention-only block indices (subset scan): 3, 10, 17, 24, 31
+attention_block_indices: [3, 10, 17, 24, 31]

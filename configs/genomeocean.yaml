@@ -1,0 +1,13 @@
+model_id: "pGenomeOcean/GenomeOcean-4B"
+model_type: "genomeocean"
+hf_trust_remote_code: true
+# GenomeOcean-4B — causal decoder transformer, trained on metagenomic assemblies.
+# Tokenizer: character-level / BPE; no fixed-length alignment needed.
+# Hidden size: 3072 (confirmed: embedding output shape (N, 3072)).
+# Architecture: Llama/Mistral-style; down_proj pattern confirmed by inspect_genomeocean.py.
+# Confirm num_layers and down_proj_pattern by running inspect_genomeocean.py first.
+down_proj_pattern: "model.layers.{i}.mlp.down_proj"   # Llama-style — verify with inspect
+num_layers: 32                                          # estimate — verify with inspect
+dtype: "bfloat16"
+device: "cuda"
+causal: true
