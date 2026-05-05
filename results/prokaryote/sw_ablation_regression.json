@@ -1,0 +1,1308 @@
+{
+  "n_seqs": 90,
+  "features": [
+    "gc_frac",
+    "cpg_density",
+    "kmer_entropy",
+    "repeat_frac",
+    "complexity"
+  ],
+  "regression_standardised": {
+    "intercept": 9.47306678957408,
+    "coefs": {
+      "gc_frac": -0.3059786384326765,
+      "cpg_density": -0.2751312221821204,
+      "kmer_entropy": -0.30744995757966076,
+      "repeat_frac": -0.02716657893654166,
+      "complexity": 0.40455861277526983
+    },
+    "r2": 0.347058944361448,
+    "pearson_r": {
+      "gc_frac": -0.51962227631769,
+      "cpg_density": -0.496065323901799,
+      "kmer_entropy": 0.19007905316804857,
+      "repeat_frac": -0.0910259422729369,
+      "complexity": 0.18908895982980242
+    }
+  },
+  "regression_raw": {
+    "intercept": 61.96897552616633,
+    "coefs": {
+      "gc_frac": -7.353001109468611,
+      "cpg_density": -2.671658486104317,
+      "kmer_entropy": -7.488952521739228,
+      "repeat_frac": -23.407142254787978,
+      "complexity": 22.20864468163815
+    },
+    "r2": 0.3470589443614477,
+    "pearson_r": {
+      "gc_frac": -0.5196222763176899,
+      "cpg_density": -0.4960653239017992,
+      "kmer_entropy": 0.19007905316804855,
+      "repeat_frac": -0.0910259422729369,
+      "complexity": 0.1890889598298024
+    }
+  },
+  "records": [
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 953704,
+      "delta_sw": 9.022489219903946,
+      "clean_ppl": 0.49794802069664,
+      "features": {
+        "gc_frac": 0.4811197916666667,
+        "cpg_density": 1.1195663321368396,
+        "kmer_entropy": 8.697151074168044,
+        "repeat_frac": 0.0,
+        "complexity": 0.857421875
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 220145,
+      "delta_sw": 8.680491983890533,
+      "clean_ppl": 0.7427076697349548,
+      "features": {
+        "gc_frac": 0.5146484375,
+        "cpg_density": 1.160325086665237,
+        "kmer_entropy": 8.683000463820708,
+        "repeat_frac": 0.0019569471624266144,
+        "complexity": 0.849609375
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 2295530,
+      "delta_sw": 8.766219556331635,
+      "clean_ppl": 0.7453179955482483,
+      "features": {
+        "gc_frac": 0.5579427083333334,
+        "cpg_density": 1.0607968302883557,
+        "kmer_entropy": 8.721622412084022,
+        "repeat_frac": 0.0019569471624266144,
+        "complexity": 0.8671875
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 2019937,
+      "delta_sw": 9.014231324195862,
+      "clean_ppl": 0.7485955953598022,
+      "features": {
+        "gc_frac": 0.5413411458333334,
+        "cpg_density": 1.1651321960879686,
+        "kmer_entropy": 8.79046052243136,
+        "repeat_frac": 0.0,
+        "complexity": 0.900390625
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 1862621,
+      "delta_sw": 9.326801776885986,
+      "clean_ppl": 0.9287838935852051,
+      "features": {
+        "gc_frac": 0.4798177083333333,
+        "cpg_density": 1.0866943395809268,
+        "kmer_entropy": 8.816846801736684,
+        "repeat_frac": 0.0,
+        "complexity": 0.9140625
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 1192136,
+      "delta_sw": 9.12556654214859,
+      "clean_ppl": 0.2522220015525818,
+      "features": {
+        "gc_frac": 0.5358072916666666,
+        "cpg_density": 1.1794308395648014,
+        "kmer_entropy": 8.72776547268505,
+        "repeat_frac": 0.0,
+        "complexity": 0.87109375
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 871740,
+      "delta_sw": 9.358790099620819,
+      "clean_ppl": 0.5767567753791809,
+      "features": {
+        "gc_frac": 0.5094401041666666,
+        "cpg_density": 1.216031667491341,
+        "kmer_entropy": 8.805644970694674,
+        "repeat_frac": 0.0019569471624266144,
+        "complexity": 0.90625
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 4605654,
+      "delta_sw": 9.565713703632355,
+      "clean_ppl": 0.729261577129364,
+      "features": {
+        "gc_frac": 0.5029296875,
+        "cpg_density": 1.1763314881496212,
+        "kmer_entropy": 8.79807797268505,
+        "repeat_frac": 0.0019569471624266144,
+        "complexity": 0.90625
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 744093,
+      "delta_sw": 9.061263144016266,
+      "clean_ppl": 0.6234483122825623,
+      "features": {
+        "gc_frac": 0.5426432291666666,
+        "cpg_density": 1.2231053653138475,
+        "kmer_entropy": 8.745059912084022,
+        "repeat_frac": 0.0019569471624266144,
+        "complexity": 0.876953125
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 3521169,
+      "delta_sw": 9.689313530921936,
+      "clean_ppl": 0.5332397222518921,
+      "features": {
+        "gc_frac": 0.5602213541666666,
+        "cpg_density": 1.1369882026370577,
+        "kmer_entropy": 8.77092927243136,
+        "repeat_frac": 0.0,
+        "complexity": 0.89453125
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 269110,
+      "delta_sw": 7.923604488372803,
+      "clean_ppl": 3.3757452964782715,
+      "features": {
+        "gc_frac": 0.5026041666666666,
+        "cpg_density": 0.9948787478102116,
+        "kmer_entropy": 8.811983081042012,
+        "repeat_frac": 0.0,
+        "complexity": 0.908203125
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 256377,
+      "delta_sw": 9.429747521877289,
+      "clean_ppl": 0.5249214768409729,
+      "features": {
+        "gc_frac": 0.5143229166666666,
+        "cpg_density": 1.132155286788317,
+        "kmer_entropy": 8.846181860347336,
+        "repeat_frac": 0.0,
+        "complexity": 0.923828125
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 795712,
+      "delta_sw": 9.35637366771698,
+      "clean_ppl": 0.6808463335037231,
+      "features": {
+        "gc_frac": 0.51171875,
+        "cpg_density": 1.0957990201188368,
+        "kmer_entropy": 8.785596801736684,
+        "repeat_frac": 0.0019569471624266144,
+        "complexity": 0.900390625
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 1825087,
+      "delta_sw": 8.872865200042725,
+      "clean_ppl": 0.8791298866271973,
+      "features": {
+        "gc_frac": 0.4947916666666667,
+        "cpg_density": 1.1702472126458177,
+        "kmer_entropy": 8.814414941389348,
+        "repeat_frac": 0.0019569471624266144,
+        "complexity": 0.91015625
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 1932906,
+      "delta_sw": 8.889807879924774,
+      "clean_ppl": 0.9025686383247375,
+      "features": {
+        "gc_frac": 0.541015625,
+        "cpg_density": 1.0351005611907003,
+        "kmer_entropy": 8.690617914074398,
+        "repeat_frac": 0.0,
+        "complexity": 0.857421875
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 4259087,
+      "delta_sw": 8.931314706802368,
+      "clean_ppl": 0.7005612850189209,
+      "features": {
+        "gc_frac": 0.4837239583333333,
+        "cpg_density": 1.1627279824001135,
+        "kmer_entropy": 8.780216162084022,
+        "repeat_frac": 0.0,
+        "complexity": 0.89453125
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 230972,
+      "delta_sw": 9.553755730390549,
+      "clean_ppl": 0.4065418541431427,
+      "features": {
+        "gc_frac": 0.4915364583333333,
+        "cpg_density": 1.1803444355551813,
+        "kmer_entropy": 8.844707470694674,
+        "repeat_frac": 0.0,
+        "complexity": 0.923828125
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 1657607,
+      "delta_sw": 10.039052426815033,
+      "clean_ppl": 0.605133593082428,
+      "features": {
+        "gc_frac": 0.478515625,
+        "cpg_density": 1.1790738423028786,
+        "kmer_entropy": 8.832988720694674,
+        "repeat_frac": 0.0,
+        "complexity": 0.91796875
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 4603327,
+      "delta_sw": 9.544809579849243,
+      "clean_ppl": 0.7707431316375732,
+      "features": {
+        "gc_frac": 0.4567057291666667,
+        "cpg_density": 1.0755032669095645,
+        "kmer_entropy": 8.835420581042012,
+        "repeat_frac": 0.0,
+        "complexity": 0.919921875
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 3501118,
+      "delta_sw": 8.571332812309265,
+      "clean_ppl": 0.7209454774856567,
+      "features": {
+        "gc_frac": 0.5319010416666666,
+        "cpg_density": 1.220421918662525,
+        "kmer_entropy": 8.780733081042012,
+        "repeat_frac": 0.0,
+        "complexity": 0.896484375
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 1838597,
+      "delta_sw": 8.945007860660553,
+      "clean_ppl": 0.5123409628868103,
+      "features": {
+        "gc_frac": 0.5416666666666666,
+        "cpg_density": 0.9724554221883023,
+        "kmer_entropy": 8.741670581042012,
+        "repeat_frac": 0.0,
+        "complexity": 0.880859375
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 3776530,
+      "delta_sw": 9.637383997440338,
+      "clean_ppl": 0.8470749258995056,
+      "features": {
+        "gc_frac": 0.5013020833333334,
+        "cpg_density": 1.1036213587811752,
+        "kmer_entropy": 8.801738720694674,
+        "repeat_frac": 0.0,
+        "complexity": 0.90234375
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 2321716,
+      "delta_sw": 9.604586124420166,
+      "clean_ppl": 0.7040915489196777,
+      "features": {
+        "gc_frac": 0.4908854166666667,
+        "cpg_density": 1.1199692842562439,
+        "kmer_entropy": 8.835420581042012,
+        "repeat_frac": 0.0,
+        "complexity": 0.919921875
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 54852,
+      "delta_sw": 9.055471062660217,
+      "clean_ppl": 0.4582303762435913,
+      "features": {
+        "gc_frac": 0.517578125,
+        "cpg_density": 1.1762740183792815,
+        "kmer_entropy": 8.792451831042012,
+        "repeat_frac": 0.0,
+        "complexity": 0.8984375
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 1340408,
+      "delta_sw": 9.076699912548065,
+      "clean_ppl": 0.8490851521492004,
+      "features": {
+        "gc_frac": 0.5013020833333334,
+        "cpg_density": 1.1138808124758555,
+        "kmer_entropy": 8.844707470694674,
+        "repeat_frac": 0.0019569471624266144,
+        "complexity": 0.923828125
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 3526319,
+      "delta_sw": 9.276347815990448,
+      "clean_ppl": 0.814782440662384,
+      "features": {
+        "gc_frac": 0.5149739583333334,
+        "cpg_density": 1.1685518246635245,
+        "kmer_entropy": 8.825176220694674,
+        "repeat_frac": 0.0019569471624266144,
+        "complexity": 0.916015625
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 2850585,
+      "delta_sw": 8.965323269367218,
+      "clean_ppl": 0.6282598376274109,
+      "features": {
+        "gc_frac": 0.5361328125,
+        "cpg_density": 1.1869469809584483,
+        "kmer_entropy": 8.793926220694674,
+        "repeat_frac": 0.0,
+        "complexity": 0.8984375
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 2320026,
+      "delta_sw": 9.01597660779953,
+      "clean_ppl": 0.8462088704109192,
+      "features": {
+        "gc_frac": 0.4886067708333333,
+        "cpg_density": 1.1649415157827272,
+        "kmer_entropy": 8.807559912084022,
+        "repeat_frac": 0.0,
+        "complexity": 0.908203125
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 1308638,
+      "delta_sw": 9.16897577047348,
+      "clean_ppl": 0.5942202210426331,
+      "features": {
+        "gc_frac": 0.4710286458333333,
+        "cpg_density": 1.2619945659027594,
+        "kmer_entropy": 8.806602441389348,
+        "repeat_frac": 0.003913894324853229,
+        "complexity": 0.90625
+      }
+    },
+    {
+      "label": "promoter",
+      "chrom": "NC_000913.3",
+      "center": 1798094,
+      "delta_sw": 9.16472202539444,
+      "clean_ppl": 0.5287880301475525,
+      "features": {
+        "gc_frac": 0.5322265625,
+        "cpg_density": 1.225582155723469,
+        "kmer_entropy": 8.757736132778696,
+        "repeat_frac": 0.0,
+        "complexity": 0.884765625
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 1309111,
+      "delta_sw": 9.835975110530853,
+      "clean_ppl": 0.8558936715126038,
+      "features": {
+        "gc_frac": 0.458984375,
+        "cpg_density": 1.2052609447085738,
+        "kmer_entropy": 8.854951831042012,
+        "repeat_frac": 0.0019569471624266144,
+        "complexity": 0.9296875
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 2268965,
+      "delta_sw": 9.442696511745453,
+      "clean_ppl": 0.8152285218238831,
+      "features": {
+        "gc_frac": 0.4775390625,
+        "cpg_density": 1.2053062393311789,
+        "kmer_entropy": 8.832988720694674,
+        "repeat_frac": 0.0,
+        "complexity": 0.919921875
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 2365129,
+      "delta_sw": 9.486234188079834,
+      "clean_ppl": 0.6293396949768066,
+      "features": {
+        "gc_frac": 0.4563802083333333,
+        "cpg_density": 1.2139893301719027,
+        "kmer_entropy": 8.776309912084022,
+        "repeat_frac": 0.0,
+        "complexity": 0.89453125
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 1757807,
+      "delta_sw": 9.076426923274994,
+      "clean_ppl": 0.5613046288490295,
+      "features": {
+        "gc_frac": 0.4912109375,
+        "cpg_density": 1.1840046179784378,
+        "kmer_entropy": 8.799747412084022,
+        "repeat_frac": 0.0,
+        "complexity": 0.904296875
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 2871151,
+      "delta_sw": 8.572982728481293,
+      "clean_ppl": 0.6712446808815002,
+      "features": {
+        "gc_frac": 0.5403645833333334,
+        "cpg_density": 1.2874691152504951,
+        "kmer_entropy": 8.811983081042012,
+        "repeat_frac": 0.0,
+        "complexity": 0.908203125
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 1702279,
+      "delta_sw": 9.979274928569794,
+      "clean_ppl": 0.5995329022407532,
+      "features": {
+        "gc_frac": 0.5146484375,
+        "cpg_density": 1.0569574067672927,
+        "kmer_entropy": 8.740636743126032,
+        "repeat_frac": 0.0,
+        "complexity": 0.876953125
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 2184363,
+      "delta_sw": 9.22443300485611,
+      "clean_ppl": 0.5047540068626404,
+      "features": {
+        "gc_frac": 0.5139973958333334,
+        "cpg_density": 1.135039791292502,
+        "kmer_entropy": 8.789503051736684,
+        "repeat_frac": 0.0,
+        "complexity": 0.8984375
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 4259338,
+      "delta_sw": 9.649713218212128,
+      "clean_ppl": 0.35377246141433716,
+      "features": {
+        "gc_frac": 0.4720052083333333,
+        "cpg_density": 1.1512129462510323,
+        "kmer_entropy": 8.764591162084022,
+        "repeat_frac": 0.0,
+        "complexity": 0.890625
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 4103452,
+      "delta_sw": 9.521731615066528,
+      "clean_ppl": 0.505476713180542,
+      "features": {
+        "gc_frac": 0.5341796875,
+        "cpg_density": 1.1368004303900558,
+        "kmer_entropy": 8.74697485347337,
+        "repeat_frac": 0.0,
+        "complexity": 0.880859375
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 2076904,
+      "delta_sw": 10.551920533180237,
+      "clean_ppl": 0.6001094579696655,
+      "features": {
+        "gc_frac": 0.5162760416666666,
+        "cpg_density": 0.9191091165166743,
+        "kmer_entropy": 8.838369360347336,
+        "repeat_frac": 0.0,
+        "complexity": 0.919921875
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 433601,
+      "delta_sw": 9.460358619689941,
+      "clean_ppl": 1.011124610900879,
+      "features": {
+        "gc_frac": 0.5123697916666666,
+        "cpg_density": 1.1738765068287982,
+        "kmer_entropy": 8.817363720694674,
+        "repeat_frac": 0.0,
+        "complexity": 0.91015625
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 784787,
+      "delta_sw": 10.340198159217834,
+      "clean_ppl": 0.6532014608383179,
+      "features": {
+        "gc_frac": 0.4951171875,
+        "cpg_density": 1.068560570663178,
+        "kmer_entropy": 8.823701831042012,
+        "repeat_frac": 0.005870841487279843,
+        "complexity": 0.9140625
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 3535715,
+      "delta_sw": 9.314880311489105,
+      "clean_ppl": 0.6718044877052307,
+      "features": {
+        "gc_frac": 0.5367838541666666,
+        "cpg_density": 1.2611954845912563,
+        "kmer_entropy": 8.819795581042012,
+        "repeat_frac": 0.0,
+        "complexity": 0.9140625
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 2304543,
+      "delta_sw": 8.9859379529953,
+      "clean_ppl": 0.9466077089309692,
+      "features": {
+        "gc_frac": 0.5302734375,
+        "cpg_density": 1.1861182751911679,
+        "kmer_entropy": 8.814931860347336,
+        "repeat_frac": 0.0,
+        "complexity": 0.908203125
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 377461,
+      "delta_sw": 8.687474191188812,
+      "clean_ppl": 0.7225103974342346,
+      "features": {
+        "gc_frac": 0.5221354166666666,
+        "cpg_density": 1.1829383886255924,
+        "kmer_entropy": 8.844707470694674,
+        "repeat_frac": 0.0,
+        "complexity": 0.923828125
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 27377,
+      "delta_sw": 8.739454686641693,
+      "clean_ppl": 0.8240657448768616,
+      "features": {
+        "gc_frac": 0.5445963541666666,
+        "cpg_density": 1.1465121753759409,
+        "kmer_entropy": 8.797315551736684,
+        "repeat_frac": 0.0019569471624266144,
+        "complexity": 0.90234375
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 2797941,
+      "delta_sw": 9.51372343301773,
+      "clean_ppl": 0.6719807982444763,
+      "features": {
+        "gc_frac": 0.4501953125,
+        "cpg_density": 1.2084871311989955,
+        "kmer_entropy": 8.775352441389348,
+        "repeat_frac": 0.0,
+        "complexity": 0.892578125
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 1122563,
+      "delta_sw": 9.24729073047638,
+      "clean_ppl": 0.7272337675094604,
+      "features": {
+        "gc_frac": 0.4853515625,
+        "cpg_density": 1.2178218892240493,
+        "kmer_entropy": 8.801221801736684,
+        "repeat_frac": 0.0,
+        "complexity": 0.904296875
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 2167152,
+      "delta_sw": 9.494555652141571,
+      "clean_ppl": 0.7383535504341125,
+      "features": {
+        "gc_frac": 0.4736328125,
+        "cpg_density": 1.1021286773499164,
+        "kmer_entropy": 8.805644970694674,
+        "repeat_frac": 0.0019569471624266144,
+        "complexity": 0.90625
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 1354355,
+      "delta_sw": 9.214860647916794,
+      "clean_ppl": 0.40039756894111633,
+      "features": {
+        "gc_frac": 0.5338541666666666,
+        "cpg_density": 1.1995779156904476,
+        "kmer_entropy": 8.738204882778696,
+        "repeat_frac": 0.0,
+        "complexity": 0.875
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 3710649,
+      "delta_sw": 8.805866479873657,
+      "clean_ppl": 0.4718043804168701,
+      "features": {
+        "gc_frac": 0.4928385416666667,
+        "cpg_density": 1.057629393507256,
+        "kmer_entropy": 8.762159301736684,
+        "repeat_frac": 0.0019569471624266144,
+        "complexity": 0.884765625
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 3578800,
+      "delta_sw": 8.755394637584686,
+      "clean_ppl": 0.7685158848762512,
+      "features": {
+        "gc_frac": 0.5143229166666666,
+        "cpg_density": 1.1975148025814482,
+        "kmer_entropy": 8.794883691389348,
+        "repeat_frac": 0.0,
+        "complexity": 0.900390625
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 85462,
+      "delta_sw": 9.251659452915192,
+      "clean_ppl": 0.7147073149681091,
+      "features": {
+        "gc_frac": 0.4567057291666667,
+        "cpg_density": 1.1650389904307397,
+        "kmer_entropy": 8.842275610347336,
+        "repeat_frac": 0.0,
+        "complexity": 0.921875
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 958891,
+      "delta_sw": 8.660598039627075,
+      "clean_ppl": 0.8564393520355225,
+      "features": {
+        "gc_frac": 0.4856770833333333,
+        "cpg_density": 1.2422989086773242,
+        "kmer_entropy": 8.812745501990378,
+        "repeat_frac": 0.003913894324853229,
+        "complexity": 0.912109375
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 644047,
+      "delta_sw": 9.211991965770721,
+      "clean_ppl": 0.8489544987678528,
+      "features": {
+        "gc_frac": 0.5055338541666666,
+        "cpg_density": 1.1095790542452437,
+        "kmer_entropy": 8.800264331042012,
+        "repeat_frac": 0.0,
+        "complexity": 0.90234375
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 1258974,
+      "delta_sw": 9.119012117385864,
+      "clean_ppl": 0.5099437236785889,
+      "features": {
+        "gc_frac": 0.5149739583333334,
+        "cpg_density": 1.13448183248283,
+        "kmer_entropy": 8.821269970694674,
+        "repeat_frac": 0.0,
+        "complexity": 0.912109375
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 4606050,
+      "delta_sw": 9.148334085941315,
+      "clean_ppl": 0.8063187003135681,
+      "features": {
+        "gc_frac": 0.5159505208333334,
+        "cpg_density": 1.1793100811744166,
+        "kmer_entropy": 8.79417172268505,
+        "repeat_frac": 0.0019569471624266144,
+        "complexity": 0.90625
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 303755,
+      "delta_sw": 10.187606871128082,
+      "clean_ppl": 0.7824696898460388,
+      "features": {
+        "gc_frac": 0.4768880208333333,
+        "cpg_density": 1.048569765880299,
+        "kmer_entropy": 8.847139331042012,
+        "repeat_frac": 0.0,
+        "complexity": 0.92578125
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 3101657,
+      "delta_sw": 9.308263719081879,
+      "clean_ppl": 0.7200527787208557,
+      "features": {
+        "gc_frac": 0.5055338541666666,
+        "cpg_density": 1.1607531573826075,
+        "kmer_entropy": 8.801221801736684,
+        "repeat_frac": 0.0,
+        "complexity": 0.904296875
+      }
+    },
+    {
+      "label": "enhancer",
+      "chrom": "NC_000913.3",
+      "center": 1247546,
+      "delta_sw": 9.302765756845474,
+      "clean_ppl": 0.4034510552883148,
+      "features": {
+        "gc_frac": 0.5009765625,
+        "cpg_density": 1.1676701331873747,
+        "kmer_entropy": 8.785596801736684,
+        "repeat_frac": 0.0019569471624266144,
+        "complexity": 0.896484375
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 1650212,
+      "delta_sw": 10.829810380935669,
+      "clean_ppl": 0.9970166683197021,
+      "features": {
+        "gc_frac": 0.4833984375,
+        "cpg_density": 1.053678614302864,
+        "kmer_entropy": 8.80217927243136,
+        "repeat_frac": 0.0,
+        "complexity": 0.90625
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 2287689,
+      "delta_sw": 10.804853081703186,
+      "clean_ppl": 0.7222846746444702,
+      "features": {
+        "gc_frac": 0.4807942708333333,
+        "cpg_density": 1.1111036149997189,
+        "kmer_entropy": 8.72405427243136,
+        "repeat_frac": 0.0,
+        "complexity": 0.869140625
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 1300928,
+      "delta_sw": 10.824288725852966,
+      "clean_ppl": 0.854408860206604,
+      "features": {
+        "gc_frac": 0.4762369791666667,
+        "cpg_density": 0.9588122497953508,
+        "kmer_entropy": 8.812940551736684,
+        "repeat_frac": 0.0019569471624266144,
+        "complexity": 0.91015625
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 1651456,
+      "delta_sw": 10.756697714328766,
+      "clean_ppl": 0.8523940443992615,
+      "features": {
+        "gc_frac": 0.458984375,
+        "cpg_density": 1.016446890585406,
+        "kmer_entropy": 8.815889331042012,
+        "repeat_frac": 0.0,
+        "complexity": 0.91015625
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 3560198,
+      "delta_sw": 8.311477541923523,
+      "clean_ppl": 1.1561204195022583,
+      "features": {
+        "gc_frac": 0.5520833333333334,
+        "cpg_density": 1.2873724527088266,
+        "kmer_entropy": 8.790977441389348,
+        "repeat_frac": 0.003913894324853229,
+        "complexity": 0.8984375
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 2331318,
+      "delta_sw": 9.24712187051773,
+      "clean_ppl": 0.4754294753074646,
+      "features": {
+        "gc_frac": 0.541015625,
+        "cpg_density": 1.1968999370508697,
+        "kmer_entropy": 8.687228583032386,
+        "repeat_frac": 0.0,
+        "complexity": 0.853515625
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 249361,
+      "delta_sw": 8.678109407424927,
+      "clean_ppl": 0.5445382595062256,
+      "features": {
+        "gc_frac": 0.548828125,
+        "cpg_density": 1.2103933750325409,
+        "kmer_entropy": 8.68838110347337,
+        "repeat_frac": 0.0,
+        "complexity": 0.859375
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 4534480,
+      "delta_sw": 11.298114657402039,
+      "clean_ppl": 1.554585576057434,
+      "features": {
+        "gc_frac": 0.4729817708333333,
+        "cpg_density": 1.0266556158596905,
+        "kmer_entropy": 8.8515625,
+        "repeat_frac": 0.0,
+        "complexity": 0.92578125
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 2808359,
+      "delta_sw": 9.14261782169342,
+      "clean_ppl": 0.9091647863388062,
+      "features": {
+        "gc_frac": 0.525390625,
+        "cpg_density": 1.0755377565937374,
+        "kmer_entropy": 8.793409301736684,
+        "repeat_frac": 0.0019569471624266144,
+        "complexity": 0.90234375
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 3951796,
+      "delta_sw": 9.32491672039032,
+      "clean_ppl": 1.045573353767395,
+      "features": {
+        "gc_frac": 0.5348307291666666,
+        "cpg_density": 1.089248572064387,
+        "kmer_entropy": 8.83984375,
+        "repeat_frac": 0.0,
+        "complexity": 0.919921875
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 3419336,
+      "delta_sw": 9.574227809906006,
+      "clean_ppl": 1.0463337898254395,
+      "features": {
+        "gc_frac": 0.4778645833333333,
+        "cpg_density": 1.1864527629233512,
+        "kmer_entropy": 8.804170581042012,
+        "repeat_frac": 0.0,
+        "complexity": 0.904296875
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 734546,
+      "delta_sw": 12.109090805053711,
+      "clean_ppl": 0.27551937103271484,
+      "features": {
+        "gc_frac": 0.4768880208333333,
+        "cpg_density": 0.9277067303904833,
+        "kmer_entropy": 8.790977441389348,
+        "repeat_frac": 0.0,
+        "complexity": 0.900390625
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 1081765,
+      "delta_sw": 8.231225669384003,
+      "clean_ppl": 0.8970502018928528,
+      "features": {
+        "gc_frac": 0.5221354166666666,
+        "cpg_density": 1.1223844648502184,
+        "kmer_entropy": 8.757541083032388,
+        "repeat_frac": 0.0,
+        "complexity": 0.88671875
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 1300741,
+      "delta_sw": 9.519876837730408,
+      "clean_ppl": 1.2536159753799438,
+      "features": {
+        "gc_frac": 0.470703125,
+        "cpg_density": 0.9520515449717636,
+        "kmer_entropy": 8.811025610347336,
+        "repeat_frac": 0.0,
+        "complexity": 0.90625
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 3769081,
+      "delta_sw": 11.041541457176208,
+      "clean_ppl": 1.0904384851455688,
+      "features": {
+        "gc_frac": 0.3811848958333333,
+        "cpg_density": 0.8444990349184067,
+        "kmer_entropy": 8.793409301736684,
+        "repeat_frac": 0.0,
+        "complexity": 0.900390625
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 2786472,
+      "delta_sw": 10.871989011764526,
+      "clean_ppl": 1.142115831375122,
+      "features": {
+        "gc_frac": 0.3619791666666667,
+        "cpg_density": 0.9005276529216337,
+        "kmer_entropy": 8.775352441389348,
+        "repeat_frac": 0.0,
+        "complexity": 0.89453125
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 4235621,
+      "delta_sw": 9.096155524253845,
+      "clean_ppl": 0.539620041847229,
+      "features": {
+        "gc_frac": 0.5091145833333334,
+        "cpg_density": 1.1457286432160805,
+        "kmer_entropy": 8.800264331042012,
+        "repeat_frac": 0.0,
+        "complexity": 0.90625
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 1434693,
+      "delta_sw": 11.283372163772583,
+      "clean_ppl": 0.6256148815155029,
+      "features": {
+        "gc_frac": 0.4137369791666667,
+        "cpg_density": 0.9882543055077582,
+        "kmer_entropy": 8.815889331042012,
+        "repeat_frac": 0.0,
+        "complexity": 0.91015625
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 1642282,
+      "delta_sw": 11.23502391576767,
+      "clean_ppl": 0.7867646813392639,
+      "features": {
+        "gc_frac": 0.4319661458333333,
+        "cpg_density": 0.9274507273364184,
+        "kmer_entropy": 8.822227441389348,
+        "repeat_frac": 0.0,
+        "complexity": 0.9140625
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 1544372,
+      "delta_sw": 9.891858100891113,
+      "clean_ppl": 0.720280647277832,
+      "features": {
+        "gc_frac": 0.4013671875,
+        "cpg_density": 0.9574896325840618,
+        "kmer_entropy": 8.763633691389348,
+        "repeat_frac": 0.0,
+        "complexity": 0.88671875
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 2227882,
+      "delta_sw": 8.891146421432495,
+      "clean_ppl": 1.1213581562042236,
+      "features": {
+        "gc_frac": 0.5319010416666666,
+        "cpg_density": 1.1109554053748616,
+        "kmer_entropy": 8.831514331042012,
+        "repeat_frac": 0.0,
+        "complexity": 0.91796875
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 2798842,
+      "delta_sw": 10.147785902023315,
+      "clean_ppl": 0.6850407123565674,
+      "features": {
+        "gc_frac": 0.45703125,
+        "cpg_density": 1.2905074529938814,
+        "kmer_entropy": 8.790019970694674,
+        "repeat_frac": 0.0,
+        "complexity": 0.896484375
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 2034234,
+      "delta_sw": 9.082983136177063,
+      "clean_ppl": 1.5687798261642456,
+      "features": {
+        "gc_frac": 0.4371744791666667,
+        "cpg_density": 1.0572875033306688,
+        "kmer_entropy": 8.821269970694674,
+        "repeat_frac": 0.0019569471624266144,
+        "complexity": 0.912109375
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 2772582,
+      "delta_sw": 5.780298233032227,
+      "clean_ppl": 5.413017272949219,
+      "features": {
+        "gc_frac": 0.4508463541666667,
+        "cpg_density": 0.9803314659002265,
+        "kmer_entropy": 8.780216162084022,
+        "repeat_frac": 0.0,
+        "complexity": 0.89453125
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 3188170,
+      "delta_sw": 11.547918289899826,
+      "clean_ppl": 0.3385753929615021,
+      "features": {
+        "gc_frac": 0.4524739583333333,
+        "cpg_density": 1.100411834495953,
+        "kmer_entropy": 8.815889331042012,
+        "repeat_frac": 0.0019569471624266144,
+        "complexity": 0.91015625
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 4500290,
+      "delta_sw": 10.655015468597412,
+      "clean_ppl": 1.5402626991271973,
+      "features": {
+        "gc_frac": 0.513671875,
+        "cpg_density": 0.9335359235945301,
+        "kmer_entropy": 8.873525610347336,
+        "repeat_frac": 0.0,
+        "complexity": 0.9375
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 1473750,
+      "delta_sw": 9.63347715139389,
+      "clean_ppl": 0.5409794449806213,
+      "features": {
+        "gc_frac": 0.5182291666666666,
+        "cpg_density": 1.1683173358454058,
+        "kmer_entropy": 8.718673632778696,
+        "repeat_frac": 0.0,
+        "complexity": 0.869140625
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 2994231,
+      "delta_sw": 12.006624937057495,
+      "clean_ppl": 1.1496460437774658,
+      "features": {
+        "gc_frac": 0.3307291666666667,
+        "cpg_density": 0.7659206451235903,
+        "kmer_entropy": 8.75139802243136,
+        "repeat_frac": 0.0,
+        "complexity": 0.880859375
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 2331971,
+      "delta_sw": 8.979916125535965,
+      "clean_ppl": 0.4703516662120819,
+      "features": {
+        "gc_frac": 0.5377604166666666,
+        "cpg_density": 1.2670086523854605,
+        "kmer_entropy": 8.748008691389348,
+        "repeat_frac": 0.0,
+        "complexity": 0.880859375
+      }
+    },
+    {
+      "label": "random",
+      "chrom": "NC_000913.3",
+      "center": 4575918,
+      "delta_sw": 9.052820563316345,
+      "clean_ppl": 1.497048020362854,
+      "features": {
+        "gc_frac": 0.4807942708333333,
+        "cpg_density": 1.119348106926364,
+        "kmer_entropy": 8.797832470694674,
+        "repeat_frac": 0.0019569471624266144,
+        "complexity": 0.900390625
+      }
+    }
+  ]
+}

@@ -123,6 +123,43 @@ python3 scripts/interpretability/compare_attribution_methods.py \
     --out        "${RESULTS}/attribution_comparison.json" \
     --plot       "${RESULTS}/attribution_comparison.png"
 
+# ── Step 7: hexamer causal test ───────────────────────────────────────────────
+echo ""
+echo ">>> STEP 7: hexamer causal test"
+python3 scripts/interpretability/run_sw_hexamer_causal.py \
+    --model      "${MODEL}" \
+    --sw_index   "${SW_INDEX}" \
+    --configs_dir configs \
+    --kmer_scan  "${RESULTS}/sw_kmer_scan.json" \
+    --out        "${RESULTS}/sw_hexamer_causal.json" \
+    --plot       "${RESULTS}/sw_hexamer_causal.png"
+
+# ── Step 8: causal tracing ────────────────────────────────────────────────────
+echo ""
+echo ">>> STEP 8: causal tracing"
+python3 scripts/interpretability/run_sw_causal_tracing.py \
+    --model      "${MODEL}" \
+    --sw_index   "${SW_INDEX}" \
+    --configs_dir configs \
+    --fasta      "${FASTA}" \
+    --promoters  "${PROMOTERS}" \
+    --enhancers  "${ENHANCERS}" \
+    --random     "${RANDOM_BED}" \
+    --n_seqs     30 \
+    --window_bp  3072 \
+    --out        "${RESULTS}/sw_causal_tracing.json" \
+    --plot       "${RESULTS}/sw_causal_tracing.png"
+
+# ── Step 9: ablation regression ───────────────────────────────────────────────
+echo ""
+echo ">>> STEP 9: ablation regression"
+python3 scripts/interpretability/run_sw_ablation_regression.py \
+    --trace      "${RESULTS}/sw_causal_tracing.json" \
+    --fasta      "${FASTA}" \
+    --window_bp  3072 \
+    --out        "${RESULTS}/sw_ablation_regression.json" \
+    --plot       "${RESULTS}/sw_ablation_regression.png"
+
 echo ""
 echo "============================================================"
 echo "All steps complete. Results in: ${RESULTS}/"

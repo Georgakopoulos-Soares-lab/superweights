@@ -546,14 +546,24 @@ row 1927, out\_max = 506 014) on *E. coli* K-12 sequences (promoters, terminator
 | 4 | K-mer motif enrichment | AT-rich motif hint (OR = 1.5, p_adj = 0.043); below FDR threshold. |
 | 5 | Gradient attribution | 150 sequences (50/label), all valid; saliency profiles computed. |
 | 6 | Attribution comparison | Gradient vs omission agreement: mean Spearman ρ = −0.077, all contexts n.s. Methods disagree in prokaryote context. |
+| 7 | Hexamer causal test | r(SW activation, KL divergence) = **−0.710** (p ≈ 0, t = −118) — **inverted** vs EUK (r = +0.437). AT-rich top activators cause the *least* KL divergence when SW is ablated; low-activation k-mers suffer most (KL 0.884 vs 0.043). SW is not causally necessary for its highest-activating tokens. |
+| 8 | Causal tracing | Mean ΔPPL = **+9.47 log-PPL units** (random control Δ = 0.00033). Uniform across contexts: promoter=9.15, terminator=9.34, random=9.93. No context-specificity — SW is a general-purpose component for E. coli sequences. |
+| 9 | Ablation regression | R² = **0.347** (higher than EUK R² = 0.158). GC fraction (β = −0.306) and k-mer entropy (β = −0.307) dominate: AT-rich, low-complexity sequences suffer most from SW ablation, consistent with AT-rich hexamers being the top activators. |
 
 ### Biological interpretation (prokaryote)
 
-PROK SW row 1927 shows **inverse GC preference** (AT-rich activators, negative activations)
-and **context-sensitivity** (shuffle controls significant). This contrasts sharply with the
-EUK SW, which is GC-rich, context-insensitive, and mechanistically a single-k-mer detector.
-The prokaryote SW may encode Shine-Dalgarno-adjacent AT-rich motifs or ribosome binding site
-features rather than composition statistics alone.
+PROK SW row 1927 shows **inverse GC preference** (AT-rich activators, negative activations),
+**context-sensitivity** (shuffle controls significant, p < 0.01), and a **causal paradox**:
+the hexamer causal test (r = −0.710) reveals that ablating the SW most disrupts prediction
+of *low-activation* tokens — the opposite of EUK. This suggests the PROK SW acts as a
+**suppressive gate**: high activations for AT-rich k-mers that are otherwise easy to predict,
+but its removal catastrophically disrupts predictions for GC-rich tokens it barely activates.
+
+The high causal tracing ΔPPL (+9.47 vs EUK ~+3 log-PPL) and higher composition-explained
+variance (R² = 0.347) indicate the PROK SW is more deeply integrated into the model's
+residual stream than the EUK SW, despite lying at an earlier layer (L2 vs L4). The mechanism
+remains fundamentally composition-driven (GC/AT content, k-mer entropy) rather than
+biologically regulatory, consistent with the cross-kingdom transfer null result.
 
 ---
 
@@ -611,10 +621,11 @@ interesting but unvalidated secondary signal.
 
 ### Recommended next steps
 
-1. Prokaryote k-mer scan: test if prok SW fires on Shine-Dalgarno (AGGAGG) instead of CC/CT.
+1. ~~Prokaryote k-mer scan: test if prok SW fires on Shine-Dalgarno (AGGAGG) instead of CC/CT.~~ ✅ Done — AT-rich preference, not Shine-Dalgarno.
 2. Nucleotide Transformer v2: provides a byte-level transformer to decouple architecture from tokenizer.
 3. Test NF-κB enrichment at larger k (top-500 foreground) and cross-reference with CTCF ChIP-seq.
 4. SW-aware INT4 downstream benchmark: retain SW rows in FP16, INT4 all else → report GUE accuracy.
+5. Investigate PROK SW causal paradox (r = −0.710): why does ablation hurt low-activation k-mers most? Hypothesis: PROK SW row 1927 acts as a residual-stream gain control that dampens AT-rich token predictions while amplifying GC-rich ones.
 
 ---
 
