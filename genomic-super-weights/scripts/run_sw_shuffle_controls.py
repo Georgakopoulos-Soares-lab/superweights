@@ -195,10 +195,95 @@ def _kmer_block_shuffle(seq: str, k: int, rng: random.Random) -> str:
     return "".join(tokens)
 
 
+def _trinuc_shuffle(seq: str, rng: random.Random) -> str:
+    """
+    Trinucleotide-preserving shuffle via random Eulerian path in De Bruijn graph.
+
+    Formalisation
+    -------------
+    Build a directed multigraph:
+      nodes  = distinct dinucleotides (2-mers) appearing in the sequence
+      edges  = one edge per overlapping trinucleotide (XY → YZ for each XYZ)
+
+    The original sequence IS an Eulerian path through this graph.  Any other
+    Eulerian path through the same multigraph is a valid shuffle with identical
+    trinucleotide frequencies (Altschul–Erickson, CABIOS 1985, generalised to
+    k=3).  We randomise the path by shuffling each node's out-edge list before
+    running Hierholzer's algorithm.
+
+    Preserves: exact per-trinucleotide (3-mer) counts.
+    Destroys : positional order of trinucleotides and all higher-order context.
+
+    Why this matters for the paper
+    ------------------------------
+    GENERator uses non-overlapping 6-mer tokens.  A dinucleotide shuffle already
+    preserves ≥90 % of hexamer composition (because each hexamer overlaps many
+    2-mers).  Trinucleotide preservation is a strictly stronger control: if SW
+    activation is still flat on trinucleotide-shuffled sequences (p > 0.05),
+    we can rule out any residual 3-mer composition effect and conclude the SW
+    fires purely on token identity — not on context above the 3-mer level.
+    """
+    from collections import defaultdict
+
+    VALID = set("ACGT")
+    bases = [b if b in VALID else "N" for b in seq.upper()]
+    n = len(bases)
+    if n < 3:
+        rng.shuffle(bases)
+        return "".join(bases)
+
+    # Build adjacency list: dinucleotide node → [next character, ...]
+    adj: dict[str, list] = defaultdict(list)
+    for i in range(n - 2):
+        di = bases[i] + bases[i + 1]
+        adj[di].append(bases[i + 2])
+
+    # Shuffle each node's edge list → randomises which Eulerian path we take
+    for node in adj:
+        rng.shuffle(adj[node])
+
+    # Index-tracked copies for Hierholzer's algorithm
+    adj_lst = {node: list(edges) for node, edges in adj.items()}
+    adj_idx = {node: 0 for node in adj_lst}
+
+    # Hierholzer's algorithm: find a random Eulerian PATH starting at seq[0:2]
+    start = bases[0] + bases[1]
+    stack: list[str] = [start]
+    path_nodes: list[str] = []
+
+    while stack:
+        u = stack[-1]
+        if adj_idx.get(u, 0) < len(adj_lst.get(u, [])):
+            c = adj_lst[u][adj_idx[u]]
+            adj_idx[u] += 1
+            stack.append(u[1] + c)       # next dinucleotide node
+        else:
+            path_nodes.append(stack.pop())
+
+    path_nodes = path_nodes[::-1]         # Hierholzer returns path in reverse
+
+    # Reconstruct sequence: first dinucleotide + last char of each subsequent node
+    if not path_nodes:
+        return "".join(bases)
+
+    result = list(path_nodes[0])          # 2 characters
+    for node in path_nodes[1:]:
+        result.append(node[-1])
+
+    # Safety pad (should never trigger on valid DNA)
+    if len(result) < n:
+        pool = bases[:]
+        rng.shuffle(pool)
+        result.extend(pool[: n - len(result)])
+
+    return "".join(result[:n])
+
+
 SHUFFLE_TYPES = {
     "dinuc":      _dinuc_shuffle,
     "mono":       _mono_shuffle,
     "kmer_block": _kmer_block_shuffle,
+    "trinuc":     _trinuc_shuffle,
 }
 
 
@@ -366,7 +451,7 @@ def parse_args():
                    choices=["generator", "generator_prokaryote",
                             "generator_prokaryote_1b"])
     p.add_argument("--shuffle_types", nargs="+",
-                   default=["dinuc", "mono", "kmer_block"],
+                   default=["dinuc", "mono", "kmer_block", "trinuc"],
                    choices=list(SHUFFLE_TYPES.keys()),
                    help="Which shuffle types to run")
     p.add_argument("--sw_index",    default="results/super_weight_index.json")
