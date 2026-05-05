@@ -317,7 +317,7 @@ def main():
         "model": args.model,
         "task":  args.task,
         "seeds": args.seeds,
-        "n_sw_rows": len(sw_rows),
+        "n_sw_rows": len(sw_list),
         "aggregate": {
             "baseline_acc_mean":   float(bsl_acc.mean()),
             "baseline_acc_std":    float(bsl_acc.std()),

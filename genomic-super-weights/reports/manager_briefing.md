@@ -85,22 +85,33 @@ This is consistent with NLP observations where super weight effects are more pro
 
 ---
 
-## 5. Downstream Functional Ablation (DNABERT-2)
+## 5. Downstream Functional Ablation (DNABERT-2) — Multi-seed (3 seeds)
 
-We fine-tuned DNABERT-2 on three GUE (Genome Understanding Evaluation) classification benchmarks, then evaluated with all 10 SW rows simultaneously zeroed vs. equivalently-sized random row sets.
+We fine-tuned DNABERT-2 on three GUE (Genome Understanding Evaluation) classification benchmarks (seeds 0/1/2), then evaluated with all 10 SW rows simultaneously zeroed vs. equivalently-sized random row sets. All values are mean ± std across 3 seeds.
 
-| Task | Type | Baseline acc | SW-ablated acc | Δacc | Random control |
-|---|---|---|---|---|---|
-| `prom_core_notata` | Promoter recognition | 83.81% (MCC 0.676) | 52.10% | **−31.7%** | ±0.00% |
-| `EMP/H3K4me3` | Histone modification | 67.09% (MCC 0.342) | 66.63% | −0.46% | ±0.07% |
-| `splice/reconstructed` | Splice site detection | 92.46% (MCC 0.871) | 59.12% | **−33.4%** | ±0.03% |
+| Task | Type | Baseline acc | SW-ablated acc | Δacc | p (vs 0) | Random ctrl |
+|---|---|---|---|---|---|---|
+| `prom_core_notata` | Promoter recognition | 83.82% ± 0.19% | 71.25% ± 16.87% | −12.56% ± 16.73% | p=0.40 | ±0.19% |
+| `EMP/H3K4me3` | Histone modification | 64.20% ± 2.84% | 59.67% ± 5.27% | −4.53% ± 6.18% | p=0.41 | ±2.81% |
+| `splice/reconstructed` | Splice site detection | 92.74% ± 0.11% | 67.19% ± 0.69% | **−25.54% ± 0.73%** | **p=0.0004** | ±0.13% |
 
-> **Note — multi-seed error bars pending**: These results are from single-seed fine-tuning. Multi-seed runs (seeds 0/1/2) are currently executing on GPU 3. Error bars will be added upon completion. The effect sizes (−31.7% and −33.4%) are large enough that statistical significance is not in question, but proper reporting requires the variance estimate.
+**Per-seed breakdown (prom_core_notata)**:
 
-**Critical dissociation**: Promoter and splice detection collapse entirely without SWs (>30% accuracy drop). Histone modification prediction is unaffected. This dissociation tells us:
+| Seed | Baseline | SW-ablated | Δacc |
+|---|---|---|---|
+| 0 | 83.61% | 47.39% | **−36.22%** |
+| 1 | 84.06% | 82.93% | −1.13% |
+| 2 | 83.78% | 83.44% | −0.34% |
 
-- Tasks requiring recognition of **discrete sequence motifs** (TATA boxes, splice donor/acceptor consensus) depend on super weight rows for their concentrated representation.
-- Tasks encoding **diffuse epigenomic signal** (H3K4me3 enrichment correlates with broad GC-rich context) have that information distributed across many parameters — no single bottleneck.
+**Revised interpretation after multi-seed analysis:**
+
+**Splice detection** is the robust finding: SW ablation reduces accuracy by −25.5% ± 0.7% with near-zero variance (p=0.0004). This is a stable, reproducible dependency on SW rows for splice site recognition.
+
+**Promoter recognition** is seed-dependent: seed 0 shows dramatic collapse to 47% (−36%), but seeds 1 and 2 show near-zero effect (−1%, −0.3%). The single-seed version of this experiment was anomalously sensitive. With multi-seed evidence, the promoter effect is **not statistically reliable** (p=0.40). The effect is genuine for some fine-tuning trajectories but not robust across initializations.
+
+**H3K4me3** is also high-variance and not significant (p=0.41), consistent with the original interpretation that epigenomic state is not SW-driven.
+
+**Practical conclusion**: SW rows in DNABERT-2 are causally necessary for splice site detection at all fine-tuning seeds, but only incidentally contribute to promoter recognition (depends on which random basin the optimizer finds). The splice result (−25.5%, p=0.0004, n=3) is the clean publishable claim.
 
 ---
 
@@ -291,8 +302,8 @@ Across all experiments, a consistent picture emerges:
 |---|---|---|---|
 | Detection | Full-model SW scan | ✅ | GENERator: n=2, out_max=375k; DNABERT-2: n=10, out_max=945; SSMs: no functional SWs |
 | Detection | Caduceus bidir-Mamba weight analysis | ✅ | Proj max/median=2.4× (normal) vs GENERator: extreme activations |
-| Functional | GUE downstream ablation | ✅ (1-seed) | Splice/promoter: −31–33%; Epigenomic (H3K4me3): −0.46% (n.s.) |
-| Functional | GUE multi-seed (3 seeds) | 🔄 running | ETA: ~3 hours; will add error bars |
+| Functional | GUE downstream ablation (3-seed) | ✅ Done | Splice: −25.5% ± 0.7% (p=0.0004), robust; Prom: −12.6% ± 16.7% (p=0.40), seed-dependent; H3K4me3: n.s. |
+| Functional | GUE multi-seed (3 seeds) | ✅ Done | See above |
 | Functional | Per-row ablation | ✅ | No single row is a bottleneck; n=10 rows act as redundant ensemble |
 | Compression | Progressive compression sweep | ✅ | Shadow redundancy: near-SW rows safest (−1.34% at 20%); far rows catastrophic |
 | Compression | INT4/INT8 quantization ablation | ✅ | Yu et al. strategy +0.159 PPL; near-SW rows tolerate INT4 better (p=0.0003) |
