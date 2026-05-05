@@ -531,6 +531,49 @@ Output: per-sequence Spearman ρ, aggregate t-tests by genomic context, overlay 
 
 ---
 
+## Prokaryote Interpretability — GENERator Prokaryote 3B SW Row 1927
+
+Parallel six-step interpretability pipeline applied to the prokaryote model (SW at layer 2,
+row 1927, out\_max = 506 014) on *E. coli* K-12 sequences (promoters, terminators, random).
+
+### Per-experiment findings (prokaryote)
+
+| Step | Experiment | Key result |
+|------|-----------|-----------|
+| 1 | K-mer scan | Top k-mers produce **negative** SW activations; AT-rich hexamers dominate. GC correlation r = **−0.09** (opposite sign to EUK r = +0.19). |
+| 2 | Token omission | 30 sequences (10/label); no significant context-specificity across promoter/terminator/random. |
+| 3 | Shuffle controls | **All four shuffles significantly perturb SW activation (p < 0.01, n = 90)**, the opposite of EUK behaviour. PROK SW is context-sensitive above the single k-mer level. |
+| 4 | K-mer motif enrichment | AT-rich motif hint (OR = 1.5, p_adj = 0.043); below FDR threshold. |
+| 5 | Gradient attribution | 150 sequences (50/label), all valid; saliency profiles computed. |
+| 6 | Attribution comparison | Gradient vs omission agreement: mean Spearman ρ = −0.077, all contexts n.s. Methods disagree in prokaryote context. |
+
+### Biological interpretation (prokaryote)
+
+PROK SW row 1927 shows **inverse GC preference** (AT-rich activators, negative activations)
+and **context-sensitivity** (shuffle controls significant). This contrasts sharply with the
+EUK SW, which is GC-rich, context-insensitive, and mechanistically a single-k-mer detector.
+The prokaryote SW may encode Shine-Dalgarno-adjacent AT-rich motifs or ribosome binding site
+features rather than composition statistics alone.
+
+---
+
+## Cross-Kingdom Transfer Experiment
+
+Tests whether each model's super-weight activates equally on sequences from the opposite
+biological domain. Run with `scripts/interpretability/run_cross_kingdom_transfer.py`.
+
+| Model | In-domain | In-domain mean | Out-domain | Out-domain mean | Fold-change | Mann-Whitney p |
+|-------|-----------|---------------|-----------|----------------|-------------|----------------|
+| GENERator eukaryote (SW L4 r2371) | hg38 | 6 581.6 | E. coli | 6 610.4 | 1.004 | 0.538 (n.s.) |
+| GENERator prokaryote (SW L2 r1927) | E. coli | 10 637.8 | hg38 | 10 709.7 | 1.007 | 0.644 (n.s.) |
+
+**Finding**: Both super-weights fire at statistically indistinguishable levels on in-domain
+and out-of-domain sequences (~0.4–0.7% fold-change, p > 0.5). Super-weights are not
+kingdom-specific detectors — they encode low-level statistical features (k-mer composition,
+sequence length statistics) that are present across both eukaryotic and prokaryotic genomes.
+
+---
+
 ## Overall Synthesis — GENERator 3B SW Row 2371
 
 Six interpretability experiments consistently characterise SW row 2371 (layer 4,

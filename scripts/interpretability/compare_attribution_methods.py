@@ -528,21 +528,20 @@ def main():
     omit_data = _load_omit(args.omit)
 
     print("\n  Computing per-sequence correlations ...", flush=True)
-    results = _compare(grad_data, omit_data, n_grid=args.n_grid)
+    if args.match_by == "label_order":
+        print("  Using label+order matching (--match_by label_order) ...", flush=True)
+        grad_list = _load_grad_ordered(args.grad)
+        omit_list = _load_omit_ordered(args.omit)
+        results = _compare_by_label_order(grad_list, omit_list, n_grid=args.n_grid)
+    else:
+        results = _compare(grad_data, omit_data, n_grid=args.n_grid)
 
     if not results:
-        if args.match_by == "label_order":
-            print("  Falling back to label+order matching ...", flush=True)
-            grad_list = _load_grad_ordered(args.grad)
-            omit_list = _load_omit_ordered(args.omit)
-            results = _compare_by_label_order(grad_list, omit_list, n_grid=args.n_grid)
-        else:
+        if args.match_by != "label_order":
             print("  No matched sequences \u2014 cannot compute correlations.")
             print("  Tip: re-run with --match_by label_order to pair by label+rank instead.")
-            sys.exit(1)
-
-    if not results:
-        print("  No results after fallback \u2014 cannot compute correlations.")
+        else:
+            print("  No results after label+order matching \u2014 cannot compute correlations.")
         sys.exit(1)
 
     agg = _aggregate(results)

@@ -138,30 +138,43 @@ def _sw_saliency(model, tokenizer, seq: str, sw_layer: int, sw_row: int,
     if input_ids.shape[1] < 2:
         return None
 
-    # Get embeddings and enable gradient
-    embed_weights = model.model.embed_tokens(input_ids)  # [1, L, D]
-    embed_inputs  = embed_weights.detach().requires_grad_(True)
-
-    # Hook to capture SW row activation at the target layer
+    # Hook into embed_tokens output to capture embeddings with gradient.
+    # Using inputs_embeds directly breaks device_map="auto" (multi-GPU), so
+    # we hook into embed_tokens and call retain_grad() on its output instead.
     _captured = {}
-    def _hook(_module, _inp, _out):
+
+    def _embed_hook(_module, _inp, _out):
+        _out.retain_grad()
+        _captured["embed"] = _out
+
+    def _sw_hook(_module, _inp, _out):
         _captured["act"] = _out  # [1, L, hidden_size]
 
     target_module = model.model.layers[sw_layer].mlp.down_proj
-    handle = target_module.register_forward_hook(_hook)
+    h_embed = model.model.embed_tokens.register_forward_hook(_embed_hook)
+    h_sw    = target_module.register_forward_hook(_sw_hook)
 
     try:
-        _ = model(inputs_embeds=embed_inputs)
+        with torch.enable_grad():
+            _ = model(input_ids=input_ids)
     finally:
-        handle.remove()
+        h_embed.remove()
+        h_sw.remove()
 
-    sw_act = _captured["act"]          # [1, L, hidden_size]
+    embed_out = _captured.get("embed")
+    sw_act    = _captured.get("act")
+    if embed_out is None or sw_act is None:
+        return None
+
     # Target: total abs activation at the SW row across all positions
     scalar = sw_act[..., sw_row].abs().sum()
     scalar.backward()
 
+    if embed_out.grad is None:
+        return None
+
     # Saliency: L2 norm over embedding dimension
-    saliency = embed_inputs.grad.norm(dim=-1).squeeze(0)  # [L]
+    saliency = embed_out.grad.norm(dim=-1).squeeze(0)  # [L]
     return saliency.detach().cpu().numpy()
 
 
