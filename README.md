@@ -281,6 +281,56 @@ Output files: `results/quant_ablation_{model}_{task}_int{bits}.{json,png}`
 
 ---
 
+### INT4 Downstream Benchmark — Practical Compression (`run_int4_downstream_benchmark.py`)
+
+Translates the shadow-redundancy finding from the perplexity-level sensitivity analysis
+into a practical downstream task question: **does SW-aware INT4 quantization preserve
+GUE accuracy better than naive INT4?**
+
+This experiment uses DNABERT-2 on `splice/reconstructed` — the only robust multi-seed
+result — and evaluates four conditions at a fixed compression target (10% of non-SW rows):
+
+| Condition | What is INT4'd | What stays FP16 |
+|---|---|---|
+| `fp16_baseline` | nothing (reference) | everything |
+| `naive_int4` | ALL rows including SW rows | nothing |
+| `yu_all_int4` | all non-SW rows | 10 SW rows only |
+| `near_sw_int4` | near-SW rows only (10% of non-SW pool) | everything else |
+| `random_int4` | same count as near_sw, random non-SW rows (10 seeds) | everything else |
+
+Per condition, the script reports: accuracy, MCC, F1, Δ vs FP16 baseline, peak GPU
+memory (MB) during inference, inference time (ms/sample), and theoretical weight memory
+savings (MB) for the quantized rows assuming FP16→INT4 (4× compression on those rows).
+
+> **Note**: RTN simulation keeps weights in FP16 dtype — actual runtime memory and
+> speed gains require hardware INT4 GEMM kernels. Theoretical savings are reported as
+> a proxy for expected real-world gains.
+
+**What to look for:**
+- `yu_all_int4` holding accuracy close to FP16 — replicates Yu et al. in a genomic model
+- `near_sw_int4` ≥ `random_int4` at matched compression — shadow-redundancy transfers to downstream
+- `naive_int4` showing clear accuracy drop from quantizing the SW rows — confirms SW fragility
+
+Run:
+```bash
+python scripts/compression/run_int4_downstream_benchmark.py \
+    --task splice/reconstructed \
+    --ckpt_dir results/gue_checkpoints/dnabert2_splice_reconstructed \
+    --near_sw_frac 10.0 \
+    --out results/int4_downstream_benchmark_splice.json \
+    --plot results/int4_downstream_benchmark_splice.png
+```
+
+Or on SLURM:
+```bash
+sbatch scripts/compression/int4_downstream_benchmark_splice.sbatch
+```
+
+Requires: fine-tuned checkpoint from `run_gue_ablation.py` on `splice/reconstructed`.
+Output: `results/int4_downstream_benchmark_splice.{json,png}`
+
+---
+
 ### Mechanistic Interpretability: Gradient Saliency + Causal Ablation
 
 Two complementary analyses targeting GENERator's layer-4 SW rows (2371 and 1522)
@@ -681,8 +731,10 @@ interesting but unvalidated secondary signal.
 │   │   ├── run_gue_multiseed.py            # GUE fine-tuning + ablation over 3 seeds
 │   │   └── analyze_superrow_proximity.py   # Monte-Carlo clustering of SW coordinates
 │   ├── compression/
-│   │   ├── run_compression_sweep.py        # Progressive pruning sweep (5 criteria)
-│   │   └── run_quantization_ablation.py    # RTN INT4/INT8 quantization sensitivity
+│   │   ├── run_compression_sweep.py           # Progressive pruning sweep (5 criteria)
+│   │   ├── run_quantization_ablation.py       # RTN INT4/INT8 quantization sensitivity
+│   │   ├── run_int4_downstream_benchmark.py   # Practical INT4 benchmark (4 conditions, splice)
+│   │   └── int4_downstream_benchmark_splice.sbatch  # SLURM job for benchmark
 │   ├── interpretability/
 │   │   ├── run_sw_gradient_attribution.py  # Gradient saliency maps for SW rows
 │   │   ├── run_sw_causal_tracing.py        # SW row ablation + activation-shift
@@ -786,6 +838,18 @@ python scripts/compression/run_quantization_ablation.py \
 Sweeps five conditions (baseline, yu_all, sw_fragility, near_sw, random) at increasing
 quantization fractions. Use `--bits 8` for INT8; default fracs are 1, 5, 10, 20, 30%.
 See Results section for interpretation.
+
+### 5b. INT4 downstream benchmark (practical compression)
+
+```bash
+python scripts/compression/run_int4_downstream_benchmark.py \
+    --task splice/reconstructed \
+    --ckpt_dir results/gue_checkpoints/dnabert2_splice_reconstructed \
+    --near_sw_frac 10.0
+```
+
+Four conditions (fp16_baseline, naive_int4, yu_all_int4, near_sw_int4, random_int4).
+Reports accuracy, MCC, memory, inference time, and theoretical weight savings per condition.
 
 ### 6. Mechanistic interpretability (gradient saliency + causal ablation)
 
