@@ -279,6 +279,72 @@ python scripts/compression/run_quantization_ablation.py \
 
 Output files: `results/quant_ablation_{model}_{task}_int{bits}.{json,png}`
 
+#### Whole-Model INT4 Quantization — SW-Exemption Comparison (`run_whole_model_quantization.py`)
+
+Extends the down-proj-only ablation above to all 7 linear projection types
+(`down_proj`, `gate_proj`, `up_proj`, `q_proj`, `k_proj`, `v_proj`, `o_proj`) —
+806 396 / 806 397 rows total across 30 layers.  RTN INT4 is applied; SW rows are
+excluded from the candidate pool using the following criterion:
+
+- `down_proj`  — exclude `(sw_layer, sw_row)` (the actual super-row)
+- `gate_proj` / `up_proj` — exclude `(sw_layer, sw_col)` (intermediate feature index)
+- Attention projections — no exclusion (no known SW in attention layers)
+
+Three single-shot conditions are measured per model:
+
+| Condition | Rows quantized |
+|---|---|
+| `yu_all` | all eligible non-SW rows |
+| `yu_all_including_sw` | all eligible rows **+ SW rows** |
+| `sw_fragility` | SW rows only |
+
+Evaluation uses 6 × 1 200 nt sequences (7 200 nt / ~1 200 tokens) with GC biases
+spanning 40–65% to challenge both model variants equally.
+
+**Results — GENERator eukaryote 3B (INT4, full scope)**
+
+| Condition | n rows | Δ PPL |
+|---|---|---|
+| `yu_all` (SW exempt) | 806 396 | **+0.117** |
+| `yu_all_including_sw` | 806 402 | **+0.117** |
+| SW marginal cost (`yu_all_sw − yu_all`) | +6 SW rows | **+0.0006** |
+| `sw_fragility` (SW rows only) | 6 | +0.0005 |
+
+**Results — GENERator prokaryote 3B (INT4, full scope)**
+
+| Condition | n rows | Δ PPL |
+|---|---|---|
+| `yu_all` (SW exempt) | 806 397 | **+0.444** |
+| `yu_all_including_sw` | 806 400 | **+0.445** |
+| SW marginal cost | +3 SW rows | **+0.0006** |
+| `sw_fragility` (SW rows only) | 3 | +0.0003 |
+
+**Key finding**: The SW rows in GENERator are **not quantization-sensitive**.
+Protecting them (Yu et al.-style exemption) provides a marginal PPL benefit of
++0.0006 in both models — indistinguishable from noise — while the SW rows alone
+cause negligible degradation (+0.0003–0.0005).  This is a **non-replication** of the
+Yu et al. (2024) SW-exemption finding in genomic LMs: unlike NLP LLMs where
+SW-exemption is critical for INT4 compression, GENERator's super-weight rows are
+no more precision-sensitive than ordinary rows.
+
+Note: the prokaryote model shows a larger overall INT4 cost (+0.444 vs +0.117).
+This is consistent with the prokaryote SW being more deeply integrated into the
+residual stream (earlier layer L2, higher ΔPPL from zeroing: +9.47 vs +2.92) — the
+whole model is more fragile to precision loss, but this fragility is distributed
+across ordinary rows, not concentrated in the SW.
+
+Run with:
+```bash
+# Eukaryote
+bash scripts/compression/run_whole_model_quant_generator.sh
+# Prokaryote
+bash scripts/compression/run_whole_model_quant_generator_prokaryote.sh
+```
+
+Output files:
+- `results/whole_model_quant_generator_sw_comparison.{json,png}`
+- `results/whole_model_quant_generator_prokaryote_sw_comparison.{json,png}`
+
 ---
 
 ### INT4 Downstream Benchmark — Practical Compression (`run_int4_downstream_benchmark.py`)
