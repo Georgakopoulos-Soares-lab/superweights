@@ -2,37 +2,43 @@
 scripts/compression/run_int4_downstream_benchmark.py
 -----------------------------------------------------
 Practical INT4 downstream benchmark: does SW-aware quantization preserve
-GUE task accuracy better than naive INT4?
+task performance better than naive INT4?
 
 Four conditions at a fixed compression target (--near_sw_frac % of non-SW rows):
 
   1. fp16_baseline  : no quantization (reference)
   2. naive_int4     : INT4 ALL rows, SW rows included  ← worst-case baseline
-  3. yu_all         : INT4 all non-SW rows, SW rows stay FP16  (Yu et al. strategy)
+  3. yu_all_int4    : INT4 all non-SW rows, SW rows stay FP16  (Yu et al. strategy)
   4. near_sw_int4   : INT4 only near-SW rows (shadow-redundant subset), all else FP16
   5. random_int4    : INT4 same count as near_sw, random non-SW rows (--n_rand_seeds seeds)
 
-Metrics per condition:
-  - GUE accuracy (%), MCC, F1
-  - Delta vs FP16 baseline
+Supported models and metrics:
+  --model dnabert2   : GUE downstream accuracy / MCC on a fine-tuned checkpoint
+  --model generator  : Perplexity (PPL) on probe sequences — no GUE fine-tuning needed
+
+Additional metrics per condition:
   - Peak GPU memory (MB) during inference
   - Inference wall-clock time (ms / sample)
-  - Theoretical weight memory saved (MB) assuming FP16 → INT4 = 4× on quantized rows
-    Note: RTN simulation here keeps weights in FP16 dtype; actual memory gains
-    require hardware INT4 kernels. Theoretical savings are reported for reference.
+  - Theoretical weight memory saved (MB): FP16→INT4 on quantized rows
+    (RTN simulation keeps dtype FP16; actual memory needs hardware INT4 kernels)
 
-Intended use: DNABERT-2 on splice/reconstructed (your most robust GUE finding).
-The script also works on any other GUE task with a fine-tuned checkpoint.
-
-Usage:
+Usage (DNABERT-2, splice):
     python scripts/compression/run_int4_downstream_benchmark.py \\
+        --model dnabert2 \\
         --task splice/reconstructed \\
-        --ckpt_dir results/gue_checkpoints/dnabert2_splice_reconstructed \\
+        --ckpt_dir results/gue_checkpoints/dnabert2_reconstructed \\
         --near_sw_frac 10.0 \\
         --out results/int4_downstream_benchmark_splice.json
 
-    --near_sw_frac   % of non-SW candidate rows to INT4 in the near_sw condition
-                     (and the matched count for random_int4). Default: 10.0
+Usage (GENERator, PPL):
+    python scripts/compression/run_int4_downstream_benchmark.py \\
+        --model generator \\
+        --near_sw_frac 30.0 \\
+        --out results/int4_downstream_benchmark_generator.json
+
+    --near_sw_frac   % of non-SW candidate rows to INT4 in the near_sw condition.
+                     Use 30.0 for GENERator (where the near-SW effect was clearest).
+                     Use 10.0 for DNABERT-2. Default: 10.0
     --n_rand_seeds   Number of random seeds for condition 5. Default: 10.
 """
 
@@ -177,6 +183,58 @@ def run_condition(label: str, model, rows_to_quant: list[tuple],
           f"  mem={metrics['peak_mem_mb']} MB  {metrics['ms_per_sample']:.2f} ms/sample"
           f"{delta_str}")
     return result
+
+
+def _ppl_condition(label: str, model, tokenizer, rows_to_quant: list,
+                   pattern: str, sequences: list, device: str,
+                   bits: int = 4, baseline_ppl: float | None = None) -> dict:
+    """Apply RTN quantization, measure PPL + peak GPU mem + wall-clock, restore.
+
+    Handles both single-GPU (device="cuda") and multi-GPU (device_map="auto") models.
+    For multi-GPU models the peak_mem_mb is the sum across all CUDA devices.
+    """
+    from run_quantization_ablation import _generator_perplexity
+
+    if rows_to_quant:
+        saves = _apply_quantization(model, pattern, rows_to_quant, bits=bits)
+
+    # Reset peak-memory counters on all available CUDA devices
+    if torch.cuda.is_available():
+        for _dev in range(torch.cuda.device_count()):
+            torch.cuda.reset_peak_memory_stats(_dev)
+        torch.cuda.synchronize()
+
+    t0  = time.perf_counter()
+    ppl = _generator_perplexity(model, tokenizer, sequences)
+    t1  = time.perf_counter()
+
+    if torch.cuda.is_available():
+        torch.cuda.synchronize()
+        peak_mem_mb = round(
+            sum(torch.cuda.max_memory_allocated(_dev)
+                for _dev in range(torch.cuda.device_count())) / 1024 ** 2, 1)
+    else:
+        peak_mem_mb = None
+
+    if rows_to_quant:
+        _restore_quantization(model, pattern, saves)
+
+    elapsed_ms = (t1 - t0) * 1000.0
+    ms_per_seq = round(elapsed_ms / max(len(sequences), 1), 3)
+    delta_ppl  = round(ppl - baseline_ppl, 6) if baseline_ppl is not None else None
+
+    delta_str = f"  ΔPPL={delta_ppl:+.4f}" if delta_ppl is not None else ""
+    print(f"  [{label:<18}]  ppl={ppl:.4f}  mem={peak_mem_mb} MB"
+          f"  {ms_per_seq:.1f} ms/seq{delta_str}")
+
+    return {
+        "label":            label,
+        "n_quantized_rows": len(rows_to_quant),
+        "ppl":              round(ppl, 6),
+        "delta_ppl":        delta_ppl,
+        "peak_mem_mb":      peak_mem_mb,
+        "ms_per_seq":       ms_per_seq,
+    }
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -420,23 +478,261 @@ def _print_summary_table(results: dict, bits: int = 4):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# GENERator PPL benchmark
+# ─────────────────────────────────────────────────────────────────────────────
+
+PROBE_SEQS = [
+    "ATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGCATGC",
+    "GCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAG",
+    "AAAATTTTCCCCGGGGAAAATTTTCCCCGGGGAAAATTTTCCCCGGGG",
+    "ATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+    "GTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTAC",
+    "CGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGAT",
+]
+
+
+def run_generator_benchmark(
+    model, tokenizer,
+    sw_list: list,
+    pattern: str,
+    num_layers: int,
+    near_sw_frac: float,
+    n_rand_seeds: int,
+    device: str,
+    bits: int = 4,
+    sequences: list | None = None,
+) -> dict:
+    """Four-condition INT4 benchmark for GENERator (perplexity metric).
+
+    Unlike the DNABERT-2 benchmark, num_rows varies per layer so all_rows
+    and candidates are built by inspecting each layer's weight shape.
+    """
+    if sequences is None:
+        sequences = PROBE_SEQS
+
+    sw_coords = {(sw["layer"], sw["row"]) for sw in sw_list}
+    sw_rows   = [(sw["layer"], sw["row"]) for sw in sw_list]
+
+    # Build all (layer, row) pairs dynamically — GENERator num_rows varies
+    all_rows = []
+    for li in range(num_layers):
+        m = _resolve_module(model, pattern, li)
+        nrows = m.weight.data.shape[0]
+        for ri in range(nrows):
+            all_rows.append((li, ri))
+
+    # Non-SW candidate pool
+    candidates = [(li, ri) for li, ri in all_rows if (li, ri) not in sw_coords]
+    n_total    = len(candidates)
+
+    # Near-SW ranking (highest shadow similarity first → ascending=False)
+    print("  Ranking rows by proximity to SW coordinates …", flush=True)
+    # For GENERator the "num_rows" sentinel passed to _rank_proximity can be
+    # anything; the function uses the actual weight shape internally.
+    sentinel_num_rows = _resolve_module(model, pattern, 0).weight.data.shape[0]
+    ranked_near = _rank_proximity(model, pattern, candidates, sw_list,
+                                  num_layers, sentinel_num_rows, ascending=False)
+    n_near    = max(1, int(round(n_total * near_sw_frac / 100.0)))
+    near_rows = ranked_near[:n_near]
+
+    print(f"\n  Compression target: near_sw_frac={near_sw_frac}%  "
+          f"n_near={n_near}  n_total_candidates={n_total}  n_sw={len(sw_rows)}")
+    print(f"  Quantization: INT{bits} (RTN simulation)\n")
+
+    # ── Condition 1: fp16_baseline ────────────────────────────────────────────
+    base         = _ppl_condition("fp16_baseline", model, tokenizer, [],
+                                  pattern, sequences, device)
+    baseline_ppl = base["ppl"]
+
+    # ── Condition 2: naive_int4  (ALL rows including SW) ─────────────────────
+    naive = _ppl_condition("naive_int4", model, tokenizer, all_rows,
+                           pattern, sequences, device, bits=bits,
+                           baseline_ppl=baseline_ppl)
+    naive["theoretical_savings_mb"] = _theoretical_savings_mb(
+        model, pattern, all_rows, from_bits=16, to_bits=bits)
+
+    # ── Condition 3: yu_all_int4  (non-SW rows only) ──────────────────────────
+    yu = _ppl_condition("yu_all_int4", model, tokenizer, candidates,
+                        pattern, sequences, device, bits=bits,
+                        baseline_ppl=baseline_ppl)
+    yu["theoretical_savings_mb"] = _theoretical_savings_mb(
+        model, pattern, candidates, from_bits=16, to_bits=bits)
+
+    # ── Condition 4: near_sw_int4 ─────────────────────────────────────────────
+    near = _ppl_condition("near_sw_int4", model, tokenizer, near_rows,
+                          pattern, sequences, device, bits=bits,
+                          baseline_ppl=baseline_ppl)
+    near["theoretical_savings_mb"] = _theoretical_savings_mb(
+        model, pattern, near_rows, from_bits=16, to_bits=bits)
+
+    # ── Condition 5: random_int4  (n_rand_seeds seeds) ────────────────────────
+    rand_results = []
+    for seed in range(n_rand_seeds):
+        rand_rows = _random.Random(seed).sample(candidates, n_near)
+        r = _ppl_condition(f"random_int4_seed{seed}", model, tokenizer, rand_rows,
+                           pattern, sequences, device, bits=bits,
+                           baseline_ppl=baseline_ppl)
+        r["theoretical_savings_mb"] = _theoretical_savings_mb(
+            model, pattern, rand_rows, from_bits=16, to_bits=bits)
+        rand_results.append(r)
+
+    rand_ppls  = [r["ppl"]       for r in rand_results]
+    rand_dppls = [r["delta_ppl"] for r in rand_results]
+    rand_mems  = [r["peak_mem_mb"] for r in rand_results if r["peak_mem_mb"] is not None]
+    rand_times = [r["ms_per_seq"] for r in rand_results]
+    print(f"  [random_int4 (n={n_rand_seeds})]  "
+          f"ppl={np.mean(rand_ppls):.4f}±{np.std(rand_ppls):.4f}  "
+          f"ΔPPL={np.mean(rand_dppls):+.4f}±{np.std(rand_dppls):.4f}")
+
+    random_summary = {
+        "label":             "random_int4",
+        "n_quantized_rows":  n_near,
+        "n_seeds":           n_rand_seeds,
+        "ppl_mean":          float(np.mean(rand_ppls)),
+        "ppl_std":           float(np.std(rand_ppls)),
+        "delta_ppl_mean":    float(np.mean(rand_dppls)),
+        "delta_ppl_std":     float(np.std(rand_dppls)),
+        "ms_per_seq_mean":   float(np.mean(rand_times)),
+        "peak_mem_mb_mean":  float(np.mean(rand_mems)) if rand_mems else None,
+        "theoretical_savings_mb": rand_results[0]["theoretical_savings_mb"],
+        "per_seed":          rand_results,
+    }
+
+    return {
+        "fp16_baseline": base,
+        "naive_int4":    naive,
+        "yu_all_int4":   yu,
+        "near_sw_int4":  near,
+        "random_int4":   random_summary,
+        "config": {
+            "near_sw_frac":     near_sw_frac,
+            "n_near_rows":      n_near,
+            "n_sw_rows":        len(sw_rows),
+            "n_candidate_rows": n_total,
+            "bits":             bits,
+        },
+    }
+
+
+def _print_ppl_summary_table(results: dict, bits: int = 4):
+    cfg = results["config"]
+    print("\n" + "="*80)
+    print(f"INT{bits} PPL BENCHMARK SUMMARY  (GENERator)")
+    print(f"near_sw_frac={cfg['near_sw_frac']}%  "
+          f"n_near={cfg['n_near_rows']}  n_sw={cfg['n_sw_rows']}  "
+          f"n_total_candidates={cfg['n_candidate_rows']}")
+    print("="*80)
+    header = f"{'Condition':<22} {'PPL':>8} {'ΔPPL':>10} {'ΔWt(MB)':>9}  {'mem(MB)':>8} {'ms/seq':>7}"
+    print(header)
+    print("-" * len(header))
+
+    def _prow(label, cond, is_rand=False):
+        ppl  = cond.get("ppl_mean",        cond.get("ppl",       float("nan")))
+        dppl = cond.get("delta_ppl_mean",   cond.get("delta_ppl", 0.0)) or 0.0
+        sav  = cond.get("theoretical_savings_mb", 0.0)
+        mem  = cond.get("peak_mem_mb_mean", cond.get("peak_mem_mb"))
+        ms   = cond.get("ms_per_seq_mean",  cond.get("ms_per_seq"))
+        mem_s = f"{mem:.1f}" if mem is not None else "—"
+        ms_s  = f"{ms:.1f}"  if ms  is not None else "—"
+        std_s = f"±{cond.get('ppl_std', 0):.4f}" if is_rand else ""
+        return (f"  {label:<20} {ppl:>8.4f}{std_s:<10}  {dppl:>+8.4f}  "
+                f"{sav:>8.1f}  {mem_s:>8} {ms_s:>7}")
+
+    print(_prow("fp16_baseline", results["fp16_baseline"]))
+    print(_prow("naive_int4",    results["naive_int4"]))
+    print(_prow("yu_all_int4",   results["yu_all_int4"]))
+    print(_prow("near_sw_int4",  results["near_sw_int4"]))
+    print(_prow("random_int4",   results["random_int4"], is_rand=True))
+    print("="*80)
+    near_d = results["near_sw_int4"]["delta_ppl"]
+    rand_d = results["random_int4"]["delta_ppl_mean"]
+    rand_s = results["random_int4"]["ppl_std"]
+    print(f"\n  near_sw vs random: ΔPPL = {near_d:+.4f} vs {rand_d:+.4f}±{rand_s:.4f}")
+    print(f"  near_sw is {'BETTER (lower PPL)' if near_d < rand_d else 'NOT BETTER'} than random "
+          f"(diff={near_d - rand_d:+.4f})")
+
+
+def _plot_ppl(results: dict, model_name: str, out_path: str, bits: int = 4):
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+    except ImportError:
+        print("  [skip plot] matplotlib not available")
+        return
+
+    b      = results["fp16_baseline"]
+    cfg    = results["config"]
+    labels = ["FP16\nbaseline", "Naive\nINT4", "Yu et al.\n(non-SW)",
+              f"Near-SW\n({cfg['near_sw_frac']}%)", "Random\nINT4"]
+    dppls  = [
+        0.0,
+        results["naive_int4"]["delta_ppl"],
+        results["yu_all_int4"]["delta_ppl"],
+        results["near_sw_int4"]["delta_ppl"],
+        results["random_int4"]["delta_ppl_mean"],
+    ]
+    errs   = [None, None, None, None, results["random_int4"]["delta_ppl_std"]]
+    colors = ["black", "crimson", "darkorange", "steelblue", "gray"]
+
+    fig, ax = plt.subplots(figsize=(9, 5))
+    fig.suptitle(f"INT{bits} Benchmark: {model_name} (Perplexity)\n"
+                 f"FP16 baseline PPL={b['ppl']:.4f}", fontsize=11)
+    x    = range(len(labels))
+    bars = ax.bar(x, dppls, color=colors, alpha=0.85, edgecolor="black", linewidth=0.6)
+    for i, (bar, err) in enumerate(zip(bars, errs)):
+        if err is not None:
+            ax.errorbar(i, dppls[i], yerr=err, fmt="none",
+                        ecolor="black", capsize=4, linewidth=1.2)
+        v = dppls[i]
+        ax.text(bar.get_x() + bar.get_width() / 2,
+                v + (0.002 if v >= 0 else -0.008),
+                f"{v:+.4f}", ha="center",
+                va="bottom" if v >= 0 else "top", fontsize=8, fontweight="bold")
+    ax.axhline(0, color="black", linewidth=0.8)
+    ax.set_xticks(list(x))
+    ax.set_xticklabels(labels, fontsize=9)
+    ax.set_ylabel("ΔPPL vs FP16 baseline")
+    ax.set_title("Perplexity impact of INT4 quantization per condition")
+    ax.grid(True, axis="y", alpha=0.3)
+
+    near_d = results["near_sw_int4"]["delta_ppl"]
+    rand_d = results["random_int4"]["delta_ppl_mean"]
+    better = near_d < rand_d
+    ax.annotate(
+        f"near_sw {'better ✓' if better else 'worse ✗'}\n(Δ={near_d - rand_d:+.4f})",
+        xy=(3, near_d), xytext=(3.3, near_d + 0.03),
+        fontsize=7, color="steelblue",
+        arrowprops=dict(arrowstyle="->", color="steelblue", lw=0.8),
+    )
+    plt.tight_layout()
+    plt.savefig(out_path, dpi=150, bbox_inches="tight")
+    print(f"  Plot saved → {out_path}")
+    plt.close(fig)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # CLI
 # ─────────────────────────────────────────────────────────────────────────────
 
 def parse_args():
     p = argparse.ArgumentParser(
-        description="Practical INT4 downstream benchmark for DNABERT-2 on a GUE task."
+        description="Practical INT4 downstream benchmark (DNABERT-2 GUE or GENERator PPL)."
     )
+    p.add_argument("--model",    default="dnabert2",
+                   choices=["dnabert2", "generator", "generator_prokaryote",
+                             "generator_prokaryote_1b"],
+                   help="Model to benchmark. dnabert2=GUE accuracy; generator*=PPL.")
     p.add_argument("--task",     default="splice/reconstructed",
-                   help="GUE task path. Use splice/reconstructed for the robust result.")
+                   help="GUE task path (dnabert2 only). Use splice/reconstructed.")
     p.add_argument("--gue_root", default="/home/nvidia/data/gue/GUE")
     p.add_argument("--ckpt_dir", default=None,
-                   help="Dir with model_state.pt. Auto-detected from task if omitted.")
+                   help="Dir with model_state.pt (dnabert2 only).")
     p.add_argument("--sw_index", default="results/super_weight_index.json")
     p.add_argument("--configs_dir", default="configs")
     p.add_argument("--near_sw_frac", type=float, default=10.0,
-                   help="Pct of non-SW rows to INT4 in the near_sw condition "
-                        "(and matched random count). Default: 10.0")
+                   help="Pct of non-SW rows to INT4 in near_sw + random conditions. "
+                        "Use 10.0 for dnabert2, 30.0 for generator. Default: 10.0")
     p.add_argument("--n_rand_seeds", type=int, default=10)
     p.add_argument("--bits",  type=int, default=4, choices=[4, 8])
     p.add_argument("--batch_size", type=int, default=64)
@@ -448,8 +744,74 @@ def parse_args():
 
 def main():
     args = parse_args()
+    if args.model != "dnabert2":
+        return _main_generator(args)
+    return _main_dnabert2(args)
 
-    # ── Load DNABERT-2 config ─────────────────────────────────────────────────
+
+def _main_generator(args):
+    """GENERator PPL-mode benchmark."""
+    cfg_path = Path(args.configs_dir) / f"{args.model}.yaml"
+    if not cfg_path.exists():
+        cfg_path = _ROOT / "configs" / f"{args.model}.yaml"
+    with open(cfg_path) as f:
+        cfg = yaml.safe_load(f)
+
+    sw_index_path = Path(args.sw_index)
+    if not sw_index_path.exists():
+        sw_index_path = _ROOT / args.sw_index
+    with open(sw_index_path) as f:
+        sw_data = json.load(f)
+    sw_list = sw_data.get(args.model, {}).get("results", [])
+    print(f"  Loaded {len(sw_list)} super rows for {args.model}")
+
+    print(f"\n  Loading {args.model} …", flush=True)
+    from models.generator_wrapper import GeneratorWrapper
+    wrapper   = GeneratorWrapper(cfg)
+    wrapper.load()
+    # GeneratorWrapper uses device_map="auto" — do NOT call .to(device) after load.
+    model     = wrapper.model.eval()
+    tokenizer = wrapper.tokenizer
+    pattern    = cfg["down_proj_pattern"]
+    num_layers = cfg["num_layers"]
+    print(f"  Model loaded.  layers={num_layers}")
+
+    print(f"\n=== INT{args.bits} PPL Benchmark: {args.model} ===")
+    results = run_generator_benchmark(
+        model        = model,
+        tokenizer    = tokenizer,
+        sw_list      = sw_list,
+        pattern      = pattern,
+        num_layers   = num_layers,
+        near_sw_frac = args.near_sw_frac,
+        n_rand_seeds = args.n_rand_seeds,
+        device       = args.device,
+        bits         = args.bits,
+    )
+
+    _print_ppl_summary_table(results, bits=args.bits)
+
+    task_slug = args.model
+    out_path  = args.out  or f"results/int4_downstream_benchmark_{task_slug}.json"
+    plot_path = args.plot or out_path.replace(".json", ".png")
+    Path(out_path).parent.mkdir(parents=True, exist_ok=True)
+
+    output = {
+        "model":         args.model,
+        "metric":        "perplexity",
+        "bits":          args.bits,
+        "near_sw_frac":  args.near_sw_frac,
+        "n_rand_seeds":  args.n_rand_seeds,
+        **results,
+    }
+    with open(out_path, "w") as f:
+        json.dump(output, f, indent=2, default=str)
+    print(f"\n  Results saved → {out_path}")
+    _plot_ppl(results, args.model, plot_path, bits=args.bits)
+
+
+def _main_dnabert2(args):
+    """DNABERT-2 GUE accuracy benchmark (original behaviour)."""
     cfg_path = Path(args.configs_dir) / "dnabert2.yaml"
     if not cfg_path.exists():
         cfg_path = _ROOT / "configs" / "dnabert2.yaml"
