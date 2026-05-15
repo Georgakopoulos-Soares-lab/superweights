@@ -118,5 +118,17 @@
         "in_max": null
       }
     ]
+  },
+  "ntv3": {
+    "mode": "superrow",
+    "results": [
+      {
+        "layer": 11,
+        "row": 1472,
+        "col": 1579,
+        "in_max": 144.74658203125,
+        "out_max": 1581.7132568359375
+      }
+    ]
   }
 }

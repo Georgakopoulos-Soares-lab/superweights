@@ -61,6 +61,7 @@ from run_gue_ablation import (
     _save_row,
     _zero_row,
     _restore_row,
+    _NTv3Classifier,
 )
 
 
@@ -80,18 +81,35 @@ def _set_seed(seed: int):
 # Model loader (mirrors run_gue_ablation.py, supports dnabert2 / ntv3)
 # ─────────────────────────────────────────────────────────────────────────────
 
+# Pinned revision for NTv3 remote code — prevents pulling untrusted new versions.
+_NTV3_CODE_REVISION = "0ecff3637f0d3ba5b686d1095083218157c2ca34"
+
 def _load_model(model_id: str, num_labels: int, hf_token: str | None, device: str):
-    from transformers import AutoTokenizer, AutoModelForSequenceClassification
-    tokenizer = AutoTokenizer.from_pretrained(
-        model_id, trust_remote_code=True, token=hf_token
-    )
-    model = AutoModelForSequenceClassification.from_pretrained(
-        model_id,
-        num_labels=num_labels,
-        trust_remote_code=True,
-        token=hf_token,
-        ignore_mismatched_sizes=True,
-    )
+    import transformers
+
+    is_ntv3 = "InstaDeepAI" in model_id and "NTv3" in model_id
+    tok_kwargs = {"trust_remote_code": True}
+    if is_ntv3:
+        tok_kwargs["code_revision"] = _NTV3_CODE_REVISION
+    if hf_token:
+        tok_kwargs["token"] = hf_token
+
+    tokenizer = transformers.AutoTokenizer.from_pretrained(model_id, **tok_kwargs)
+    if is_ntv3 and tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+
+    if is_ntv3:
+        backbone = transformers.AutoModelForMaskedLM.from_pretrained(
+            model_id, **tok_kwargs
+        )
+        embed_dim = backbone.config.embed_dim
+        model = _NTv3Classifier(backbone, embed_dim, num_labels)
+    else:
+        model = transformers.AutoModelForSequenceClassification.from_pretrained(
+            model_id, num_labels=num_labels, ignore_mismatched_sizes=True,
+            **tok_kwargs,
+        )
+
     model = model.to(device)
     return model, tokenizer
 
@@ -217,6 +235,15 @@ def main():
     parser.add_argument("--out",          default="results/gue_multiseed_results.json")
     parser.add_argument("--hf_token",     default=None)
     parser.add_argument("--device",       default="cuda")
+    parser.add_argument("--min_baseline_acc", type=float, default=0.0,
+                        help="Abort if the first-seed baseline accuracy is below this threshold "
+                             "even after retries.")
+    parser.add_argument("--retry_epochs", nargs="+", type=int, default=[],
+                        help="If first-seed baseline < --min_baseline_acc, retry training with "
+                             "these epoch counts in order before giving up. "
+                             "E.g. --retry_epochs 8 12 20")
+    parser.add_argument("--retry_lr", type=float, default=None,
+                        help="Learning rate to use during retries (default: halve --lr each retry).")
     args = parser.parse_args()
 
     # ── Config ───────────────────────────────────────────────────────────────
@@ -282,6 +309,54 @@ def main():
             hf_token   = hf_token,
             ckpt_dir   = ckpt_dir,
         )
+
+        # Quality gate on first seed: retry with more epochs if needed
+        if seed == args.seeds[0] and args.min_baseline_acc > 0.0:
+            bl_acc = result["baseline"]["accuracy"]
+            if bl_acc < args.min_baseline_acc and args.retry_epochs:
+                for attempt, retry_ep in enumerate(args.retry_epochs):
+                    retry_lr = args.retry_lr if args.retry_lr else args.lr * (0.5 ** (attempt + 1))
+                    print(f"\n[RETRY {attempt+1}] baseline={bl_acc:.4f} < {args.min_baseline_acc:.2f} "
+                          f"— retraining seed 0 with epochs={retry_ep}, lr={retry_lr:.2e}")
+                    # Delete the bad checkpoint so fine_tune reruns
+                    import shutil
+                    seed_ckpt = os.path.join(ckpt_dir, f"seed_{seed}")
+                    if os.path.exists(seed_ckpt):
+                        shutil.rmtree(seed_ckpt)
+                    result = run_one_seed(
+                        seed       = seed,
+                        model_id   = model_id,
+                        sw_list    = sw_list,
+                        pattern    = pattern,
+                        train_ds   = train_ds,
+                        val_ds     = val_ds,
+                        test_ds    = test_ds,
+                        epochs     = retry_ep,
+                        lr         = retry_lr,
+                        batch      = args.batch,
+                        n_rand_repeats = args.n_rand,
+                        device     = args.device,
+                        hf_token   = hf_token,
+                        ckpt_dir   = ckpt_dir,
+                    )
+                    bl_acc = result["baseline"]["accuracy"]
+                    if bl_acc >= args.min_baseline_acc:
+                        print(f"[RETRY {attempt+1}] Success — baseline={bl_acc:.4f}")
+                        # Use the winning epochs/lr for all remaining seeds
+                        epochs   = retry_ep
+                        args.lr  = retry_lr
+                        break
+                else:
+                    print(f"\n[SKIP] baseline {bl_acc:.4f} < {args.min_baseline_acc:.2f} "
+                          f"after all retries. Task {args.model}/{args.task} skipped.")
+                    sys.exit(0)
+            elif bl_acc < args.min_baseline_acc:
+                print(f"\n[SKIP] First-seed baseline accuracy {bl_acc:.4f} < "
+                      f"--min_baseline_acc {args.min_baseline_acc:.2f}. "
+                      f"Task {args.model}/{args.task} skipped — model did not learn the task. "
+                      f"Try passing --retry_epochs 8 12 20 to attempt longer training.")
+                sys.exit(0)
+
         per_seed.append(result)
 
     # ── Aggregate ─────────────────────────────────────────────────────────────

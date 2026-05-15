@@ -240,7 +240,7 @@ def _plot(results: list, out_path: str, sw_info: str):
     x = np.arange(len(contexts))
     w = 0.35
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4.5))
 
     # Left: ablation cost (delta PPL)
     sw_means   = [np.mean(sw_by_ctx[c])   for c in contexts]
@@ -248,36 +248,147 @@ def _plot(results: list, out_path: str, sw_info: str):
     sw_sems    = [np.std(sw_by_ctx[c])    for c in contexts]
     rand_sems  = [np.std(rand_by_ctx[c])  for c in contexts]
 
-    bars1 = ax1.bar(x - w/2, sw_means,   w, label="SW rows",      color="steelblue",
-                    yerr=sw_sems,   capsize=4)
-    bars2 = ax1.bar(x + w/2, rand_means, w, label="Random rows",   color="lightgray",
-                    yerr=rand_sems, capsize=4)
-    ax1.axhline(0.0, color="black", linewidth=0.7, linestyle="--")
+    CTX_COLORS = {"promoter": "#4878CF", "enhancer": "#E8601C", "random": "#888888"}
+
+    bars1 = ax1.bar(x - w/2, sw_means,   w, label="SW rows",    color="#4878CF",
+                    yerr=sw_sems,   capsize=4, error_kw={"linewidth": 1.2})
+    bars2 = ax1.bar(x + w/2, rand_means, w, label="Random rows", color="#CCCCCC",
+                    yerr=rand_sems, capsize=4, error_kw={"linewidth": 1.2})
+    ax1.axhline(0.0, color="black", linewidth=0.8, linestyle="--")
     ax1.set_xticks(x)
-    ax1.set_xticklabels(contexts)
-    ax1.set_ylabel("ΔPPL  (ablated − clean)  ↑ = more important")
-    ax1.set_title(f"SW row ablation cost by genomic context\n{sw_info}")
-    ax1.legend(fontsize=9)
+    ax1.set_xticklabels(contexts, fontsize=11)
+    ax1.set_ylabel("ΔPPL  (ablated − clean)  ↑ = more important", fontsize=11)
+    ax1.set_title(f"SW row ablation cost by genomic context\n{sw_info}", fontsize=12)
+    ax1.legend(fontsize=10, framealpha=0.8)
     ax1.grid(True, alpha=0.3, axis="y")
+    ax1.tick_params(labelsize=10)
+    ax1.spines["top"].set_visible(False)
+    ax1.spines["right"].set_visible(False)
 
     # Right: activation distribution shift (real vs shuffled)
     all_shifts  = [r.get("act_shift", 0.0) for r in results]
     all_labels  = [r["label"]              for r in results]
-    ctx_colours = {"promoter": "steelblue", "enhancer": "darkorange", "random": "gray"}
-    cols = [ctx_colours.get(lbl, "purple") for lbl in all_labels]
-    ax2.scatter(range(len(all_shifts)), all_shifts, c=cols, s=25, alpha=0.7)
+    cols = [CTX_COLORS.get(lbl, "purple") for lbl in all_labels]
+    ax2.scatter(range(len(all_shifts)), all_shifts, c=cols, s=22, alpha=0.75, linewidths=0)
     ax2.axhline(0.0, color="black", linewidth=0.8, linestyle="--")
-    ax2.set_xlabel("Sequence index")
-    ax2.set_ylabel("Activation shift  (real − shuffled) / pooled-std")
-    ax2.set_title("SW row activation: real vs dinucleotide-shuffled")
-    for ctx, col in ctx_colours.items():
-        ax2.scatter([], [], c=col, label=ctx)
-    ax2.legend(fontsize=9)
+    ax2.set_xlabel("Sequence index", fontsize=11)
+    ax2.set_ylabel("Activation shift  (real − shuffled) / pooled-std", fontsize=11)
+    ax2.set_title("SW row activation: real vs dinucleotide-shuffled", fontsize=12)
+    present_ctxs = set(all_labels)
+    for ctx, col in CTX_COLORS.items():
+        if ctx in present_ctxs:
+            ax2.scatter([], [], c=col, label=ctx, s=40)
+    ax2.legend(fontsize=10, framealpha=0.8)
     ax2.grid(True, alpha=0.3)
+    ax2.tick_params(labelsize=10)
+    ax2.spines["top"].set_visible(False)
+    ax2.spines["right"].set_visible(False)
 
     plt.tight_layout()
-    plt.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.savefig(out_path, dpi=300, bbox_inches="tight")
     print(f"  Plot saved → {out_path}")
+    plt.close(fig)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Combined EUK + PROK plot
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _plot_combined(euk_data: dict, prok_data: dict, out_path: str):
+    """2×2 figure: EUK row on top, PROK row on bottom.
+    Each row: left = ΔPPL bar chart, right = activation-shift scatter.
+    """
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+    except ImportError:
+        print("  [skip plot] matplotlib not available")
+        return
+
+    from collections import defaultdict
+
+    CTX_COLORS = {"promoter": "#4878CF", "enhancer": "#E8601C", "random": "#888888"}
+    BAR_SW     = "#4878CF"
+    BAR_RAND   = "#CCCCCC"
+
+    fig, axes = plt.subplots(2, 2, figsize=(13, 8))
+    plt.rcParams.update({"font.size": 11})
+
+    panel_labels = [
+        (euk_data,  "Eukaryote (GENERator 3B)",  "(A)"),
+        (prok_data, "Prokaryote (GENERator 3B)", "(B)"),
+    ]
+
+    for row_idx, (data, organism_label, panel_tag) in enumerate(panel_labels):
+        results  = data["results"]
+        sw_layer = data["sw_layer"]
+        sw_rows  = data["sw_rows"]
+        sw_info  = f"layer={sw_layer}  rows={sw_rows}"
+
+        sw_by_ctx   = defaultdict(list)
+        rand_by_ctx = defaultdict(list)
+        for r in results:
+            ctx = r["label"]
+            sw_by_ctx[ctx].append(r["delta_sw"])
+            rand_by_ctx[ctx].append(r["delta_rand_mean"])
+
+        all_shifts = [r.get("act_shift", 0.0) for r in results]
+        all_labels = [r["label"]              for r in results]
+        present    = set(all_labels)
+
+        contexts = sorted(sw_by_ctx.keys())
+        x        = np.arange(len(contexts))
+        w        = 0.35
+
+        ax1 = axes[row_idx, 0]
+        ax2 = axes[row_idx, 1]
+
+        # ── Left: ΔPPL bar chart ──────────────────────────────────────────────
+        sw_means   = [np.mean(sw_by_ctx[c])   for c in contexts]
+        rand_means = [np.mean(rand_by_ctx[c]) for c in contexts]
+        sw_sems    = [np.std(sw_by_ctx[c])    for c in contexts]
+        rand_sems  = [np.std(rand_by_ctx[c])  for c in contexts]
+
+        ax1.bar(x - w/2, sw_means,   w, label="SW rows",    color=BAR_SW,
+                yerr=sw_sems,   capsize=4, error_kw={"linewidth": 1.2})
+        ax1.bar(x + w/2, rand_means, w, label="Random rows", color=BAR_RAND,
+                yerr=rand_sems, capsize=4, error_kw={"linewidth": 1.2})
+        ax1.axhline(0.0, color="black", linewidth=0.8, linestyle="--")
+        ax1.set_xticks(x)
+        ax1.set_xticklabels(contexts, fontsize=11)
+        ax1.set_ylabel("ΔPPL  (ablated − clean)  ↑ = more important", fontsize=10)
+        ax1.set_title(f"{panel_tag} {organism_label}\n{sw_info}",
+                      fontsize=11, fontweight="bold")
+        ax1.legend(fontsize=9, framealpha=0.8)
+        ax1.grid(True, alpha=0.3, axis="y")
+        ax1.tick_params(labelsize=10)
+        ax1.spines["top"].set_visible(False)
+        ax1.spines["right"].set_visible(False)
+
+        # ── Right: activation-shift scatter ──────────────────────────────────
+        cols = [CTX_COLORS.get(lbl, "purple") for lbl in all_labels]
+        ax2.scatter(range(len(all_shifts)), all_shifts,
+                    c=cols, s=22, alpha=0.75, linewidths=0)
+        ax2.axhline(0.0, color="black", linewidth=0.8, linestyle="--")
+        ax2.set_xlabel("Sequence index", fontsize=10)
+        ax2.set_ylabel("Activation shift  (real − shuffled) / pooled-std", fontsize=10)
+        ax2.set_title("SW row activation: real vs dinucleotide-shuffled",
+                      fontsize=11)
+        for ctx, col in CTX_COLORS.items():
+            if ctx in present:
+                ax2.scatter([], [], c=col, label=ctx, s=40)
+        ax2.legend(fontsize=9, framealpha=0.8)
+        ax2.grid(True, alpha=0.3)
+        ax2.tick_params(labelsize=10)
+        ax2.spines["top"].set_visible(False)
+        ax2.spines["right"].set_visible(False)
+
+    plt.tight_layout()
+    import os
+    os.makedirs(os.path.dirname(os.path.abspath(out_path)), exist_ok=True)
+    plt.savefig(out_path, dpi=300, bbox_inches="tight")
+    print(f"  Combined plot saved → {out_path}")
     plt.close(fig)
 
 
@@ -301,13 +412,38 @@ def parse_args():
     p.add_argument("--n_rand_seeds", type=int, default=10)
     p.add_argument("--device",      default="cuda")
     p.add_argument("--seed",        type=int, default=42)
-    p.add_argument("--out",         default="results/sw_causal_tracing.json")
-    p.add_argument("--plot",        default="results/sw_causal_tracing.png")
+    p.add_argument("--out",            default="results/sw_causal_tracing.json")
+    p.add_argument("--plot",           default="results/sw_causal_tracing.png")
+    p.add_argument("--replot",         action="store_true",
+                   help="Load existing --out JSON and replot without running the model.")
+    p.add_argument("--combined_plot",  default=None,
+                   metavar="EUK_JSON:PROK_JSON:OUT_PNG",
+                   help="Produce combined EUK+PROK figure from two saved JSON files.")
     return p.parse_args()
 
 
 def main():
     args = parse_args()
+
+    # ── Combined-plot shortcut (no model needed) ──────────────────────────────
+    if args.combined_plot:
+        parts = args.combined_plot.split(":")
+        if len(parts) != 3:
+            print("--combined_plot expects EUK_JSON:PROK_JSON:OUT_PNG")
+            sys.exit(1)
+        euk_json, prok_json, out_png = parts
+        euk_data  = json.load(open(euk_json))
+        prok_data = json.load(open(prok_json))
+        _plot_combined(euk_data, prok_data, out_png)
+        return
+
+    # ── Replot shortcut (no model needed) ────────────────────────────────────
+    if args.replot:
+        data    = json.load(open(args.out))
+        sw_info = f"layer={data['sw_layer']}  rows={data['sw_rows']}"
+        _plot(data["results"], args.plot, sw_info)
+        return
+
     rng  = random.Random(args.seed)
     args.window_bp = (args.window_bp // 6) * 6   # divisible by k-mer size
 
