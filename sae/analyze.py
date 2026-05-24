@@ -213,11 +213,12 @@ def activation_entropy(feat_acts: np.ndarray, eps: float = 1e-10) -> float:
     feat_acts: [n_hexamers]  (non-negative)
     Normalised to a probability distribution before computing entropy.
     Lower entropy = more monosemantic (fires on narrow set of hexamers).
+    Dead features (max activation == 0) return inf so they sort last.
     """
     p = feat_acts - feat_acts.min()
     total = p.sum()
     if total < eps:
-        return 0.0   # dead feature — treat as perfectly monosemantic
+        return float("inf")   # dead feature — exclude from monosemantic ranking
     p = p / total
     p = p[p > eps]
     return float(-np.sum(p * np.log2(p)))
@@ -308,50 +309,85 @@ def main():
     print("[analyze] Ranking features by monosemanticity...", flush=True)
     feat_entropy = np.array([activation_entropy(acts_matrix[:, f])
                               for f in range(acts_matrix.shape[1])])
-    # Sort ascending: lowest entropy = most monosemantic
+    # Sort ascending: lowest entropy = most monosemantic.
+    # Dead features return inf (excluded from top).
     mono_rank    = np.argsort(feat_entropy)
     top_mono_idx = mono_rank[:args.top_mono].tolist()
-
-    print(f"  Top-{args.top_mono} monosemantic features:")
-    for rank, fi in enumerate(top_mono_idx):
-        top_hexamers = [hexamers[i] for i in np.argsort(acts_matrix[:, fi])[::-1][:5]]
-        print(f"    [{rank+1:2d}] feature {fi:5d}  entropy={feat_entropy[fi]:.4f}"
-              f"  GC-corr={corrs['gc'][fi]:+.3f}"
-              f"  top hexamers: {top_hexamers}")
 
     # ── SW-dependent hexamers cross-reference ─────────────────────────────────
     print(f"\n[analyze] Loading SW-dependent hexamers from {args.hexamer_src}...", flush=True)
     hexamer_data = json.loads(Path(args.hexamer_src).read_text())
     results_list = hexamer_data.get("results", [])
 
-    # Sort by kl_clean_ablated descending → SW-dependent = most affected by SW ablation
+    # Build a KL-score vector aligned to the hexamers list [4096].
+    # kl_arr[i] = kl_clean_ablated for hexamer i; 0 if not present.
+    kl_lookup = {r["kmer"]: r.get("kl_clean_ablated", 0.0) for r in results_list}
+    kl_arr    = np.array([kl_lookup.get(k, 0.0) for k in hexamers], dtype=np.float64)
+
+    # Sort by KL descending → top SW-dependent hexamers set
     sw_dep_sorted = sorted(results_list, key=lambda r: r.get("kl_clean_ablated", 0), reverse=True)
     sw_dep_top    = {r["kmer"] for r in sw_dep_sorted[:args.top_sw_dep]}
 
-    # For each top-mono feature, find which of its top hexamers overlap with sw_dep_top
+    # For each top-mono feature compute:
+    #   (a) Pearson r with SW KL scores — the primary cross-reference
+    #   (b) Top hexamers where activation > 0 only (avoid tie-breaking noise)
     overlap_results = []
     for fi in top_mono_idx:
-        feat_top = [hexamers[i] for i in np.argsort(acts_matrix[:, fi])[::-1][:args.top_sw_dep]]
-        overlap  = [k for k in feat_top if k in sw_dep_top]
+        col     = acts_matrix[:, fi].astype(np.float64)
+        nnz_idx = np.where(col > 0)[0]
+
+        # Top active hexamers (activation > 0, sorted descending)
+        top_active = [hexamers[i] for i in nnz_idx[np.argsort(col[nnz_idx])[::-1]][:10]]
+
+        # Pearson r between feature activation and SW KL scores
+        if col.std() > 1e-8 and kl_arr.std() > 1e-8:
+            sw_pearson_r = float(np.corrcoef(col, kl_arr)[0, 1])
+        else:
+            sw_pearson_r = 0.0
+
+        # Fraction of the feature's active hexamers that are SW-dependent
+        active_in_sw = [hexamers[i] for i in nnz_idx if hexamers[i] in sw_dep_top]
+        sw_active_frac = len(active_in_sw) / max(len(nnz_idx), 1)
+
         overlap_results.append({
-            "feature_idx":     fi,
+            "feature_idx":        fi,
             "activation_entropy": float(feat_entropy[fi]),
-            "gc_corr":         float(corrs["gc"][fi]),
-            "homo_corr":       float(corrs["homopolymer"][fi]),
-            "entropy_corr":    float(corrs["entropy"][fi]),
-            "top5_hexamers":   [hexamers[i] for i in np.argsort(acts_matrix[:, fi])[::-1][:5]],
-            "sw_dep_overlap_n": len(overlap),
-            "sw_dep_overlap_frac": len(overlap) / args.top_sw_dep,
-            "sw_dep_overlap_hexamers": overlap[:20],
+            "n_active_hexamers":  int(len(nnz_idx)),
+            "gc_corr":            float(corrs["gc"][fi]),
+            "homo_corr":          float(corrs["homopolymer"][fi]),
+            "entropy_corr":       float(corrs["entropy"][fi]),
+            "sw_pearson_r":       sw_pearson_r,
+            "sw_active_frac":     sw_active_frac,
+            "top_active_hexamers": top_active,
+            "active_in_sw_dep":   active_in_sw[:20],
         })
 
-    total_overlap = sum(r["sw_dep_overlap_n"] for r in overlap_results)
-    print(f"\n  SW-dependent overlap summary:")
-    print(f"    Top-{args.top_mono} monosemantic features vs top-{args.top_sw_dep} SW-dep hexamers:")
-    print(f"    Total overlapping hexamers: {total_overlap}")
-    for r in overlap_results:
-        print(f"    feature {r['feature_idx']:5d}: {r['sw_dep_overlap_n']:4d} overlapping"
-              f"  ({r['sw_dep_overlap_frac']*100:.1f}%)")
+    print(f"\n  Top-{args.top_mono} monosemantic features:")
+    for rank, r in enumerate(overlap_results):
+        fi = r["feature_idx"]
+        print(f"    [{rank+1:2d}] feature {fi:5d}  entropy={feat_entropy[fi]:.4f}"
+              f"  n_active={r['n_active_hexamers']}"
+              f"  GC-corr={r['gc_corr']:+.3f}"
+              f"  SW-r={r['sw_pearson_r']:+.4f}"
+              f"  top_active={r['top_active_hexamers'][:5]}")
+
+    # Also rank by SW Pearson r to find the features most correlated with SW sensitivity
+    sw_corr_per_feat = np.zeros(acts_matrix.shape[1])
+    if kl_arr.std() > 1e-8:
+        for f in range(acts_matrix.shape[1]):
+            col = acts_matrix[:, f].astype(np.float64)
+            if col.std() > 1e-8:
+                sw_corr_per_feat[f] = float(np.corrcoef(col, kl_arr)[0, 1])
+    top_sw_feat_idx = np.argsort(np.abs(sw_corr_per_feat))[::-1][:10].tolist()
+    print(f"\n  Top-10 features by |Pearson r with SW KL scores|:")
+    for fi in top_sw_feat_idx:
+        col     = acts_matrix[:, fi]
+        nnz_idx = np.where(col > 0)[0]
+        top_act = [hexamers[i] for i in nnz_idx[np.argsort(col[nnz_idx])[::-1]][:5]]
+        print(f"    feature {fi:5d}  SW-r={sw_corr_per_feat[fi]:+.4f}"
+              f"  GC-corr={corrs['gc'][fi]:+.3f}"
+              f"  n_active={len(nnz_idx)}"
+              f"  top_active={top_act}")
 
     # ── Heatmap: top-mono features × motif class ───────────────────────────────
     print("\n[analyze] Building heatmap...", flush=True)
@@ -377,6 +413,21 @@ def main():
         "n_features":      int(sae.n_features),
         "k":               int(sae.k),
         "top_mono_features": overlap_results,
+        "top_sw_corr_features": [
+            {
+                "feature_idx": int(fi),
+                "sw_pearson_r": float(sw_corr_per_feat[fi]),
+                "gc_corr": float(corrs["gc"][fi]),
+                "n_active_hexamers": int(np.sum(acts_matrix[:, fi] > 0)),
+                "top_active_hexamers": [
+                    hexamers[i]
+                    for i in np.where(acts_matrix[:, fi] > 0)[0][
+                        np.argsort(acts_matrix[acts_matrix[:, fi] > 0, fi])[::-1][:10]
+                    ]
+                ] if np.sum(acts_matrix[:, fi] > 0) > 0 else [],
+            }
+            for fi in top_sw_feat_idx
+        ],
         "correlations_summary": {
             name: {
                 "mean":  float(np.mean(corrs[name])),

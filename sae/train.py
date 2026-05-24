@@ -132,6 +132,112 @@ class RunningNorm:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
+# Neuron resampling
+# ──────────────────────────────────────────────────────────────────────────────
+
+@torch.no_grad()
+def resample_dead_features(
+    sae: "BatchTopKSAE",
+    optimizer: optim.Optimizer,
+    streamer: ShardStreamer,
+    device: torch.device,
+    n_collect_batches: int = 50,
+    scale: float = 0.2,
+) -> int:
+    """
+    Anthropic-style neuron resampling.
+
+    Dead features (those flagged by sae.dead_mask) are reset so their
+    encoder/decoder directions point toward inputs that the current SAE
+    reconstructs poorly.  This breaks the feedback loop where a feature
+    never fires → never gets gradient → stays dead forever.
+
+    Algorithm
+    ---------
+    1. Collect a large pool of inputs.
+    2. Compute squared per-token reconstruction loss.
+    3. Sample one input per dead feature, proportional to squared loss.
+    4. Set that feature's encoder row and decoder column to the *normalised
+       reconstruction residual* of the sampled token, scaled to 20 % of the
+       mean alive decoder norm.
+    5. Zero the feature's encoder bias.
+    6. Reset the Adam first/second moment estimates for the touched parameters
+       so stale momentum doesn't push the newly initialised feature back to zero.
+    7. Reset the inactivity counter so the feature gets a fair chance before
+       being flagged dead again.
+
+    Returns
+    -------
+    Number of features resampled.
+    """
+    dead_mask = sae.dead_mask                           # [n_features]
+    n_dead = int(dead_mask.sum().item())
+    if n_dead == 0:
+        return 0
+
+    dead_idx = dead_mask.nonzero(as_tuple=True)[0]     # [n_dead]
+
+    # ── 1. Collect a pool of inputs ───────────────────────────────────────────
+    pool = torch.cat(
+        [streamer.next_batch().to(device) for _ in range(n_collect_batches)],
+        dim=0,
+    )  # [N, d_in]
+
+    # ── 2. Per-token squared reconstruction loss ──────────────────────────────
+    sae.eval()
+    out   = sae(pool, use_aux_loss=False)
+    x_hat = out["x_hat"]                                # [N, d_in]
+    sq_loss = (pool - x_hat).pow(2).sum(dim=-1)        # [N]
+    sae.train()
+
+    # ── 3. Sample inputs proportional to squared loss ─────────────────────────
+    probs   = sq_loss / sq_loss.sum().clamp(min=1e-12)
+    chosen  = torch.multinomial(probs, num_samples=n_dead, replacement=True)
+
+    # ── 4. Compute unit-normed residuals as new directions ────────────────────
+    residuals   = (pool[chosen] - x_hat[chosen]).detach()  # [n_dead, d_in]
+    resid_norms = residuals.norm(dim=-1, keepdim=True).clamp(min=1e-8)
+    unit_resid  = residuals / resid_norms                  # [n_dead, d_in]
+
+    # Scale to 20 % of the mean alive decoder column norm
+    alive_mask  = ~dead_mask
+    if alive_mask.any():
+        avg_alive_norm = sae.W_dec[:, alive_mask].norm(dim=0).mean().item()
+    else:
+        avg_alive_norm = 1.0
+    init_scale = avg_alive_norm * scale
+
+    # Reset encoder rows  [n_features, d_in]
+    sae.W_enc.weight[dead_idx, :] = unit_resid * init_scale
+    # Reset encoder bias
+    sae.W_enc.bias[dead_idx]      = 0.0
+    # Reset decoder columns  [d_in, n_features]
+    sae.W_dec[:, dead_idx]        = unit_resid.T
+
+    # ── 5. Reset Adam state for touched parameters ────────────────────────────
+    for param_group in optimizer.param_groups:
+        for p in param_group["params"]:
+            if p not in optimizer.state:
+                continue
+            state = optimizer.state[p]
+            for mkey in ("exp_avg", "exp_avg_sq"):
+                if mkey not in state:
+                    continue
+                m = state[mkey]
+                if p is sae.W_enc.weight:   # [n_features, d_in]
+                    m[dead_idx, :] = 0.0
+                elif p is sae.W_enc.bias:   # [n_features]
+                    m[dead_idx]    = 0.0
+                elif p is sae.W_dec:        # [d_in, n_features]
+                    m[:, dead_idx] = 0.0
+
+    # ── 6. Reset inactivity counters so resampled features get a fair chance ──
+    sae.steps_since_active[dead_idx] = 0
+
+    return n_dead
+
+
+# ──────────────────────────────────────────────────────────────────────────────
 # Sanity checks
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -300,6 +406,19 @@ def train(args):
         with torch.no_grad():
             sae.update_dead_mask(out["acts"].detach())
 
+        # Neuron resampling: rescue dead features periodically
+        if args.resample_every > 0 and step % args.resample_every == 0:
+            n_resampled = resample_dead_features(
+                sae, optimizer, streamer, device,
+                n_collect_batches=50,
+                scale=args.resample_scale,
+            )
+            if n_resampled > 0:
+                print(
+                    f"  [resample] step={step}: resampled {n_resampled} dead features",
+                    flush=True,
+                )
+
         if step % args.log_every == 0:
             entry = {
                 "step":       step,
@@ -347,15 +466,17 @@ def train(args):
 
     # Save training config alongside outputs
     config_out = {
-        "acts_dir":    args.acts_dir,
-        "d_in":        d_in,
-        "n_features":  n_features,
-        "k":           args.k,
-        "dict_mult":   args.dict_mult,
-        "lr":          args.lr,
-        "steps":       args.steps,
-        "batch":       args.batch,
-        "lambda_aux":  args.lambda_aux,
+        "acts_dir":       args.acts_dir,
+        "d_in":           d_in,
+        "n_features":     n_features,
+        "k":              args.k,
+        "dict_mult":      args.dict_mult,
+        "lr":             args.lr,
+        "steps":          args.steps,
+        "batch":          args.batch,
+        "lambda_aux":     args.lambda_aux,
+        "resample_every": args.resample_every,
+        "resample_scale": args.resample_scale,
     }
     (out_dir / "train_config.json").write_text(json.dumps(config_out, indent=2))
 
@@ -388,6 +509,10 @@ def main():
                         help="Log interval in steps (default: 1000)")
     parser.add_argument("--save_every", type=int,   default=20_000,
                         help="Checkpoint interval in steps (default: 20 000)")
+    parser.add_argument("--resample_every", type=int, default=0,
+                        help="Neuron resampling interval in steps; 0 = disabled (default: 0)")
+    parser.add_argument("--resample_scale", type=float, default=0.2,
+                        help="Scale factor for resampled feature init (fraction of avg alive norm; default: 0.2)")
     args = parser.parse_args()
     train(args)
 
