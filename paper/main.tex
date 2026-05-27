@@ -405,26 +405,19 @@ directly via ablation and residual-stream attribution.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth,keepaspectratio]{media/image_fig2.png}
+\includegraphics[width=\textwidth,keepaspectratio]{media/image_fig2_panels_EF.png}
 \caption{\textbf{Cross-architecture structural mechanism: $\|U_k\|_F$
 predicts candidate super-rows in any gated FFN.}
-\textbf{(A--B)}~Activation lifecycle of the SW channel across all 30
-layers for GENERator EUK \textbf{(A)} and PROK \textbf{(B)}. Top:
-post-residual hidden-state magnitude (mean $\pm$ 1\,s.d.\ over 20
-sequences); bottom: per-block contribution to that channel. Dotted
-line marks the step-up layer.
-\textbf{(C--D)}~Cold-weights $\|U_k\|_F$ for every output dimension
-$k$ at the step-up layer in GENERator EUK \textbf{(C)} and PROK
-\textbf{(D)}. SW rows (red dashed lines) rank first among all 3{,}072
-output coordinates, $12\times$ (EUK) and $18\times$ (PROK) above the
-median.
+(Panels A--D, GENERator EUK/PROK activation lifecycle and
+step-up-layer $\|U_k\|_F$ bars, are pending GENERator JSONs from the
+collaborator and are omitted from this render.)
 \textbf{(E)}~Cross-architecture $\|U_k\|_F$ percentile of the
-empirically identified SW rows in GENERator (filled circles, 99th+
-percentile, ablation-positive), DNABERT-2 (filled squares, 9 of 10
+empirically identified SW rows in DNABERT-2 (filled squares, 9 of 10
 rows at 99th+ percentile + one outlier at 8th percentile,
 ablation-positive), NTv3 (filled diamond, rank 1/1{,}536 at L11,
 ablation-positive), and Evo1 (open triangles, 95.9--98.8 percentile,
-ablation-null). The visual asymmetry between filled and open
+ablation-null). GENERator markers (filled circles) drop in once the
+upstream JSONs land. The visual asymmetry between filled and open
 markers at similar percentiles communicates the
 necessary-but-not-sufficient finding: $\|U_k\|_F$ concentrates in all
 four models, but downstream load-bearing depends on the mixing
@@ -433,12 +426,14 @@ operator.
 603 (top): source layers 3/5/6 show MLP-dominant contribution
 (block\_delta tracks mlp\_out), propagator layers 7/8 show
 residual-dominant contribution ($|H_i| > |\Delta_i^{\text{MLP}}|$).
-Evo1 (bottom): the magnitude-165 MLP write is deposited into the
-residual stream essentially unchanged at the source layer
-(block\_delta/mlp\_out $\approx 1.0$), then attenuates by $\sim 56\%$
-across the next conv-mixing block as the long-convolution mixer
-disperses the channel across coordinates rather than preserving it
-along one row.}
+Evo1 row 3776, bf16-clean across all 32 StripedHyena blocks (bottom):
+the MLP writes a magnitude-$\approx\!165$ value at layer 10, then
+layers 11--12 deposit a further $\sim\!10^6$--$10^7$, after which the
+MLP contribution at that row falls to $\approx\!0$ and the residual
+freezes at $\approx 3\times 10^7$ for the remaining 20 blocks.
+Per-token argmax shifts away from row 3776 by layer 13, and the
+residual is normalised away by the pre-unembed RMSNorm, consistent
+with the ablation-null phenotype ($\Delta$PPL $\approx 0$\%).}
 \label{fig:mech}
 \end{figure}
 
@@ -575,23 +570,22 @@ genomes.
 \includegraphics[width=\textwidth,keepaspectratio]{media/image_fig3.png}
 \caption{\textbf{Super-weight encoding and kingdom-asymmetric
 mechanism.}
-\textbf{(A--B)}~Mean absolute SW activation grouped by hexamer
-composition for GENERator EUK \textbf{(A)} and PROK \textbf{(B)}.
-\textbf{(C)}~Causal-hexamer correlation: SW activation ($x$-axis)
+\textbf{(A)}~Mean absolute SW activation grouped by hexamer
+composition class (AT-rich, GC-rich, CpG-rich, homopolymer, balanced)
+for GENERator EUK and PROK side-by-side on a log axis.
+\textbf{(B)}~EUK causal-hexamer scatter: SW activation ($x$-axis)
 vs.\ KL divergence between clean and ablated next-token distributions
-($y$-axis) for all 4{,}096 hexamers. EUK (left) shows positive
-correlation ($r = +0.437$, driver behaviour); PROK (right) shows
-negative correlation ($r = -0.710$, suppressive gate behaviour).
-\textbf{(D)}~SAE feature--SW correlation in PROK\@. Positive
-correlations ($r \approx +0.71$) cluster on GC-rich
-coding/ribosomal hexamers; negative correlations ($r \approx -0.73$)
-cluster on AT-rich homopolymeric sequences, independently recovering
-the suppressive-gate axis.
-\textbf{(E)}~Shuffle-control activation shifts: EUK (all flat,
-$p > 0.31$) vs.\ PROK (all significant, $p < 0.01$).
-\textbf{(F)}~Motif enrichment of the top-500 most SW-dependent
-hexamers (Fisher exact $+$ BH correction). Only homopolymer-run
-enrichment in EUK is significant ($q = 0.022$).}
+($y$-axis) for all 4{,}096 hexamers; $r = +0.437$ (driver behaviour).
+\textbf{(C)}~PROK causal-hexamer scatter, same axes; $r = -0.710$
+(suppressive-gate behaviour). The sign reversal between B and C is
+the headline kingdom asymmetry.
+\textbf{(D)}~Shuffle-control activation shifts across four shuffle
+types (mono-, dinuc-, trinuc-, 6-mer block): EUK all flat
+($p > 0.31$), PROK all significant ($p < 0.01$).
+\textbf{(E)}~Motif enrichment of the top-500 most SW-dependent
+hexamers (Fisher exact + BH correction), drawn as a butterfly with
+PROK $\log_2$ odds ratio on the left and EUK on the right so the
+kingdom contrast is visually immediate.}
 \label{fig:kmer}
 \end{figure}
 
@@ -706,10 +700,7 @@ near-zero MCC), motivating MCC rather than accuracy as the primary
 read-out for this task.
 \textbf{(C)}~Per-row ablation on the DNABERT-2 splice checkpoint: no
 single row causes more than $-1.45\%$ accuracy loss, demonstrating
-distributed-ensemble organisation.
-\textbf{(D)}~Comparative SW phenotype: single-row dominance in causal
-decoders (revealed by perplexity) vs.\ redundant ensemble in masked
-encoders (revealed by downstream task ablation).}
+distributed-ensemble organisation.}
 \label{fig:gue}
 \end{figure}
 

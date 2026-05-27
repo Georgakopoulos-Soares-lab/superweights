@@ -219,11 +219,26 @@ def build(out_path: Path):
     axD = fig.add_subplot(gs[2, 0])
     axE = fig.add_subplot(gs[2, 1])
 
-    panel_A(axA); panel_label(axA, "A", x=-0.04)
-    panel_B(axB); panel_label(axB, "B")
-    panel_C(axC); panel_label(axC, "C")
-    panel_D(axD); panel_label(axD, "D")
-    panel_E(axE); panel_label(axE, "E", x=-0.20)
+    panel_A(axA)
+    panel_B(axB)
+    panel_C(axC)
+    panel_D(axD)
+    panel_E(axE)
+
+    # Align panel labels using *figure* coordinates so B/D share an x and C/E share an x.
+    # Take the left edge of the column-0 and column-1 axes as the anchor.
+    fig.canvas.draw()
+    x_col0 = axB.get_position().x0
+    x_col1 = axC.get_position().x0
+    y_A    = axA.get_position().y1 + 0.005
+    y_BC   = axB.get_position().y1 + 0.005
+    y_DE   = axD.get_position().y1 + 0.005
+    LBL_KW = dict(fontsize=14, fontweight="bold", va="bottom", ha="left")
+    fig.text(x_col0 - 0.045, y_A,  "A", **LBL_KW)
+    fig.text(x_col0 - 0.045, y_BC, "B", **LBL_KW)
+    fig.text(x_col1 - 0.045, y_BC, "C", **LBL_KW)
+    fig.text(x_col0 - 0.045, y_DE, "D", **LBL_KW)
+    fig.text(x_col1 - 0.045, y_DE, "E", **LBL_KW)
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path)

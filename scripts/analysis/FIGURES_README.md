@@ -15,6 +15,14 @@ python scripts/analysis/plot_figureN.py
 
 Output PNG + PDF land in [paper/media/](../../paper/media).
 
+All plot scripts share a unified style helper
+[scripts/analysis/_figstyle.py](_figstyle.py) which applies the
+`apply_style()` defaults (no suptitles, no per-panel titles, sans-serif,
+no top/right spines, editable-text PDF) and exposes the `panel_label()`
+helper for compact bold A/B/C labels in the corner. Fig 3 additionally
+places panel labels in figure coordinates so that labels B/D and C/E
+share exact vertical lines despite differing tick-label widths.
+
 ────────────────────────────────────────────────────────────────────────────
 
 ## Figure 1 — Necessity / sufficiency of SW rows
@@ -71,43 +79,50 @@ target layout.
 
 ────────────────────────────────────────────────────────────────────────────
 
-## Figure 3 — Causal-mediation + propagation cone
+## Figure 3 — Super-weight encoding and kingdom-asymmetric mechanism (5 panels)
 - Script: [scripts/analysis/plot_figure3.py](plot_figure3.py)
 - Output: [paper/media/image_fig3.png](../../paper/media/image_fig3.png), .pdf
 
-| Panel | Data file                                                                                                                                                          | Status   |
-|-------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
-| A     | [results/causal_mediation_dnabert2.json](../../results/causal_mediation_dnabert2.json)                                                                             | present  |
-| B     | [results/propagation_cone_dnabert2.json](../../results/propagation_cone_dnabert2.json)                                                                              | present  |
-| C     | [results/hexamer_specificity_dnabert2.json](../../results/hexamer_specificity_dnabert2.json)                                                                       | present  |
+| Panel | What it shows                                                                          | Data file                                                                                                                                  | Status   |
+|-------|----------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|----------|
+| A     | Mean \|SW act\| by hexamer composition class, EUK vs PROK (log y)                      | [results/sw_kmer_scan.json](../../results/sw_kmer_scan.json) + `results/prokaryote/sw_kmer_scan.json`                                       | present  |
+| B     | EUK causal-hexamer scatter (act vs KL), $r=+0.437$                                     | [results/sw_hexamer_causal.json](../../results/sw_hexamer_causal.json)                                                                     | present  |
+| C     | PROK causal-hexamer scatter, $r=-0.710$                                                | `results/prokaryote/sw_hexamer_causal.json`                                                                                                | present  |
+| D     | Shuffle-control activation shifts (mono/dinuc/trinuc/6-mer), EUK vs PROK               | [results/sw_shuffle_controls.json](../../results/sw_shuffle_controls.json) + `results/prokaryote/sw_shuffle_controls.json`                  | present  |
+| E     | Motif enrichment butterfly (top-500 SW-dependent hexamers, PROK← →EUK)                  | [results/sw_kmer_motifs.json](../../results/sw_kmer_motifs.json) + `results/prokaryote/sw_kmer_motifs.json`                                | present  |
 
-Action: **None.**
+Action: **None.** Redesigned from 8-cell to 5-panel layout in commit `bc5575f`;
+panel labels B/D and C/E are vertically aligned via figure-coordinate `fig.text()`.
 
 ────────────────────────────────────────────────────────────────────────────
 
-## Figure 4 — GUE functional consequences of SW ablation
+## Figure 4 — GUE functional consequences of SW ablation (3 panels)
 - Script: [scripts/analysis/plot_figure4.py](plot_figure4.py) (5-seed NTv3 splice in panel B)
 - Output: [paper/media/image_fig4.png](../../paper/media/image_fig4.png), .pdf
 
 | Panel | What it shows                                                                       | Data file                                                                              | Status   |
 |-------|-------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|----------|
 | A     | DNABERT-2 multiseed Δacc on 3 GUE tasks (SW rows vs random-10 control)              | [results/gue_multiseed_results.json](../../results/gue_multiseed_results.json)         | present  |
-| B     | NTv3 splice MCC: baseline vs SW-ablated, 5 seeds; majority-class collapse callouts | [results/gue_multiseed_ntv3_splice.json](../../results/gue_multiseed_ntv3_splice.json) | present  |
+| B     | NTv3 splice MCC: baseline vs SW-ablated, 5 seeds; majority-class collapse marked † | [results/gue_multiseed_ntv3_splice.json](../../results/gue_multiseed_ntv3_splice.json) | present  |
 | C     | DNABERT-2 per-row Δacc bar chart on splice/reconstructed                            | [results/gue_per_row_ablation.json](../../results/gue_per_row_ablation.json)           | present  |
 
 Action: **None.** ΔMCC = -0.119 ± 0.054, t = -4.86, p = 0.0083, sign-neg 5/5.
+Redesigned to drop the schematic panel D in commit `bc5575f`.
 
 ────────────────────────────────────────────────────────────────────────────
 
-## Figure 5 — Spearman / GUE-wide effect-size summary
+## Figure 5 — Compression implications (3 panels)
 - Script: [scripts/analysis/plot_figure5.py](plot_figure5.py)
 - Output: [paper/media/image_fig5.png](../../paper/media/image_fig5.png), .pdf
 
-| Panel | Data file                                                                              | Status   |
-|-------|----------------------------------------------------------------------------------------|----------|
-| A / B | [results/gue_full_sweep.json](../../results/gue_full_sweep.json) and Spearman aggregates | present  |
+| Panel | What it shows                                                                          | Data file                                                                                | Status   |
+|-------|----------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|----------|
+| A     | DNABERT-2 progressive `down_proj` pruning sweep (5 selection criteria, 0.5–30%)        | `results/compression_sweep_*.json`                                                       | present  |
+| B     | Per-row INT4 quantization on GENERator EUK, 10 seeds                                   | `results/quant_ablation_generator_int4.json`                                             | present  |
+| C     | Whole-model INT4 on extended 100k-token probe (EUK + PROK)                             | `results/whole_model_quant_generator{,_prokaryote}_100k.json`                            | present  |
 
-Action: **None.**
+Action: **None.** Dropped the splice-INT4 B2 sidebar in commit `bc5575f`; layout is
+now a clean 3-panel row.
 
 ────────────────────────────────────────────────────────────────────────────
 

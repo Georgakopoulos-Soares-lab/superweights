@@ -31,6 +31,21 @@ Generated this round:
 - [paper/media/image_fig2_panels_EF.png](paper/media/image_fig2_panels_EF.png)
   (cross-arch ‖U_k‖_F percentile + dual-panel residual attribution)
 
+Figure cleanup (commit `bc5575f`):
+- All plot scripts now share [scripts/analysis/_figstyle.py](scripts/analysis/_figstyle.py)
+  (no suptitles, no per-panel titles, compact bold A/B/C labels in corners,
+  sans-serif, no top/right spines, editable-text PDF).
+- Fig 3 redesigned from an 8-cell stack to 5 clean panels (A composition bars,
+  B EUK scatter, C PROK scatter, D shuffle controls, E motif butterfly).
+  Panel labels B/D and C/E are vertically aligned via figure-coordinate
+  `fig.text()` to handle Panel E's wide motif tick labels.
+- Fig 4 dropped the schematic comparative-phenotype panel D — now 3 panels A/B/C.
+- Fig 5 dropped the splice-INT4 B2 sidebar — now 3 panels A/B/C in a single row.
+- Fig 2 (E+F) legend collapsed to a single block with the GENERator (pending)
+  marker; panel F1 source/propagator regimes shown as background shading; panel
+  F2 has inline annotations for the "MLP writes blow up" and "frozen ≈ 3·10⁷"
+  regions.
+
 Still pending (GENERator EUK / PROK access required from collaborator):
 - Fig 2 panels A–D — activation lifecycle + ‖U_k‖_F bar at step-up layer.
   Expected file names listed in
