@@ -1,0 +1,140 @@
+{
+  "model": "dnabert2",
+  "probe": "actb_500",
+  "row": 603,
+  "per_layer": [
+    {
+      "layer": 0,
+      "sw_pos": 57,
+      "residual_in": 0.14815890789031982,
+      "mlp_out": 1.2271535396575928,
+      "residual_out": 1.3753124475479126,
+      "mlp_out_max_row": 339,
+      "mlp_out_max_val": 2.1814775466918945,
+      "residual_in_abs": 0.14815890789031982,
+      "mlp_out_abs": 1.2271535396575928
+    },
+    {
+      "layer": 1,
+      "sw_pos": 30,
+      "residual_in": -0.2958867847919464,
+      "mlp_out": 0.23207300901412964,
+      "residual_out": -0.06381377577781677,
+      "mlp_out_max_row": 529,
+      "mlp_out_max_val": 1.720918893814087,
+      "residual_in_abs": 0.2958867847919464,
+      "mlp_out_abs": 0.23207300901412964
+    },
+    {
+      "layer": 2,
+      "sw_pos": 0,
+      "residual_in": -0.6802453398704529,
+      "mlp_out": -3.9426755905151367,
+      "residual_out": -4.622920989990234,
+      "mlp_out_max_row": 603,
+      "mlp_out_max_val": 3.9426755905151367,
+      "residual_in_abs": 0.6802453398704529,
+      "mlp_out_abs": 3.9426755905151367
+    },
+    {
+      "layer": 3,
+      "sw_pos": 0,
+      "residual_in": -8.811561584472656,
+      "mlp_out": -3.526134729385376,
+      "residual_out": -12.337696075439453,
+      "mlp_out_max_row": 603,
+      "mlp_out_max_val": 3.526134729385376,
+      "residual_in_abs": 8.811561584472656,
+      "mlp_out_abs": 3.526134729385376
+    },
+    {
+      "layer": 4,
+      "sw_pos": 0,
+      "residual_in": -4.721288204193115,
+      "mlp_out": -4.250129222869873,
+      "residual_out": -8.971417427062988,
+      "mlp_out_max_row": 603,
+      "mlp_out_max_val": 4.250129222869873,
+      "residual_in_abs": 4.721288204193115,
+      "mlp_out_abs": 4.250129222869873
+    },
+    {
+      "layer": 5,
+      "sw_pos": 0,
+      "residual_in": -5.428308486938477,
+      "mlp_out": -4.218742370605469,
+      "residual_out": -9.647050857543945,
+      "mlp_out_max_row": 603,
+      "mlp_out_max_val": 4.218742370605469,
+      "residual_in_abs": 5.428308486938477,
+      "mlp_out_abs": 4.218742370605469
+    },
+    {
+      "layer": 6,
+      "sw_pos": 115,
+      "residual_in": -6.86910343170166,
+      "mlp_out": -4.976184368133545,
+      "residual_out": -11.845287322998047,
+      "mlp_out_max_row": 603,
+      "mlp_out_max_val": 4.976184368133545,
+      "residual_in_abs": 6.86910343170166,
+      "mlp_out_abs": 4.976184368133545
+    },
+    {
+      "layer": 7,
+      "sw_pos": 115,
+      "residual_in": -10.959078788757324,
+      "mlp_out": -5.799403190612793,
+      "residual_out": -16.758481979370117,
+      "mlp_out_max_row": 603,
+      "mlp_out_max_val": 5.799403190612793,
+      "residual_in_abs": 10.959078788757324,
+      "mlp_out_abs": 5.799403190612793
+    },
+    {
+      "layer": 8,
+      "sw_pos": 115,
+      "residual_in": -10.435117721557617,
+      "mlp_out": -6.230308532714844,
+      "residual_out": -16.66542625427246,
+      "mlp_out_max_row": 603,
+      "mlp_out_max_val": 6.230308532714844,
+      "residual_in_abs": 10.435117721557617,
+      "mlp_out_abs": 6.230308532714844
+    },
+    {
+      "layer": 9,
+      "sw_pos": 115,
+      "residual_in": -8.248711585998535,
+      "mlp_out": -0.455183207988739,
+      "residual_out": -8.70389461517334,
+      "mlp_out_max_row": 264,
+      "mlp_out_max_val": 3.214110851287842,
+      "residual_in_abs": 8.248711585998535,
+      "mlp_out_abs": 0.455183207988739
+    },
+    {
+      "layer": 10,
+      "sw_pos": 115,
+      "residual_in": -0.5554938316345215,
+      "mlp_out": -0.10559157282114029,
+      "residual_out": -0.6610854268074036,
+      "mlp_out_max_row": 103,
+      "mlp_out_max_val": 2.6531028747558594,
+      "residual_in_abs": 0.5554938316345215,
+      "mlp_out_abs": 0.10559157282114029
+    },
+    {
+      "layer": 11,
+      "sw_pos": 30,
+      "residual_in": -0.6353325247764587,
+      "mlp_out": -0.3771213889122009,
+      "residual_out": -1.0124539136886597,
+      "mlp_out_max_row": 202,
+      "mlp_out_max_val": 0.6959633231163025,
+      "residual_in_abs": 0.6353325247764587,
+      "mlp_out_abs": 0.3771213889122009
+    }
+  ],
+  "note": "residual_in   = attn_out at row 603 (entering the MLP block).\nmlp_out       = MLP block contribution at row 603 (signed).\nIf row 603 is residually carried at layer 7, |mlp_out[7,603]| << |residual_in[7,603]| and the U_k predictor (which only sees the MLP) is correctly indicating layer 7's MLP is not the source."
+}

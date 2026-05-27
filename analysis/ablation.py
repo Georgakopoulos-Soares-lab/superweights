@@ -42,7 +42,15 @@ def causal_perplexity(wrapper, sequence: str) -> float:
     else:
         seq = sequence
 
-    inputs = tokenizer(seq, return_tensors="pt", add_special_tokens=False)
+    # Non-HF tokenizers (e.g. Evo's CharLevelTokenizer) can't be called
+    # like `tokenizer(seq, return_tensors=...)`. Delegate to the wrapper's
+    # own perplexity routine when available.
+    if not callable(tokenizer) or hasattr(wrapper, "_skip_hf_tokenize"):
+        return wrapper.compute_perplexity(seq)
+    try:
+        inputs = tokenizer(seq, return_tensors="pt", add_special_tokens=False)
+    except TypeError:
+        return wrapper.compute_perplexity(seq)
     inputs = {k: v.to(model.device) for k, v in inputs.items()}
     ids    = inputs["input_ids"]
 

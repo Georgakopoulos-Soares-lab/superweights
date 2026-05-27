@@ -2,7 +2,97 @@
 
 Locating super weights in transformer-based genomic LMs following the data-free,
 single-forward-pass method from Yu et al. (2024) *"The Super Weight in Large Language Models"*
-(arXiv 2411.07191). Detection only — no quantization.
+(arXiv 2411.07191), plus mechanistic interpretability and compression analyses.
+
+---
+
+## Pre-submission status (latest, Nov 2026)
+
+The 5-arc manuscript has been restructured (v4) with two new cross-architecture experiments
+landing in Figures 2 & 4:
+
+- **5-seed NTv3 splice** — ΔMCC = −0.119 ± 0.054, t = −4.86, p = 0.0083, sign-neg 5/5.
+  Majority-class collapse on seeds 4 and 5 (Δacc > 0 but ΔMCC ≪ 0).
+- **NTv3 ‖U_k‖_F per-layer audit** (all 12 transformer blocks) — only L11 row 1472 ranks
+  1 / 1536 (100th percentile); no other layer hosts a registered SW row.
+- **Evo1 bf16-clean residual attribution** across all 32 StripedHyena blocks — corrects
+  the earlier fp16 trace: row 3776 is *preserved-then-frozen* at ≈ 3 × 10⁷ from layer 13
+  onward (MLP@row ≈ 0), normalised away by the pre-unembed RMSNorm. Same-protocol
+  ablation gives ΔPPL ≈ 0% on the held-out window.
+
+**Repo-local workflow:**
+- Per-figure data-status & generation guide:
+  [scripts/analysis/FIGURES_README.md](scripts/analysis/FIGURES_README.md)
+- Evo2 replication plan (what to re-run with frontier StripedHyena access):
+  [EVO2_REPLICATION.md](EVO2_REPLICATION.md)
+
+Generated this round:
+- [paper/media/image_fig4.png](paper/media/image_fig4.png) (5-seed NTv3 panel B)
+- [paper/media/image_fig2_panels_EF.png](paper/media/image_fig2_panels_EF.png)
+  (cross-arch ‖U_k‖_F percentile + dual-panel residual attribution)
+
+Still pending (GENERator EUK / PROK access required from collaborator):
+- Fig 2 panels A–D — activation lifecycle + ‖U_k‖_F bar at step-up layer.
+  Expected file names listed in
+  [scripts/analysis/FIGURES_README.md](scripts/analysis/FIGURES_README.md).
+
+---
+
+## Paper Status (May 2026)
+
+Restructured 5-part-arc manuscript at `paper/main.tex` (~200 lines, replaces 900-line
+`main_old.tex`). Compiled headline figures live under `paper/media/`.
+
+| # | Figure | Source script | Source data | Status |
+|---|--------|---------------|-------------|--------|
+| 1 | Architecture restriction (transformer decoders only) | `scripts/analysis/plot_figure1.py` | `super_weight_index.json`, `ablation_results.json` | ✅ |
+| 2 | Quadratic amplifier mechanism | `scripts/analysis/plot_sw_mechanistic.py` | `sw_causal_tracing.json`, `sw_grad_attribution.json` | ✅ |
+| 3 | Kingdom asymmetry (EUK driver +0.437 vs PROK gate −0.710) | `scripts/analysis/plot_figure2.py` | `sw_hexamer_causal.json`, `sw_shuffle_controls.json`, `sw_kmer_scan.json` | ✅ |
+| 4 | GUE functional consequences (splice −25.5% across 3 seeds) | `scripts/analysis/plot_figure4.py` | `gue_multiseed_results.json`, `gue_per_row_ablation.json` | ✅ NEW |
+| 5 | Compression — shadow redundancy + whole-model INT4 | `scripts/analysis/plot_figure5.py` | `compression_sweep_*.json`, `quant_ablation_generator_int4.json`, `int4_downstream_benchmark_splice.json`, `whole_model_quant_generator{,_prokaryote}_100k.json` | ✅ NEW |
+
+### Latest result — extended 100k-token whole-model INT4 (May 26 2026)
+
+14× higher resolution than the original 7,200-nt probe; **resolves the Yu et al. SW-exemption question**:
+
+| Model | Baseline PPL | Naïve INT4 ΔPPL | Yu-exempt ΔPPL | SW marginal cost | SW-only fragility |
+|-------|-------------:|----------------:|---------------:|-----------------:|------------------:|
+| GENERator EUK 3B  | 8.427 | **+0.0870** | +0.0879 | **−0.00083** | +0.00013 |
+| GENERator PROK 3B | 8.783 | **+0.4669** | +0.4664 | **+0.00041** | −0.00007 |
+
+**Non-replication of Yu et al. confirmed**: SW marginal cost (Yu+SW − Yu-exempt) is below the
+±0.001-PPL noise floor in both kingdoms — protecting SW rows yields **no measurable benefit** at
+INT4 in genomic transformer decoders. This is now Part 5's headline result.
+
+Reproduce with:
+```bash
+CUDA_VISIBLE_DEVICES=0 conda run -n generator --live-stream python3 \
+  scripts/compression/run_whole_model_quantization.py --model generator \
+  --scopes full --fracs 100 --bits 4 --n_rand_seeds 0 \
+  --n_probe_seqs 500 --probe_seq_len 1200 --probe_seed 42 \
+  --sw_index results/super_weight_index.json \
+  --out results/whole_model_quant_generator_100k.json
+```
+(`--model generator_prokaryote` for PROK.)
+
+### Priority of results (for paper)
+
+1. **Architecture restriction** (Fig 1) — transformer decoders only; SSM/Hyena/Mamba show no SW.
+2. **Splice collapse** (Fig 4A) — DNABERT-2 SW ablation: −25.5 ± 0.7% across 3 seeds, p = 0.0004.
+3. **Kingdom asymmetry** (Fig 3) — EUK driver r = +0.437 vs PROK suppressive gate r = −0.710.
+4. **Quadratic amplifier mechanism** (Fig 2) — single early FFN row + residual propagation.
+5. **Yu et al. non-replication at scale** (Fig 5C) — 100k-token INT4 SW marginal cost ≈ 0.
+6. **Shadow redundancy** (Fig 5A,B) — near-SW rows are the *most* INT4-tolerant; far-SW rows collapse.
+
+### Test suite
+
+```
+tests/
+├── test_detection.py   # Super-weight detection regression tests
+└── test_hooks.py       # Forward-hook integrity / shape tests
+```
+
+Run with `pytest tests/`.
 
 ---
 
@@ -298,34 +388,35 @@ Three single-shot conditions are measured per model:
 | `yu_all_including_sw` | all eligible rows **+ SW rows** |
 | `sw_fragility` | SW rows only |
 
-Evaluation uses 6 × 1 200 nt sequences (7 200 nt / ~1 200 tokens) with GC biases
-spanning 40–65% to challenge both model variants equally.
+Evaluation supports a configurable probe via `--n_probe_seqs`, `--probe_seq_len`, `--probe_seed`.
+The headline run uses a **500-sequence × 1,200-nt hg38 probe (~100,000 tokens, seed 42)** — 14×
+the original 7,200-nt probe, sufficient to resolve marginal costs below 0.001 PPL.
 
-**Results — GENERator eukaryote 3B (INT4, full scope)**
+**Results — GENERator eukaryote 3B (INT4, full scope, 100k tokens)**
+
+| Condition | n rows | PPL | Δ PPL |
+|---|---|---|---|
+| FP16 baseline | — | 8.4274 | — |
+| `yu_all` (SW exempt) | 806 396 | 8.5153 | **+0.0879** |
+| `yu_all_including_sw` (naïve INT4) | 806 402 | 8.5145 | **+0.0870** |
+| SW marginal cost (`yu_all_inc_sw − yu_all`) | +6 SW rows | — | **−0.00083** |
+| `sw_fragility` (SW rows only) | 6 | 8.4276 | +0.00013 |
+
+**Results — GENERator prokaryote 3B (INT4, full scope, 100k tokens)**
 
 | Condition | n rows | Δ PPL |
 |---|---|---|
-| `yu_all` (SW exempt) | 806 396 | **+0.117** |
-| `yu_all_including_sw` | 806 402 | **+0.117** |
-| SW marginal cost (`yu_all_sw − yu_all`) | +6 SW rows | **+0.0006** |
-| `sw_fragility` (SW rows only) | 6 | +0.0005 |
+| `yu_all` (SW exempt) | 806 397 | **+0.4664** |
+| `yu_all_including_sw` (naïve INT4) | 806 400 | **+0.4669** |
+| SW marginal cost | +3 SW rows | **+0.00041** |
+| `sw_fragility` (SW rows only) | 3 | −0.00007 |
 
-**Results — GENERator prokaryote 3B (INT4, full scope)**
-
-| Condition | n rows | Δ PPL |
-|---|---|---|
-| `yu_all` (SW exempt) | 806 397 | **+0.444** |
-| `yu_all_including_sw` | 806 400 | **+0.445** |
-| SW marginal cost | +3 SW rows | **+0.0006** |
-| `sw_fragility` (SW rows only) | 3 | +0.0003 |
-
-**Key finding**: The SW rows in GENERator are **not quantization-sensitive**.
-Protecting them (Yu et al.-style exemption) provides a marginal PPL benefit of
-+0.0006 in both models — indistinguishable from noise — while the SW rows alone
-cause negligible degradation (+0.0003–0.0005).  This is a **non-replication** of the
-Yu et al. (2024) SW-exemption finding in genomic LMs: unlike NLP LLMs where
-SW-exemption is critical for INT4 compression, GENERator's super-weight rows are
-no more precision-sensitive than ordinary rows.
+**Key finding (updated May 2026)**: At a properly powered 100k-token evaluation, the SW rows in
+GENERator are **definitively not quantization-sensitive**. Protecting them (Yu et al.-style
+exemption) changes PPL by ≤ 0.001 in both models — within the noise floor — and the EUK
+marginal cost is actually slightly *negative*. SW-only INT4 fragility is negligible
+(±0.0001 PPL). This is a **confirmed non-replication** of the Yu et al. (2024) SW-exemption
+heuristic in genomic LMs.
 
 Note: the prokaryote model shows a larger overall INT4 cost (+0.444 vs +0.117).
 This is consistent with the prokaryote SW being more deeply integrated into the
@@ -341,7 +432,11 @@ bash scripts/compression/run_whole_model_quant_generator.sh
 bash scripts/compression/run_whole_model_quant_generator_prokaryote.sh
 ```
 
-Output files:
+Output files (extended 100k-token runs):
+- `results/whole_model_quant_generator_100k.{json,png}`
+- `results/whole_model_quant_generator_prokaryote_100k.{json,png}`
+
+Legacy 7,200-nt runs (preserved for reference):
 - `results/whole_model_quant_generator_sw_comparison.{json,png}`
 - `results/whole_model_quant_generator_prokaryote_sw_comparison.{json,png}`
 
@@ -786,7 +881,24 @@ interesting but unvalidated secondary signal.
 │       └── random_262kb.bed
 ├── docs/
 │   └── superweight_paper.txt  # Reference paper (Yu et al. 2024)
+├── paper/
+│   ├── main.tex                  # Restructured 5-part-arc manuscript (current)
+│   ├── main_old.tex              # 900-line prior version (reference)
+│   └── media/
+│       ├── image_fig4.{png,pdf}  # Figure 4 — GUE functional consequences
+│       └── image_fig5.{png,pdf}  # Figure 5 — Compression: shadow redundancy + INT4
 ├── scripts/
+│   ├── analysis/
+│   │   ├── plot_figure1.py             # Fig 1 — architecture restriction
+│   │   ├── plot_figure2.py             # Fig 3 — kingdom asymmetry composite
+│   │   ├── plot_figure4.py             # Fig 4 — GUE functional consequences (NEW)
+│   │   ├── plot_figure5.py             # Fig 5 — compression + 100k-INT4 (NEW)
+│   │   ├── plot_sw_mechanistic.py      # Fig 2 — quadratic amplifier mechanism
+│   │   ├── plot_activation_lifecycle.py
+│   │   ├── plot_architecture_schematic.py
+│   │   ├── plot_composite_figure.py
+│   │   ├── plot_model_ablation_comparison.py
+│   │   └── plot_quantization_sw_comparison.py
 │   ├── detection/
 │   │   ├── run_detection.py          # CLI: detect super weights
 │   │   ├── run_ablation.py           # CLI: ablation test (perplexity)
@@ -798,7 +910,8 @@ interesting but unvalidated secondary signal.
 │   │   └── analyze_superrow_proximity.py   # Monte-Carlo clustering of SW coordinates
 │   ├── compression/
 │   │   ├── run_compression_sweep.py           # Progressive pruning sweep (5 criteria)
-│   │   ├── run_quantization_ablation.py       # RTN INT4/INT8 quantization sensitivity
+│   │   ├── run_quantization_ablation.py       # Per-row RTN INT4/INT8 quantization sensitivity
+│   │   ├── run_whole_model_quantization.py    # Full-model INT4 with configurable probe (NEW: --n_probe_seqs / --probe_seq_len / --probe_seed)
 │   │   ├── run_int4_downstream_benchmark.py   # Practical INT4 benchmark (4 conditions, splice)
 │   │   └── int4_downstream_benchmark_splice.sbatch  # SLURM job for benchmark
 │   ├── interpretability/

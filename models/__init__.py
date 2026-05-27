@@ -10,3 +10,12 @@ WRAPPER_MAP = {
     "ntv3":                  NTv3Wrapper,
     "dnabert2":              DNABERT2Wrapper,
 }
+
+# Evo1 wrapper depends on the `evo` package which is only installed in the
+# `evo` conda env. Import lazily so other envs (generator/biojepa) can still
+# import models.__init__ without crashing.
+try:
+    from .evo1_wrapper import Evo1Wrapper
+    WRAPPER_MAP["evo1"] = Evo1Wrapper
+except ImportError:
+    pass

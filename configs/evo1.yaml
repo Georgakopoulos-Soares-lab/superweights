@@ -1,0 +1,16 @@
+model_id: "togethercomputer/evo-1-8k-base"
+model_type: "evo1"
+hf_trust_remote_code: true
+# Evo 1 is StripedHyena (32 blocks: ParallelGatedConvBlock + AttentionBlock).
+# Each block has a ParallelGatedMLP with l1/l2 (gate, up via GLU) and l3 (down).
+# l3: in=10928, out=4096 — the MLP down-projection (analog of mlp.down_proj).
+# Root: evo.model (StripedHyena).
+down_proj_pattern: "blocks.{i}.mlp.l3"
+num_layers: 32
+hidden_dim: 4096
+d_ffn: 10928
+dtype: "float16"
+device: "cuda"
+causal: true
+# Attention-only block indices (same set as Evo2 7B): 3, 10, 17, 24, 31
+attention_block_indices: [3, 10, 17, 24, 31]

@@ -711,11 +711,31 @@ def parse_args():
                    help="Before the main sweep, run a quick sanity check that "
                         "prints per-row quantisation error stats for one module. "
                         "Useful to confirm quantisation is actually being applied.")
+    p.add_argument("--n_probe_seqs",
+                   type=int, default=6,
+                   help="Number of probe sequences for perplexity evaluation "
+                        "(default 6 → 7,200 nt; use 100+ for powered eval).")
+    p.add_argument("--probe_seq_len",
+                   type=int, default=1200,
+                   help="Length (nt) of each probe sequence.")
+    p.add_argument("--probe_seed",
+                   type=int, default=42,
+                   help="Seed for probe sequence generation.")
     return p.parse_args()
 
 
 def main():
     args   = parse_args()
+
+    # ── Build probe sequences (configurable evaluation size) ──────────────────
+    probe_seqs = _make_probe_seqs(
+        n_seqs=args.n_probe_seqs,
+        seq_len_nt=args.probe_seq_len,
+        seed=args.probe_seed,
+    )
+    print(f"[probe] {len(probe_seqs)} seqs × {args.probe_seq_len} nt = "
+          f"{len(probe_seqs) * args.probe_seq_len:,} nt "
+          f"({sum(len(s) // 6 for s in probe_seqs):,} tokens ≈6-mer)")
 
     # ── Load config ───────────────────────────────────────────────────────────
     cfg_path = Path(args.configs_dir) / f"{args.model}.yaml"
@@ -782,7 +802,7 @@ def main():
         print(f"  Restored correctly: "
               f"{torch.allclose(m_check.weight.data.float().cpu(), w_orig, atol=1e-5)}")
         print(f"  Eval token count: "
-              f"{sum(len(s) // 6 for s in PROBE_SEQS)} tokens across {len(PROBE_SEQS)} seqs")
+              f"{sum(len(s) // 6 for s in probe_seqs)} tokens across {len(probe_seqs)} seqs")
 
     # ── Grid search ───────────────────────────────────────────────────────────
     all_results = {
@@ -793,6 +813,13 @@ def main():
         "criteria":     args.criteria,
         "sw_list":      sw_list,
         "scopes":       {},
+        "probe": {
+            "n_seqs": args.n_probe_seqs,
+            "seq_len_nt": args.probe_seq_len,
+            "total_nt": args.n_probe_seqs * args.probe_seq_len,
+            "approx_tokens": sum(len(s) // 6 for s in probe_seqs),
+            "seed": args.probe_seed,
+        },
     }
 
     for scope in args.scopes:
@@ -804,7 +831,7 @@ def main():
             criteria     = args.criteria,
             fracs        = args.fracs,
             n_rand_seeds = args.n_rand_seeds,
-            sequences    = PROBE_SEQS,
+            sequences    = probe_seqs,
             bits         = args.bits,
             num_layers   = num_layers,
         )
