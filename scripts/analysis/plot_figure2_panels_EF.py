@@ -68,10 +68,21 @@ def _rows_evo1(p: Path):
     return out
 
 
+def _rows_generator(p: Path):
+    """Same schema as _rows_dnabert2 but uses 'sw_row_ranks' key."""
+    return _rows_dnabert2(p)
+
+
 def panel_E(ax):
     db = _rows_dnabert2(RES / "sw_mechanistic_dnabert2.json")
     nt = _rows_ntv3   (RES / "sw_mechanistic_ntv3.json")
     ev = _rows_evo1   (RES / "sw_mechanistic_evo1.json")
+
+    gen_euk_path  = RES / "sw_mechanistic_generator.json"
+    gen_prok_path = RES / "sw_mechanistic_generator_prokaryote.json"
+    gen_euk  = _rows_generator(gen_euk_path)  if gen_euk_path.exists()  else []
+    gen_prok = _rows_generator(gen_prok_path) if gen_prok_path.exists() else []
+    gen_rows = gen_euk + gen_prok
 
     def scatter(rows, marker, color, label, *, filled=True, size=85):
         if not rows:
@@ -85,17 +96,22 @@ def panel_E(ax):
             ax.scatter(xs, ys, marker=marker, facecolors="none", edgecolor=color,
                        linewidth=1.4, s=size, label=label, zorder=3)
 
-    scatter(db, "s", "#2c3e50", "DNABERT-2",          filled=True,  size=70)
-    scatter(nt, "D", "#16a085", "NTv3",               filled=True,  size=95)
-    scatter(ev, "^", "#444444", "Evo1 (null)",        filled=False, size=85)
+    scatter(db,       "s", "#2c3e50", "DNABERT-2",    filled=True,  size=70)
+    scatter(nt,       "D", "#16a085", "NTv3",          filled=True,  size=95)
+    scatter(ev,       "^", "#444444", "Evo1 (null)",   filled=False, size=85)
+    scatter(gen_rows, "o", "#c0392b", "GENERator",     filled=True,  size=90)
 
-    # GENERator placeholder marker in legend so reader sees what's missing
-    gen_patch = mpatches.Patch(facecolor="#c0392b", edgecolor="black",
-                               label="GENERator (pending)")
-    handles, labels = ax.get_legend_handles_labels()
-    ax.legend(handles + [gen_patch], labels + ["GENERator (pending)"],
-              loc="lower left", frameon=False, ncol=2,
-              handletextpad=0.4, columnspacing=1.2)
+    if not gen_rows:
+        # GENERator data not yet generated — show placeholder in legend
+        gen_patch = mpatches.Patch(facecolor="#c0392b", edgecolor="black",
+                                   label="GENERator (pending)")
+        handles, labels = ax.get_legend_handles_labels()
+        ax.legend(handles + [gen_patch], labels + ["GENERator (pending)"],
+                  loc="lower left", frameon=False, ncol=2,
+                  handletextpad=0.4, columnspacing=1.2)
+    else:
+        ax.legend(loc="lower left", frameon=False, ncol=2,
+                  handletextpad=0.4, columnspacing=1.2)
 
     # mark the DNABERT-2 L7 r603 outlier (low-percentile, residual-carried)
     out = [r for r in db if r["layer"] == 7 and r["sw_row"] == 603]
