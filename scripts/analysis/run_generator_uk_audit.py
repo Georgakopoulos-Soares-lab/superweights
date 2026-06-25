@@ -43,15 +43,16 @@ import yaml
 ROOT = Path(__file__).resolve().parent.parent.parent
 
 VARIANT_CFG = {
-    "euk":  ("generator",            "results/sw_mechanistic_generator.json"),
-    "prok": ("generator_prokaryote", "results/sw_mechanistic_generator_prokaryote.json"),
+    "euk":    ("generator",                  "results/sw_mechanistic_generator.json"),
+    "prok":   ("generator_prokaryote",       "results/sw_mechanistic_generator_prokaryote.json"),
+    "prok1b": ("generator_prokaryote_1b",    "results/sw_mechanistic_generator_prokaryote_1b.json"),
 }
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="GENERator ||U_k||_F audit")
-    parser.add_argument("--variant", choices=["euk", "prok"], required=True,
-                        help="'euk' → GENERator-EUK, 'prok' → GENERator-PROK")
+    parser.add_argument("--variant", choices=["euk", "prok", "prok1b"], required=True,
+                        help="'euk' → GENERator-EUK 3B, 'prok' → GENERator-PROK 3B, 'prok1b' → GENERator-PROK 1.2B")
     args = parser.parse_args()
 
     model_key, out_rel = VARIANT_CFG[args.variant]

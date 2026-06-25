@@ -55,13 +55,13 @@ VARIANT_CFG = {
         "model_key": "generator",
         "sw_row":    2371,
         "probe":     "actb_500",
-        "out":       "results/activation_lifecycle_generator.json",
+        "out":       "results/activation_residual_generator.json",
     },
     "prok": {
         "model_key": "generator_prokaryote",
         "sw_row":    1927,
         "probe":     "pseudomonadota",
-        "out":       "results/activation_lifecycle_generator_prokaryote.json",
+        "out":       "results/activation_residual_generator_prokaryote.json",
     },
 }
 

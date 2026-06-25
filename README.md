@@ -62,7 +62,7 @@ Restructured 5-part-arc manuscript at `paper/main.tex` (~200 lines, replaces 900
 |---|--------|---------------|-------------|--------|
 | 1 | Architecture restriction (transformer decoders only) | `scripts/analysis/plot_figure1.py` | `super_weight_index.json`, `ablation_results.json` | ✅ |
 | 2 | Quadratic amplifier mechanism | `scripts/analysis/plot_sw_mechanistic.py` | `sw_causal_tracing.json`, `sw_grad_attribution.json` | ✅ |
-| 3 | Kingdom asymmetry (EUK driver +0.437 vs PROK gate −0.710) | `scripts/analysis/plot_figure2.py` | `sw_hexamer_causal.json`, `sw_shuffle_controls.json`, `sw_kmer_scan.json` | ✅ |
+| 3 | Composition encoding (shared magnitude-scaled mechanism; EUK \|write\|–KL r = +0.437, PROK r = +0.710; the PROK −0.710 is a signed-activation write-direction convention, not an opposite mechanism) | `scripts/analysis/plot_figure2.py` | `sw_hexamer_causal.json`, `sw_shuffle_controls.json`, `sw_kmer_scan.json` | ✅ |
 | 4 | GUE functional consequences (splice −25.5% across 3 seeds) | `scripts/analysis/plot_figure4.py` | `gue_multiseed_results.json`, `gue_per_row_ablation.json` | ✅ NEW |
 | 5 | Compression — shadow redundancy + whole-model INT4 | `scripts/analysis/plot_figure5.py` | `compression_sweep_*.json`, `quant_ablation_generator_int4.json`, `int4_downstream_benchmark_splice.json`, `whole_model_quant_generator{,_prokaryote}_100k.json` | ✅ NEW |
 
@@ -94,7 +94,7 @@ CUDA_VISIBLE_DEVICES=0 conda run -n generator --live-stream python3 \
 
 1. **Architecture restriction** (Fig 1) — transformer decoders only; SSM/Hyena/Mamba show no SW.
 2. **Splice collapse** (Fig 4A) — DNABERT-2 SW ablation: −25.5 ± 0.7% across 3 seeds, p = 0.0004.
-3. **Kingdom asymmetry** (Fig 3) — EUK driver r = +0.437 vs PROK suppressive gate r = −0.710.
+3. **Shared magnitude-scaled mechanism** (Fig 3) — in both kingdoms ablation cost scales with SW write magnitude (EUK r = +0.437, PROK r = +0.710); the PROK −0.710 reflects a signed-activation write-direction convention, not an opposite "suppressive gate."
 4. **Quadratic amplifier mechanism** (Fig 2) — single early FFN row + residual propagation.
 5. **Yu et al. non-replication at scale** (Fig 5C) — 100k-token INT4 SW marginal cost ≈ 0.
 6. **Shadow redundancy** (Fig 5A,B) — near-SW rows are the *most* INT4-tolerant; far-SW rows collapse.
@@ -115,9 +115,9 @@ Run with `pytest tests/`.
 
 | Model | Type | Params | HF ID |
 |-------|------|--------|-------|
-| GENERator eukaryote | Causal decoder | 3B | `GenerTeam/GENERator-eukaryote-3b-base` |
-| GENERator prokaryote | Causal decoder | ~200M | `GenerTeam/GENERator-prokaryote-*` |
-| GENERator prokaryote 1B | Causal decoder | 1B | `GenerTeam/GENERator-prokaryote-1b-base` |
+| GENERator eukaryote | Causal decoder | 3B | `GenerTeam/GENERator-v2-eukaryote-3b-base` |
+| GENERator prokaryote | Causal decoder | 3B | `GenerTeam/GENERator-v2-prokaryote-3b-base` |
+| GENERator prokaryote 1B | Causal decoder | 1.2B | `GenerTeam/GENERator-v2-prokaryote-1.2b-base` |
 | Evo 2 7B | StripedHyena2 SSM | 7B | `arcinstitute/evo2_7b` |
 | NTv3 | Encoder (masked LM) | 50M | `InstaDeepAI/nucleotide-transformer-v3-50m-multi-species` |
 | DNABERT-2 | Encoder (masked LM) | 117M | `zhihan1996/DNABERT-2-117M` |
@@ -772,18 +772,21 @@ row 1927, out\_max = 506 014) on *E. coli* K-12 sequences (promoters, terminator
 | 4 | K-mer motif enrichment | AT-rich motif hint (OR = 1.5, p_adj = 0.043); below FDR threshold. |
 | 5 | Gradient attribution | 150 sequences (50/label), all valid; saliency profiles computed. |
 | 6 | Attribution comparison | Gradient vs omission agreement: mean Spearman ρ = −0.077, all contexts n.s. Methods disagree in prokaryote context. |
-| 7 | Hexamer causal test | r(SW activation, KL divergence) = **−0.710** (p ≈ 0, t = −118) — **inverted** vs EUK (r = +0.437). AT-rich top activators cause the *least* KL divergence when SW is ablated; low-activation k-mers suffer most (KL 0.884 vs 0.043). SW is not causally necessary for its highest-activating tokens. |
+| 7 | Hexamer causal test | r(signed SW activation, KL divergence) = **−0.710** (p ≈ 0, t = −118). The negative sign is a write-direction convention: the PROK SW writes with **negative** activations, so the most strongly (most negative) activating AT-rich tokens carry the largest write magnitude and the largest ablation KL. On **\|write\| magnitude** the correlation is **r = +0.710**, matching EUK (+0.437) — the same magnitude-scaled mechanism, not an inversion. |
 | 8 | Causal tracing | Mean ΔPPL = **+9.47 log-PPL units** (random control Δ = 0.00033). Uniform across contexts: promoter=9.15, terminator=9.34, random=9.93. No context-specificity — SW is a general-purpose component for E. coli sequences. |
 | 9 | Ablation regression | R² = **0.347** (higher than EUK R² = 0.158). GC fraction (β = −0.306) and k-mer entropy (β = −0.307) dominate: AT-rich, low-complexity sequences suffer most from SW ablation, consistent with AT-rich hexamers being the top activators. |
 
 ### Biological interpretation (prokaryote)
 
-PROK SW row 1927 shows **inverse GC preference** (AT-rich activators, negative activations),
-**context-sensitivity** (shuffle controls significant, p < 0.01), and a **causal paradox**:
-the hexamer causal test (r = −0.710) reveals that ablating the SW most disrupts prediction
-of *low-activation* tokens — the opposite of EUK. This suggests the PROK SW acts as a
-**suppressive gate**: high activations for AT-rich k-mers that are otherwise easy to predict,
-but its removal catastrophically disrupts predictions for GC-rich tokens it barely activates.
+PROK SW row 1927 shows **inverse GC preference** (AT-rich activators, negative activations)
+and **context-sensitivity** (shuffle controls significant, p < 0.01). The hexamer causal
+test (signed-activation r = −0.710) initially looks inverted versus EUK, but the sign is a
+write-direction convention: because the PROK SW writes with negative activations, the most
+strongly (most negative) activating AT-rich tokens carry the largest write magnitude and
+their predictions are most disrupted by ablation. On |write| magnitude the correlation is
+**r = +0.710**, the same magnitude-scaled mechanism as EUK (+0.437). The PROK SW is therefore
+not a "suppressive gate" opposite to EUK but the same magnitude-driven component with a
+flipped activation sign.
 
 The high causal tracing ΔPPL (+9.47 vs EUK ~+3 log-PPL) and higher composition-explained
 variance (R² = 0.347) indicate the PROK SW is more deeply integrated into the model's
@@ -814,6 +817,11 @@ sequence length statistics) that are present across both eukaryotic and prokaryo
 
 Six interpretability experiments consistently characterise SW row 2371 (layer 4,
 out_max = 375 361) as a **context-insensitive housekeeping super-weight**.
+
+> **Note (canonical index):** the EUK detector converged on **two** layer-4 super-rows —
+> the dominant row 2371 (characterised below) and a secondary row 1522 at the same layer.
+> Causal tracing zeroes both rows together; the per-experiment characterisation below was
+> run on the dominant row 2371.
 
 ### Per-experiment findings
 
@@ -851,7 +859,7 @@ interesting but unvalidated secondary signal.
 2. Nucleotide Transformer v2: provides a byte-level transformer to decouple architecture from tokenizer.
 3. Test NF-κB enrichment at larger k (top-500 foreground) and cross-reference with CTCF ChIP-seq.
 4. SW-aware INT4 downstream benchmark: retain SW rows in FP16, INT4 all else → report GUE accuracy.
-5. Investigate PROK SW causal paradox (r = −0.710): why does ablation hurt low-activation k-mers most? Hypothesis: PROK SW row 1927 acts as a residual-stream gain control that dampens AT-rich token predictions while amplifying GC-rich ones.
+5. ~~Investigate PROK SW causal paradox (r = −0.710)~~ ✅ Resolved — the negative sign is a write-direction convention; on |write| magnitude r = +0.710, matching EUK's magnitude-scaled mechanism. PROK SW row 1927 is the same magnitude-driven component with a flipped activation sign, not a suppressive gate.
 
 ---
 
