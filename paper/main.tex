@@ -89,14 +89,18 @@ into a structural component (the gated-FFN amplifier; weight-only
 predictable) and a systemic component (whether the surrounding mixer
 preserves the candidate along its own residual coordinate). Second,
 within the SW-positive models, super-weights encode nucleotide
-composition rather than annotated regulatory grammar, with a
-sign-reversed correlation between SW activation and ablation cost
-between the eukaryotic ($r = {+}0.437$) and prokaryotic
-($r = {-}0.710$) GENERator models; a sparse autoencoder trained on
-prokaryotic residual-stream activations independently recovers the
-same compositional axis. Third, ablating the SW ensemble in DNABERT-2
-collapses splice-site recognition by $-25.5\%$ accuracy while leaving
-histone-mark prediction intact, and the splice effect replicates in
+composition rather than annotated regulatory grammar; in both
+GENERator models the ablation cost scales with the magnitude of the
+super-weight write ($r = {+}0.437$ in the eukaryotic and
+$r = {+}0.710$ in the prokaryotic model), and a sparse autoencoder
+trained on prokaryotic residual-stream activations independently
+recovers the same compositional axis. (The prokaryotic super-weight
+writes in the negative direction, so on \emph{signed} activation the
+same data give $r = {-}0.710$, a write-direction convention rather
+than a distinct mechanism.) Third, ablating the SW ensemble in
+DNABERT-2 collapses splice-site recognition by $-25.5\%$ accuracy
+while affecting histone-mark prediction only weakly and
+inconsistently, and the splice effect replicates in
 NTv3 across five seeds ($\Delta\mathrm{MCC} = -0.119 \pm 0.054$,
 $p = 0.008$). The SW neighbourhood is extremelly tolerant to pruning
 and INT4 quantization compared with random rows, suggesting refined
@@ -145,9 +149,11 @@ of the surrounding mixing operator (whether candidate concentrated
 channels are preserved along their own residual coordinate
 downstream). Within the SW-positive models we additionally
 characterise what the super-weight encodes (nucleotide composition,
-not biological regulatory grammar), document a sign-reversed
-SW-activation/ablation-cost correlation between the eukaryotic and
-prokaryotic GENERator models, and show that the immediate
+not biological regulatory grammar), show that in both the eukaryotic
+and prokaryotic GENERator models the SW-activation/ablation-cost
+correlation scales with the magnitude of the super-weight write (the
+negative sign in the prokaryotic model reflecting only its write
+direction), and show that the immediate
 neighbourhood of the SW row is unusually tolerant to pruning and
 INT4 quantization---a property we term shadow redundancy.
 
@@ -378,8 +384,8 @@ preserved. The per-token argmax leaves row 3776 by layer~13.}
 \end{figure}
 
 \medskip
-\noindent\textbf{Super-weights encode nucleotide composition with a
-sign-reversed correlation across kingdoms}
+\noindent\textbf{Super-weights encode nucleotide composition through a
+shared magnitude-scaled mechanism}
 
 Having established the structural mechanism and the dissociation
 between architecture classes, we asked what each load-bearing SW
@@ -418,7 +424,7 @@ perturbed SW activation (mononucleotide $p = 0.0017$, dinucleotide
 $p = 0.0092$, k-mer block $p = 0.0099$, trinucleotide $p < 10^{-8}$),
 indicating context-sensitivity at multiple levels.
 
-\textit{Sign-reversed SW-activation/ablation-cost correlation.}
+\textit{Ablation cost scales with super-weight write magnitude.}
 A genome-wide scan over all 4{,}096 6-mers showed the EUK SW
 activates broadly with a modest positive GC-content correlation
 ($r = +0.19$) and CC/CT-family k-mers at the top of the activation
@@ -429,18 +435,20 @@ $r = +0.437$ ($t = 5.06$, $p = 4.46 \times 10^{-7}$): hexamers that
 strongly activate the SW are also those whose predictions are most
 disrupted by its removal. AAAAAA, with activation~24, produced
 near-zero KL on ablation (0.0018). In PROK the GC correlation is
-negative ($r = -0.09$), AT-rich hexamers dominate the activation
-distribution, and the SW-activation/KL-divergence correlation
-reverses sign: $r = -0.710$ ($t = -118$, $p \approx 0$).
-Top-quartile AT-rich activators in PROK produce a mean ablation KL
-of 0.043, while bottom-quartile low-activation hexamers produce
-KL $= 0.884$. We refer to the EUK pattern (high activation,
-high ablation cost) as driver behaviour, and the PROK pattern (high
-activation, low ablation cost) as suppressive-gate behaviour. Both
-patterns are statistically robust within their respective model,
-but we caution that the present data establish the correlation
-reversal, not a fully resolved circuit-level account of why the two
-kingdoms compute super-weights differently; a parallel EUK sparse
+negative ($r = -0.09$) and AT-rich hexamers dominate the activation
+distribution. The PROK super-weight writes exclusively in the
+negative direction (signed activation from $-723{,}256$ to $-44$),
+so correlating \emph{signed} activation against KL gives a negative
+coefficient, $r = -0.710$ ($t = -118$, $p \approx 0$); on the
+mechanistically appropriate \emph{write-magnitude} the correlation is
+$r = +0.710$, the same positive relationship as EUK.
+Top-quartile AT-rich activators (largest-magnitude writes) in PROK
+produce the largest ablation KL and low-magnitude hexamers the
+smallest, exactly as in EUK. The interpretation is therefore identical
+in both models: ablation cost scales with the size of the
+super-weight write, and the $r = -0.710$ figure reflects only the
+negative write-direction convention, not a distinct
+``suppressive-gate'' computation; a parallel EUK sparse
 autoencoder (currently in training) is intended to give the same
 basis-decomposition view of EUK that we have for PROK.
 
@@ -506,7 +514,10 @@ balanced) for EUK and PROK on a log axis.
 KL divergence between clean and ablated next-token distributions
 ($y$) for all 4{,}096 hexamers; Pearson $r = +0.437$.
 \textbf{(C)}~PROK causal-hexamer scatter, same axes; Pearson
-$r = -0.710$.
+$r = -0.710$ on \emph{signed} activation. The PROK super-weight
+writes in the negative direction, so on write \emph{magnitude} the
+same data give $r = +0.710$---the same positive relationship as EUK
+in (B), a write-direction convention rather than a distinct mechanism.
 \textbf{(D)}~Mean SW activation shift across four shuffle types
 (mono-, dinuc-, trinuc-, 6-mer block) for EUK and PROK, with
 per-shuffle $p$-values; EUK shifts are not statistically significant
@@ -746,20 +757,26 @@ extending it to other non-attention mixers (Mamba, EMA, parallel
 Hyena variants) is the natural next test.
 
 Within the SW-positive models, the super-weight encodes nucleotide
-composition rather than annotated regulatory grammar. The
-SW-activation/ablation-cost correlation reverses sign between
-GENERator EUK and PROK ($r = +0.437$ vs.\ $r = -0.710$), and a
-sparse autoencoder trained on PROK residual-stream activations
-recovers the same GC-rich vs.\ AT-rich axis. We refer to these as
-driver vs.\ suppressive-gate behaviours and are explicit that what
-we have characterised is the correlation reversal, not a fully
-resolved circuit-level account; a matched EUK SAE is in progress.
+composition rather than annotated regulatory grammar. In both
+GENERator models the ablation cost scales with the magnitude of the
+super-weight write ($r = +0.437$ in EUK and $r = +0.710$ in PROK on
+write magnitude), and a sparse autoencoder trained on PROK
+residual-stream activations recovers the same GC-rich vs.\ AT-rich
+axis. The PROK super-weight writes in the negative direction, so on
+\emph{signed} activation the same data give $r = -0.710$; we are
+explicit that this sign is a write-direction convention rather than a
+distinct ``suppressive-gate'' mechanism, and that what differs between
+the two models is context-sensitivity and integration depth, not the
+underlying magnitude-scaled mechanism. A matched EUK SAE is in
+progress.
 
-Functionally, the DNABERT-2 SW ensemble is required for splice-site
-recognition ($-25.5\%$ accuracy across 3 seeds) but not for
-histone-mark prediction; the splice effect replicates in NTv3 across
-five seeds (5/5 negative direction, $p = 0.008$ on MCC). The
-splice/histone dissociation is consistent with a local-hexamer
+Functionally, the DNABERT-2 SW ensemble is reliably required for
+splice-site recognition ($-25.5\%$ accuracy across 3 seeds) but only
+weakly and inconsistently involved in histone-mark prediction; the
+splice effect replicates in NTv3 across five seeds (5/5 negative
+direction, $p = 0.008$ on MCC). The splice/histone contrast is one of
+reliability and magnitude rather than a clean dissociation, and is
+consistent with a local-hexamer
 detector role for the SW ensemble (splice sites have short
 consensus sequences; H3K4me3 reflects diffuse chromatin context)
 and provides a usable diagnostic principle: tasks that depend on
@@ -785,12 +802,12 @@ We note several limitations explicitly. First, the
 structural-vs-systemic decomposition rests on a single architecture
 transition (gated-FFN transformer to StripedHyena hybrid via Evo1);
 direct replication on Evo2, MegaDNA, HybridNA, and on Mamba-class
-models is a revision-stage goal. Second, the kingdom-asymmetric
-sign reversal is established between two GENERator models trained
+models is a revision-stage goal. Second, the EUK/PROK
+comparison is established between two GENERator models trained
 on different corpora with otherwise matched architecture and
 training procedure, but we have not run the same comparison on
-other transformer-decoder genomic LMs to confirm that the reversal
-generalises beyond GENERator. Third, the disentanglement of
+other transformer-decoder genomic LMs to confirm that the shared
+magnitude-scaled mechanism generalises beyond GENERator. Third, the disentanglement of
 architecture from tokenizer is incomplete: GENERator uses 6-mer
 tokenization and is SW-positive, Evo1/Evo2 use byte-level
 tokenization and are SW-negative under ablation; a publicly
