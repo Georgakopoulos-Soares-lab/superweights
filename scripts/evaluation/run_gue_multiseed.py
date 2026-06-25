@@ -105,10 +105,22 @@ def _load_model(model_id: str, num_labels: int, hf_token: str | None, device: st
         embed_dim = backbone.config.embed_dim
         model = _NTv3Classifier(backbone, embed_dim, num_labels)
     else:
+        # DNABERT-2 is a public model; on transformers 4.29.x the custom remote
+        # BertForSequenceClassification forwards unexpected kwargs (e.g. `token`)
+        # into __init__ and errors, so strip auth kwargs for this path.
+        dnabert_kwargs = {k: v for k, v in tok_kwargs.items() if k != "token"}
         model = transformers.AutoModelForSequenceClassification.from_pretrained(
             model_id, num_labels=num_labels, ignore_mismatched_sizes=True,
-            **tok_kwargs,
+            **dnabert_kwargs,
         )
+        # DNABERT-2 ships a 2022-era Triton flash-attention kernel that uses the
+        # removed tl.dot(trans_b=...) API and breaks on modern Triton. Force the
+        # mathematically-equivalent PyTorch attention fallback (bert_layers.py
+        # uses it whenever the Triton func is None) for reproducible loading.
+        import sys as _sys
+        for _name, _mod in list(_sys.modules.items()):
+            if _name.endswith("bert_layers") and "DNABERT" in _name:
+                _mod.flash_attn_qkvpacked_func = None
 
     model = model.to(device)
     return model, tokenizer
