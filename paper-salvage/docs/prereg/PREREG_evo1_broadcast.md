@@ -67,6 +67,75 @@ re-run numbers are reported in R3.
   measures a non-source layer and breaks source-layer symmetry with the other four models.
   Reconsider only if the amended protocol also returns flat.
 
+> Note on the second rejected alternative: it rejects *fp32 alone*, i.e. fp32 while keeping
+> ε = 1.0. D-013 adopts fp32 **together with** AC-relative ε. These are not in conflict —
+> the rejection stands as written and is not revised.
+
+## Numerical precision (added per D-013)
+
+The impulse trace runs in **fp32** for all five models. α remains fixed at 0.01 and is not
+tuned per model. Predictions and reporting branches are unchanged.
+
+Every output record carries a per-layer headroom column:
+
+    headroom_ℓ = ε_effective_ℓ / ULP( max |h_ℓ| )
+
+- headroom ≥ 4× — the layer is adequately powered; a null there is a measurement.
+- headroom < 4× — the layer is under-powered; report as **unmeasured**, not as zero.
+
+A flat result is interpretable only where headroom is adequate. This column is required for
+every model and every control arm, and it is what allows Branch C to be earned rather than
+asserted.
+
+## v1 provenance (added per D-013)
+
+v1 of this preregistration was version-controlled but not machine-locked; `LOCKS.jsonl` did
+not exist at the time. Its provenance is the git commit that introduced it:
+
+    commit: ____________________   date: ____________________
+    (git log --follow --diff-filter=A -- docs/prereg/PREREG_evo1_broadcast.md)
+
+This is disclosed in Methods. No retroactive LOCKS.jsonl entry is synthesised for v1.
+
+### Result of that recovery: v1 was never committed
+
+**The block above cannot be filled, and the premise that v1 "was version-controlled" is
+false.** The recovery command returns no commits:
+
+```
+$ git log --follow --diff-filter=A -- paper-salvage/docs/prereg/PREREG_evo1_broadcast.md
+(no output)
+
+$ git log --format="%h %ad %s" --date=short -- \
+      paper-salvage/docs/prereg/PREREG_evo1_broadcast.md \
+      paper-salvage/PREREG_evo1_broadcast.md
+e705497 2026-08-12 E2 bookkeeping: void the fixed-eps protocol, install prereg v2, …
+```
+
+`e705497` is the only commit that has ever contained this path, and it already contains
+**v2**. The entire `paper-salvage/` tree was untracked until that commit. v1 existed only
+as an untracked working-tree file and was overwritten in place by the STEP 1 instruction
+"replace `PREREG_evo1_broadcast.md` with the v2 text" before any commit was made. No blob
+of v1 exists in the object store.
+
+**What this costs.** v1's status as a *preregistration* rests on nothing verifiable. There
+is no hash, no commit, and no timestamp establishing that its prediction was fixed before
+the first Evo1 run. Methods must not describe v1 as preregistered.
+
+**What survives, and why it is weaker.** v1's primary prediction and falsifier are quoted
+verbatim in §"What v1 predicted, and what happened" above — but that quotation lives inside
+v2, which was written *after* the first run. It is a post-hoc transcription of a
+pre-hoc claim, and it cannot be distinguished from one by any external check.
+
+A reconstruction of the full v1 text, recovered from the working session in which it was
+read before being overwritten, is filed at `archive/PREREG_evo1_broadcast_v1_RECONSTRUCTED.md`.
+It is labelled as a reconstruction. **It is not evidence and must not be cited as a
+preregistration record.**
+
+**Bearing on v2.** None. v2 is being locked *before* its confirming run, with `LOCKS.jsonl`
+now in place, which is the property v1 turned out to lack. The v1 failure is disclosed, not
+repaired.
+
 ## Predictions (state before running)
 
 **Sanity, all models except Evo1:** α = 0.01 should land near ε = 1.0 for GENERator,

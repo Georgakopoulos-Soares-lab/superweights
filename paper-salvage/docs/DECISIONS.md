@@ -173,3 +173,88 @@ one-off workaround, and it affects any future StripedHyena run through this harn
 **Independent consistency check worth keeping:** the measured residual freeze at
 ~4.2e6–3e7 reproduces the manuscript's "residual freezes at ≈3×10⁷" claim for row 3776 from
 a different script. Log this in CLAIMS_LEDGER.md as corroboration of C-009's supporting trace.
+
+## D-012a — Correction to D-012: reference script path
+**Date:** Phase 1
+**Corrects:** D-012 (not edited; append-only)
+
+D-012 cites the reference fp32 pattern as
+`scripts/interpretability/run_evo1_residual_attribution_fp32.py`. The actual path is
+`scripts/analysis/run_evo1_residual_attribution_fp32.py`. Everything else in D-012 stands.
+
+---
+
+## D-013 — Impulse assay runs in fp32; α remains fixed at 0.01; per-layer headroom reported
+**Date:** Phase 1
+**Builds on:** D-011 (AC-relative ε). Does **not** supersede it.
+
+**Decision:** Run the impulse trace in fp32 for all five models. Keep α = 0.01. Add a
+per-layer headroom diagnostic, ε_effective / ULP(|h_ℓ|), to every output record.
+
+**Trigger.** The STEP 2 gate measured Evo1's AC scale: std 3.33e5 at L11, 5.53e7 at L13+.
+α = 0.01 gives ε ≈ 3.3e3 at injection. The bf16 increment is ≈2.0e3 at L11 but ≈3.3e4 from
+L13 onward, so under bf16 the injected perturbation sits ~10× below representable precision
+downstream unless the L12→L13 explosion amplifies it proportionally.
+
+**Why this is disqualifying, not merely risky.** Whether that amplification occurs *is* T.
+Under bf16 the instrument's validity is conditional on the quantity being measured, and a
+flat result cannot be distinguished from T = 0. Branch C of the prereg would also be
+unearnable, since it requires showing the perturbation was representable in the first place.
+
+**Why fp32 rather than a larger α.** fp32 ULP is 0.5 at 4.2e6 and 128 at 1.29e9, giving
+6,600× and 26× headroom respectively at ε = 3.3e3. It also leaves ε at ~6e-5 of the local AC
+component, i.e. a genuine small-signal linear-response probe. Beating bf16 by raising α
+would require α ≈ 0.1–0.5 — injecting 10–50% of the AC component, no longer small-signal and
+at risk of nonlinearity. Precision is a property of the instrument; α is a property of the
+protocol. Changing the former is calibration, changing the latter after seeing results is
+tuning.
+
+**Why all five and not Evo1 alone.** At magnitude ~100 the bf16 increment is ~0.78, so the
+original ε = 1.0 was only ~1.3 ULP for GENERator / DNABERT-2 / NTv3 as well. If those runs
+were bf16 they were precision-marginal and their existing T/C/KL values are suspect. Running
+all five in fp32 is both the symmetric choice and the one that removes precision as a
+confound everywhere. **Record the precision used by the original runs before re-running** —
+if it was not fp32, note it as a defect in the superseded numbers.
+
+**The headroom diagnostic is what makes a null reportable.** "The perturbation was 26× above
+representable precision and still produced no downstream change" is a finding. "Everything
+was zero" is not. This column must be present in every output record, for every model and
+every control arm.
+
+**Consequences:**
+- Prereg v2 amended (see below) and locked before the re-run.
+- α is **not** revised. Predictions and branches A–D are **not** revised.
+- Branch C becomes earnable, conditional on the headroom column showing adequate margin.
+- New pass/fail criterion: if headroom < 4× at any downstream layer for any model, the
+  assay is under-powered at that layer and results there are reported as unmeasured, not
+  as zero.
+
+---
+
+# Append to docs/prereg/PREREG_evo1_broadcast.md (v2), under "Amended protocol"
+
+## Numerical precision (added per D-013)
+
+The impulse trace runs in **fp32** for all five models. α remains fixed at 0.01 and is not
+tuned per model. Predictions and reporting branches are unchanged.
+
+Every output record carries a per-layer headroom column:
+
+    headroom_ℓ = ε_effective_ℓ / ULP( max |h_ℓ| )
+
+- headroom ≥ 4× — the layer is adequately powered; a null there is a measurement.
+- headroom < 4× — the layer is under-powered; report as **unmeasured**, not as zero.
+
+A flat result is interpretable only where headroom is adequate. This column is required for
+every model and every control arm, and it is what allows Branch C to be earned rather than
+asserted.
+
+## v1 provenance (added per D-013)
+
+v1 of this preregistration was version-controlled but not machine-locked; `LOCKS.jsonl` did
+not exist at the time. Its provenance is the git commit that introduced it:
+
+    commit: ____________________   date: ____________________
+    (git log --follow --diff-filter=A -- docs/prereg/PREREG_evo1_broadcast.md)
+
+This is disclosed in Methods. No retroactive LOCKS.jsonl entry is synthesised for v1.

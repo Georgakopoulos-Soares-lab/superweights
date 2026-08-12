@@ -64,9 +64,22 @@ forward pass, not of the injection, and it is reproduced across two independent 
 **Keep it** as corroboration of the supporting trace behind C-009. It is unaffected by the
 ε amendment and does not need to be re-derived from the re-run.
 
-Caveat: this is corroboration of a magnitude, conditional on the STEP-2 input-sensitivity
-gate in `PREREG_evo1_broadcast.md` §Precondition passing. If the gate fails, this note is
-void along with everything else measured through the Evo1 trace.
+Caveat resolved 2026-08-12: the STEP 2 gate **passed**
+(`experiments/E2_evo1_broadcast/GATE_RESULTS.md`), so this note stands.
+
+**N-002 — "bit-for-bit identical from L13" was a statistic, not the hidden state.**
+The Evo1 residual does **not** freeze. No layer is bitwise identical to any other; the
+appearance came from a layer-to-layer max |Δ| statistic that saturates on a few very large
+coordinates. Any manuscript wording implying a frozen residual must be corrected to describe
+the magnitude plateau instead. Evidence: `results/evo1_layer_freeze_check.json`.
+
+**N-003 — relative-change collapse (Phase 1b candidate, do not chase).**
+After the L12→L13 magnitude explosion (max |h| → 1.29e9), consecutive-layer change falls to
+~1e-6 of residual magnitude and blocks 21–31 alter < 0.2% of coordinates. This is an
+observation about how little the second half of Evo1 moves the residual, not a claim about
+what it computes, and it is **not** the AC/DC decomposition Branch C would require. Logged
+as a Phase 1b candidate under the binding Phase 1 stop rule. No ledger row until it is
+promoted. Evidence: `experiments/E2_evo1_broadcast/GATE_RESULTS.md`.
 
 ## Retired claims
 

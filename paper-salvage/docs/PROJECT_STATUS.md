@@ -68,6 +68,15 @@ amplifies the perturbation, the assay may return flat a second time. The prereg 
 pre-commits to reporting that outcome as residual lack of dynamic range rather than as a
 null about Evo1 (§Control requirement, Branch C). α is **not** to be tuned to avoid it.
 
+## Open gaps
+
+- **Phase 0 §0.2 migration not done.** `results/keep/` now exists but is empty. The
+  provenance discipline starts with the E2 re-run; the pre-existing artifacts cited in
+  `docs/CLAIMS_LEDGER.md` have not been copied in with `PROVENANCE.md` files, so several
+  ledger rows still cite paths that live only in the old tree. Backfill is Phase 2 work.
+- **Prereg v1 text is not recoverable from git.** See `docs/prereg/PREREG_evo1_broadcast.md`
+  §v1 provenance. v1 was untracked when it was replaced, so no commit ever contained it.
+
 ## Submission blockers (independent of science)
 
 - [ ] Figure 2 panels A–D are absent; v15 caption admits they are "pending GENERator JSONs"

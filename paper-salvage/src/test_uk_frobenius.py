@@ -32,8 +32,12 @@ def main() -> None:
     uk = uk_frobenius(g, u, d)
 
     # 1. vectorised == definition
+    # uk_frobenius promotes to float64 (it documents why). Build the reference in float64
+    # too: accumulating these dot products in float32 costs ~1e-7 per term, which alone
+    # trips a 1e-9 tolerance and makes this assertion fail against a correct implementation.
+    g64, u64, d64 = g.double(), u.double(), d.double()
     ref = sum(
-        float(d[K, i]) ** 2 * float(g[i] @ g[i]) * float(u[i] @ u[i])
+        float(d64[K, i]) ** 2 * float(g64[i] @ g64[i]) * float(u64[i] @ u64[i])
         for i in range(d_ffn)
     ) ** 0.5
     assert abs(float(uk[K]) - ref) / ref < 1e-9, "vectorised form disagrees with definition"
