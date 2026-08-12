@@ -28,8 +28,8 @@ is not yet measured)
 | C-011 | R2 | Structural concentration does not imply functional criticality | C-009 + C-007/8 | | established | migrate |
 | C-012 | R3 | GENERator EUK: C = 1.0 through all downstream layers | `sw_broadcast_impulse.json` (fixed-ε, superseded) | random-coord, neighbour-row, random-dense | pending-rerun | E2 re-run, D-011 |
 | C-013 | R3 | GENERator PROK: C ≈ 0.92 → ~0 by L14 while total gain grows toward output | as above | as above | pending-rerun | E2 re-run, D-011 |
-| C-014 | R3 | DNABERT-2: C ≈ 0 immediately, largest impulse KL (≈0.31) | as above | as above | pending-rerun | E2 re-run, D-011 |
-| C-015 | R3 | C describes routing geometry, not criticality | C-012–014 | | established | migrate |
+| C-014 | R3 | DNABERT-2: C ≈ 0 immediately, largest impulse KL (≈0.31) | as above | as above | **CONTESTED** | **blocked — noise floor, see N-004** |
+| C-015 | R3 | C describes routing geometry, not criticality | C-012–014 | | **downgraded: was `established`** | **hold — leans on C-014, see N-004** |
 | C-016 | R3 | Evo1 routing regime | | full control set | pending | E2 |
 | C-017 | R3 | **[THESIS SLOT]** relation of T to criticality | | | pending | E2 |
 | C-018 | R3 | Broadcast observability H = (L−ℓ−1)/L is a methodological covariate; NTv3 H ≈ 0.08 | | | consistent-with | write |
@@ -80,6 +80,39 @@ observation about how little the second half of Evo1 moves the residual, not a c
 what it computes, and it is **not** the AC/DC decomposition Branch C would require. Logged
 as a Phase 1b candidate under the binding Phase 1 stop rule. No ledger row until it is
 promoted. Evidence: `experiments/E2_evo1_broadcast/GATE_RESULTS.md`.
+
+**N-004 — DNABERT-2's impulse assay is noise-dominated. BLOCKER.**
+Two *identical* DNABERT-2 forward passes, no injection, differ by KL = **0.305** and
+‖Δh‖ = 4.50. The SW injection gives KL = 0.277 and ‖Δh‖ = 4.50. Per-layer SNR is
+0.930–1.000: the injection changes the downstream residual by the same amount as changing
+nothing. C-014's headline "largest impulse KL ≈ 0.31" and the noise floor agree to two
+significant figures.
+
+GENERator EUK, GENERator PROK and NTv3 have an **exactly zero** noise floor on the same
+harness, device and fp32 path, so this is specific to DNABERT-2 (likely its Triton
+flash-attention kernels; it is in `eval()` and has no dropout). Not diagnosed further and
+no fix attempted — that decision is pending.
+
+Consequences: C-014 contested; C-015 downgraded from `established` because its DNABERT-2
+leg supplies the C ≈ 0; D-004's stated rationale and the X-003 retirement rest on the same
+measurement; the `CLAUDE.md` hard constraint "DNABERT-2 has C ≈ 0 and the strongest encoder
+phenotype" is affected in its first clause only. **C-027 and C-028 are unaffected** — the
+ablation phenotype is a different experiment. The conclusion "C is not necessary for
+criticality" may survive on the ablation evidence, but not on the impulse C value.
+
+Evidence: `results/impulse_determinism_dnabert2.json`,
+`results/impulse_determinism_{generator,generator_prokaryote,ntv3}.json`,
+`experiments/E2_evo1_broadcast/INSTRUMENT_VALIDATION.md`.
+
+**N-005 — T is ε-invariant where powered, so the AC-ε re-run stays comparable.**
+On GENERator PROK (deterministic), T is flat to three significant figures across
+ε = 1e-2 … 10, and T at the AC-relative ε reproduces T at ε = 1.0 to 1.5%. Below ε ≈ 1e-3 T
+inflates — the fp32 accumulation floor D-013's headroom column is designed to flag. Note
+that α = 0.01 does **not** land near ε = 1.0: ε spans 2,500× across the four non-Evo1 models
+(EUK 9.37, PROK 1.68e-2, DNABERT-2 3.71e-3, NTv3 0.60). The prereg's sanity expectation is
+false as written and should be corrected before locking; the comparability it was meant to
+protect is delivered by ε-invariance instead.
+Evidence: `results/impulse_linearity_generator_prokaryote.json`.
 
 ## Retired claims
 

@@ -3,6 +3,18 @@ scripts/interpretability/run_sw_broadcast_impulse.py
 ----------------------------------------------------
 Super-weight broadcast / impulse-response assay.
 
+Protocol: D-011 (AC-relative ε) + D-013 (fp32 everywhere, per-layer headroom).
+Preregistered in docs/prereg/PREREG_evo1_broadcast.md v2.
+
+The injection magnitude is scaled to the AC component at the injection layer,
+
+    ε = α · std( h_ℓ − mean(h_ℓ) ),    α = 0.01 FIXED for all five models,
+
+because the DC offset is the part carrying no input-dependent signal. Every layer record
+carries headroom = ε / ULP(max|h_ℓ|); below 4× the layer is UNMEASURED, not zero. All five
+models run in fp32 — for Evo1 that requires disabling flash-attn at construction, see
+_load_evo1_fp32.
+
 For each super-weight output row k (at its source MLP layer), we inject a
 small perturbation ε·e_k into the residual stream at the SW token position
 and measure how it propagates through all downstream layers. Three metrics
@@ -21,10 +33,13 @@ Models (from super_weight_index.json):
   ntv3                 — layer 11, row 1472  (transformer +)
   evo1                 — layer 11, row 3776  (SSM control)
 
-Controls per SW:
+Controls per SW (four arms, per the prereg):
   random_coord  : axis-aligned ε perturbation at a uniformly random coordinate
   neighbour_row : axis-aligned ε perturbation at row ± 1
   random_dir    : dense random-unit-direction perturbation of the same ε norm
+  matched_norm  : random coordinate, ε rescaled so the first downstream layer sees the
+                  same perturbation norm the SW injection produced there (added here;
+                  the prereg names four arms but only three were ever implemented)
 
 Usage:
   python scripts/interpretability/run_sw_broadcast_impulse.py --model generator
@@ -36,6 +51,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import random
 import sys
 from pathlib import Path
@@ -102,7 +118,8 @@ def _load_model(model_name: str, device: str):
             cfg.pad_token_id = tok.pad_token_id or 0
         model = AutoModelForMaskedLM.from_pretrained(
             "zhihan1996/DNABERT-2-117M", config=cfg, trust_remote_code=True,
-            revision=_DNABERT2_REV, device_map={"": "cpu"})
+            revision=_DNABERT2_REV, device_map={"": "cpu"},
+            torch_dtype=torch.float32)   # explicit per D-013; was already the default
         model.eval()
         if device == "cuda":
             model = model.cuda()
@@ -120,19 +137,77 @@ def _load_model(model_name: str, device: str):
         return model, tok
 
     if arch == "evo1":
-        from evo import Evo
-        evo = Evo("evo-1-8k-base", device=device)
-        # StripedHyena's poles/residues must stay wide-range (fp32); everything
-        # else goes to bf16 (same exponent range as fp32, so the layer-10/11
-        # spike at the SW row doesn't overflow the way it does under fp16
-        # autocast — see run_evo1_residual_attribution_fp32.py).
-        for n, p in evo.model.named_parameters():
-            if any(k in n for k in ("poles", "residues")):
-                continue
-            p.data = p.data.to(torch.bfloat16)
-        return evo.model, evo.tokenizer
+        return _load_evo1_fp32(device)
 
     raise ValueError(f"Unknown arch: {arch}")
+
+
+def _load_evo1_fp32(device: str):
+    """Evo1 in pure fp32, with flash-attn disabled at construction (D-013).
+
+    Why not `Evo(...)` directly: its loader calls `to_bfloat16_except_poles_residues()`
+    and builds MHA with `use_flash_attn=True`. flash-attn asserts fp16/bf16, so a pure-fp32
+    forward dies in a bare `AssertionError`. `use_flash_attn` is read in
+    `AttentionBlock.__init__` and baked into the MHA module, so patching the config after
+    construction does nothing (and leaves the object in a broken state). It has to be set
+    before `StripedHyena(config)` is built, which means reproducing the loader here.
+
+    Evo1 has 3 attention blocks (`attn_layer_idxs = [8, 16, 24]`); the other 29 are Hyena.
+    Only those 3 change kernel — same mathematics, non-fused implementation.
+
+    NOTE for Methods: this is a deviation from Evo1's reference inference path, and it is
+    required by D-013's fp32 mandate. Cross-check against the bf16 path: residual
+    magnitudes agree closely (L13 median |h| 4.09e6 fp32 vs 4.23e6 bf16; max 1.2953e9 vs
+    1.2918e9; std AC 5.64e7 vs 5.53e7), so the scale structure is a property of the model
+    rather than of the numerical format.
+
+    Supersedes the bf16 loader from 0cbca69 for this assay. The comment in
+    scripts/analysis/run_evo1_residual_attribution_fp32.py ("cannot use pure fp32") is
+    correct only for the default flash-attn path; that script is bf16 despite its name and
+    despite writing "dtype": "float32" into its own output record.
+    """
+    import json as _json
+    import os
+    import pkgutil
+
+    import yaml as _yaml
+    from huggingface_hub import snapshot_download
+    from safetensors.torch import load_file
+    from stripedhyena.model import StripedHyena
+    from stripedhyena.utils import dotdict
+    from evo.models import CharLevelTokenizer
+
+    model_dir = snapshot_download("togethercomputer/evo-1-8k-base", revision="1.1_fix")
+    index_path = os.path.join(model_dir, "model.safetensors.index.json")
+    single_path = os.path.join(model_dir, "model.safetensors")
+
+    raw: dict = {}
+    if os.path.exists(index_path):
+        with open(index_path) as f:
+            index = _json.load(f)
+        for shard in sorted(set(index["weight_map"].values())):
+            raw.update(load_file(os.path.join(model_dir, shard)))
+    else:
+        raw = load_file(single_path)
+
+    state_dict = {(k[len("backbone."):] if k.startswith("backbone.") else k): v
+                  for k, v in raw.items()}
+    if "unembed.weight" not in state_dict and "embedding_layer.weight" in state_dict:
+        state_dict["unembed.weight"] = state_dict["embedding_layer.weight"]
+    del raw
+
+    cfg_raw = _yaml.safe_load(
+        pkgutil.get_data("evo.models", "configs/evo-1-8k-base_inference.yml"))
+    cfg_raw["use_flash_attn"] = False
+    cfg = dotdict(cfg_raw, Loader=_yaml.FullLoader)
+
+    model = StripedHyena(cfg)
+    model.load_state_dict(state_dict, strict=True)
+    model = model.to(device)
+    for p in model.parameters():          # no to_bfloat16_except_poles_residues()
+        p.data = p.data.to(torch.float32)
+    model.eval()
+    return model, CharLevelTokenizer(512)
 
 
 def _get_blocks(model, arch: str) -> list:
@@ -264,9 +339,10 @@ def run_pass(model, inp_dict: dict, blocks: list, arch: str,
 
     try:
         with torch.no_grad():
+            # No autocast anywhere: every model runs in fp32 (D-013). The bf16 autocast
+            # that used to wrap the evo1 branch is gone with the fp32 loader.
             if arch == "evo1":
-                with torch.autocast("cuda", dtype=torch.bfloat16):
-                    out = model(inp_dict["__evo_ids__"])
+                out = model(inp_dict["__evo_ids__"])
             else:
                 out = model(**inp_dict)
     finally:
@@ -274,6 +350,76 @@ def run_pass(model, inp_dict: dict, blocks: list, arch: str,
             h.remove()
 
     return captured, out
+
+
+# ─── Epsilon and precision headroom (D-011, D-013) ───────────────────────────
+
+ALPHA = 0.01          # FIXED for all five models. Not tuned per model. See D-011.
+HEADROOM_MIN = 4.0    # below this a layer is under-powered -> UNMEASURED, not zero.
+
+
+def ac_epsilon(h_source: torch.Tensor, alpha: float = ALPHA) -> tuple[float, dict]:
+    """AC-relative injection magnitude:  eps = alpha * std( h - mean(h) ).
+
+    The mean is taken across the d_model coordinates per token (the DC offset), and the
+    std over the whole (T, D) residual at the injection layer.
+
+    Scaling to the AC component rather than to |h[k]| or median |h| is the point of D-011:
+    the DC offset is precisely the part that carries no input-dependent signal.
+    """
+    x = h_source.float()
+    ac = x - x.mean(dim=-1, keepdim=True)
+    std_ac = float(ac.std())
+    eps = alpha * std_ac
+    return eps, {
+        "alpha": alpha,
+        "std_ac": std_ac,
+        "dc_mean": float(x.mean()),
+        "median_abs_h": float(x.abs().median()),
+        "max_abs_h": float(x.abs().max()),
+    }
+
+
+def ulp(x: float, dtype: torch.dtype = torch.float32) -> float:
+    """Unit in the last place at magnitude |x| for the given format.
+
+    fp32 has 23 explicit mantissa bits, bf16 has 7. The smallest representable increment
+    near |x| is 2**(floor(log2|x|) - mantissa_bits).
+    """
+    mant = {torch.float32: 23, torch.bfloat16: 7, torch.float16: 10}[dtype]
+    ax = abs(x)
+    if ax == 0.0 or not math.isfinite(ax):
+        return float("inf")
+    return 2.0 ** (math.floor(math.log2(ax)) - mant)
+
+
+def headroom(eps: float, h_layer: torch.Tensor,
+             dtype: torch.dtype = torch.float32) -> dict:
+    """headroom_l = eps_effective_l / ULP( max |h_l| )   -- D-013.
+
+    This is what makes a null reportable. "The perturbation sat 26x above the representable
+    increment and still produced no downstream change" is a measurement. "Everything was
+    zero" is not: without this column a genuine T = 0 and a perturbation quietly rounded
+    away at injection are the same number.
+
+    Reported at the layer max (the conservative figure the prereg formula names) and at the
+    layer median (the typical coordinate).
+    """
+    x = h_layer.float()
+    mx = float(x.abs().max())
+    md = float(x.abs().median())
+    u_max, u_med = ulp(mx, dtype), ulp(md, dtype)
+    hr_max = eps / u_max if u_max > 0 else float("inf")
+    return {
+        "headroom_at_max": hr_max,
+        "headroom_at_median": eps / u_med if u_med > 0 else float("inf"),
+        "ulp_at_max": u_max,
+        "ulp_at_median": u_med,
+        "max_abs_h": mx,
+        "median_abs_h": md,
+        "powered": bool(hr_max >= HEADROOM_MIN),
+        "status": "measured" if hr_max >= HEADROOM_MIN else "UNMEASURED",
+    }
 
 
 # ─── Metrics ─────────────────────────────────────────────────────────────────
@@ -284,10 +430,14 @@ def broadcast_metrics(
     sw_row: int,
     source_layer: int,
     epsilon: float,
+    dtype: torch.dtype = torch.float32,
 ) -> dict[int, dict]:
     """
     Compute per-layer broadcast metrics from clean vs perturbed hidden states.
-    Returns dict: layer_idx -> {T_mean, T_max, C, t_star, dnorm_per_token}
+    Returns dict: layer_idx -> {T_mean, T_max, C, t_star, dnorm_per_token, headroom...}
+
+    Every record carries the D-013 headroom diagnostic. Where `powered` is False the
+    T/C values at that layer must be reported as UNMEASURED, not as zero.
     """
     results: dict[int, dict] = {}
     for li in sorted(clean_hs.keys()):
@@ -305,12 +455,14 @@ def broadcast_metrics(
         t_star = int(dnorm.argmax().item())
         d_star = delta[t_star]                       # (D,)
         C = float(d_star[sw_row].item() / (d_star.norm().item() + 1e-12))
+        hr = headroom(epsilon, c[:L], dtype)
         results[li] = {
             "T_mean":          T_mean,
             "T_max":           T_max,
             "C":               C,
             "t_star":          t_star,
             "dnorm_per_token": dnorm.tolist(),
+            **hr,
         }
     return results
 
@@ -335,7 +487,7 @@ def kl_divergence(logits_clean: torch.Tensor, logits_pert: torch.Tensor,
 # ─── Per-model assay ──────────────────────────────────────────────────────────
 
 def run_model_assay(model_name: str, epsilon: float, n_controls: int,
-                    seed: int, device: str) -> dict:
+                    seed: int, device: str, fixed_eps: float | None = None) -> dict:
     rng = random.Random(seed)
     np_rng = np.random.default_rng(seed)
 
@@ -370,18 +522,38 @@ def run_model_assay(model_name: str, epsilon: float, n_controls: int,
     d_model = src_hs.shape[-1] if src_hs is not None else clean_hs[0].shape[-1]
     print(f"[broadcast:{model_name}] sw_pos={sw_pos}  d_model={d_model}")
 
+    # ── AC-relative epsilon (D-011) ─────────────────────────────────────────
+    # alpha is FIXED at 0.01 for every model. --epsilon is ignored unless --fixed_eps.
+    if fixed_eps is not None:
+        epsilon = fixed_eps
+        eps_meta = {"mode": "fixed", "alpha": None, "epsilon": epsilon}
+        print(f"[broadcast:{model_name}] FIXED eps={epsilon:g}  (superseded protocol)")
+    else:
+        epsilon, eps_meta = ac_epsilon(src_hs, ALPHA)
+        eps_meta.update({"mode": "ac_relative", "epsilon": epsilon})
+        print(f"[broadcast:{model_name}] eps = alpha*std_AC = {ALPHA} * "
+              f"{eps_meta['std_ac']:.4e} = {epsilon:.4e}")
+
+    param_dtype = next(model.parameters()).dtype
+    print(f"[broadcast:{model_name}] param dtype = {param_dtype}")
+
     # ── SW perturbed pass ───────────────────────────────────────────────────
     pert_hs, pert_out = run_pass(model, inp, blocks, arch,
                                  inject_layer=sw_layer, inject_pos=sw_pos,
                                  inject_row=sw_row, epsilon=epsilon)
     logits_pert = _get_logits(pert_out, arch)
 
-    sw_metrics = broadcast_metrics(clean_hs, pert_hs, sw_row, sw_layer, epsilon)
+    sw_metrics = broadcast_metrics(clean_hs, pert_hs, sw_row, sw_layer,
+                                   epsilon, param_dtype)
     kl_sw = kl_divergence(logits_clean, logits_pert, sw_pos, is_causal)
 
-    print(f"[broadcast:{model_name}] KL_sw={kl_sw:.4e}")
+    n_unmeasured = sum(1 for m in sw_metrics.values() if not m["powered"])
+    print(f"[broadcast:{model_name}] KL_sw={kl_sw:.4e}   "
+          f"under-powered layers: {n_unmeasured}/{len(sw_metrics)}")
     for li, m in sorted(sw_metrics.items()):
-        print(f"  layer {li:3d}  T_mean={m['T_mean']:.4f}  C={m['C']:+.4f}")
+        flag = "" if m["powered"] else "   <-- UNMEASURED"
+        print(f"  layer {li:3d}  T_mean={m['T_mean']:.4e}  C={m['C']:+.4f}  "
+              f"headroom={m['headroom_at_max']:.3g}x{flag}")
 
     # ── Control passes ───────────────────────────────────────────────────────
     non_sw = [r for r in range(d_model) if r != sw_row]
@@ -422,11 +594,63 @@ def run_model_assay(model_name: str, epsilon: float, n_controls: int,
                              inject_row=None, epsilon=epsilon, inject_dir=v)
         # For C metric, use a random reference row
         ref_row = rng.choice(non_sw)
-        rm2 = broadcast_metrics(clean_hs, rh2, ref_row, sw_layer, epsilon)
+        rm2 = broadcast_metrics(clean_hs, rh2, ref_row, sw_layer, epsilon, param_dtype)
         kl_r2 = kl_divergence(logits_clean, _get_logits(ro2, arch), sw_pos, is_causal)
         rand_dir_results.append({"kl": kl_r2,
                                  "metrics": {str(k): v_m for k, v_m in rm2.items()}})
     controls["random_dir"] = rand_dir_results
+
+    # Control D: matched-norm.
+    #
+    # The prereg names four arms; this harness only ever implemented three, so every
+    # existing "four control arms" statement about the other models is inaccurate. See
+    # RESULTS.md. Definition adopted here, stated explicitly because the prereg does not
+    # define it and it is being locked:
+    #
+    #   Inject at a random coordinate, but rescale eps so the perturbation's norm at the
+    #   FIRST downstream layer matches what the SW injection produced there. This asks a
+    #   different question from Control A: not "does an arbitrary coordinate of the same
+    #   injected size broadcast as far" but "does an arbitrary coordinate that starts with
+    #   the same downstream footprint stay as large". It isolates propagation from the
+    #   immediate local response.
+    #
+    # Control C already matches the injected norm, so norm-matching at the injection site
+    # is covered; matching at the first downstream layer is the non-redundant reading.
+    first_down = min(sw_metrics.keys()) if sw_metrics else None
+    matched_results = []
+    if first_down is not None:
+        sw_dnorm = sw_metrics[first_down]["T_mean"] * abs(epsilon)   # un-normalise
+        for rr in [rng.choice(non_sw) for _ in range(n_controls)]:
+            probe_h, _ = run_pass(model, inp, blocks, arch,
+                                  inject_layer=sw_layer, inject_pos=sw_pos,
+                                  inject_row=rr, epsilon=epsilon)
+            pm = broadcast_metrics(clean_hs, probe_h, rr, sw_layer, epsilon, param_dtype)
+            ctrl_dnorm = pm[first_down]["T_mean"] * abs(epsilon)
+            if ctrl_dnorm <= 0:
+                matched_results.append({"row": rr, "scale": None,
+                                        "note": "control produced no downstream response; "
+                                                "cannot norm-match"})
+                continue
+            scale = sw_dnorm / ctrl_dnorm
+            eps_m = epsilon * scale
+            mh, mo = run_pass(model, inp, blocks, arch,
+                              inject_layer=sw_layer, inject_pos=sw_pos,
+                              inject_row=rr, epsilon=eps_m)
+            mm = broadcast_metrics(clean_hs, mh, rr, sw_layer, eps_m, param_dtype)
+            kl_m = kl_divergence(logits_clean, _get_logits(mo, arch), sw_pos, is_causal)
+            matched_results.append({
+                "row": rr, "scale": scale, "epsilon_matched": eps_m, "kl": kl_m,
+                "metrics": {str(k): v_m for k, v_m in mm.items()},
+            })
+    controls["matched_norm"] = matched_results
+
+    ctrl_unpowered = {}
+    for cname, centry in controls.items():
+        entries = centry if isinstance(centry, list) else [centry]
+        bad = sum(1 for e in entries for m in e.get("metrics", {}).values()
+                  if not m.get("powered", True))
+        tot = sum(len(e.get("metrics", {})) for e in entries)
+        ctrl_unpowered[cname] = {"under_powered_layers": bad, "total_layers": tot}
 
     return {
         "model":      model_name,
@@ -442,6 +666,17 @@ def run_model_assay(model_name: str, epsilon: float, n_controls: int,
         "sw_metrics": {str(k): v for k, v in sw_metrics.items()},
         "kl_sw":      kl_sw,
         "controls":   controls,
+        # provenance for the D-013 headroom audit
+        "precision": {
+            "param_dtype":       str(param_dtype),
+            "autocast":          None,
+            "headroom_min":      HEADROOM_MIN,
+            "under_powered_sw":  n_unmeasured,
+            "n_downstream":      len(sw_metrics),
+            "under_powered_controls": ctrl_unpowered,
+        },
+        "epsilon_meta": eps_meta,
+        "protocol": "D-011 AC-relative eps + D-013 fp32/headroom",
     }
 
 
@@ -588,8 +823,9 @@ def parse_args():
     p.add_argument("--model",      default="generator",
                    choices=list(SW_TARGETS) + ["all"],
                    help="Model to analyse (or 'all' to run every model sequentially).")
-    p.add_argument("--epsilon",    type=float, default=1.0,
-                   help="Perturbation magnitude (default 1.0).")
+    p.add_argument("--fixed_eps",  type=float, default=None,
+                   help="SUPERSEDED protocol: inject this fixed epsilon instead of the "
+                        "AC-relative one. Only for reproducing the pre-D-011 numbers.")
     p.add_argument("--n_controls", type=int, default=5,
                    help="Number of random-control draws per type.")
     p.add_argument("--seed",       type=int, default=42)
@@ -614,7 +850,8 @@ def main():
         for mname in models_to_run:
             try:
                 all_results[mname] = run_model_assay(
-                    mname, args.epsilon, args.n_controls, args.seed, args.device)
+                    mname, 0.0, args.n_controls, args.seed, args.device,
+                    fixed_eps=args.fixed_eps)
             except Exception as exc:
                 print(f"[broadcast:{mname}] FAILED — {exc}")
                 import traceback; traceback.print_exc()

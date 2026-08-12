@@ -1,9 +1,25 @@
 # PROJECT_STATUS.md
 
 **Last updated:** 2026-08-12
-**Current phase:** Phase 1 — Blocking experiments (E2 in progress)
-**Blocking on:** E2 re-run of all five models under the amended AC-relative-ε protocol
-(D-011). Held at STEP 3 pending review of the STEP 2 gate result below.
+**Current phase:** Phase 1 — Blocking experiments (E2 halted at STEP 3)
+**Blocking on:** a decision about DNABERT-2's impulse noise floor. **The prereg was not
+locked and the five-model re-run was not started** — see the blocker below.
+
+> ## ⛔ BLOCKER — DNABERT-2 impulse assay is noise-dominated
+>
+> Two identical DNABERT-2 forward passes with **no injection** differ by KL = 0.305; the SW
+> injection gives KL = 0.277. Per-layer SNR 0.93–1.00. C-014's published "largest impulse
+> KL ≈ 0.31" matches the noise floor to two significant figures.
+>
+> GENERator EUK/PROK and NTv3 have an exactly-zero noise floor on the same harness and path,
+> so this is DNABERT-2-specific (likely its Triton flash-attn kernels).
+>
+> Running the five-model table now would place one column of run-to-run noise beside four
+> real ones, certified as adequately powered by a headroom column that measures
+> representability rather than determinism. That is the D-011 error class again.
+>
+> Full analysis: `experiments/E2_evo1_broadcast/INSTRUMENT_VALIDATION.md`. Ledger: N-004, N-005.
+> No fix attempted, nothing interpreted, no thesis sentence drafted.
 
 ---
 
@@ -31,7 +47,7 @@ Phases 1 and 2 run **in parallel**. R1, R2, R4, R6, R7 do not depend on the Evo1
 | ID | Experiment | Status | Owner | Prereg |
 |---|---|---|---|---|
 | E1 | NLP cold-weight validation (row + scalar) + prospective lock | not started | | `prereg/PREREG_nlp_prospective.md` |
-| E2 | Evo1 standardized broadcast | **v1 void; gate passed; re-run pending** | | `prereg/PREREG_evo1_broadcast.md` **v2, not yet relocked** |
+| E2 | Evo1 standardized broadcast | **HALTED at STEP 3 — see blocker** | | `prereg/PREREG_evo1_broadcast.md` **v2, NOT locked** |
 | E3 | Bidirectional steering w/ degradation controls | not started | | `prereg/PREREG_steering.md` |
 | E4 | c_{k,i} granularity decomposition, all genomic gated FFNs | not started | | free alongside E1 |
 
@@ -106,4 +122,8 @@ YYYY-MM-DD  |  scaffold created; outline frozen  |  next: run PHASE_0 inventory
             |  key -> evo1_fixed_eps_SUPERSEDED; container hash recorded in ENVIRONMENT.md;
             |  STEP 2 input-sensitivity gate PASSED
             |  next: relock prereg v2, then re-run all five models at alpha=0.01
+2026-08-12  |  STEP 2b restructure done; harness amended to fp32 + AC-eps + headroom +
+            |  matched-norm arm; instrument validation found DNABERT-2 impulse assay is
+            |  noise-dominated (N-004). Prereg NOT locked, re-run NOT started.
+            |  next: decide DNABERT-2 determinism before locking
 ```
