@@ -196,11 +196,41 @@ def adapter_evo1(model, block: int):
     return mlp.l1.weight, mlp.l2.weight, mlp.l3.weight
 
 
+def adapter_ntv3(model, layer: int):
+    """NTv3 SelfAttentionBlock: FFN inline as fc1 (packed gate+up) and fc2 (down).
+
+    NOT Mistral-style. Verified by inspection at L11 of NTv3_650M_pre: the block exposes
+    `fc1` [12288, 1536] and `fc2` [1536, 6144] with a SiLU, so fc1 packs gate and up on
+    adjacent row blocks (2 * 6144 = 12288) -- the DNABERT-2 layout. There is no `mlp`
+    module; `blk.mlp` resolves to an unrelated bound method, and the previous
+    `adapter_llama_swiglu` entry would raise on `model.model.layers`.
+
+    Which half of fc1 is gate and which is up cannot be read off the shapes, and does not
+    matter: c_{k,i} = W_down[k,i]^2 ||W_gate[i,:]||^2 ||W_up[i,:]||^2 is symmetric under
+    swapping them, so every quantity in this module is invariant to the choice.
+
+    Raises rather than transposing anything silently.
+    """
+    blk = model.core.transformer_blocks[layer]
+    if not (hasattr(blk, "fc1") and hasattr(blk, "fc2")):
+        raise ValueError(
+            f"NTv3 block {layer} ({type(blk).__name__}) has no fc1/fc2; "
+            f"children={[n for n, _ in blk.named_children()]}")
+    packed = blk.fc1.weight                   # [2 * d_ffn, d_model]
+    down = blk.fc2.weight                     # [d_model, d_ffn]
+    d_model, d_ffn = down.shape
+    if packed.shape != (2 * d_ffn, d_model):
+        raise ValueError(
+            f"NTv3 fc1 is {tuple(packed.shape)}, expected {(2 * d_ffn, d_model)} given "
+            f"fc2 {tuple(down.shape)}; refusing to guess a layout")
+    return packed[:d_ffn], packed[d_ffn:], down
+
+
 ADAPTERS: dict[str, Callable] = {
     "llama_swiglu": adapter_llama_swiglu,
     "generator": adapter_llama_swiglu,
     "mistral": adapter_llama_swiglu,
-    "ntv3": adapter_llama_swiglu,      # verify -- Mistral-style, confirm module path
+    "ntv3": adapter_ntv3,              # was adapter_llama_swiglu -- wrong, see N-010
     "dnabert2": adapter_dnabert2,
     "evo1": adapter_evo1,
 }

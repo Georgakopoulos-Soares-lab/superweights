@@ -157,4 +157,8 @@ YYYY-MM-DD  |  scaffold created; outline frozen  |  next: run PHASE_0 inventory
             |  rank 1277, decomposed 5.47 rank 1289). EUK reproduces exactly. C-001 stays
             |  on hold. No layer search, no tuning.
             |  next: queue item 2 (N-010 shared adapter fix + tests)
+2026-08-12  |  Item 2: N-010 FIXED in src/uk_frobenius.py (adapter_ntv3, shape-guarded).
+            |  7 new tests, all failing under the old Llama adapter; suite green + E1
+            |  self-test. NTv3 E4 recomputed via shared impl -- reproduces EXACTLY.
+            |  next: queue item 3 (amend + lock E2 prereg)
 ```

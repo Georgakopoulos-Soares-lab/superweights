@@ -191,9 +191,15 @@ support and it must not be migrated. Evidence:
 `ADAPTERS["ntv3"] = adapter_llama_swiglu` (flagged "verify") would raise: NTv3 has no
 `model.model.layers` and no `mlp` module. Its `SelfAttentionBlock` carries the FFN inline as
 `fc1` (12288, 1536) and `fc2` (1536, 6144) with SiLU — `fc1` is **packed** gate+up, the
-DNABERT-2 layout. Corrected in `experiments/E4_granularity/run_e4_granularity.py`;
-`src/uk_frobenius.py` is **not** edited, since it is shared with E1 and the fix belongs with
-a test. Any future use of the registry for NTv3 will be wrong until it is.
+DNABERT-2 layout. **RESOLVED 2026-08-12.** `adapter_ntv3` added to `src/uk_frobenius.py` with shape guards
+that raise rather than transpose; `ADAPTERS["ntv3"]` repointed. Seven tests added in
+`src/test_ntv3_adapter.py`, all of which fail under the old Llama-style entry (including an
+explicit assertion that `adapter_llama_swiglu` raises on an NTv3 model). Full suite green:
+7 passed, plus the E1 self-test. Recomputing NTv3's E4 row through the shared implementation
+reproduces the overnight value **exactly on every field** (rank 1/1536, max/median
+3.612997884175097, top-1 index 1713, top-1 share 0.17540364719820148, PR 22.71939144675925),
+so no NTv3 result changes. E1's NLP results were not touched — no test demonstrated an error
+there. Evidence: `results/e4_ntv3_shared_adapter.json`.
 
 Gate/up ordering within the packed half is unresolvable from shapes and immaterial: c_{k,i}
 is symmetric under swapping them.
