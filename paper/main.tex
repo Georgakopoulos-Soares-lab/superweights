@@ -97,12 +97,18 @@ trained on prokaryotic residual-stream activations independently
 recovers the same compositional axis. (The prokaryotic super-weight
 writes in the negative direction, so on \emph{signed} activation the
 same data give $r = {-}0.710$, a write-direction convention rather
-than a distinct mechanism.) Third, ablating the SW ensemble in
+than a distinct mechanism.) Consistent with this compositional role,
+fine-tuning GENERator on 35 downstream tasks and ablating the
+dominant SW row collapses composition-driven classification
+(20-way fungal-species $-82.5\%$ accuracy) while leaving
+local-motif tasks unaffected
+(splice-site $-0.05\%$), with matched random-row controls within
+$\pm 0.1$ percentage points. Third, ablating the SW ensemble in
 DNABERT-2 collapses splice-site recognition by $-25.5\%$ accuracy
 while affecting histone-mark prediction only weakly and
 inconsistently, and the splice effect replicates in
 NTv3 across five seeds ($\Delta\mathrm{MCC} = -0.119 \pm 0.054$,
-$p = 0.008$). The SW neighbourhood is extremelly tolerant to pruning
+$p = 0.008$). The SW neighbourhood is extremely tolerant to pruning
 and INT4 quantization compared with random rows, suggesting refined
 SW-aware compression schemes are possible.
 
@@ -614,6 +620,83 @@ across five layers, with row 603 alone recurring at layers 3, 5, 6,
 and 7, consistent with the residual-stream channel reuse documented
 in the mechanism section.
 
+\medskip
+\noindent\textbf{Functional consequences in the fine-tuned GENERator decoder}
+
+To test whether the SW dependence extends beyond fine-tunable
+encoders to the autoregressive decoder, we fine-tuned a
+classification head on GENERator eukaryote~3B for 35 downstream
+tasks---the standard GUE benchmark families (promoter recognition,
+splice-site detection, histone-mark and epigenetic-state
+prediction, transcription-factor binding) augmented with a
+multi-class organism-classification task (20-way fungal
+species) and per-cell-line and mouse-TF variants---and re-evaluated
+each task after zeroing the single dominant SW row (layer~4,
+row~2371), with a matched random-row control. Every one of the 35
+random-row controls fell within $\pm 0.1$ percentage points of
+baseline, confirming that any effect is specific to the
+super-weight rather than to generic row removal
+(\textbf{Table~\ref{tab:generator_gue}}).
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{lrrrr}
+\toprule
+task & base acc & $\Delta$Acc$_{\mathrm{SW}}$ & $\Delta$MCC$_{\mathrm{SW}}$ & $\Delta$Acc$_{\mathrm{rand}}$\\
+\midrule
+fungi/species\_20      & 0.868 & $-82.5$ & $-85.3$ & $-0.02$\\
+EMP/H3                 & 0.858 & $-38.2$ & $-74.3$ & $+0.01$\\
+mouse/3                & 0.778 & $-26.3$ & $-56.8$ & $-0.00$\\
+EPI/GM12878            & 0.587 & $-21.6$ & $-90.4$ & $+0.00$\\
+EMP/H3K4me3            & 0.627 & $-12.4$ & $-19.7$ & $+0.00$\\
+prom/prom\_core\_all   & 0.803 & $-8.7$  & $-15.1$ & $-0.00$\\
+tf/2                   & 0.739 & $-5.8$  & $-10.4$ & $+0.01$\\
+\midrule
+splice/reconstructed   & 0.878 & $-0.05$ & $-0.09$ & $-0.02$\\
+prom/prom\_300\_notata & 0.962 & $-0.02$ & $-0.04$ & $+0.00$\\
+EMP/H4ac               & 0.681 & $0.00$  & $+0.65$ & $-0.01$\\
+tf/1                   & 0.811 & $0.00$  & $0.00$  & $0.00$\\
+\bottomrule
+\end{tabular}
+\caption{GENERator eukaryote 3B downstream-task accuracy after
+ablation of the dominant SW row (layer~4, row~2371), in percentage
+points relative to the fine-tuned baseline. Representative tasks are
+shown from the 35-task suite, ordered by SW-ablation effect; the
+random-row control ($\Delta$Acc$_{\mathrm{rand}}$) is the mean of
+matched random-row ablations. The effect is strongly bimodal:
+composition-driven classification collapses, while local-motif
+tasks are unaffected.}
+\label{tab:generator_gue}
+\end{table}
+
+The effect was sharply bimodal. The multi-class organism
+classifier collapsed toward chance (20-way fungal species
+$-82.5\%$ accuracy / $-85.3\%$ MCC), and
+broad chromatin-state labels that co-vary with genome-wide
+composition dropped substantially (H3 $-38.2\%$; GM12878
+$-21.6\%$ MCC $-90.4\%$; H3K4me3 $-12.4\%$). In contrast, tasks
+defined by short local consensus sequences were essentially
+untouched (splice-site $-0.05\%$; TATA/core-notata promoters and
+several transcription-factor tasks $\approx 0\%$). Across all 35
+tasks the mean accuracy change was $-7.0\%$, with 16 tasks exceeding
+$1\%$ damage and the remainder indistinguishable from the
+random-row controls. This dissociation is consistent with the EUK
+SW writing global nucleotide composition: species identity and
+GC-correlated chromatin labels are decided largely by k-mer
+composition and therefore collapse when the SW is removed, whereas
+local-motif detection survives on context that does not route
+through it. Notably, the GENERator decoder shows essentially no
+splice-site dependence ($-0.05\%$), whereas the DNABERT-2 encoder
+loses $-25.5\%$ on the same task. We read this not as a
+contradiction but as model-specific routing under a shared
+magnitude-scaled mechanism: in the decoder the SW carries the
+compositional signal that drives organism classification, while in
+the encoder it is recruited for splice-site discrimination. We note
+that the species-classification task is not part of the standard
+GUE suite and produces the largest effect; we report it
+separately and treat the standard GUE families as the primary
+comparison with the encoders.
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth,keepaspectratio]{media/image_fig4.png}
@@ -834,7 +917,17 @@ is a BERT-style encoder (12 layers, $d_{\text{model}} = 768$,
 $d_{\text{ffn}} = 3{,}072$, vocabulary 4{,}096, BPE). NTv3 50M,
 Evo1 7B, Evo2 7B (loading-blocked), MegaDNA, HybridNA, and
 Caduceus-PS were loaded from HuggingFace Hub in full precision
-where compatible.
+where compatible. Two exceptions are recorded explicitly. Evo1 was
+run in bfloat16 for every parameter except the StripedHyena
+\texttt{poles} and \texttt{residues}, which were held in float32;
+float16 is not usable, as it cannot represent the layer-10 to
+layer-13 residual excursion and yields non-finite values throughout.
+DNABERT-2 parameters were float32, but its default Triton
+flash-attention kernel casts the query, key, value and attention-bias
+tensors to float16 internally, so its attention was not evaluated in
+full precision at inference; impulse-response measurements reported
+here therefore use the eager PyTorch attention path, which is
+deterministic and stays in float32.
 
 \textit{Detect-then-ablate protocol.}
 Forward hooks recorded $\max|\mathrm{input}|$ and

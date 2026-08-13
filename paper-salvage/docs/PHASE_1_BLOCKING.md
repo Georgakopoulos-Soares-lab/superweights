@@ -46,10 +46,14 @@ wildly (EUK 1.0, PROK 0.92→0, DNABERT-2 ≈0). Evo1 is structurally concentrat
 the residual deposit is faithful (block_delta / mlp_out ≈ 1.0), ~44% survives into the
 next block, and ablation is ΔPPL = 0.0%. The impulse run was prepared but never completed.
 
-**Design.** Identical protocol to the other four models — ε = 1.0 into the residual stream
-at the SW row/token at its source layer, tracked across all 32 StripedHyena blocks, with
-the same four control arms: random-coordinate, neighbouring-row, random-dense-direction,
-and matched-norm.
+**Design.** _(As originally planned. **Superseded** — see D-011, D-013, D-015 and the
+locked prereg. ε = 1.0 was replaced by AC-relative ε = α·std(h−mean h) with α = 0.01
+primary / 1.0 secondary; the run is fp32 with a per-layer headroom column. Also note the
+"same four control arms" was inaccurate when written: the harness implemented three, and
+the fourth — matched-norm — was only added for the locked run.)_ Identical protocol to the
+other four models — ε = 1.0 into the residual stream at the SW row/token at its source
+layer, tracked across all 32 StripedHyena blocks, with the same four control arms:
+random-coordinate, neighbouring-row, random-dense-direction, and matched-norm.
 
 **Preregister the prediction before running.** See `prereg/PREREG_evo1_broadcast.md`.
 

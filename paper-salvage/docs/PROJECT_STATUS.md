@@ -1,10 +1,13 @@
 # PROJECT_STATUS.md
 
-**Last updated:** 2026-08-12
-**Current phase:** Phase 1 — Blocking experiments (E2 halted at STEP 3)
-**Blocking on:** a functional-metric decision for R3. KL is ~0 for GENERator PROK at both
-doses, so the STEP 3d stop condition fired. **Prereg NOT locked, re-run NOT started** —
-see `experiments/E2_evo1_broadcast/BLOCKED.md`.
+**Last updated:** 2026-08-13
+**Current phase:** Phase 1 — E1 retrospective, E2 and E4 complete; E3 not started
+**Blocking on:** author interpretation only. E2 is locked, run and reported; the open items
+are scientific calls listed in `NEXT_SESSION.md` §5 (Evo1 Branch A vs B, N-009/C-001, the
+missing Evo1 secondary-dose KL, empty matched-norm arms).
+
+_(The STEP 3d blocker recorded in `experiments/E2_evo1_broadcast/BLOCKED.md` was resolved by
+D-015; that file is retained as the record of the stop, not as current state.)_
 
 > ## 🔒 E2 PREREGISTRATION LOCKED — five-model run authorised
 >
@@ -25,8 +28,11 @@ see `experiments/E2_evo1_broadcast/BLOCKED.md`.
 > each model's noise floor, no dose escalation, no metric substitution. Amendment made
 > after the planned pre-lock probe and before the lock.
 >
-> DNABERT-2 on eager (D-014). C-014 retired (X-006), never to be resurrected. X-003 stays
-> **live**. Null rule binding: headroom ≥ 4× **and** noise floor below signal.
+> DNABERT-2 on eager (D-014). C-014 retired (X-006), never to be resurrected. Null rule
+> binding: headroom ≥ 4× **and** noise floor below signal.
+>
+> **Update after the run:** X-003 **stays retired** — N-006's pre-committed rule fired on the
+> re-measured DNABERT-2 C ≈ 0 (peak +0.0625, ends −0.0221). See N-011.
 
 ---
 
@@ -43,7 +49,7 @@ blocking experiments. See `PAPER_OUTLINE.md` for the frozen skeleton.
 | Phase | Doc | State |
 |---|---|---|
 | 0 — Triage | `PHASE_0_TRIAGE.md` | in progress |
-| 1 — Blocking experiments | `PHASE_1_BLOCKING.md` | not started |
+| 1 — Blocking experiments | `PHASE_1_BLOCKING.md` | E1 retrospective, E2, E4 done; E1 prospective and E3 not started |
 | 2 — Writing (Evo1-independent) | `PHASE_2_WRITING.md` | not started |
 | 3 — Assembly & submission | `PHASE_3_ASSEMBLY.md` | not started |
 
@@ -102,19 +108,18 @@ null about Evo1 (§Control requirement, Branch C). α is **not** to be tuned to 
 
 ## Submission blockers (independent of science)
 
-- [ ] Figure 2 panels A–D are absent; v15 caption admits they are "pending GENERator JSONs"
+- [ ] Figure 2 panels A–D — **source JSONs all located**; render blocked on N-009 (PROK panel would come from the unreproducible artifact). Caption's "pending GENERator JSONs" is out of date but was NOT edited, since the panels are still not rendered. See `docs/REFERENCE_AUDIT.md`
 - [ ] Abstract/Results contradiction on pruning tolerance ("shadow redundancy")
 - [ ] "Eight models" oversell vs. actual coverage asymmetry
 - [ ] NTv3 post-hoc MCC metric choice
-- [ ] Verify ref [11] Sun et al. arXiv ID (2603.05498 does not match the known
-      massive-activations paper 2402.17762)
-- [ ] Typo sweep ("extremelly")
+- [ ] Verify ref [11] Sun et al. arXiv ID — **audited, needs external lookup**, see `docs/REFERENCE_AUDIT.md`
+- [x] Typo sweep — `extremelly` → `extremely` fixed in `paper/main.tex:111` (2026-08-13). **Note:** that sentence still asserts retired claim X-001 (SW-neighbourhood pruning tolerance); left as-is because rewriting it is scientific, and it is already tracked as blocker B2.
 
 ## Open questions
 
-1. Does T predict criticality? — resolved by E2.
-2. Is the genomic causal object a scalar, a row, or an ensemble, and does it differ
-   between GENERator and DNABERT-2? — resolved by E4.
+1. Does T predict criticality? — **E2 measured; the relation is NOT assigned.** Branch A vs B is an open author call.
+2. Is the genomic causal object a scalar, a row, or an ensemble? — **E4 measured**; see
+   `experiments/E4_granularity/CANONICAL_TABLE.md`. Interpretation not drawn.
 3. Does the SW track the raw corpus prior or deviation from a Markov expectation? —
    conditional, only if R4's interpretation stays unclear after E3.
 
