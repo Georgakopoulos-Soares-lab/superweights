@@ -1,106 +1,142 @@
 # NEXT_SESSION.md
 
-**Session:** 2026-08-12 overnight queue. **Queue finished.** E3 and E5 not started, as
-instructed.
+**Session:** 2026-08-12/13 overnight queue #2.
+**Stopped at:** queue item 4 (five-model E2 run) — **launched and in flight when the session
+ended**. Items 1, 2, 3, 7a, 7b complete. Items 5, 6, 8 not started.
 
 ---
 
-## Completed
+## 1. What completed
 
 | Item | Outcome | Commit |
 |---|---|---|
-| D-014 — adopt eager attention for DNABERT-2 | recorded; C-014 **retired** as X-006; X-003 **live** | `d7fb27f` |
-| STEP 3d — secondary-dose probe | **BLOCKED** — KL flat for PROK at both doses | `d7fb27f` |
-| E1 retrospective arm | **3/3 at both levels**; scalar recovery claimable | `a157686` |
-| E4 granularity | **5/5 models**, all shape-verified | `7c26a0a` |
+| Session decision | D-015 recorded: T/C primary, KL secondary/descriptive, pre-lock | `9e35b1b`* |
+| 1 — N-009 / C-001 | Layer resolved to **L2**; stored artifact **does not reproduce**; C-001 stays on hold | `b9e3ab1` |
+| 2 — N-010 | `adapter_ntv3` added to shared `uk_frobenius.py` + 7 tests; NTv3 E4 reproduces **exactly** | `3ca8bb6` |
+| 3a — prereg amendment | D-015 endpoints written in; confidence **3/5** | (in `128b4ee` lineage) |
+| 3b — **PREREG LOCKED** | see hash below | `128b4ee` |
+| 7a/7b — audit | Ref [11] and Figure 2 both **flagged, neither changed** | `791813e` |
 
-Earlier in the session: `0cbca69` bf16 harness fix, `e705497` E2 bookkeeping, `2c83692`
-restructure + D-012a/D-013, `40b2d29` STEP 3a/3b/3c.
+\* the D-015 commit is the one immediately preceding `b9e3ab1`; `git log --oneline` shows the
+full chain.
 
-## Blocked — needs your decision
+### PREREG LOCK — record this everywhere it is cited
 
-### 1. E2, at STEP 3d: which functional metric for R3
+```
+sha256 3d7515d0b7889f65038acd8479e85976248e7dbd0e5a701303de3a1b37dbfdc3
+utc    2026-08-13T02:59:20+00:00
+commit 695eb9279bbdbbe824721e9f1ab39c7f82af9b4e
+ledger paper-salvage/docs/prereg/LOCKS.jsonl   (first and only entry)
+verify paper-salvage/src/prereg_lock.py verify --all  ->  OK
+```
 
-`paper-salvage/experiments/E2_evo1_broadcast/BLOCKED.md`
+**Do not edit `PREREG_evo1_broadcast.md`.** Its Methods `<hash>`/`<date>` placeholders are
+deliberately left unfilled: writing the hash into the file changes the file's hash and makes
+`verify` report CHANGED. LOCKS.jsonl is authoritative.
 
-The stop condition fired. **GENERator PROK KL is flat at both doses**: 0.0 at α=0.01 and
-9.94e-7 at α=1.0. A 100× dose increase moved nothing in the output — top-10 mean rank shift
-**0.000**, top-1 unchanged, top-10 overlap 1.00. Both candidate replacement metrics were
-measured and are *also* flat for PROK: KL at the SW token position is 1.06e-6 (same order as
-the sequence mean), top-k rank displacement is exactly 0.
+## 2. What is in flight / not done
 
-DNABERT-2 on eager *is* measurable at α=1.0 (KL 4.63e-5, top-1 changes), but it is the only
-one, and it is the model whose kernel was just replaced.
+- **Item 4 — five-model run: STARTED, INCOMPLETE.** Four non-Evo1 models were launched
+  sequentially in the background; only GENERator EUK had begun (still loading checkpoint
+  shards) when the session ended. Evo1 was never launched. **Assume nothing finished.**
+- **Item 5 — E2 RESULTS.md: not written.**
+- **Item 6 — canonical E4 cross-model table: not written.**
+- **Item 8 — provenance backfill into `results/keep/`: not started.**
+- Item 7c (typo sweep) not done.
 
-Per your rule the dose was **not** escalated and no metric was substituted. **The prereg is
-not locked and the five-model re-run has not started.** Everything else about the protocol
-is settled and the prereg is ready to lock the moment a metric is chosen.
-
-Not decided here: whether the metric is wrong, or the PROK perturbation genuinely has no
-small-signal functional effect. The probe does not distinguish them.
-
-### 2. C-001 — GENERator PROK ranks 1289/3,072, not 1 (N-009)
-
-E4 measured PROK's SW row at layer 2 (the `SW_TARGETS` layer) and got rank **1289 / 3,072**.
-EUK at layer 4 ranks 1, as C-001 claims. Probably a layer mismatch — `SW_TARGETS` layer 2 is
-the *impulse source* layer, C-001 says *step-up* layer — but choosing which layer C-001 means
-is a call about an existing claim. **C-001 is on hold and must not be migrated until it is
-pinned down.**
-
-### 3. `uk_frobenius` NTv3 adapter is wrong (N-010)
-
-`ADAPTERS["ntv3"] = adapter_llama_swiglu` would raise. NTv3 holds its FFN inline as
-`fc1` (12288, 1536) + `fc2` (1536, 6144) with SiLU — `fc1` is packed gate+up, the DNABERT-2
-layout. Fixed in the E4 script only; `src/uk_frobenius.py` deliberately untouched because it
-is shared with E1 and the fix belongs with a test.
-
-## Exact next command
-
-Once you have chosen the R3 functional metric:
+### Before rerunning item 4, check what survived
 
 ```bash
 cd /work/11034/atzanakak/glm_super_weight/genomic-super-weights
+python3 -c "
+import json; d=json.load(open('results/sw_broadcast_impulse.json'))
+[print(k, 'NEW-PROTOCOL' if 'epsilon_meta' in v else 'old fixed-eps') for k,v in d.items()]"
+```
 
-# 1. fill the confidence field in docs/prereg/PREREG_evo1_broadcast.md, then:
-python paper-salvage/src/prereg_lock.py lock \
-    paper-salvage/docs/prereg/PREREG_evo1_broadcast.md
+The pre-D-011 baseline is preserved at
+`results/sw_broadcast_impulse_PRE_D011_fixed_eps.json` — do not overwrite it.
 
-# 2. four non-Evo1 models
+## 3. Exact next commands
+
+```bash
+cd /work/11034/atzanakak/glm_super_weight/genomic-super-weights
 ENV=/work/11034/atzanakak/work/11034/atzanakak/miniconda3/envs/grlm
 export LD_LIBRARY_PATH=$ENV/lib HF_HOME=/work/11034/atzanakak/ls6/huggingface/.hf-cache
 export HF_HUB_CACHE=$HF_HOME/hub PYTHONPATH=$PWD
-$ENV/bin/python scripts/interpretability/run_sw_broadcast_impulse.py \
-    --model all --n_controls 5 --seed 42 --device cuda --out_dir results
 
-# 3. Evo1 must run inside the container (see paper-salvage/docs/ENVIRONMENT.md)
+# (a) four non-Evo1 models, one at a time (each 3B model needs ~6 min just to load)
+for M in generator generator_prokaryote dnabert2 ntv3; do
+  $ENV/bin/python -u scripts/interpretability/run_sw_broadcast_impulse.py \
+      --model $M --n_controls 5 --seed 42 --device cuda --out_dir results \
+      > logs/e2_run_$M.log 2>&1
+done
+
+# (b) Evo1, in the container
 source /opt/apps/lmod/lmod/init/bash && module load tacc-apptainer
 export HF_HUB_OFFLINE=1
 env -u SSL_CERT_FILE -u REQUESTS_CA_BUNDLE apptainer exec --nv \
     /work/11034/atzanakak/ls6/containers/evo2.sif \
-    python3 scripts/interpretability/run_sw_broadcast_impulse.py \
-    --model evo1 --n_controls 5 --seed 42 --device cuda --out_dir results
+    python3 -u scripts/interpretability/run_sw_broadcast_impulse.py \
+    --model evo1 --n_controls 5 --seed 42 --device cuda --out_dir results \
+    > logs/e2_run_evo1.log 2>&1
+
+# (c) Evo1 noise floor — required by the null rule, not yet measured for Evo1
+env -u SSL_CERT_FILE -u REQUESTS_CA_BUNDLE apptainer exec --nv \
+    /work/11034/atzanakak/ls6/containers/evo2.sif \
+    python3 -u scripts/interpretability/impulse_determinism_check.py --model evo1
+
+# (d) stamp provenance (written this session, not yet run)
+$ENV/bin/python scripts/interpretability/stamp_e2_provenance.py
 ```
 
-The harness already does dual dose, four control arms, fp32, the headroom column, eager
-DNABERT-2, and Evo1 with `use_flash_attn=False` set before `StripedHyena(config)`.
+`stamp_e2_provenance.py` adds checkpoint, dtype, attention path, seed, git commit,
+container identity, lock hash and each model's measured noise floor. It is **additive** and
+never touches a measured value — it exists so the harness was not edited mid-run.
 
-## Environment gotchas that cost time
+Noise floors already measured and on disk: `results/impulse_determinism_{generator,
+generator_prokaryote,dnabert2,ntv3}.json`. DNABERT-2's is the **eager** one. Evo1's is missing.
 
-- The container has **no `python`**, only `python3`.
-- The host's `SSL_CERT_FILE` points at a path that does not exist inside the container; any
-  `huggingface_hub` network call dies in `ssl.create_default_context` with a bare
-  `FileNotFoundError`. Use `env -u SSL_CERT_FILE -u REQUESTS_CA_BUNDLE`.
-- The `grlm` conda env needs `LD_LIBRARY_PATH=$ENV/lib` prepended or PIL fails on
-  `GLIBCXX_3.4.29`.
-- There is **no `evo` conda env**; the `.sbatch` and `nohup` launchers under
-  `scripts/interpretability/` still say `conda activate evo` and are stale for Evo1.
+## 4. Claim statuses touched this session
 
-## Still open from earlier
+| Claim | Status now |
+|---|---|
+| C-001 | **on hold** — PROK half has no reproducible support; must not be migrated |
+| C-003 | established, confirmed by E4 |
+| C-004, C-005 | established (E1 retrospective, previous session) |
+| C-014 | **RETIRED as X-006.** Never resurrect |
+| C-015 | unsupported pending re-run |
+| C-032 | supported |
+| X-003 | **LIVE** — do not treat "C is not necessary for criticality" as settled |
+| N-009 | resolved-as-blocker (see below) · N-010 **fixed** |
 
-- Phase 0 §0.2 migration: `results/keep/` exists but is empty; backfill is Phase 2.
-- Phase 1b queue (**logged, not started**): C-010's L7/r603 source-vs-propagator resolution
-  ran through Triton at inference and needs re-verification on eager. C-002 is weights-only
-  and unaffected. C-027/C-028 are fine-tuning with dropout > 0 and already took eager.
-- E1 prospective arm — needs your model choice and a lock. C-006 stays `pending`.
-- The Methods disclosure from D-014 (Δ = −74.3%, fp16 cast as mechanism) must appear
-  verbatim and must not be presented as a passed guard.
+## 5. Unresolved scientific decisions — yours
+
+1. **N-009: the PROK structural artifact does not reproduce.** Same layer (2), same row
+   (1927), same checkpoint *name*, and both the exact and the decomposed formulas agree with
+   each other (rank 1277 / 1289) while the stored artifact says rank 1. EUK reproduces
+   exactly. Possible causes — an upstream HF repo change since 29 May 2026, a difference in
+   how weights were loaded/dtyped originally, something else — need a call, not a trace.
+   Until settled, C-001's PROK half is unsupported and Figure 2's PROK panel cannot be drawn.
+2. **Ref [11]** needs an external arXiv lookup of `2603.05498` and `2402.17762`. Local
+   sources cannot separate "corrupted reference to Sun M. 2024" from "correct reference to a
+   real 2026 paper". It is also uncited in the body.
+3. **Figure 2 A–D**: inputs all exist; whether to render EUK-only, or wait on N-009, is
+   authorial.
+
+## 6. Environment traps (unchanged, still true)
+
+- Container has **no `python`**, only `python3`.
+- Host `SSL_CERT_FILE` points outside the container; any `huggingface_hub` network call dies
+  in `ssl.create_default_context`. Use `env -u SSL_CERT_FILE -u REQUESTS_CA_BUNDLE`.
+- `grlm` needs `LD_LIBRARY_PATH=$ENV/lib` prepended or PIL fails on `GLIBCXX_3.4.29`.
+- No `evo` conda env; the `.sbatch`/`nohup` launchers saying `conda activate evo` are stale.
+- GENERator 3B checkpoints take ~6 minutes to load from the shared filesystem; tqdm shard
+  progress does not flush to a redirected log, so a static log is **not** evidence of a hang.
+  Check `ps -o etime,time` and `nvidia-smi` instead.
+- `prereg_lock.py` warns "working tree is dirty" because of pre-existing `paper/main.tex`
+  changes and two untracked manuscript files that predate this work and are not E2's.
+
+## 7. Not started, deliberately
+
+E1 prospective, E3, E5, corpus-prior, extra DNABERT-2 seeds, Phase 1b / C-010 eager
+re-verification, AC/DC decomposition, R3 thesis sentence, abstract/Discussion rewrites.
