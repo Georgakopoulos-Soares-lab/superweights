@@ -165,4 +165,11 @@ YYYY-MM-DD  |  scaffold created; outline frozen  |  next: run PHASE_0 inventory
 2026-08-13  |  Item 3: E2 prereg amended (D-015 endpoints, confidence 3/5) and LOCKED.
             |  sha256 3d7515d0b7889f65... utc 2026-08-13T02:59:20. verify OK.
             |  next: queue item 4 (five-model run)
+2026-08-13  |  Item 4 partial: FOUR models run under the locked protocol (EUK, PROK,
+            |  DNABERT-2 eager, NTv3), both doses, 0 under-powered layers, noise floors all
+            |  exactly 0.0. C-012 and C-013 CONFIRMED. N-006's rule fired -> C-015 restored,
+            |  X-003 stays retired (N-011). matched-norm arm empty for EUK/DNABERT-2 (0 rows
+            |  in +/-10% band) and failed for NTv3; band NOT widened. NTv3 T/C undefined
+            |  (no downstream layers). Evo1 still running. RESULTS.md written; no branch.
+            |  next: finish Evo1, then items 6 and 8
 ```

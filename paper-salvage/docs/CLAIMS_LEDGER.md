@@ -26,10 +26,10 @@ is not yet measured)
 | C-009 | R2 | Evo1 is structurally concentrated (top 1.2–4.1%) but ablation gives ΔPPL = 0.0% | | random rows ≈ 0 | established | migrate |
 | C-010 | R2 | DNABERT-2 L7 r603 predictor rank 706/768 reflects a propagator, not a source (residual carry-in −10.96 vs. local MLP −5.80) | | | supported | migrate |
 | C-011 | R2 | Structural concentration does not imply functional criticality | C-009 + C-007/8 | | established | migrate |
-| C-012 | R3 | GENERator EUK: C = 1.0 through all downstream layers | `sw_broadcast_impulse.json` (fixed-ε, superseded) | random-coord, neighbour-row, random-dense | pending-rerun | E2 re-run, D-011 |
-| C-013 | R3 | GENERator PROK: C ≈ 0.92 → ~0 by L14 while total gain grows toward output | as above | as above | pending-rerun | E2 re-run, D-011 |
+| C-012 | R3 | GENERator EUK: C = 1.0 through all downstream layers (+1.0000 → +0.9911, L5–29) | `sw_broadcast_impulse.json` key `generator`, lock `3d7515d0b788…` | random-coord, neighbour-row, random-dense; **matched-norm arm empty (0/3072 rows in band)** | established | **CONFIRMED under locked protocol** |
+| C-013 | R3 | GENERator PROK: C ≈ 0.92 → ~0 while total gain grows toward output (C +0.9177 → +0.0056; T 1.47e-2 → 6.18, L3–29) | `sw_broadcast_impulse.json` key `generator_prokaryote` | all four arms incl. matched-norm (n=5) | established | **CONFIRMED under locked protocol** |
 | C-014 | R3 | _(retired — see X-006)_ | | | **RETIRED** | D-014 |
-| C-015 | R3 | C describes routing geometry, not criticality | C-012/13 only; C-014 retired | | **unsupported pending re-run** | **hold — X-003 is live, see N-006** |
+| C-015 | R3 | C describes routing geometry, not criticality | C-012/13 + re-measured DNABERT-2 C | | **restored: established** | **N-006 rule fired — see N-011** |
 | C-016 | R3 | Evo1 routing regime | | full control set | pending | E2 |
 | C-017 | R3 | **[THESIS SLOT]** relation of T to criticality | | | pending | E2 |
 | C-018 | R3 | Broadcast observability H = (L−ℓ−1)/L is a methodological covariate; NTv3 H ≈ 0.08 | | | consistent-with | write |
@@ -204,13 +204,30 @@ there. Evidence: `results/e4_ntv3_shared_adapter.json`.
 Gate/up ordering within the packed half is unresolvable from shapes and immaterial: c_{k,i}
 is symmetric under swapping them.
 
+**N-011 — N-006's rule fired: DNABERT-2 C is still ≈ 0 on the clean kernel.**
+N-006 pre-committed: *"Re-measured DNABERT-2 C ≈ 0 → X-003 stays retired, C-015 restored."*
+The locked-protocol re-measurement on eager attention gives DNABERT-2 **C = +0.0331 at L6,
+peak +0.0625, −0.0221 at L11** — against EUK's +1.0000 and PROK's +0.9177 at their first
+downstream layers. That is ≈ 0. The rule fires mechanically:
+
+- **X-003 stays retired.** Its falsification rested on DNABERT-2 having C ≈ 0, which
+  survives; it never depended on the retracted "largest KL ≈ 0.31" (X-006).
+- **C-015 restored to `established`.**
+- `CLAUDE.md`'s "C is NOT necessary for criticality" constraint may drop PROVISIONAL **only**
+  in respect of the C value. Its second clause — "and the strongest encoder phenotype" —
+  rests on C-027/C-028, which are untouched and unaudited for the Triton/eager question.
+
+Applied as a mechanical status change under a pre-existing rule. **No new interpretation**,
+and nothing here says what T does or does not predict. Evidence:
+`experiments/E2_evo1_broadcast/RESULTS.md` §B.
+
 ## Retired claims
 
 | ID | Claim | Why retired |
 |---|---|---|
 | X-001 | "SW neighbourhood is extremely tolerant to pruning" / shadow redundancy | Contradicted by our own pruning sweep: near-SW −1.60 pp vs. random −0.82 pp at 20% |
 | X-002 | "We scanned eight genomic language models" (as a uniform benchmark) | Coverage is asymmetric; replaced by the coverage table |
-| X-003 | (‖U_k‖_F, C) jointly predict criticality | Falsified by DNABERT-2 (C ≈ 0, largest KL) — **⚠ MAY BE UN-RETIRED, see note below** |
+| X-003 | (‖U_k‖_F, C) jointly predict criticality | Falsified by DNABERT-2 C ≈ 0. **STAYS RETIRED** — re-measured on the clean eager kernel, C peaks at +0.0625 and ends −0.0221, i.e. still ≈ 0. The falsification never depended on the retracted KL value. See N-011. |
 | X-006 | "DNABERT-2 has C ≈ 0 immediately and the largest impulse KL (≈0.31)" (was C-014) | The 0.31 was the **noise floor of a nondeterministic Triton kernel**, not a measurement. Two identical passes differed by KL = 0.305. On the deterministic eager path the primary-dose value is **1.8e-8**. Retired, not revised — the number was never a measurement of anything. See D-014, N-007. |
 | X-004 | DNABERT-2 ensemble behaviour is a *consequence* of C ≈ 0 | Association only; no causal evidence. May return as `consistent-with` after E4 |
 | X-005 | Broadcast headroom bounds broadcast | One extreme case; demoted to methodological covariate (C-018) |
