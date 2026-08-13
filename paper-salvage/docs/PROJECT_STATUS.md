@@ -6,26 +6,27 @@
 doses, so the STEP 3d stop condition fired. **Prereg NOT locked, re-run NOT started** —
 see `experiments/E2_evo1_broadcast/BLOCKED.md`.
 
-> ## ⛔ BLOCKED — STEP 3d: KL is flat for GENERator PROK at both doses
+> ## 🔒 E2 PREREGISTRATION LOCKED — five-model run authorised
 >
-> **DNABERT-2 kernel: RESOLVED (D-014).** Eager attention adopted; Triton is the defective
-> path (fp16 cast of qkv/bias, 8.5% perplexity nondeterminism). C-014 **retired** as X-006 —
-> its "largest impulse KL ≈ 0.31" was a noise floor. Clean primary-dose value is 1.8e-8.
-> Guard disclosure (Δ = −74.3%) goes into Methods verbatim, not as a passed guard.
+> **sha256 `3d7515d0b7889f65038acd8479e85976248e7dbd0e5a701303de3a1b37dbfdc3`**
+> **UTC 2026-08-13T02:59:20** · git `695eb92` · ledger `docs/prereg/LOCKS.jsonl`
 >
-> **New blocker.** A 100× dose increase on PROK moved KL from 0.0 to 9.94e-7 and moved
-> nothing in the output: top-10 mean rank shift **0.000**, top-1 unchanged, top-10 overlap
-> 1.00. Both candidate replacement metrics were measured and are also flat for PROK. Per the
-> pre-committed rule the dose was **not** escalated and no metric was substituted.
+> `verify --all` → OK. The locked file is **deliberately not edited after locking** — the
+> Methods `<hash>`/`<date>` placeholders stay as written, because filling them in would
+> change the file's hash and break its own verification. LOCKS.jsonl is authoritative.
 >
-> DNABERT-2 (eager) *is* measurable at α=1.0 (KL 4.63e-5, top-1 changes), but a KL column
-> resting on it alone is the fragility the dual dose was meant to remove.
+> Pre-lock checks, all clean: no result under the new protocol had been generated
+> (`sw_broadcast_impulse.json` held only pre-D-011 fixed-ε entries); `verify --all` reported
+> "no locks recorded"; the diff was reviewed. The lock tool warned the working tree was
+> dirty — that is `paper/main.tex` and two untracked manuscript files which predate this
+> session and are not part of E2.
 >
-> **X-003 is LIVE.** `CLAUDE.md`'s "C is NOT necessary for criticality" rested on the now-
-> retired C-014 and is unsupported until the re-run reports.
+> **STEP 3d blocker resolved by D-015:** T and C primary, KL secondary/descriptive against
+> each model's noise floor, no dose escalation, no metric substitution. Amendment made
+> after the planned pre-lock probe and before the lock.
 >
-> Detail: `experiments/E2_evo1_broadcast/BLOCKED.md`. Ledger: N-004, N-006, N-007, N-008,
-> X-006. Decisions: D-014.
+> DNABERT-2 on eager (D-014). C-014 retired (X-006), never to be resurrected. X-003 stays
+> **live**. Null rule binding: headroom ≥ 4× **and** noise floor below signal.
 
 ---
 
@@ -53,7 +54,7 @@ Phases 1 and 2 run **in parallel**. R1, R2, R4, R6, R7 do not depend on the Evo1
 | ID | Experiment | Status | Owner | Prereg |
 |---|---|---|---|---|
 | E1 | NLP cold-weight validation (row + scalar) + prospective lock | **retrospective DONE (3/3 both levels)**; prospective not started | | `prereg/PREREG_nlp_prospective.md` |
-| E2 | Evo1 standardized broadcast | **BLOCKED at STEP 3d — KL flat for PROK at both doses** | | `prereg/PREREG_evo1_broadcast.md` **v2, NOT locked** |
+| E2 | Evo1 standardized broadcast | **LOCKED — run authorised** | | `prereg/PREREG_evo1_broadcast.md` v2, **locked `3d7515d0b788…`** |
 | E3 | Bidirectional steering w/ degradation controls | not started | | `prereg/PREREG_steering.md` |
 | E4 | c_{k,i} granularity decomposition, all genomic gated FFNs | **DONE — 5/5 models** | | free alongside E1 |
 
@@ -161,4 +162,7 @@ YYYY-MM-DD  |  scaffold created; outline frozen  |  next: run PHASE_0 inventory
             |  7 new tests, all failing under the old Llama adapter; suite green + E1
             |  self-test. NTv3 E4 recomputed via shared impl -- reproduces EXACTLY.
             |  next: queue item 3 (amend + lock E2 prereg)
+2026-08-13  |  Item 3: E2 prereg amended (D-015 endpoints, confidence 3/5) and LOCKED.
+            |  sha256 3d7515d0b7889f65... utc 2026-08-13T02:59:20. verify OK.
+            |  next: queue item 4 (five-model run)
 ```
