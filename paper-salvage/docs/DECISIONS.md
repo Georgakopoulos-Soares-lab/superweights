@@ -258,3 +258,46 @@ not exist at the time. Its provenance is the git commit that introduced it:
     (git log --follow --diff-filter=A -- docs/prereg/PREREG_evo1_broadcast.md)
 
 This is disclosed in Methods. No retroactive LOCKS.jsonl entry is synthesised for v1.
+
+---
+
+## D-014 — DNABERT-2 runs on eager attention; Triton is the defective path
+**Date:** Phase 1
+**Builds on:** D-013. **Supersedes in part:** the STEP 3 finding recorded in
+`experiments/E2_evo1_broadcast/INSTRUMENT_VALIDATION.md` §4 that "the three normalised
+models were already fp32" — that holds for GENERator EUK/PROK and NTv3, **not** for
+DNABERT-2's attention.
+
+**Decision:** DNABERT-2 runs the eager PyTorch attention path for all impulse work.
+`_dnabert2_force_eager_attention()` sets the remote module's `flash_attn_qkvpacked_func`
+to `None`, selecting the branch the remote code already provides.
+
+**Rationale.**
+
+1. **The guard was inapplicable, not failed.** The Triton arm's masked-LM perplexity varies
+   **8.48%** run to run (720.6 / 681.1 / 662.2). A ±1% tolerance cannot protect a quantity
+   that has no fixed value. The comparison was ill-posed from the start.
+2. **Triton never ran fp32.** `convert_dtype` in `BertUnpadSelfAttention.forward` casts qkv
+   and the attention bias to **fp16** because the kernel accepts only fp16/bf16. DNABERT-2's
+   attention has never run in fp32 at inference; the fp32 parameter dtype was cosmetic.
+3. **Eager is better on both axes at once.** PPL 176.9 vs 687.9 (3.9× better) **and**
+   bit-reproducible (0.000% spread). A change that had damaged the model would not improve
+   perplexity and eliminate nondeterminism simultaneously.
+
+**Disclosure — required, verbatim, in Methods.** The guard outcome is reported as it
+happened and is **not** presented as a passed guard:
+
+> Forcing DNABERT-2 onto its eager attention path changed masked-LM perplexity by
+> Δ = −74.3% (687.9 → 176.9). The mechanism is the Triton kernel's fp16 cast of the query,
+> key, value and bias tensors; the same kernel also made the forward pass nondeterministic,
+> with perplexity varying 8.5% across identical repeats.
+
+**Consequences:**
+- C-014 is **retired**, not revised (see CLAIMS_LEDGER X-006). Its "largest impulse
+  KL ≈ 0.31" was the noise floor of a nondeterministic kernel; the clean primary-dose value
+  is 1.8e-8.
+- X-003 is **live** again pending the re-measured DNABERT-2 C. `CLAUDE.md`'s "C is NOT
+  necessary for criticality" rested on C-014 and is unsupported until the re-run reports.
+- Phase 1b queue (logged, not started): C-010's L7/r603 source-vs-propagator resolution ran
+  through Triton at inference and needs re-verification on eager. C-002 is weights-only and
+  unaffected. C-027/C-028 are fine-tuning with dropout > 0 and already took the eager branch.

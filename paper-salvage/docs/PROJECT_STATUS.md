@@ -2,34 +2,30 @@
 
 **Last updated:** 2026-08-12
 **Current phase:** Phase 1 — Blocking experiments (E2 halted at STEP 3)
-**Blocking on:** a decision about which attention kernel is DNABERT-2. **The prereg was not
-locked and the five-model re-run was not started** — see the blocker below.
+**Blocking on:** a functional-metric decision for R3. KL is ~0 for GENERator PROK at both
+doses, so the STEP 3d stop condition fired. **Prereg NOT locked, re-run NOT started** —
+see `experiments/E2_evo1_broadcast/BLOCKED.md`.
 
-> ## ⛔ BLOCKER — DNABERT-2 attention kernel: determinism fixed, guard failed
+> ## ⛔ BLOCKED — STEP 3d: KL is flat for GENERator PROK at both doses
 >
-> **Determinism: solved.** Attempt 1 of the STEP 3a ladder worked — forcing the eager
-> PyTorch attention path gives an **exactly zero** noise floor. Attempts 2 and 3 not needed.
-> The real DNABERT-2 impulse signal is ‖Δh‖ = 2.4e-3, KL = 1.8e-8 — about 1,800× smaller
-> than the 4.50 / 0.277 previously measured, which was entirely noise. C-014's "largest
-> impulse KL ≈ 0.31" does not survive.
+> **DNABERT-2 kernel: RESOLVED (D-014).** Eager attention adopted; Triton is the defective
+> path (fp16 cast of qkv/bias, 8.5% perplexity nondeterminism). C-014 **retired** as X-006 —
+> its "largest impulse KL ≈ 0.31" was a noise floor. Clean primary-dose value is 1.8e-8.
+> Guard disclosure (Δ = −74.3%) goes into Methods verbatim, not as a passed guard.
 >
-> **Guard: FAILED.** MLM perplexity, same weights and inputs, kernel the only difference:
-> Triton/fp16 = 687.9 (nondeterministic, 8.48% spread across repeats) vs eager/fp32 = 176.9
-> (0.000% spread). Δ = **−74.3%** against ±1%. Per the standing rule this is reported, not
-> adopted, so the fix is **not** in force for the re-run.
+> **New blocker.** A 100× dose increase on PROK moved KL from 0.0 to 9.94e-7 and moved
+> nothing in the output: top-10 mean rank shift **0.000**, top-1 unchanged, top-10 overlap
+> 1.00. Both candidate replacement metrics were measured and are also flat for PROK. Per the
+> pre-committed rule the dose was **not** escalated and no metric was substituted.
 >
-> The Triton path silently casts qkv to fp16 and its own perplexity varies by 8.5%, so it is
-> not a fixed quantity to match against; the eager path is 3.9× better and bit-reproducible.
-> That suggests Triton is the defective path — but deciding which path *is* DNABERT-2 is a
-> substantive call and is not made here.
+> DNABERT-2 (eager) *is* measurable at α=1.0 (KL 4.63e-5, top-1 changes), but a KL column
+> resting on it alone is the fragility the dual dose was meant to remove.
 >
-> **Unaudited scope:** the loaded config has `attention_probs_dropout_prob = 0.0`, so Triton
-> was the *default* inference path. Every inference-time DNABERT-2 analysis went through it.
-> Whether C-002, C-010, C-027 or C-028 are affected has not been checked.
+> **X-003 is LIVE.** `CLAUDE.md`'s "C is NOT necessary for criticality" rested on the now-
+> retired C-014 and is unsupported until the re-run reports.
 >
-> Ledger: N-004, N-006, N-007, N-008. Detail:
-> `experiments/E2_evo1_broadcast/INSTRUMENT_VALIDATION.md`.
-> Everything else in STEP 3b/3c is complete; the prereg is ready to lock once this is decided.
+> Detail: `experiments/E2_evo1_broadcast/BLOCKED.md`. Ledger: N-004, N-006, N-007, N-008,
+> X-006. Decisions: D-014.
 
 ---
 
@@ -57,7 +53,7 @@ Phases 1 and 2 run **in parallel**. R1, R2, R4, R6, R7 do not depend on the Evo1
 | ID | Experiment | Status | Owner | Prereg |
 |---|---|---|---|---|
 | E1 | NLP cold-weight validation (row + scalar) + prospective lock | not started | | `prereg/PREREG_nlp_prospective.md` |
-| E2 | Evo1 standardized broadcast | **HALTED at STEP 3 — see blocker** | | `prereg/PREREG_evo1_broadcast.md` **v2, NOT locked** |
+| E2 | Evo1 standardized broadcast | **BLOCKED at STEP 3d — KL flat for PROK at both doses** | | `prereg/PREREG_evo1_broadcast.md` **v2, NOT locked** |
 | E3 | Bidirectional steering w/ degradation controls | not started | | `prereg/PREREG_steering.md` |
 | E4 | c_{k,i} granularity decomposition, all genomic gated FFNs | not started | | free alongside E1 |
 
@@ -141,4 +137,8 @@ YYYY-MM-DD  |  scaffold created; outline frozen  |  next: run PHASE_0 inventory
             |  random row, dual dose (a=0.01 T/C, a=1.0 KL), sanity expectation corrected,
             |  v1 declared not-preregistered, reconstruction deleted (N-008 fp32 mislabel).
             |  next: decide DNABERT-2 kernel, then lock and run
+2026-08-12  |  D-014 adopt eager for DNABERT-2; C-014 retired as X-006; X-003 live.
+            |  STEP 3d probe: KL flat for PROK at alpha=1.0 too (9.9e-7, zero rank shift);
+            |  stop condition fired -> BLOCKED.md written, prereg NOT locked, run NOT started
+            |  next: functional-metric decision for R3; meanwhile queue items 3 (E1) and 4 (E4)
 ```
