@@ -1,8 +1,8 @@
 # NEXT_SESSION.md
 
 **Session:** 2026-08-12/13 overnight queue #2.
-**Stopped at:** queue item 4 — **four of five models complete; Evo1 still running.**
-Items 1, 2, 3, 5 (partial), 7a, 7b complete. Items 6, 7c, 8 not started.
+**Stopped at:** end of queue item 5. **Items 1, 2, 3, 4, 5, 7a, 7b complete.**
+Items 6, 7c, 8 not started. All five models measured; one Evo1 dose failed and is recorded.
 
 ---
 
@@ -36,14 +36,13 @@ deliberately left unfilled: writing the hash into the file changes the file's ha
 
 ## 2. What is in flight / not done
 
-- **Item 4 — four of five models COMPLETE** under the locked protocol: GENERator EUK,
-  GENERator PROK, DNABERT-2 (eager), NTv3. Both doses, 0 under-powered layers, all noise
-  floors exactly 0.0, provenance stamped. **Evo1 was launched and was still loading its
-  7B fp32 checkpoint when the session ended** — check `logs/e2_evo1_noise.log` and
-  `logs/e2_run_evo1.log`; both were 0 bytes / absent at stop time.
-- **Item 5 — RESULTS.md written** for the four completed models
-  (`paper-salvage/experiments/E2_evo1_broadcast/RESULTS.md`). §E and §F are placeholders
-  awaiting Evo1; **no prereg branch is assigned.**
+- **Items 4 and 5 COMPLETE.** All five models measured under the locked protocol; every
+  noise floor exactly 0.0; 0 under-powered layers anywhere. RESULTS.md is written in full.
+- **One recorded failure:** Evo1's secondary dose (α = 1.0) died on CUDA OOM after the
+  primary dose ran in the same process. **No retry** — the allowed provenance-preserving
+  retry would need a per-dose flag, i.e. a code change. Evo1's KL reads "not measured", not
+  zero. To finish it, add a dose selector and run the secondary alone in a fresh process.
+- **Prereg branch: C and D excluded, A vs B NOT assigned** — that is your call (§5).
 - **Item 6 — canonical E4 cross-model table: not written.**
 - **Item 8 — provenance backfill into `results/keep/`: not started.**
 - Item 7c (typo sweep) not done.
@@ -106,6 +105,8 @@ generator_prokaryote,dnabert2,ntv3}.json`. DNABERT-2's is the **eager** one. Evo
 |---|---|
 | C-001 | **on hold** — PROK half has no reproducible support; must not be migrated |
 | C-012, C-013 | **CONFIRMED** under the locked protocol |
+| C-016 | **supported** — Evo1 routing regime measured |
+| C-017 | still the thesis slot; **branch unassigned** |
 | C-003 | established, confirmed by E4 |
 | C-004, C-005 | established (E1 retrospective, previous session) |
 | C-014 | **RETIRED as X-006.** Never resurrect |
