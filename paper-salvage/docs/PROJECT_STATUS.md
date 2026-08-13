@@ -188,4 +188,11 @@ YYYY-MM-DD  |  scaffold created; outline frozen  |  next: run PHASE_0 inventory
             |  PROK row included at its own layer 2 and marked CONTESTED / C-001 ON HOLD;
             |  no other layer examined. Unavailable cells marked n/s, not recomputed.
             |  next: item 7c (mechanical cleanup), item 8 (provenance backfill)
+2026-08-13  |  Items 7c and 8 DONE. 7c: "extremelly" fixed; Methods precision disclosure
+            |  added for Evo1 bf16 and DNABERT-2's Triton fp16 attention cast (D-012/D-014/
+            |  N-008); PHASE_1 E2 design annotated as superseded; stale PROJECT_STATUS state
+            |  corrected (X-003 retired, not live). Manuscript BUILD NOT RUN -- no LaTeX
+            |  toolchain on this node. 8: 5 established claims migrated to results/keep/
+            |  with PROVENANCE.md; 12 logged in UNMIGRATED.md (empty evidence paths).
+            |  QUEUE COMPLETE. Remaining work is author judgment -- see NEXT_SESSION.md 5.
 ```

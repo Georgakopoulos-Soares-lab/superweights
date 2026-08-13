@@ -1,161 +1,140 @@
 # NEXT_SESSION.md
 
-**Session:** 2026-08-12/13 overnight queue #2.
-**Stopped at:** end of queue item 5. **Items 1, 2, 3, 4, 5, 7a, 7b complete.**
-Items 6, 7c, 8 not started. All five models measured; one Evo1 dose failed and is recorded.
+**Session:** 2026-08-13 overnight queue #3.
+**Status: the queue is finished.** Items 6, 7c, 8 and 9 complete. Nothing is mid-flight and
+the tree is clean. E3 and E5 were not started, as instructed.
 
 ---
 
-## 1. What completed
+## 1. Completed this session
 
 | Item | Outcome | Commit |
 |---|---|---|
-| Session decision | D-015 recorded: T/C primary, KL secondary/descriptive, pre-lock | `9e35b1b`* |
-| 1 — N-009 / C-001 | Layer resolved to **L2**; stored artifact **does not reproduce**; C-001 stays on hold | `b9e3ab1` |
-| 2 — N-010 | `adapter_ntv3` added to shared `uk_frobenius.py` + 7 tests; NTv3 E4 reproduces **exactly** | `3ca8bb6` |
-| 3a — prereg amendment | D-015 endpoints written in; confidence **3/5** | (in `128b4ee` lineage) |
-| 3b — **PREREG LOCKED** | see hash below | `128b4ee` |
-| 7a/7b — audit | Ref [11] and Figure 2 both **flagged, neither changed** | `791813e` |
+| 6 — canonical E4 table | Built from stored artifacts only; PROK marked CONTESTED | `0bc57ee` |
+| 7c — mechanical cleanup | Typo, precision disclosure, stale state; **build could not run** | `e20d12d` |
+| 8 — provenance backfill | 5 established claims migrated, 12 logged unmigrated | `25606c6` + fixup |
+| 9 — this handoff | — | (this commit) |
 
-\* the D-015 commit is the one immediately preceding `b9e3ab1`; `git log --oneline` shows the
-full chain.
+Earlier in the campaign: `d7fb27f` (E2 blocked at 3d), `a157686` (E1 retrospective),
+`7c26a0a` (E4 raw), `16e80f6` (D-015), `b9e3ab1` (N-009), `3ca8bb6` (N-010),
+`695eb92`/`128b4ee` (prereg amended + **locked**), `00cedd3`/`ee746de` (E2 five-model run),
+`1098ca9` (claim statuses), `791813e` (ref [11] + Figure 2 audit).
 
-### PREREG LOCK — record this everywhere it is cited
+## 2. Blockers
 
-```
-sha256 3d7515d0b7889f65038acd8479e85976248e7dbd0e5a701303de3a1b37dbfdc3
-utc    2026-08-13T02:59:20+00:00
-commit 695eb9279bbdbbe824721e9f1ab39c7f82af9b4e
-ledger paper-salvage/docs/prereg/LOCKS.jsonl   (first and only entry)
-verify paper-salvage/src/prereg_lock.py verify --all  ->  OK
-```
+**None blocking further mechanical work.** Everything remaining is a scientific judgment
+(§5). Two things were attempted and could not be completed:
 
-**Do not edit `PREREG_evo1_broadcast.md`.** Its Methods `<hash>`/`<date>` placeholders are
-deliberately left unfilled: writing the hash into the file changes the file's hash and makes
-`verify` report CHANGED. LOCKS.jsonl is authoritative.
+- **Manuscript build not run.** No LaTeX toolchain on this node — `pdflatex`, `xelatex`,
+  `lualatex`, `latexmk`, `tectonic` all absent, no Makefile in `paper/`. The edits are
+  verified only by brace balance (379/379), one `\begin{document}`/`\end{document}`, and
+  closed `\texttt{}` groups. **`paper/main.tex` has not been compiled since editing.**
+- **Evo1 secondary-dose KL** remains unmeasured (CUDA OOM). Not retried, per instruction.
 
-## 2. What is in flight / not done
+## 3. Canonical report paths
 
-- **Items 4 and 5 COMPLETE.** All five models measured under the locked protocol; every
-  noise floor exactly 0.0; 0 under-powered layers anywhere. RESULTS.md is written in full.
-- **One recorded failure:** Evo1's secondary dose (α = 1.0) died on CUDA OOM after the
-  primary dose ran in the same process. **No retry** — the allowed provenance-preserving
-  retry would need a per-dose flag, i.e. a code change. Evo1's KL reads "not measured", not
-  zero. To finish it, add a dose selector and run the secondary alone in a fresh process.
-- **Prereg branch: C and D excluded, A vs B NOT assigned** — that is your call (§5).
-- **Item 6 — canonical E4 cross-model table: not written.**
-- **Item 8 — provenance backfill into `results/keep/`: not started.**
-- Item 7c (typo sweep) not done.
-
-### Before rerunning item 4, check what survived
-
-```bash
-cd /work/11034/atzanakak/glm_super_weight/genomic-super-weights
-python3 -c "
-import json; d=json.load(open('results/sw_broadcast_impulse.json'))
-[print(k, 'NEW-PROTOCOL' if 'epsilon_meta' in v else 'old fixed-eps') for k,v in d.items()]"
-```
-
-The pre-D-011 baseline is preserved at
-`results/sw_broadcast_impulse_PRE_D011_fixed_eps.json` — do not overwrite it.
-
-## 3. Exact next commands
-
-```bash
-cd /work/11034/atzanakak/glm_super_weight/genomic-super-weights
-ENV=/work/11034/atzanakak/work/11034/atzanakak/miniconda3/envs/grlm
-export LD_LIBRARY_PATH=$ENV/lib HF_HOME=/work/11034/atzanakak/ls6/huggingface/.hf-cache
-export HF_HUB_CACHE=$HF_HOME/hub PYTHONPATH=$PWD
-
-# (a) four non-Evo1 models, one at a time (each 3B model needs ~6 min just to load)
-for M in generator generator_prokaryote dnabert2 ntv3; do
-  $ENV/bin/python -u scripts/interpretability/run_sw_broadcast_impulse.py \
-      --model $M --n_controls 5 --seed 42 --device cuda --out_dir results \
-      > logs/e2_run_$M.log 2>&1
-done
-
-# (b) Evo1, in the container
-source /opt/apps/lmod/lmod/init/bash && module load tacc-apptainer
-export HF_HUB_OFFLINE=1
-env -u SSL_CERT_FILE -u REQUESTS_CA_BUNDLE apptainer exec --nv \
-    /work/11034/atzanakak/ls6/containers/evo2.sif \
-    python3 -u scripts/interpretability/run_sw_broadcast_impulse.py \
-    --model evo1 --n_controls 5 --seed 42 --device cuda --out_dir results \
-    > logs/e2_run_evo1.log 2>&1
-
-# (c) Evo1 noise floor — required by the null rule, not yet measured for Evo1
-env -u SSL_CERT_FILE -u REQUESTS_CA_BUNDLE apptainer exec --nv \
-    /work/11034/atzanakak/ls6/containers/evo2.sif \
-    python3 -u scripts/interpretability/impulse_determinism_check.py --model evo1
-
-# (d) stamp provenance (written this session, not yet run)
-$ENV/bin/python scripts/interpretability/stamp_e2_provenance.py
-```
-
-`stamp_e2_provenance.py` adds checkpoint, dtype, attention path, seed, git commit,
-container identity, lock hash and each model's measured noise floor. It is **additive** and
-never touches a measured value — it exists so the harness was not edited mid-run.
-
-Noise floors already measured and on disk: `results/impulse_determinism_{generator,
-generator_prokaryote,dnabert2,ntv3}.json`. DNABERT-2's is the **eager** one. Evo1's is missing.
-
-## 4. Claim statuses touched this session
-
-| Claim | Status now |
+| What | Path |
 |---|---|
-| C-001 | **on hold** — PROK half has no reproducible support; must not be migrated |
-| C-012, C-013 | **CONFIRMED** under the locked protocol |
-| C-016 | **supported** — Evo1 routing regime measured |
-| C-017 | still the thesis slot; **branch unassigned** |
-| C-003 | established, confirmed by E4 |
-| C-004, C-005 | established (E1 retrospective, previous session) |
-| C-014 | **RETIRED as X-006.** Never resurrect |
-| C-015 | **restored: established** (N-006's rule fired — see N-011) |
-| C-032 | supported |
-| X-003 | **STAYS RETIRED** — N-006's pre-committed rule fired: re-measured DNABERT-2 C is still ≈ 0 (peak +0.0625, ends −0.0221). See N-011. Its falsification never depended on the retracted KL |
-| N-009 | resolved-as-blocker (see below) · N-010 **fixed** |
+| **E2 results** | `paper-salvage/experiments/E2_evo1_broadcast/RESULTS.md` |
+| E2 instrument validation | `paper-salvage/experiments/E2_evo1_broadcast/INSTRUMENT_VALIDATION.md` |
+| E2 STEP-2 gate | `paper-salvage/experiments/E2_evo1_broadcast/GATE_RESULTS.md` |
+| E2 STEP-3d stop record | `paper-salvage/experiments/E2_evo1_broadcast/BLOCKED.md` (historical) |
+| **E4 canonical table** | `paper-salvage/experiments/E4_granularity/CANONICAL_TABLE.md` |
+| E4 N-009 resolution | `paper-salvage/experiments/E4_granularity/N009_RESOLUTION.md` |
+| E1 results | `paper-salvage/experiments/E1_nlp_validation/RESULTS.md` |
+| Cleanup log | `paper-salvage/docs/CLEANUP_LOG.md` |
+| Reference / Figure 2 audit | `paper-salvage/docs/REFERENCE_AUDIT.md` |
+| Environment for Methods | `paper-salvage/docs/ENVIRONMENT.md` |
 
-## 5. Unresolved scientific decisions — yours
+## 4. Migrated provenance artifacts
 
-1. **N-009: the PROK structural artifact does not reproduce.** Same layer (2), same row
-   (1927), same checkpoint *name*, and both the exact and the decomposed formulas agree with
-   each other (rank 1277 / 1289) while the stored artifact says rank 1. EUK reproduces
-   exactly. Possible causes — an upstream HF repo change since 29 May 2026, a difference in
-   how weights were loaded/dtyped originally, something else — need a call, not a trace.
-   Until settled, C-001's PROK half is unsupported and Figure 2's PROK panel cannot be drawn.
-2. **Ref [11]** needs an external arXiv lookup of `2603.05498` and `2402.17762`. Local
-   sources cannot separate "corrupted reference to Sun M. 2024" from "correct reference to a
-   real 2026 paper". It is also uncited in the body.
-3. **Figure 2 A–D**: inputs all exist; whether to render EUK-only, or wait on N-009, is
-   authorial.
+Under `paper-salvage/results/keep/` (copied, not moved; each with `PROVENANCE.md`):
 
-### Also worth your decision
+| Batch | Claims | Class |
+|---|---|---|
+| `E1_nlp_retrospective/` | C-004, C-005 | derived |
+| `E2_broadcast_locked/` | C-012, C-013, C-015 | raw (+ `LOCKS.jsonl`) |
+| `E4_granularity/` | C-003 | derived |
 
-- **matched-norm arm is empty for GENERator EUK and DNABERT-2** — 0 rows fall within ±10%
-  of the SW row's ‖W_down[k,:]‖ (EUK 0/3072 at norm 1.4260e+01; DNABERT-2 0/768 at
-  5.1931e+00). PROK has 3,063. The band was **not** widened; that would be tuning a locked
-  protocol. Whether an empty arm is acceptable, or the definition needs revisiting for a
-  future protocol version, is yours.
-- **matched-norm failed for NTv3**: the impulse harness's `_sw_output_matrix` can't find
-  NTv3's down-projection (same defect class as N-010, now fixable via the shared
-  `ADAPTERS["ntv3"]`). Not repaired and NTv3 not re-run, because NTv3 has no downstream
-  layers so the arm yields no T or C regardless.
-- **NTv3 T and C are undefined** — its SW layer is 11 of 12 (C-018, H ≈ 0.08). Not a null.
+**`results/keep/UNMIGRATED.md`** lists the 12 established claims left behind — all have an
+**empty evidence path** in the ledger, so picking a candidate file would be a guess at the
+mapping, which is precisely how N-009 arose. C-001 and C-014/X-006 are excluded by rule.
 
-## 6. Environment traps (unchanged, still true)
+Note: `paper-salvage/results/` matches the repo's `results/` ignore pattern, so everything
+there is tracked via `git add -f`.
+
+## 5. Unresolved scientific decisions — all yours, none decided
+
+1. **Evo1 Branch A vs B**, and how to read its T relative to controls. Branch C and D are
+   excluded (headroom 26× at L13+, 0/20 under-powered, noise floor 0.0). Peak T: EUK
+   3.79e-02, **Evo1 1.20e-01**, DNABERT-2 8.01e-01, PROK 6.18e+00, NTv3 undefined. Evo1's SW
+   arm (1.1997e-01) sits within ~9% of all three of its control arms (1.10–1.17e-01).
+2. **Whether T has any relationship to criticality** — C-017 remains the thesis slot,
+   unassigned.
+3. **C-001 / PROK rank discrepancy (N-009).** Same layer (2), same row, same checkpoint
+   *name*; exact and decomposed formulas agree (rank 1277 / 1289) while the stored artifact
+   says rank 1. EUK reproduces exactly. C-001 on hold; Figure 2's PROK panel blocked on it.
+4. **Evo1's missing secondary-dose KL** — accept as unmeasured, or add a per-dose flag and
+   run the secondary alone in a fresh process.
+5. **Empty matched-norm arms** (EUK 0/3,072, DNABERT-2 0/768 within ±10%) — whether an empty
+   arm is acceptable or the definition needs revisiting in a future protocol version.
+6. **Whether/when to re-run C-010 on eager** (Phase 1b; it was measured through the Triton
+   path at inference).
+7. **E1 prospective model choice** — needs your pick plus a lock. C-006 stays `pending`.
+8. **E3 steering prereg and predictions** — not started; needs your predictions and a lock.
+
+Also open, from the audit: **ref [11]** needs an external arXiv lookup (`2603.05498` vs
+`2402.17762`; it is additionally uncited in the body), and **Figure 2 A–D** rendering is an
+authorial call gated on N-009.
+
+## 6. Current claim statuses
+
+| Claim | Status |
+|---|---|
+| C-001 | **on hold** — do not migrate, do not render its Figure 2 panel |
+| C-003, C-004, C-005 | established |
+| C-012, C-013 | **established, confirmed under the locked protocol** |
+| C-014 | **RETIRED as X-006** — never resurrect |
+| C-015 | **restored: established** (N-006's rule fired → N-011) |
+| C-016 | supported — Evo1 routing regime measured |
+| C-017 | pending — thesis slot, **branch unassigned** |
+| C-032 | supported — canonical table |
+| X-003 | **stays retired** — re-measured DNABERT-2 C ≈ 0 |
+| N-009 | open (scientific) · N-010 fixed · N-011 applied |
+
+## 7. Exact next commands
+
+Nothing is required to resume — the queue is done. Useful entry points:
+
+```bash
+cd /work/11034/atzanakak/glm_super_weight/genomic-super-weights
+
+# verify the prereg lock still holds
+python3 paper-salvage/src/prereg_lock.py verify --all      # expect: OK
+
+# re-run the shared-library tests after any uk_frobenius change
+ENV=/work/11034/atzanakak/work/11034/atzanakak/miniconda3/envs/grlm
+LD_LIBRARY_PATH=$ENV/lib PYTHONPATH=$PWD/paper-salvage/src \
+  $ENV/bin/python -m pytest paper-salvage/src -q            # expect: 7 passed
+
+# regenerate the canonical E4 table (reads stored artifacts only, loads no model)
+python3 paper-salvage/experiments/E4_granularity/build_canonical_table.py
+```
+
+**Prereg lock, for citation:**
+`3d7515d0b7889f65038acd8479e85976248e7dbd0e5a701303de3a1b37dbfdc3`,
+UTC `2026-08-13T02:59:20+00:00`, git `695eb92`. Do **not** edit the locked prereg — filling
+its `<hash>`/`<date>` placeholders changes its hash and breaks `verify`.
+
+## 8. Environment traps
 
 - Container has **no `python`**, only `python3`.
 - Host `SSL_CERT_FILE` points outside the container; any `huggingface_hub` network call dies
   in `ssl.create_default_context`. Use `env -u SSL_CERT_FILE -u REQUESTS_CA_BUNDLE`.
-- `grlm` needs `LD_LIBRARY_PATH=$ENV/lib` prepended or PIL fails on `GLIBCXX_3.4.29`.
+- `grlm` needs `LD_LIBRARY_PATH=$ENV/lib` or PIL fails on `GLIBCXX_3.4.29`.
 - No `evo` conda env; the `.sbatch`/`nohup` launchers saying `conda activate evo` are stale.
-- GENERator 3B checkpoints take ~6 minutes to load from the shared filesystem; tqdm shard
-  progress does not flush to a redirected log, so a static log is **not** evidence of a hang.
-  Check `ps -o etime,time` and `nvidia-smi` instead.
-- `prereg_lock.py` warns "working tree is dirty" because of pre-existing `paper/main.tex`
-  changes and two untracked manuscript files that predate this work and are not E2's.
-
-## 7. Not started, deliberately
-
-E1 prospective, E3, E5, corpus-prior, extra DNABERT-2 seeds, Phase 1b / C-010 eager
-re-verification, AC/DC decomposition, R3 thesis sentence, abstract/Discussion rewrites.
+- GENERator 3B checkpoints take ~6 min to load; tqdm shard progress does not flush to a
+  redirected log, so a static log is **not** evidence of a hang — check `ps -o etime,time`.
+- Evo1 at fp32 nearly fills a 40 GB A100; a second dose in the same process OOMs.
+- `paper-salvage/results/` is gitignored via the `results/` pattern — use `git add -f`.
+- No LaTeX toolchain on this node.
