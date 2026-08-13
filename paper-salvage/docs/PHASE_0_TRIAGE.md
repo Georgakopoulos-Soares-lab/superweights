@@ -53,11 +53,11 @@ Nothing in the new tree should reference a path that exists only in the old tree
 
 | # | Blocker | Fix | Owner | Date |
 |---|---|---|---|---|
-| B1 | Figure 2 panels A–D absent, caption admits it | locate GENERator JSONs, render | | |
+| B1 | Figure 2 panels A–D absent, caption admits it | **JSONs located — all four present.** Caption's stated reason is out of date. Render still blocked: the PROK ‖U_k‖_F panel would come from the artifact N-009 found unreproducible. EUK reproduces. Authorial call. See `docs/REFERENCE_AUDIT.md`. | | 2026-08-12 |
 | B2 | Abstract claims SW-neighbourhood pruning tolerance; Results conclude far-SW fragility dominates and random pruning is safer than near-SW | rewrite abstract; delete "shadow redundancy" | | |
 | B3 | "Eight models" implies uniform benchmark | replace with coverage table (PAPER_OUTLINE) | | |
 | B4 | NTv3 MCC chosen post-hoc after seeds 4–5 collapsed | see 0.4 | | |
-| B5 | Ref [11] Sun et al. arXiv:2603.05498 does not match the known massive-activations paper (2402.17762) | verify and correct | | |
+| B5 | Ref [11] Sun et al. arXiv:2603.05498 | **FLAGGED — needs external lookup, NOT corrected.** Different author initial (P. vs Mingjie), different title, different year; the local Yu et al. bibliography cites Sun et al. 2024 by OpenReview ID `1ayU4fMqme`, giving no arXiv ID, so `2402.17762` is uncorroborated locally. The entry is also **never cited in the body**. See `docs/REFERENCE_AUDIT.md`. | | 2026-08-12 |
 
 ## 0.4 Resolve the NTv3 metric problem
 
