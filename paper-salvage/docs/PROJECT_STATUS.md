@@ -151,4 +151,10 @@ YYYY-MM-DD  |  scaffold created; outline frozen  |  next: run PHASE_0 inventory
             |  Two flags: PROK ranks 1289/3072 at L2 (C-001 on hold, N-009), and the
             |  uk_frobenius ntv3 adapter is wrong -- NTv3 is packed like DNABERT-2 (N-010).
             |  next: E2 metric decision (BLOCKED.md); E1 prospective arm needs model + lock
+2026-08-12  |  D-015 recorded (T/C primary, KL secondary, pre-lock). Queue item 1: N-009
+            |  resolved -- C-001's PROK layer IS 2 (layer-mismatch hypothesis was wrong),
+            |  same checkpoint name; stored 2648.48/rank 1 does NOT reproduce (exact 5.51
+            |  rank 1277, decomposed 5.47 rank 1289). EUK reproduces exactly. C-001 stays
+            |  on hold. No layer search, no tuning.
+            |  next: queue item 2 (N-010 shared adapter fix + tests)
 ```

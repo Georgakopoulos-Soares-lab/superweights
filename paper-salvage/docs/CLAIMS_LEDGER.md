@@ -163,15 +163,29 @@ The numbers are probably sound: the STEP 2 gate measured both paths and they agr
 5.53e7). This is a **labelling** defect, not necessarily a numerical one. Methods must state
 the actual dtype, and the stored JSON's `dtype` field should be corrected or annotated.
 
-**N-009 — GENERator PROK ranks 1289/3,072 at layer 2, not 1. C-001 on hold.**
-E4 measured the PROK SW row (1927) at layer 2 — the layer in `SW_TARGETS` — and found rank
-**1289 / 3,072**, top-1 share 0.0047, PR 2191.6. EUK at layer 4 does rank 1, as C-001 claims.
+**N-009 — GENERator PROK: claim layer resolved to L2; stored artifact does not reproduce.
+C-001 stays on hold.** _(updated 2026-08-12; the layer-mismatch hypothesis below was WRONG)_
 
-Most likely a **layer mismatch rather than a contradiction**: `SW_TARGETS` layer 2 is the
-*impulse source layer*, while C-001 refers to the *step-up layer*, which for PROK may be a
-different layer. Not investigated — deciding which layer C-001 means is a call about an
-existing claim, not an E4 measurement. C-001 is left as written and must not be migrated
-until the layer is pinned. Evidence: `results/e4_granularity.json`.
+Provenance traced backward claim -> result -> log -> script -> config. The claim's layer is
+**2**, row 1927 — the same layer E4 used — and the original log records the **same checkpoint
+name** now in the config (`GenerTeam/GENERator-v2-prokaryote-3b-base`, run 29 May 2026).
+C-001's "18×" is that artifact's 17.90; the "12×" is EUK's 12.24.
+
+Recomputed at that exact layer on current weights:
+
+| | value | rank | max/median |
+|---|---|---|---|
+| stored artifact | 2648.4773 | 1/3072 | 17.90 |
+| exact ‖U_k‖_F (original formula) | 5.5106 | **1277**/3072 | 7.18 |
+| decomposition (`uk_frobenius`) | 5.4710 | **1289**/3072 | 6.13 |
+
+The two current implementations **agree with each other** and both disagree with the stored
+artifact, so this is not a formula difference. **EUK reproduces exactly** (max/median 12.24
+both, rank 1); PROK does not. Cause not determined — that needs a decision, not a trace.
+
+C-001 is **not** restored and **not** retired; its PROK half currently has no reproducible
+support and it must not be migrated. Evidence:
+`experiments/E4_granularity/N009_RESOLUTION.md`, `results/n009_prok_layer_resolution.json`.
 
 **N-010 — `uk_frobenius` ADAPTERS registry is wrong for NTv3.**
 `ADAPTERS["ntv3"] = adapter_llama_swiglu` (flagged "verify") would raise: NTv3 has no
