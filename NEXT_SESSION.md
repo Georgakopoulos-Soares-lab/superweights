@@ -1,8 +1,8 @@
 # NEXT_SESSION.md
 
 **Session:** 2026-08-12/13 overnight queue #2.
-**Stopped at:** queue item 4 (five-model E2 run) — **launched and in flight when the session
-ended**. Items 1, 2, 3, 7a, 7b complete. Items 5, 6, 8 not started.
+**Stopped at:** queue item 4 — **four of five models complete; Evo1 still running.**
+Items 1, 2, 3, 5 (partial), 7a, 7b complete. Items 6, 7c, 8 not started.
 
 ---
 
@@ -36,10 +36,14 @@ deliberately left unfilled: writing the hash into the file changes the file's ha
 
 ## 2. What is in flight / not done
 
-- **Item 4 — five-model run: STARTED, INCOMPLETE.** Four non-Evo1 models were launched
-  sequentially in the background; only GENERator EUK had begun (still loading checkpoint
-  shards) when the session ended. Evo1 was never launched. **Assume nothing finished.**
-- **Item 5 — E2 RESULTS.md: not written.**
+- **Item 4 — four of five models COMPLETE** under the locked protocol: GENERator EUK,
+  GENERator PROK, DNABERT-2 (eager), NTv3. Both doses, 0 under-powered layers, all noise
+  floors exactly 0.0, provenance stamped. **Evo1 was launched and was still loading its
+  7B fp32 checkpoint when the session ended** — check `logs/e2_evo1_noise.log` and
+  `logs/e2_run_evo1.log`; both were 0 bytes / absent at stop time.
+- **Item 5 — RESULTS.md written** for the four completed models
+  (`paper-salvage/experiments/E2_evo1_broadcast/RESULTS.md`). §E and §F are placeholders
+  awaiting Evo1; **no prereg branch is assigned.**
 - **Item 6 — canonical E4 cross-model table: not written.**
 - **Item 8 — provenance backfill into `results/keep/`: not started.**
 - Item 7c (typo sweep) not done.
@@ -101,12 +105,13 @@ generator_prokaryote,dnabert2,ntv3}.json`. DNABERT-2's is the **eager** one. Evo
 | Claim | Status now |
 |---|---|
 | C-001 | **on hold** — PROK half has no reproducible support; must not be migrated |
+| C-012, C-013 | **CONFIRMED** under the locked protocol |
 | C-003 | established, confirmed by E4 |
 | C-004, C-005 | established (E1 retrospective, previous session) |
 | C-014 | **RETIRED as X-006.** Never resurrect |
-| C-015 | unsupported pending re-run |
+| C-015 | **restored: established** (N-006's rule fired — see N-011) |
 | C-032 | supported |
-| X-003 | **LIVE** — do not treat "C is not necessary for criticality" as settled |
+| X-003 | **STAYS RETIRED** — N-006's pre-committed rule fired: re-measured DNABERT-2 C is still ≈ 0 (peak +0.0625, ends −0.0221). See N-011. Its falsification never depended on the retracted KL |
 | N-009 | resolved-as-blocker (see below) · N-010 **fixed** |
 
 ## 5. Unresolved scientific decisions — yours
@@ -122,6 +127,19 @@ generator_prokaryote,dnabert2,ntv3}.json`. DNABERT-2's is the **eager** one. Evo
    real 2026 paper". It is also uncited in the body.
 3. **Figure 2 A–D**: inputs all exist; whether to render EUK-only, or wait on N-009, is
    authorial.
+
+### Also worth your decision
+
+- **matched-norm arm is empty for GENERator EUK and DNABERT-2** — 0 rows fall within ±10%
+  of the SW row's ‖W_down[k,:]‖ (EUK 0/3072 at norm 1.4260e+01; DNABERT-2 0/768 at
+  5.1931e+00). PROK has 3,063. The band was **not** widened; that would be tuning a locked
+  protocol. Whether an empty arm is acceptable, or the definition needs revisiting for a
+  future protocol version, is yours.
+- **matched-norm failed for NTv3**: the impulse harness's `_sw_output_matrix` can't find
+  NTv3's down-projection (same defect class as N-010, now fixable via the shared
+  `ADAPTERS["ntv3"]`). Not repaired and NTv3 not re-run, because NTv3 has no downstream
+  layers so the arm yields no T or C regardless.
+- **NTv3 T and C are undefined** — its SW layer is 11 of 12 (C-018, H ≈ 0.08). Not a null.
 
 ## 6. Environment traps (unchanged, still true)
 
