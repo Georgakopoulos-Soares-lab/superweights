@@ -1,131 +1,146 @@
 # PROJECT_STATUS.md
 
-**Last updated:** 2026-08-13
-**Current phase:** Phase 1 — E1 retrospective, E2 and E4 complete; E3 not started
-**Blocking on:** author interpretation only. E2 is locked, run and reported; the open items
-are scientific calls listed in `NEXT_SESSION.md` §5 (Evo1 Branch A vs B, N-009/C-001, the
-missing Evo1 secondary-dose KL, empty matched-norm arms).
+**Last updated:** 2026-08-13 (reconciliation pass, second session of the day)
+**Current phase:** Post-reconciliation. Evidence audit, ledger, decisions, and outline are
+reconciled against a new thesis (`DECISIONS.md` D-016). **No experiment was run this
+session.** The next phase is writing prose against R1 and R6 (the only two sections with
+enough evidence to draft) and/or closing the three flagged provenance conflicts — see
+`NEXT_SESSION.md`.
 
-_(The STEP 3d blocker recorded in `experiments/E2_evo1_broadcast/BLOCKED.md` was resolved by
-D-015; that file is retained as the record of the stop, not as current state.)_
+**Blocking on:** author review of three flagged provenance conflicts (N-013, N-014, N-015 in
+`CLAIMS_LEDGER.md`) and author decisions on the pre-existing open items below (Evo1 Branch A
+vs B, N-009/C-001, the missing Evo1 secondary-dose KL, empty matched-norm arms) — none of
+which changed this session.
 
-> ## 🔒 E2 PREREGISTRATION LOCKED — five-model run authorised
+> ## 🔒 E2 PREREGISTRATION LOCKED — unchanged, re-verified this session
 >
 > **sha256 `3d7515d0b7889f65038acd8479e85976248e7dbd0e5a701303de3a1b37dbfdc3`**
 > **UTC 2026-08-13T02:59:20** · git `695eb92` · ledger `docs/prereg/LOCKS.jsonl`
 >
-> `verify --all` → OK. The locked file is **deliberately not edited after locking** — the
-> Methods `<hash>`/`<date>` placeholders stay as written, because filling them in would
-> change the file's hash and break its own verification. LOCKS.jsonl is authoritative.
->
-> Pre-lock checks, all clean: no result under the new protocol had been generated
-> (`sw_broadcast_impulse.json` held only pre-D-011 fixed-ε entries); `verify --all` reported
-> "no locks recorded"; the diff was reviewed. The lock tool warned the working tree was
-> dirty — that is `paper/main.tex` and two untracked manuscript files which predate this
-> session and are not part of E2.
->
-> **STEP 3d blocker resolved by D-015:** T and C primary, KL secondary/descriptive against
-> each model's noise floor, no dose escalation, no metric substitution. Amendment made
-> after the planned pre-lock probe and before the lock.
->
-> DNABERT-2 on eager (D-014). C-014 retired (X-006), never to be resurrected. Null rule
-> binding: headroom ≥ 4× **and** noise floor below signal.
->
-> **Update after the run:** X-003 **stays retired** — N-006's pre-committed rule fired on the
-> re-measured DNABERT-2 C ≈ 0 (peak +0.0625, ends −0.0221). See N-011.
+> `python3 src/prereg_lock.py verify --all` → **OK**, re-checked at the start and end of this
+> session. The lock is untouched by this pass; no impulse/broadcast work was performed.
+
+---
+
+## What changed this session (2026-08-13, reconciliation pass)
+
+A downstream review asserted a substantially revised scientific state (new headline results:
+a DNABERT-2 redundant pair, a GENERator attention-sink phenotype, causal GC steering, an Evo1
+numerical-saturation diagnosis, an NTv3 truncation-bug retraction, a PROK contamination
+diagnosis). Every one of these was traced against the actual repository and **none has a
+supporting artifact** — three are additionally in direct conflict with artifacts that already
+exist. Full trace: `docs/NEW_DIRECTION_EVIDENCE_AUDIT.md`. Consequences, in order:
+
+1. `CLAIMS_LEDGER.md` reconciled: three claims (C-020, C-021's PROK half, C-029) downgraded
+   to a new `contested` status (real evidence exists, but a later instruction calls it into
+   question with no artifact of its own — flagged for the author, not resolved either way).
+   One new claim added (C-033, quantization scale-endpoint math, established directly from
+   code with no run). See `CLAIMS_LEDGER.md` N-012–N-015 for the reasoning behind each.
+2. `DECISIONS.md` D-016–D-023 appended (append-only; nothing rewritten). New thesis and
+   R1–R6 outline adopted; U_k demoted from headline to calibration signature; broadcast/T-C
+   work confirmed supplementary-only; Evo1, NTv3, and PROK's contested status recorded with
+   rationale; no-new-experiments instruction recorded.
+3. `PAPER_OUTLINE.md` rewritten (v2) around the new R1–R6 skeleton. R2–R5 are marked
+   **BLOCKED, no artifact** and must not be drafted until real evidence exists. Only R1
+   (reframed, U_k as calibration) and R6 (quantization granularity, C-033) can be drafted now.
+4. `paper-salvage/CLAUDE.md` rewritten: new thesis, new hard-constraint section listing every
+   claim that must not be written without a real artifact.
+5. `docs/MANUSCRIPT_MIGRATION_MAP.md` created: every major section/figure in `paper/main.tex`
+   (still the v6 manuscript, untouched by this pass) mapped to KEEP / REWRITE / MOVE TO
+   SUPPLEMENT / DELETE / BLOCKED BY PROVENANCE.
+6. `docs/PAPER_READINESS.md` created: sufficiency call for R1–R6. Verdict on whether any
+   further experiment is justified before writing — see that file; short answer is no.
+7. No provenance migration into `results/keep/` this session — no new claim met the
+   established-with-a-real-evidence-path bar except C-033, which is a code fact, not a
+   results artifact, so there is nothing to copy into `results/keep/` for it.
+
+**Nothing about the pre-2026-08-13 state changed except the four ledger-status edits above.**
+E1/E2/E4 results, the prereg lock, and every previously-established claim are untouched.
 
 ---
 
 ## One-paragraph state of the project
 
-v15 of the manuscript is not submittable. The problem is framing and internal consistency,
-not absence of results. The restructure keeps the closed-form ‖U_k‖_F predictor as the
-lead methodological contribution, promotes the previously-unwritten broadcast/impulse
-experiment to a central section, demotes roughly half of v15 to supplement, and adds three
-blocking experiments. See `PAPER_OUTLINE.md` for the frozen skeleton.
+The manuscript (v6, `paper/main.tex`) is written around a thesis (`‖U_k‖_F` as headline
+predictor) this project has now retired. It has not been rewritten to match the new thesis —
+this pass produced the audit, ledger, decisions, outline, and migration map that a writing
+session needs, but performed no prose rewrite itself (out of scope; see
+`docs/MANUSCRIPT_MIGRATION_MAP.md` Task note). Two of six new-outline sections (R1, R6) have
+enough real evidence to draft; four (R2–R5) do not and must not be drafted until their
+artifacts exist. See `PAPER_OUTLINE.md` for the frozen v2 skeleton.
 
 ## Phase board
 
 | Phase | Doc | State |
 |---|---|---|
-| 0 — Triage | `PHASE_0_TRIAGE.md` | in progress |
-| 1 — Blocking experiments | `PHASE_1_BLOCKING.md` | E1 retrospective, E2, E4 done; E1 prospective and E3 not started |
-| 2 — Writing (Evo1-independent) | `PHASE_2_WRITING.md` | not started |
-| 3 — Assembly & submission | `PHASE_3_ASSEMBLY.md` | not started |
+| 0 — Triage (v1) | `PHASE_0_TRIAGE.md` | historical; superseded by the 2026-08-13 reconciliation for framing purposes, but its mechanical items (figure JSONs, ref [11]) are still open and unaffected |
+| 1 — Blocking experiments (v1) | `PHASE_1_BLOCKING.md` | E1 retrospective, E2, E4 done; E1 prospective is **no longer required** (D-017); E3 not started and not blocking under the new outline (R5 is simply not drafted without it) |
+| Reconciliation (this session) | `docs/NEW_DIRECTION_EVIDENCE_AUDIT.md`, `docs/MANUSCRIPT_MIGRATION_MAP.md`, `docs/PAPER_READINESS.md` | **done** |
+| Writing (v2, next) | not yet created | R1 and R6 draftable now; R2–R5 blocked on evidence |
 
-Phases 1 and 2 run **in parallel**. R1, R2, R4, R6, R7 do not depend on the Evo1 result.
+## Tier-0 experiments (v1 framing, retained for historical accuracy — no longer the active
+Tier-0 list)
 
-## Blocking experiments (Tier 0)
+| ID | Experiment | Status | Prereg |
+|---|---|---|---|
+| E1 | NLP cold-weight validation (row + scalar) + prospective lock | retrospective DONE (3/3 both levels); prospective **retired as a requirement**, D-017 | `prereg/PREREG_nlp_prospective.md` |
+| E2 | Evo1 standardized broadcast | LOCKED, run, reported; results supplementary-only under the new outline (D-018) | `prereg/PREREG_evo1_broadcast.md` v2, locked |
+| E3 | Bidirectional steering w/ degradation controls | not started; not run this session; R5 stays BLOCKED without it | `prereg/PREREG_steering.md` (unlocked) |
+| E4 | c_{k,i} granularity decomposition | DONE — 5/5 models | free alongside E1 |
 
-| ID | Experiment | Status | Owner | Prereg |
-|---|---|---|---|---|
-| E1 | NLP cold-weight validation (row + scalar) + prospective lock | **retrospective DONE (3/3 both levels)**; prospective not started | | `prereg/PREREG_nlp_prospective.md` |
-| E2 | Evo1 standardized broadcast | **LOCKED — run authorised** | | `prereg/PREREG_evo1_broadcast.md` v2, **locked `3d7515d0b788…`** |
-| E3 | Bidirectional steering w/ degradation controls | not started | | `prereg/PREREG_steering.md` |
-| E4 | c_{k,i} granularity decomposition, all genomic gated FFNs | **DONE — 5/5 models** | | free alongside E1 |
+**No Tier-0 list is active for the next session.** Do not treat E3, an Evo1 secondary dose, a
+PROK layer search, or an NTv3 retrain as queued — see `NEXT_SESSION.md`.
 
-**Stop rule:** finish E1–E4, then re-assess before starting anything else.
+## Open gaps (unchanged from before this session, still open)
 
-## E2 status detail
+- Phase 0 §0.2 migration: `results/keep/` has E1/E2/E4 batches (Phase 0 backfill, prior
+  session) plus nothing new from this session (see item 7 above).
+- Prereg v1 text is not recoverable from git (unchanged, historical).
 
-**v1 protocol is void.** Two defects, one fixed:
+## Submission blockers (independent of science, unchanged this session — none of these were
+touched)
 
-1. *Fixed (D-012).* The harness forced `torch.autocast(float16)` for Evo1. fp16 cannot hold
-   Evo1's layer-10→13 residual excursion; the run returned `KL_sw = nan` at every layer.
-   Now casts everything except `poles`/`residues` to bf16. Committed separately (`0cbca69`).
-2. *Not fixed by (1) — motivated D-011.* After the bf16 fix the run returned exactly `0.0`
-   at every downstream layer (12–31) for the SW row **and** for the random-coordinate
-   control. Fixed ε = 1.0 is below the bf16 representable increment at Evo1's residual
-   scale. Instrument null, not a finding about Evo1.
-
-**STEP 2 gate: PASSED (2026-08-12).** Layer-20 hidden states differ across inputs — 99.6%
-of the 504 × 4,096 coordinates, max |Δ| = 4.4e8. The output is *not* input-independent, so
-the trace is sound and the manuscript's existing residual-attribution numbers stand.
-Evidence: `results/evo1_input_sensitivity_gate.json`, `results/evo1_layer_freeze_check.json`,
-`logs/evo1_gate.log`, `logs/evo1_layer_freeze.log`.
-
-The reported "bit-for-bit identical from layer 13" is a property of a *summary statistic*,
-not of the hidden state. No layer is bitwise identical to any other. What is real is a
-**collapse in relative change**: after the L12→L13 magnitude explosion (max |h| → 1.29e9),
-consecutive-layer change falls to ~1e-6 of the residual magnitude, and blocks 21–31 alter
-< 0.2% of coordinates.
-
-**Open risk carried into STEP 3 (flagged, not acted on).** α = 0.01 gives ε ≈ 3.3e3 at the
-L11 injection layer, above the bf16 increment there (≈2.0e3). But downstream of the L13
-explosion the increment is ≈3.3e4 — 10× larger than the injected ε. Unless the explosion
-amplifies the perturbation, the assay may return flat a second time. The prereg already
-pre-commits to reporting that outcome as residual lack of dynamic range rather than as a
-null about Evo1 (§Control requirement, Branch C). α is **not** to be tuned to avoid it.
-
-## Open gaps
-
-- **Phase 0 §0.2 migration not done.** `results/keep/` now exists but is empty. The
-  provenance discipline starts with the E2 re-run; the pre-existing artifacts cited in
-  `docs/CLAIMS_LEDGER.md` have not been copied in with `PROVENANCE.md` files, so several
-  ledger rows still cite paths that live only in the old tree. Backfill is Phase 2 work.
-- **Prereg v1 text is not recoverable from git.** See `docs/prereg/PREREG_evo1_broadcast.md`
-  §v1 provenance. v1 was untracked when it was replaced, so no commit ever contained it.
-
-## Submission blockers (independent of science)
-
-- [ ] Figure 2 panels A–D — **source JSONs all located**; render blocked on N-009 (PROK panel would come from the unreproducible artifact). Caption's "pending GENERator JSONs" is out of date but was NOT edited, since the panels are still not rendered. See `docs/REFERENCE_AUDIT.md`
-- [ ] Abstract/Results contradiction on pruning tolerance ("shadow redundancy")
-- [ ] "Eight models" oversell vs. actual coverage asymmetry
-- [ ] NTv3 post-hoc MCC metric choice
-- [ ] Verify ref [11] Sun et al. arXiv ID — **audited, needs external lookup**, see `docs/REFERENCE_AUDIT.md`
-- [x] Typo sweep — `extremelly` → `extremely` fixed in `paper/main.tex:111` (2026-08-13). **Note:** that sentence still asserts retired claim X-001 (SW-neighbourhood pruning tolerance); left as-is because rewriting it is scientific, and it is already tracked as blocker B2.
+- [ ] Figure 2 panels A–D — source JSONs located; render blocked on N-009 (PROK panel would
+  come from the unreproducible artifact). See `docs/REFERENCE_AUDIT.md`.
+- [ ] Abstract/Results still assert the retired "shadow redundancy" claim verbatim
+  (`paper/main.tex:111-113`) — flagged again in `docs/MANUSCRIPT_MIGRATION_MAP.md`, not fixed
+  this session (no manuscript prose was rewritten).
+- [ ] "Eight models" oversell language is still present in `paper/main.tex` (abstract line 76,
+  intro line 140/171/176, Figure 1 caption line 238) — flagged in the migration map.
+- [ ] NTv3 post-hoc MCC metric choice (unchanged) — now compounded by C-029's `contested`
+  status (N-014); both need author attention together.
+- [ ] Verify ref [11] Sun et al. arXiv ID — still flagged, needs external lookup, not
+  resolved this session (`docs/REFERENCE_AUDIT.md`).
+- [x] Typo sweep (prior session, unchanged).
 
 ## Open questions
 
-1. Does T predict criticality? — **E2 measured; the relation is NOT assigned.** Branch A vs B is an open author call.
-2. Is the genomic causal object a scalar, a row, or an ensemble? — **E4 measured**; see
-   `experiments/E4_granularity/CANONICAL_TABLE.md`. Interpretation not drawn.
-3. Does the SW track the raw corpus prior or deviation from a Markov expectation? —
-   conditional, only if R4's interpretation stays unclear after E3.
+### Pre-existing (unchanged this session)
+
+1. Does T predict criticality? — E2 measured; Branch A vs. B is an open author call, now
+   explicitly **not to be decided in a writing-focused session either** (D-018) unless a
+   future instruction reopens it.
+2. Is the genomic causal object a scalar, a row, or an ensemble? — E4 measured
+   (`experiments/E4_granularity/CANONICAL_TABLE.md`); DNABERT-2's real, established ensemble
+   answer (C-027/C-028) stands; whether a *pair* sub-structure exists within it is now an
+   explicitly open, unevidenced question (R2/R3, blocked).
+3. Does the SW track raw corpus prior or deviation from a Markov expectation? — conditional,
+   only if R4 (old) is ever revived; not applicable to the current R1–R6 outline as drafted.
+
+### New this session
+
+4. **N-013/N-014/N-015** — three claims (`contested`) where a later instruction and this
+   repository's own evidence directly disagree. Not resolved by this pass. Each needs either
+   (a) the missing artifacts located/added, or (b) an explicit author decision to retract the
+   existing claim on the strength of the instruction alone, logged as a new DECISIONS.md
+   entry.
+5. Whether R2–R5 are ever written depends entirely on whether their underlying experiments
+   get run in a future, explicitly-instructed session. This pass does not queue them.
 
 ## Session log
 
-Append one line per working session: date, what changed, what's next.
+Historical entries (through 2026-08-13, first session of the day) are preserved verbatim
+below, unchanged.
 
 ```
 YYYY-MM-DD  |  scaffold created; outline frozen  |  next: run PHASE_0 inventory
@@ -195,4 +210,16 @@ YYYY-MM-DD  |  scaffold created; outline frozen  |  next: run PHASE_0 inventory
             |  toolchain on this node. 8: 5 established claims migrated to results/keep/
             |  with PROVENANCE.md; 12 logged in UNMIGRATED.md (empty evidence paths).
             |  QUEUE COMPLETE. Remaining work is author judgment -- see NEXT_SESSION.md 5.
+2026-08-13  |  RECONCILIATION PASS (second session of the day). A downstream review handed
+            |  down six "new headline results" and six "rejected claims" against a claimed
+            |  new scientific state. Audited every one against actual repo artifacts
+            |  (docs/NEW_DIRECTION_EVIDENCE_AUDIT.md): none of the six new headline results
+            |  has any supporting artifact; three (Evo1 2^24, NTv3 p=0.48, PROK contamination)
+            |  directly conflict with existing measured evidence. No experiment run. Ledger
+            |  reconciled (3 claims -> contested, 1 new claim C-033 from direct code
+            |  inspection); DECISIONS D-016-D-023 appended; PAPER_OUTLINE.md rewritten to
+            |  v2 (R1-R6, U_k demoted, R2-R5 marked BLOCKED pending evidence, R6 draftable
+            |  now); CLAUDE.md rewritten; MANUSCRIPT_MIGRATION_MAP.md and PAPER_READINESS.md
+            |  created. Prereg lock re-verified OK, untouched.
+            |  next: see NEXT_SESSION.md -- writing R1/R6, or resolving N-013/014/015.
 ```

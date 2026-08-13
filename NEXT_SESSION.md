@@ -1,140 +1,143 @@
 # NEXT_SESSION.md
 
-**Session:** 2026-08-13 overnight queue #3.
-**Status: the queue is finished.** Items 6, 7c, 8 and 9 complete. Nothing is mid-flight and
-the tree is clean. E3 and E5 were not started, as instructed.
+**Session:** 2026-08-13, reconciliation pass (second session of the day).
+**Status: this is a writing/consolidation handoff, not an experiment queue.** No model was
+loaded, no GPU job was launched, no script was run this session. Everything below is either
+"write prose against evidence that already exists" or "close a provenance gap by finding or
+producing the missing artifact" — not "run a new analysis."
 
 ---
 
-## 1. Completed this session
+## 1. What happened this session
 
-| Item | Outcome | Commit |
-|---|---|---|
-| 6 — canonical E4 table | Built from stored artifacts only; PROK marked CONTESTED | `0bc57ee` |
-| 7c — mechanical cleanup | Typo, precision disclosure, stale state; **build could not run** | `e20d12d` |
-| 8 — provenance backfill | 5 established claims migrated, 12 logged unmigrated | `25606c6` + fixup |
-| 9 — this handoff | — | (this commit) |
+A downstream review asserted a substantially revised scientific state (six new headline
+results, six claim retractions). Every one of the six new headline results was traced against
+the actual repository and **none has a supporting artifact** — three (Evo1's "2^24
+saturation," NTv3's "p≈0.48 retrain," PROK's "eukaryotic-probe contamination") are additionally
+in direct conflict with artifacts that already exist. Full trace:
+`paper-salvage/docs/NEW_DIRECTION_EVIDENCE_AUDIT.md`.
 
-Earlier in the campaign: `d7fb27f` (E2 blocked at 3d), `a157686` (E1 retrospective),
-`7c26a0a` (E4 raw), `16e80f6` (D-015), `b9e3ab1` (N-009), `3ca8bb6` (N-010),
-`695eb92`/`128b4ee` (prereg amended + **locked**), `00cedd3`/`ee746de` (E2 five-model run),
-`1098ca9` (claim statuses), `791813e` (ref [11] + Figure 2 audit).
+Consequences, all mechanical/documentary, no science performed:
+
+- `paper-salvage/docs/CLAIMS_LEDGER.md`: 3 claims downgraded to a new `contested` status
+  (C-020, C-021 PROK half, C-029); 1 new claim added from direct code inspection (C-033,
+  quantization scale-endpoint math — no run needed, no run performed).
+- `paper-salvage/docs/DECISIONS.md`: D-016–D-023 appended (append-only).
+- `paper-salvage/docs/PAPER_OUTLINE.md`: rewritten to v2 (R1–R6). R1 and R6 are draftable
+  now; R2–R5 are marked **BLOCKED, no artifact** and must not be drafted.
+- `paper-salvage/CLAUDE.md`: rewritten with an explicit list of claims that must not be
+  written without a real artifact.
+- `paper-salvage/docs/MANUSCRIPT_MIGRATION_MAP.md`: new. Maps every major section/figure of
+  `paper/main.tex` (still the old v6 manuscript, **not rewritten this session**) to KEEP /
+  REWRITE / MOVE TO SUPPLEMENT / DELETE / BLOCKED BY PROVENANCE.
+- `paper-salvage/docs/PAPER_READINESS.md`: new. Section-by-section sufficiency call for
+  R1–R6, and an explicit verdict on whether any further experiment is justified before
+  writing (short answer: no).
+- `paper-salvage/docs/PROJECT_STATUS.md`: updated with this session's log entry (history
+  preserved, nothing rewritten).
 
 ## 2. Blockers
 
-**None blocking further mechanical work.** Everything remaining is a scientific judgment
-(§5). Two things were attempted and could not be completed:
+**None mechanical.** Everything remaining is either (a) prose writing against evidence that
+already exists, or (b) a provenance question only the author (or a future session with new
+information) can resolve:
 
-- **Manuscript build not run.** No LaTeX toolchain on this node — `pdflatex`, `xelatex`,
-  `lualatex`, `latexmk`, `tectonic` all absent, no Makefile in `paper/`. The edits are
-  verified only by brace balance (379/379), one `\begin{document}`/`\end{document}`, and
-  closed `\texttt{}` groups. **`paper/main.tex` has not been compiled since editing.**
-- **Evo1 secondary-dose KL** remains unmeasured (CUDA OOM). Not retried, per instruction.
+- **N-013 (`CLAIMS_LEDGER.md`)** — PROK SAE's fp16-clamp mechanism is real and disclosable;
+  the "98% variance destroyed / pathological features" characterization is not measured
+  anywhere and conflicts with the manuscript's own recorded SAE health diagnostics (97.4%
+  features active). Needs either a variance measurement from the stored SAE shards, or the
+  claim dropped in favor of the disclosed clamp mechanism alone.
+- **N-014** — C-029 (NTv3 splice replication, p=0.008, real 5-seed controls) directly
+  contradicts an instruction to retire it in favor of a truncation-bug/p≈0.48 story with zero
+  local artifact. Needs either the truncation-bug-fix and retrained-checkpoint artifacts
+  located/added, or an explicit author decision to retract C-029 anyway, logged as a new
+  DECISIONS.md entry.
+- **N-015** — C-020/C-021 (PROK sign-convention and shuffle claims) are `contested` because
+  they are keyed to the same artifact N-009 already found non-reproducible (C-001, on hold
+  since 2026-08-12) — not because a "wrong probe" mechanism was verified (it wasn't). Needs
+  either the probe-provenance check and an L8/r260 detection-sweep output located/added, or
+  an explicit author decision.
 
-## 3. Canonical report paths
+## 3. Canonical report paths (this session)
 
 | What | Path |
 |---|---|
-| **E2 results** | `paper-salvage/experiments/E2_evo1_broadcast/RESULTS.md` |
-| E2 instrument validation | `paper-salvage/experiments/E2_evo1_broadcast/INSTRUMENT_VALIDATION.md` |
-| E2 STEP-2 gate | `paper-salvage/experiments/E2_evo1_broadcast/GATE_RESULTS.md` |
-| E2 STEP-3d stop record | `paper-salvage/experiments/E2_evo1_broadcast/BLOCKED.md` (historical) |
-| **E4 canonical table** | `paper-salvage/experiments/E4_granularity/CANONICAL_TABLE.md` |
-| E4 N-009 resolution | `paper-salvage/experiments/E4_granularity/N009_RESOLUTION.md` |
-| E1 results | `paper-salvage/experiments/E1_nlp_validation/RESULTS.md` |
-| Cleanup log | `paper-salvage/docs/CLEANUP_LOG.md` |
-| Reference / Figure 2 audit | `paper-salvage/docs/REFERENCE_AUDIT.md` |
-| Environment for Methods | `paper-salvage/docs/ENVIRONMENT.md` |
+| **New-direction evidence audit** | `paper-salvage/docs/NEW_DIRECTION_EVIDENCE_AUDIT.md` |
+| **Manuscript migration map** | `paper-salvage/docs/MANUSCRIPT_MIGRATION_MAP.md` |
+| **Paper readiness / R1–R6 sufficiency** | `paper-salvage/docs/PAPER_READINESS.md` |
+| Reconciled outline (v2) | `paper-salvage/docs/PAPER_OUTLINE.md` |
+| Reconciled operating rules | `paper-salvage/CLAUDE.md` |
+| Superseding decisions | `paper-salvage/docs/DECISIONS.md` (D-016–D-023) |
+| Ledger reconciliation notes | `paper-salvage/docs/CLAIMS_LEDGER.md` (N-012–N-015) |
 
-## 4. Migrated provenance artifacts
+Everything from the prior session (E1/E2/E4 results, prereg lock) is unchanged — see that
+session's paths still listed in `paper-salvage/docs/PROJECT_STATUS.md`.
 
-Under `paper-salvage/results/keep/` (copied, not moved; each with `PROVENANCE.md`):
+## 4. What this session did NOT do (deliberately, per its own instructions)
 
-| Batch | Claims | Class |
-|---|---|---|
-| `E1_nlp_retrospective/` | C-004, C-005 | derived |
-| `E2_broadcast_locked/` | C-012, C-013, C-015 | raw (+ `LOCKS.jsonl`) |
-| `E4_granularity/` | C-003 | derived |
+- Did not run E3 (steering), retrain NTv3, re-run Evo1's secondary dose, search PROK layers
+  for L8/r260, redo matched-norm controls, start the E1 prospective model, or rerun C-010 on
+  eager.
+- Did not rewrite `paper/main.tex`. It still asserts the old (retired) thesis, the "eight
+  models" language, and the "shadow redundancy" claim verbatim — all flagged in
+  `MANUSCRIPT_MIGRATION_MAP.md`, none fixed. **The manuscript prose is stale relative to
+  `PAPER_OUTLINE.md` v2 and must not be cited as reflecting the current state.**
+- Did not invent numbers, controls, or mechanisms for any of the six new headline results.
+  Where no artifact existed, the claim is documented as missing, not filled in.
 
-**`results/keep/UNMIGRATED.md`** lists the 12 established claims left behind — all have an
-**empty evidence path** in the ledger, so picking a candidate file would be a guess at the
-mapping, which is precisely how N-009 arose. C-001 and C-014/X-006 are excluded by rule.
+## 5. What a future session should actually do — pick one lane, do not mix them
 
-Note: `paper-salvage/results/` matches the repo's `results/` ignore pattern, so everything
-there is tracked via `git add -f`.
+**Lane A — write.** R1 and R6 have enough real, established evidence to draft now
+(`PAPER_READINESS.md` confirms this). Draft those two sections of a new manuscript (or a new
+draft file — do not overwrite `paper/main.tex` without a plan for the rest of it) directly
+against `CLAIMS_LEDGER.md` and `PAPER_OUTLINE.md` v2. This does not require any new
+experiment.
 
-## 5. Unresolved scientific decisions — all yours, none decided
+**Lane B — close one provenance gap.** Pick exactly one of N-013/N-014/N-015, and either (a)
+locate the missing artifact (it may exist outside this repository, e.g. on another node or in
+another session's untracked scratch space, and simply needs to be copied in with provenance),
+or (b) run the minimum experiment needed to produce it, under a full preregistration if it's
+a confirmatory claim, with an explicit go-ahead from the author first. Do not do this for more
+than one item without stopping to reassess — this project has scattered before.
 
-1. **Evo1 Branch A vs B**, and how to read its T relative to controls. Branch C and D are
-   excluded (headroom 26× at L13+, 0/20 under-powered, noise floor 0.0). Peak T: EUK
-   3.79e-02, **Evo1 1.20e-01**, DNABERT-2 8.01e-01, PROK 6.18e+00, NTv3 undefined. Evo1's SW
-   arm (1.1997e-01) sits within ~9% of all three of its control arms (1.10–1.17e-01).
-2. **Whether T has any relationship to criticality** — C-017 remains the thesis slot,
-   unassigned.
-3. **C-001 / PROK rank discrepancy (N-009).** Same layer (2), same row, same checkpoint
-   *name*; exact and decomposed formulas agree (rank 1277 / 1289) while the stored artifact
-   says rank 1. EUK reproduces exactly. C-001 on hold; Figure 2's PROK panel blocked on it.
-4. **Evo1's missing secondary-dose KL** — accept as unmeasured, or add a per-dose flag and
-   run the secondary alone in a fresh process.
-5. **Empty matched-norm arms** (EUK 0/3,072, DNABERT-2 0/768 within ±10%) — whether an empty
-   arm is acceptable or the definition needs revisiting in a future protocol version.
-6. **Whether/when to re-run C-010 on eager** (Phase 1b; it was measured through the Triton
-   path at inference).
-7. **E1 prospective model choice** — needs your pick plus a lock. C-006 stays `pending`.
-8. **E3 steering prereg and predictions** — not started; needs your predictions and a lock.
+**Do not** start a new Tier-0 experiment list, and do not treat R2–R5 as implicitly queued —
+they stay BLOCKED until a future session is explicitly told to produce their evidence.
 
-Also open, from the audit: **ref [11]** needs an external arXiv lookup (`2603.05498` vs
-`2402.17762`; it is additionally uncited in the body), and **Figure 2 A–D** rendering is an
-authorial call gated on N-009.
+## 6. Unresolved scientific decisions carried over from the prior session (still open, still
+not decided by this or any pass since)
 
-## 6. Current claim statuses
-
-| Claim | Status |
-|---|---|
-| C-001 | **on hold** — do not migrate, do not render its Figure 2 panel |
-| C-003, C-004, C-005 | established |
-| C-012, C-013 | **established, confirmed under the locked protocol** |
-| C-014 | **RETIRED as X-006** — never resurrect |
-| C-015 | **restored: established** (N-006's rule fired → N-011) |
-| C-016 | supported — Evo1 routing regime measured |
-| C-017 | pending — thesis slot, **branch unassigned** |
-| C-032 | supported — canonical table |
-| X-003 | **stays retired** — re-measured DNABERT-2 C ≈ 0 |
-| N-009 | open (scientific) · N-010 fixed · N-011 applied |
+1. **Evo1 Branch A vs B** — not to be decided in a writing-focused session either (D-018)
+   unless a future instruction reopens it. Peak T: EUK 3.79e-02, Evo1 1.20e-01, DNABERT-2
+   8.01e-01, PROK 6.18e+00.
+2. **Whether T has any relationship to criticality** — C-017, `pending`, explicitly not a
+   headline-thesis candidate under the new outline.
+3. **C-001 / PROK rank discrepancy (N-009)** — unchanged, still on hold.
+4. **Evo1's missing secondary-dose KL** — unchanged, unmeasured, not to be retried without
+   instruction.
+5. **Empty matched-norm arms** — unchanged.
+6. **Whether/when to re-run C-010 on eager** — unchanged, not started.
+7. Ref [11] Sun et al. arXiv ID — still needs external lookup (`paper-salvage/docs/REFERENCE_AUDIT.md`).
 
 ## 7. Exact next commands
-
-Nothing is required to resume — the queue is done. Useful entry points:
 
 ```bash
 cd /work/11034/atzanakak/glm_super_weight/genomic-super-weights
 
-# verify the prereg lock still holds
-python3 paper-salvage/src/prereg_lock.py verify --all      # expect: OK
+# verify the prereg lock still holds (should print OK — nothing in this session touched it)
+python3 paper-salvage/src/prereg_lock.py verify --all
 
-# re-run the shared-library tests after any uk_frobenius change
+# re-run the shared-library tests if you touch uk_frobenius.py (untouched this session)
 ENV=/work/11034/atzanakak/work/11034/atzanakak/miniconda3/envs/grlm
 LD_LIBRARY_PATH=$ENV/lib PYTHONPATH=$PWD/paper-salvage/src \
   $ENV/bin/python -m pytest paper-salvage/src -q            # expect: 7 passed
-
-# regenerate the canonical E4 table (reads stored artifacts only, loads no model)
-python3 paper-salvage/experiments/E4_granularity/build_canonical_table.py
 ```
 
-**Prereg lock, for citation:**
-`3d7515d0b7889f65038acd8479e85976248e7dbd0e5a701303de3a1b37dbfdc3`,
-UTC `2026-08-13T02:59:20+00:00`, git `695eb92`. Do **not** edit the locked prereg — filling
-its `<hash>`/`<date>` placeholders changes its hash and breaks `verify`.
-
-## 8. Environment traps
+## 8. Environment traps (unchanged from prior session)
 
 - Container has **no `python`**, only `python3`.
-- Host `SSL_CERT_FILE` points outside the container; any `huggingface_hub` network call dies
-  in `ssl.create_default_context`. Use `env -u SSL_CERT_FILE -u REQUESTS_CA_BUNDLE`.
-- `grlm` needs `LD_LIBRARY_PATH=$ENV/lib` or PIL fails on `GLIBCXX_3.4.29`.
-- No `evo` conda env; the `.sbatch`/`nohup` launchers saying `conda activate evo` are stale.
-- GENERator 3B checkpoints take ~6 min to load; tqdm shard progress does not flush to a
-  redirected log, so a static log is **not** evidence of a hang — check `ps -o etime,time`.
-- Evo1 at fp32 nearly fills a 40 GB A100; a second dose in the same process OOMs.
+- Host `SSL_CERT_FILE` points outside the container; use `env -u SSL_CERT_FILE -u
+  REQUESTS_CA_BUNDLE` for any `huggingface_hub` network call.
+- `grlm` needs `LD_LIBRARY_PATH=$ENV/lib`.
+- No `evo` conda env; Evo1/StripedHyena work needs the `evo2.sif` Apptainer container.
 - `paper-salvage/results/` is gitignored via the `results/` pattern — use `git add -f`.
 - No LaTeX toolchain on this node.

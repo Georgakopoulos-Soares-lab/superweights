@@ -337,3 +337,226 @@ also flat for PROK.
 - The null rule is unchanged and still binding: no result is reported as a null unless
   headroom ≥ 4× at that layer **and** that model's noise floor is below the observed signal.
 - No manuscript thesis is drawn from this decision.
+
+---
+
+# New-direction reconciliation, 2026-08-13
+
+The decisions below were made in a single bounded reconciliation pass, triggered by a
+downstream review that asserted a substantially revised scientific state relative to the
+overnight-queue work above. That review's headline claims were traced against this
+repository's actual artifacts before any of D-016–D-025 was written; the trace is
+`docs/NEW_DIRECTION_EVIDENCE_AUDIT.md` and the corresponding ledger reconciliation is in
+`CLAIMS_LEDGER.md` (N-012–N-015). **No experiment was run to produce these decisions.** Where
+the review's claim had no local artifact, the decision below says so explicitly rather than
+adopting the claim.
+
+## D-016 — The v6 framing ("closed-form structural predictor" as the headline contribution)
+is retired; a new thesis and R1–R6 outline are adopted
+**Date:** 2026-08-13
+**Supersedes:** D-001, D-002, D-003 (in framing; their factual content is not disputed)
+
+**Decision:** The manuscript's organizing question moves from "here is a closed-form
+predictor of genomic super-weights" to **"what survives, and what fails, when the NLP
+single-super-weight concept is transferred to genomic foundation models?"** `‖U_k‖_F` moves
+from headline method to a calibration/confirmatory structural signature (see D-017). The
+outline in `PAPER_OUTLINE.md` is rewritten around six results (R1–R6); see that file for the
+frozen skeleton and `docs/MANUSCRIPT_MIGRATION_MAP.md` for how existing prose maps onto it.
+
+**Rationale.** `‖U_k‖_F` is a leaky, non-universal structural signature (DNABERT-2 already
+contains a row ranked 706/768 under this repo's own audited C-010), and the construction is
+substantially related to prior massive-activation/amplifier work (Sun et al. — see
+`docs/REFERENCE_AUDIT.md`, still unresolved as a citation, not newly resolved here). Leading
+a manuscript with it as *the* novel contribution overclaims relative to what the repo's own
+audited results support. The retrospective NLP validation (C-004, C-005: rank 1/4,096 row and
+scalar recovery, Llama/Mistral/OLMo) remains genuinely useful — as calibration evidence that
+the detection apparatus works, not as the paper's central claim.
+
+**Consequences:**
+- `PAPER_OUTLINE.md` rewritten; old R1–R7 skeleton retired (content preserved via the
+  migration map, not deleted).
+- Manuscript title/abstract in `paper/main.tex` need rewriting in a future session — this
+  pass does not rewrite manuscript prose (Task 5 is a migration map, not a rewrite).
+- `CLAUDE.md`'s frozen thesis line is superseded; see D-024 for its replacement.
+
+## D-017 — U_k/Frobenius is a confirmatory/calibration signature, not this paper's novel
+methodological contribution
+**Date:** 2026-08-13
+**Supersedes:** D-002 ("lead with the method")
+
+**Decision:** Retain the NLP retrospective validation (C-004, C-005) and the genomic
+cold-weight ranks (C-002, C-003, C-010) as supporting/calibration material within R1. Do not
+present `‖U_k‖_F` as a novel universal predictor anywhere in the manuscript.
+
+**Rationale:** see D-016. Additionally, the E1 **prospective** arm (predicting an unseen NLP
+model cold, then confirming) was never run or locked (`C-006` stays `pending`) and is not
+required to make this point — R1's job under the new framing is to establish where the
+transfer holds (three encoder/decoder gated-FFN architectures, cold weights) and where it
+already visibly strains (DNABERT-2 rank 706/768; Evo1 fires on a structural candidate that
+turns out non-functional), not to add a fourth confirmation.
+
+**Consequences:**
+- E1 prospective is **not** a blocking experiment for this manuscript. `PHASE_1_BLOCKING.md`
+  and `PROJECT_STATUS.md`'s Tier-0 table are updated accordingly (Task 4).
+- C-006 remains `pending` in the ledger, untouched, with no expectation it is filled before
+  submission.
+
+## D-018 — Broadcast/impulse (T/C/KL) work is supplementary; Evo1 Branch A/B and the
+T-criticality thesis are not adjudicated in this pass
+**Date:** 2026-08-13
+**Supersedes:** D-004 (in part — the empirical finding "C is not necessary for criticality"
+is retained), D-005 (the R3-thesis-slot mechanism is retired, not filled)
+
+**Decision:** The E2 broadcast/impulse results (C-012, C-013, C-015, C-016) remain valid,
+locked-protocol measurements and may appear as supplementary/methodological material or
+model-specific descriptive evidence. They do **not** become a main-text section, and no
+attempt is made in this pass to assign Evo1's T value to Branch A or B, or to decide whether
+T predicts criticality (C-017 stays `pending`, explicitly not eligible as a headline thesis —
+see the C-017 ledger note).
+
+**Rationale:** the new central thesis (D-016) does not require a resolved T-criticality
+claim, and forcing that adjudication now would be exactly the kind of "invent a new analysis
+to rescue an old framing" the current pass is instructed not to do. The E2 results are real
+and stay in the repository at full strength (C-012/013/015/016 strengths are unchanged) —
+only their manuscript position changes.
+
+**Consequences:**
+- `PAPER_OUTLINE.md`'s R3 (old) has no direct successor section; its content is available for
+  supplement or as local support inside another section if a specific new-headline claim
+  needs it (none currently does — see `docs/MANUSCRIPT_MIGRATION_MAP.md`).
+- Branch A vs. B remains an open, explicitly deferred author call, now with no manuscript
+  deadline attached to it.
+
+## D-019 — Evo1: the existing structural/systemic account stands; no numerical-saturation
+"false positive" narrative is adopted without evidence
+**Date:** 2026-08-13
+
+**Decision:** Evo1 continues to be described exactly as the existing, audited claims already
+describe it: structurally concentrated by `‖U_k‖_F` (top 1.2–4.1%) but non-load-bearing under
+ablation (C-009, ΔPPL=0.0%), attributed to the StripedHyena mixer redistributing the
+candidate channel rather than preserving it (`paper/main.tex:325-341`, already in the
+manuscript). A downstream review's more specific diagnosis — the SW value pinned exactly at
+2^24, invalidated by a failed "rescue" experiment — is **not adopted**: no artifact in this
+repository names 2^24 (16,777,216) at any point in Evo1's trace, the repo's own documented
+saturation points are quantitatively different (fp16 overflow at ~65,504, or a continued
+climb toward ~1.29×10⁹ under the corrected fp32/bf16 trace), "rescue" appears nowhere in
+connection with Evo1, and the "frozen residual" framing the new diagnosis would need was
+already re-examined and attributed to a summary-statistic artifact in this repo's own N-002,
+not a hard numeric ceiling.
+
+**Rationale:** adopting a specific, differently-reasoned mechanistic story with zero local
+support — and one that conflicts with an existing, already-corrected finding (N-002) — is
+exactly the "reinterpret failed experiments" and "invent new analyses to rescue old claims"
+behavior this pass is instructed against, just pointed at a different conclusion.
+
+**Consequences:**
+- `CLAIMS_LEDGER.md` C-009 is unchanged. No new claim row is added for the 2^24 saturation
+  story.
+- If the 2^24 diagnosis and rescue experiment are real work done outside this repository,
+  the artifacts need to be committed before either enters the manuscript.
+
+## D-020 — GENERator PROK: the C-001 hold is generalized to claims keyed to the same
+contested artifact; the eukaryotic-probe contamination diagnosis and the L8/r260 relocation
+are not adopted without evidence
+**Date:** 2026-08-13
+
+**Decision:** C-001 (PROK `‖U_k‖_F` rank at layer 2/row 1,927 — on hold since N-009, 2026-08-12,
+because the stored artifact does not reproduce at its own layer) is unchanged. C-020 (EUK/PROK
+r=±0.710 sign-convention claim) and C-021's PROK half (shuffle sensitivity) are downgraded from
+`established` to `contested` because they are keyed to the identical layer-2/row-1927
+artifact, not because a eukaryotic-probe contamination mechanism has been verified — it has
+not (see N-015). The proposed replacement SW location (≈L8/r260) is **not** adopted as a
+claim anywhere; no artifact names it.
+
+**Rationale:** this achieves the practical outcome the downstream review's guardrails
+require — the old PROK kingdom/sign/composition story is not presented as supported going
+forward — through a reason this repository can actually audit (N-009's reproducibility
+failure), rather than through an unaudited mechanism. It avoids both errors the current pass
+is instructed against: defending a now-doubted old claim, and fabricating support for its
+replacement.
+
+**Consequences:**
+- The PROK SAE result and the old kingdom-composition narrative are cut from main text (they
+  were already flagged for demotion in `CUT_LIST.md`); the disclosed reason is the SAE's fp16
+  clamp at ±60,000 against the PROK SW's own out_max of 506,014 (N-013), stated as a methods
+  caveat, not as a "98% variance destroyed" measured figure.
+- No layer search for an alternative PROK SW is performed in this or any pass unless
+  explicitly instructed in a future session (this would require a forward-pass sweep, which
+  is out of scope here).
+- Flagged for the author in `docs/NEW_DIRECTION_EVIDENCE_AUDIT.md` and `CLAIMS_LEDGER.md`
+  N-015.
+
+## D-021 — NTv3: C-029 is neither confirmed nor retired
+**Date:** 2026-08-13
+
+**Decision:** C-029 (NTv3 5-seed splice replication, p=0.008) moves from `supported` to
+`contested`. It is not presented as a confirmed positive replication in any new manuscript
+material. It is also not retired, deleted, or replaced with a p≈0.48 null, because no
+artifact in this repository supports the truncation-bug diagnosis or the retrained-checkpoint
+null offered for retiring it — the only NTv3 splice p-value that exists anywhere in the repo
+is C-029's own p=0.008, with real 5-seed controls.
+
+**Rationale:** the downstream review's guardrails forbid presenting NTv3 as a positive
+replication; this pass honors that without retracting a controlled result on zero evidence.
+This is a direct conflict between instruction and existing measured evidence and is
+deliberately left open rather than resolved by fiat.
+
+**Consequences:**
+- `PAPER_OUTLINE.md`/R2 (new) states DNABERT-2 as the currently-uncontested strong functional
+  encoder example; NTv3's splice result is not cited as corroborating evidence pending
+  resolution of N-014.
+- A future session should either locate the truncation-bug fix and retrained-checkpoint
+  artifacts, or explicitly decide (with the author) to retract C-029 on the strength of the
+  claim alone — this pass does neither.
+
+## D-022 — Compression/pruning narrative retired; quantization granularity (C-033) adopted
+as its replacement, scoped to per-row only
+**Date:** 2026-08-13
+**Supersedes:** the "shadow redundancy" framing wherever it still appears in manuscript prose
+(it was already retired at the claim level as X-001; this decision addresses the prose, which
+had not caught up — see `docs/MANUSCRIPT_MIGRATION_MAP.md`)
+
+**Decision:** R7 (old, "compression, one paragraph") is replaced by R6 (new): the finding
+that per-row RTN quantization already implemented in this repo (`scale = max|row| / maxval`)
+maps a row's max-magnitude element exactly to the quantizer endpoint by construction (C-033,
+new, established directly from code — no run needed), which is consistent with (not proven to
+cause) the existing C-031 null result that explicit SW exemption under INT4 makes no
+measurable difference. This is stated strictly for the per-row rule as implemented; no
+group-wise quantization scheme exists in this repo, and no "deliberately destructive regime"
+result exists beyond the standard INT4 condition C-031 already covers (a more aggressive INT2
+script exists but has no output artifact — see N-012/`NEW_DIRECTION_EVIDENCE_AUDIT.md` item 9).
+
+**Rationale:** this is the one new-direction item where a genuine, code-verifiable
+contribution is available without running anything, and it is a materially better R6 than the
+retired pruning-tolerance story (already contradicted by the project's own pruning sweep,
+X-001).
+
+**Consequences:**
+- `paper/main.tex`'s abstract line 111–113 ("The SW neighbourhood is extremely tolerant to
+  pruning and INT4 quantization... suggesting refined SW-aware compression schemes are
+  possible") still asserts the retired X-001 claim verbatim and must be rewritten in a future
+  writing session — flagged in `docs/MANUSCRIPT_MIGRATION_MAP.md`, not rewritten in this pass
+  (Task 5 is a map, not a rewrite).
+- The full pruning sweep (near-SW/far-SW/random) stays in supplement per `CUT_LIST.md`,
+  unchanged.
+
+## D-023 — No further experiments before writing; NEXT_SESSION.md becomes a consolidation
+handoff
+**Date:** 2026-08-13
+
+**Decision:** This pass is a bounded audit/reconciliation/documentation pass. No model was
+loaded, no GPU job was launched, no script was run. `NEXT_SESSION.md` is rewritten as a
+writing/consolidation handoff (Task 4), not an experiment queue. The next session's job is to
+either (a) write manuscript prose against the reconciled ledger and outline, or (b) resolve
+one of the explicitly flagged provenance conflicts (N-013, N-014, N-015) by locating or
+reproducing missing artifacts — not to start new analyses.
+
+**Rationale:** per the governing instruction for this pass, and because most of the
+"headline" results handed down for this reconciliation turned out to have no artifact — the
+highest-value next step is closing that gap or writing around it, not adding new open threads.
+
+**Consequences:**
+- `PROJECT_STATUS.md` and `NEXT_SESSION.md` updated (Task 4).
+- Any future session that wants to run E3 (steering), retrain NTv3, re-run Evo1's secondary
+  dose, search PROK layers, or investigate the 2^24 saturation claim needs its own explicit
+  instruction to do so — none of that is queued by this pass.

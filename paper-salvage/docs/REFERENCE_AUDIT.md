@@ -85,3 +85,37 @@ defensible — but splitting a four-panel figure is also an authorial decision.
 
 **Flagged for the author.** No panels rendered, no caption edited beyond leaving it as is.
 Resolve N-009 first; the plotting inputs are ready and waiting.
+
+---
+
+## Addendum, 2026-08-13 — reference check for the new-direction framing (Task 8, no broad
+literature search performed)
+
+Per `DECISIONS.md` D-016/D-017, checked whether the manuscript's bibliography already carries
+the specific citations the new framing needs. Repo-local sources only; nothing external was
+looked up.
+
+- **Yu et al. (super-weight paper)** — `arXiv:2411.07191`, already cited correctly and
+  extensively (`paper/main.tex:1077-1078`, and as the local full-text copy
+  `docs/superweight_paper.txt`). No issue.
+- **Sun et al. (massive activations / amplifier prior art)** — unresolved, exactly as
+  documented above (ref [11], `arXiv:2603.05498`, author-initial/title/year mismatch against
+  the one local candidate, never cited in the body). This is now more consequential than
+  before: D-017 explicitly reframes `‖U_k‖_F` as "substantially related to prior work by Sun
+  et al.," so this citation moving from "flagged, uncited, low-stakes" to "flagged, uncited,
+  load-bearing for the paper's own positioning claim" — **still not resolved by this pass**,
+  still needs the same external arXiv lookup (`2603.05498` vs. `2402.17762`) recommended
+  above. Do not guess.
+- **Attention-sink prior art (Xiao et al., StreamingLLM-type work)** — **not cited anywhere**
+  in `paper/main.tex`'s bibliography (`grep -n "Xiao\|attention sink\|StreamingLLM"` returns
+  zero hits in the manuscript; the only local occurrences of "attention sink" language are
+  inside the reproduced Yu et al. full text, `docs/superweight_paper.txt:790-794`, which cites
+  "Xiao et al., 2024" and "Son et al., 2024" for attention sinks and separately reports that
+  Yu et al. themselves found attention sinks persist even with super-weights removed — i.e.
+  Yu et al.'s own paper already establishes the SW/attention-sink dissociation the new
+  framing's guardrail relies on ("do not claim the SW causes the attention sink")). **Not
+  needed immediately**: R4 (the section that would need this citation) is currently
+  `BLOCKED, no artifact` per `PAPER_OUTLINE.md` v2 and is not being drafted this pass. If a
+  future session obtains real GENERator attention-pattern data and drafts R4, it will need to
+  add a proper citation for Xiao et al.'s original work — flagged here so it isn't forgotten,
+  not resolved now (would require an external lookup this pass is not authorized to guess at).

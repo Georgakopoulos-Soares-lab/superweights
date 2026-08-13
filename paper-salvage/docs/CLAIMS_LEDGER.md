@@ -9,7 +9,31 @@ evidence, controls partial) · `consistent-with` (association, no causal arrow) 
 `hypothesis` (stated as such in text) · `pending` (experiment not done) ·
 `pending-rerun` (evidence exists but was produced under a protocol that has since been
 superseded; the claim may well survive, but the number that will appear in the manuscript
-is not yet measured)
+is not yet measured) · `contested` (added 2026-08-13: the claim has real, controlled evidence
+in this repo, but a later instruction/review calls it into question and the reason offered
+for doing so has **no artifact of its own** in this repo — neither "still established" nor
+"retired" is warranted without author adjudication; see N-012–N-015)
+
+---
+
+## New-direction reconciliation pass, 2026-08-13
+
+A downstream review (outside this repository) asserted a substantially revised scientific
+state — a redundant-pair mechanism in DNABERT-2, a GENERator attention-sink phenotype, causal
+GC steering, an Evo1 numerical-saturation diagnosis, an NTv3 training-truncation bug, and a
+PROK eukaryotic-probe contamination diagnosis, among others. Every one of these was traced
+`claim → result → artifact → script` against the actual repository state (commit `6bf1601`
+plus untracked files; nothing postdates it — verified by `find -newermt`). Full trace:
+`docs/NEW_DIRECTION_EVIDENCE_AUDIT.md`. **None of the six items above has any supporting
+artifact in this repository**, and three are in direct numeric or logical conflict with
+artifacts that already exist. No claim below is added, upgraded, or silently deleted on the
+strength of that review alone — every change below either (a) reflects work this repository
+had already completed and locked before this pass (e.g. the KL≈0.31 retirement), (b) is a
+directly code-verifiable mathematical fact requiring no new run (the quantization
+scale-endpoint claim), or (c) downgrades a claim to `contested` where the review's guardrails
+forbid presenting it as supported going forward but no artifact justifies retiring it either
+— flagged for the author, not resolved by this pass. See `DECISIONS.md` for the accompanying
+superseding decisions and `docs/PAPER_READINESS.md` for the main-text-sufficiency call.
 
 ---
 
@@ -31,22 +55,23 @@ is not yet measured)
 | C-014 | R3 | _(retired — see X-006)_ | | | **RETIRED** | D-014 |
 | C-015 | R3 | C describes routing geometry, not criticality | C-012/13 + re-measured DNABERT-2 C | | **restored: established** | **N-006 rule fired — see N-011** |
 | C-016 | R3 | Evo1 routing regime: C = +0.9516 (L12) → +0.7044 sustained to L31; T 6.76e-03 → 1.20e-01 | `sw_broadcast_impulse.json` key `evo1`, lock `3d7515d0b788…` | all four arms; peak T SW 1.20e-01 vs controls 1.10–1.17e-01 | supported | **MEASURED — headroom 26×, noise floor 0.0** |
-| C-017 | R3 | **[THESIS SLOT]** relation of T to criticality | | | pending | **E2 done; branch A vs B NOT assigned — author's call** |
+| C-017 | R3 | **[THESIS SLOT]** relation of T to criticality | | | pending | **E2 done; branch A vs B NOT assigned — author's call. Per the 2026-08-13 reconciliation (D-016), this is no longer eligible to be assigned as a main-text thesis in this pass — broadcast/T-C work is supplementary unless a specific new-headline claim needs it locally. Do not restore C-017 as a headline thesis.** |
 | C-018 | R3 | Broadcast observability H = (L−ℓ−1)/L is a methodological covariate; NTv3 H ≈ 0.08 | | | consistent-with | write |
 | C-019 | R4 | EUK ablation-KL scales with SW activation, r = +0.437 (p = 4.46e−7) | | | established | migrate |
-| C-020 | R4 | PROK same relationship on write magnitude, r = +0.710; negative sign is a write-direction convention | | | established | migrate |
-| C-021 | R4 | EUK shows no shuffle sensitivity at any order (all p > 0.31, n = 90); PROK is sensitive at all four orders | | 4 shuffle types | established | migrate |
+| C-020 | R4 | PROK same relationship on write magnitude, r = +0.710; negative sign is a write-direction convention | | | **contested — see N-015** | **do not present as established pending author review** |
+| C-021 | R4 | EUK shows no shuffle sensitivity at any order (all p > 0.31, n = 90); PROK is sensitive at all four orders | | 4 shuffle types | EUK half established; **PROK half contested — see N-015** | EUK half migrates; PROK half do not present pending author review |
 | C-022 | R4 | EUK and PROK differ **jointly** in input-context sensitivity and downstream routing | C-012/13 + C-021 | | consistent-with | write |
 | C-023 | R4 | No canonical regulatory motif class is enriched among SW-dependent k-mers (only EUK homopolymers, OR 1.85, q = 0.022) | | Fisher + BH | established | demote-to-supp, 1 sentence main |
 | C-024 | R4 | Corpus-prior interpretation | | | hypothesis | conditional, D-009 |
-| C-025 | R5 | A single amplifier pathway bidirectionally steers generated composition without comparable degradation | | random rows, entropy, PPL, complexity | pending | E3 |
+| C-025 | R5 | A single amplifier pathway bidirectionally steers generated composition without comparable degradation | | random rows, entropy, PPL, complexity | pending | E3 not started; prereg exists (`prereg/PREREG_steering.md`) but is unlocked. No "38.6×" or any steering number exists anywhere in this repo — see N-012. Do not write a steering number into the manuscript. |
 | C-026 | R6 | GENERator SW ablation is bimodal: fungal species −82.5% acc / −85.3% MCC vs. splice −0.05% | | 35/35 random controls within ±0.1 pp | established | migrate |
 | C-027 | R6 | DNABERT-2 SW-ensemble ablation costs −25.5 ± 0.7 pp on splice (p = 0.0004, n = 3) | | random < 0.05 pp | supported | migrate |
 | C-028 | R6 | Max single-row DNABERT-2 effect is −1.45%; full effect requires all ten rows | | random-1-row mean −0.03% | established | migrate |
-| C-029 | R6 | NTv3 splice replicates: ΔMCC = −0.119 ± 0.054, 5/5 seeds negative, p = 0.008 | | random \|Δ\| < 3e−4 | supported | **metric issue — PHASE_0 §0.4** |
+| C-029 | R6 | NTv3 splice replicates: ΔMCC = −0.119 ± 0.054, 5/5 seeds negative, p = 0.008 | `results/gue_multiseed_ntv3_splice.json` | random \|Δ\| < 3e−4 | **contested — see N-014** | **metric issue — PHASE_0 §0.4 — AND do not present as a confirmed positive replication pending author review of N-014** |
 | C-030 | R6 | Structurally related amplifiers are recruited for different functions across models | C-026 + C-027 | | supported | write |
-| C-031 | R7 | The NLP SW-preservation heuristic does not transfer; INT4 with vs. without SW exemption differs below resolution | | | established | migrate, compress to 1 para |
+| C-031 | R7 | The NLP SW-preservation heuristic does not transfer; INT4 with vs. without SW exemption differs below resolution | | | established | migrate, compress to 1 para. See C-033 for the mathematical mechanism now available to explain this null. |
 | C-032 | R2/R3/R6 | Granularity of the causal object differs across models: PR 3.64 (DNABERT-2) / 4.56 (EUK) / 22.7 (NTv3) / 122 (Evo1) / **2192 (PROK, contested)** vs 1.02–1.24 for published NLP SWs | **`experiments/E4_granularity/CANONICAL_TABLE.md`** | shape-verified per model; PROK row marked CONTESTED (C-001 on hold) | supported | E4 canonical table done — association only |
+| C-033 | R6 | Under the per-row RTN quantization rule already implemented in this repo (`scale = max\|row\| / maxval`), the element defining a row's scale is mapped exactly to the quantizer endpoint and is therefore preserved by construction — an SW that sets its own row's scale is trivially exempt from further precision loss regardless of whether it is separately protected | `scripts/compression/run_quantization_ablation.py` (docstring, lines 12–14), `scripts/compression/run_whole_model_quantization.py:300-303` (`amax = rows.abs().amax(dim=1, keepdim=True)`) | none needed — this is a mathematical property of the code as written, not a measured effect | established | **new 2026-08-13, added from direct code inspection, no run performed.** Scoped strictly to the per-row rule as implemented; group-wise quantization was not found anywhere in this repo and this claim must not be generalized to it. "Consistent with" C-031's empirical null, not proven to be its cause — C-031 itself has no recorded evidence path (see `results/keep/UNMIGRATED.md`), so the link is disclosed as an inference, not a demonstration. |
 
 ## Ledger notes
 
@@ -220,6 +245,82 @@ downstream layers. That is ≈ 0. The rule fires mechanically:
 Applied as a mechanical status change under a pre-existing rule. **No new interpretation**,
 and nothing here says what T does or does not predict. Evidence:
 `experiments/E2_evo1_broadcast/RESULTS.md` §B.
+
+**N-012 — six new-direction headline claims have no artifact anywhere in this repository.
+Do not write any of them into the manuscript.** _(2026-08-13)_
+
+Full trace in `docs/NEW_DIRECTION_EVIDENCE_AUDIT.md`. Summary: (1) a DNABERT-2 "redundant
+pair" ablation (−33pp) — the only −33pp-adjacent number belongs to the existing 10-row
+ensemble (C-027/C-028), a single-seed instance, not a 2-row pair; (2) that pair's pretrained/
+base-model superadditivity; (3) its layer-9 joint residual-norm carriage; (4) a GENERator
+BOS/attention-sink phenotype (25–33× uniform, ~100% argmax) — no attention-pattern analysis
+of any kind exists for any GENERator model; (5) GENERator EUK causal GC steering at "38.6×" —
+E3, the preregistered experiment for exactly this, was never locked or run (`C-025` stays
+`pending`); (6) its degradation/quality controls. None of these six has a script, log, JSON,
+or even a partial run backing it. Two adjacent-but-different real results exist and must not
+be conflated with the missing claims: the existing 10-row DNABERT-2 ensemble ablation
+(C-027/C-028, real, established, −25.5pp mean) and the existing GC↔AT counterfactual-swap
+experiment (`results/sw_counterfactual_swap_generator.json`, real, demoted to supplement per
+`CUT_LIST.md`, measuring KL under activation interpolation — not free-generation GC% under
+row scaling).
+
+**N-013 — PROK SAE: the fp16 clamp mechanism is real and code-verified; the specific
+"98% variance destroyed / pathological features" description is not.** _(2026-08-13)_
+
+`sae/collect.py:176-179` clamps every channel to ±60,000 before an fp16 cast, with an
+in-code comment citing exactly this rationale ("avoid Inf from super-weight overflow"). The
+PROK SW's own detected `out_max` is 506,014 (C-008) — roughly 8–10× the clamp ceiling — so
+the mechanism for corrupting the SW channel's dynamic range specifically is real and worth
+disclosing. However, the manuscript's own recorded SAE health diagnostics
+(`manuscript.txt:389-393`: reconstruction MSE 4.78 vs. random baseline 7,238; 97.4% of
+dictionary features active) describe a healthy fit, which is not what "pathological/
+single-active features" would predict, and no artifact anywhere computes a variance-destroyed
+percentage. There is no `CLAIMS_LEDGER.md` row for the PROK SAE result at all (it lives only
+in manuscript prose and is already marked for demotion to supplement in `CUT_LIST.md`) — this
+note exists so that whatever replaces it discloses the clamp as a real methods caveat without
+asserting the unmeasured 98% figure or "pathological" characterization.
+
+**N-014 — C-029 (NTv3 splice replication) is `contested`, not retired, not confirmed.**
+_(2026-08-13)_
+
+A later review asserts the old NTv3 checkpoints were trained under a silent max-length/
+truncation bug (only ~20% of the intended context window preserved) and that retrained
+checkpoints show no SW effect (p≈0.48). `models/ntv3_wrapper.py:21` and
+`scripts/evaluation/run_gue_multiseed.py:269` do hardcode `max_length=512` — a real,
+inspectable fact — but nothing in the repository calls it a bug, states an intended larger
+window, or reports any retrained checkpoint or a p≈0.48 value under any metric. The only
+NTv3 splice p-value that exists is C-029's own p=0.008 (`results/gue_multiseed_ntv3_splice.json`,
+5/5 seeds negative, real random-row controls). The claim and the artifact directly disagree.
+Per this review's own guardrails, NTv3 must not be presented as a confirmed positive splice
+replication going forward regardless of the mechanism's provenance — so C-029 does not
+migrate and is not written as `supported`. But nothing in this repo justifies actively
+retiring an established-looking, controlled 5-seed result either. **Flagged for the author.**
+If a truncation-bug fix and retrain genuinely happened, the artifacts (config diff, retrained
+checkpoint, new eval JSON) need to be located or reproduced in a future session before this
+note can be closed either way — this pass does not retrain anything.
+
+**N-015 — C-020/C-021(PROK half): contested on the strength of an existing, repo-native
+reason, not the unaudited "wrong-probe" mechanism offered downstream.** _(2026-08-13)_
+
+A later review asserts the old GENERator PROK super-weight (layer 2, row 1,927) was
+identified using a eukaryotic probe on the prokaryotic model, invalidating the EUK/PROK sign
+relationship (r=±0.710, C-020), the PROK shuffle-sensitivity finding (C-021 PROK half), the
+PROK SAE, and the kingdom-composition story, and that the real PROK SW is elsewhere
+(reported as ≈L8/r260). No file in this repository names a probe-species mismatch, layer 8,
+or row 260 in a PROK context — this diagnosis has no local artifact. What the repository
+**does already have**, independently, is N-009: the same layer-2/row-1927 artifact's stored
+‖U_k‖_F value (2648.48, rank 1/3,072) does not reproduce against current weights at that same
+layer (recomputed 5.51/5.47, rank 1277/1289) — C-001 has been `on hold` since 2026-08-12 for
+this reason, which N-009 explicitly states is *not* a probe or formula issue ("cause not
+determined"). Because C-020/C-021's PROK halves are keyed to the identical contested
+artifact (same layer, same row), they inherit C-001's hold rather than remaining
+`established` — this is the audited, repo-native path to the same practical outcome the
+review's guardrails require (do not present the old PROK composition/kingdom story as
+supported), without asserting the specific unaudited contamination mechanism or the L8/r260
+replacement, neither of which this pass can verify. **Flagged for the author**: if the
+eukaryotic-probe diagnosis and the L8/r260 relocation are real findings from work done outside
+this repository, the artifacts (probe-provenance check, L8/r260 detection sweep output) need
+to be added to the repo before either can be written into the manuscript.
 
 ## Retired claims
 
