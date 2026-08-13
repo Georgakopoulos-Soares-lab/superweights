@@ -172,4 +172,10 @@ YYYY-MM-DD  |  scaffold created; outline frozen  |  next: run PHASE_0 inventory
             |  in +/-10% band) and failed for NTv3; band NOT widened. NTv3 T/C undefined
             |  (no downstream layers). Evo1 still running. RESULTS.md written; no branch.
             |  next: finish Evo1, then items 6 and 8
+2026-08-13  |  Evo1 COMPLETE at primary dose: noise floor 0.0, headroom 26x at L13+ (matches
+            |  D-013's projection), 0/20 under-powered. C +0.9516 -> +0.7044 sustained,
+            |  T 6.76e-03 -> 1.20e-01. Branch C and D EXCLUDED; A vs B not assigned.
+            |  Secondary dose FAILED (CUDA OOM) -- recorded, no retry (would need a code
+            |  change, not a provenance-preserving retry). C-016 -> supported.
+            |  next: items 6 and 8; author to choose branch A vs B
 ```

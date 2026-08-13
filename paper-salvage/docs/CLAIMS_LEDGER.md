@@ -30,8 +30,8 @@ is not yet measured)
 | C-013 | R3 | GENERator PROK: C ≈ 0.92 → ~0 while total gain grows toward output (C +0.9177 → +0.0056; T 1.47e-2 → 6.18, L3–29) | `sw_broadcast_impulse.json` key `generator_prokaryote` | all four arms incl. matched-norm (n=5) | established | **CONFIRMED under locked protocol** |
 | C-014 | R3 | _(retired — see X-006)_ | | | **RETIRED** | D-014 |
 | C-015 | R3 | C describes routing geometry, not criticality | C-012/13 + re-measured DNABERT-2 C | | **restored: established** | **N-006 rule fired — see N-011** |
-| C-016 | R3 | Evo1 routing regime | | full control set | pending | E2 |
-| C-017 | R3 | **[THESIS SLOT]** relation of T to criticality | | | pending | E2 |
+| C-016 | R3 | Evo1 routing regime: C = +0.9516 (L12) → +0.7044 sustained to L31; T 6.76e-03 → 1.20e-01 | `sw_broadcast_impulse.json` key `evo1`, lock `3d7515d0b788…` | all four arms; peak T SW 1.20e-01 vs controls 1.10–1.17e-01 | supported | **MEASURED — headroom 26×, noise floor 0.0** |
+| C-017 | R3 | **[THESIS SLOT]** relation of T to criticality | | | pending | **E2 done; branch A vs B NOT assigned — author's call** |
 | C-018 | R3 | Broadcast observability H = (L−ℓ−1)/L is a methodological covariate; NTv3 H ≈ 0.08 | | | consistent-with | write |
 | C-019 | R4 | EUK ablation-KL scales with SW activation, r = +0.437 (p = 4.46e−7) | | | established | migrate |
 | C-020 | R4 | PROK same relationship on write magnitude, r = +0.710; negative sign is a write-direction convention | | | established | migrate |

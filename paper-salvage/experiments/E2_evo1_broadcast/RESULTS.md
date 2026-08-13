@@ -10,8 +10,7 @@ Protocol: D-011 (AC-relative ε) + D-013 (fp32, headroom) + D-014 (DNABERT-2 eag
 D-015 (T/C primary, KL secondary). α = 0.01 primary, α = 1.0 secondary. seed 42,
 n_controls 5. **Tables only — no interpretation.**
 
-> **Evo1 is not in these tables.** Its run was still in progress when this document was
-> written. See §E.
+**All five models complete**, with one dose failure recorded in §E.
 
 ---
 
@@ -23,10 +22,10 @@ n_controls 5. **Tables only — no interpretation.**
 | GENERator PROK | 2 | 1927 | 0 | 3,072 | float32 | default HF Llama | 1.6849e-02 | 1.6849e+00 | 1.6849e+00 | **0.0 exact** | complete |
 | DNABERT-2 | 5 | 603 | 0 | 768 | float32 | **eager PyTorch** (Triton disabled, D-014) | 3.7666e-03 | 3.7666e-01 | 3.7666e-01 | **0.0 exact** | complete |
 | NTv3 | 11 | 1472 | 2 | 1,536 | float32 | default | 5.9647e-01 | 5.9647e+01 | 5.9647e+01 | **0.0 exact** | complete, **no downstream layers** |
-| Evo1 | 11 | 3776 | — | 4,096 | float32 | `use_flash_attn=False` before `StripedHyena(config)` | — | — | — | — | **in progress** |
+| Evo1 | 11 | 3776 | 324 | 4,096 | float32 | `use_flash_attn=False` before `StripedHyena(config)` | 3.3271e+03 | — | 3.3271e+05 | **0.0 exact** | **primary complete; secondary FAILED (OOM)** |
 
-Headroom: **0 under-powered layers for every completed model at both doses** (minimum
-observed headroom 4.31× at PROK L3; all others ≥ 300×). The ≥ 4× requirement of the null
+Headroom: **0 under-powered layers for every model** (minimum observed 4.31× at PROK L3;
+Evo1 26× from L13 on and 1.66e+03× at L12; all others ≥ 300×). The ≥ 4× requirement of the null
 rule is therefore satisfied everywhere a value is reported below.
 
 Checkpoints: `GenerTeam/GENERator-v2-{eukaryote,prokaryote}-3b-base`;
@@ -40,7 +39,7 @@ Checkpoints: `GenerTeam/GENERator-v2-{eukaryote,prokaryote}-3b-base`;
 | GENERator PROK | 3–29 | 1.473e-02 → **6.182e+00** | 6.182e+00 | **+0.9177 → +0.0056** | +0.9177 |
 | DNABERT-2 (eager) | 6–11 | 6.437e-01 → 1.969e-01 | 8.009e-01 | **+0.0331 → −0.0221** | +0.0625 |
 | NTv3 | — | **not defined** | — | **not defined** | — |
-| Evo1 | — | in progress | | | |
+| Evo1 | 12–31 | 6.759e-03 → 1.1997e-01 | 1.1997e-01 | **+0.9516 → +0.7044** | +0.9516 |
 
 **NTv3 has no downstream layers.** Its SW layer is 11 of 12, so the assay has nowhere to
 measure (the H ≈ 0.08 observability covariate, C-018). T and C are undefined for NTv3 — this
@@ -63,6 +62,7 @@ threshold" column is reported. None is invented here.
 | GENERator PROK | 9.9404e-07 | 0.0 | 1.8974e-06 | 1.8077e-06 | 1.7510e-06 |
 | DNABERT-2 (eager) | **4.6270e-05** | 0.0 | 1.2063e-05 | 1.8890e-05 | **arm empty** |
 | NTv3 | 1.0919e-05 | 0.0 | 9.3069e-05 | 5.9372e-05 | **arm failed — see below** |
+| Evo1 | **not measured — dose failed** | 0.0 | — | — | — |
 
 At the primary dose KL is: EUK 0.0 (numerically zero), PROK 0.0 (numerically zero),
 DNABERT-2 1.8243e-08, NTv3 7.7175e-08. **Tiny values are reported as tiny, not relabelled
@@ -106,22 +106,73 @@ signal) is satisfied wherever a non-zero signal is reported.
 
 ## E. Evo1
 
-**Not complete at the time of writing.** The run was launched inside `evo2.sif` with
-`use_flash_attn=False` set before `StripedHyena(config)` (3 of 32 blocks change kernel;
-`attn_layer_idxs = [8, 16, 24]`), fp32, seed 42, n_controls 5, both doses, immediately
-preceded by its noise-floor measurement.
+**Primary dose complete. Secondary dose (α = 1.0) FAILED — CUDA out of memory.**
 
-Nothing is reported for Evo1 here, and **no Branch (A/B/C/D) is assigned**, because the
-prereg's branches all turn on Evo1's numbers. Under the null rule no Evo1 value may be
-called a null until headroom ≥ 4× at that layer and its noise floor is shown below its
-signal. Projected headroom from the STEP 2 gate was ~27× at the max coordinate under fp32,
-but the measured column governs, not the projection.
+Run inside `evo2.sif`, fp32, `use_flash_attn=False` set before `StripedHyena(config)`
+(3 of 32 blocks change kernel; `attn_layer_idxs = [8, 16, 24]`), seed 42, n_controls 5.
 
-Command to finish and the expected artifacts are in `NEXT_SESSION.md`.
+**Noise floor: exactly 0.0** (`impulse_determinism_check --model evo1`, verdict
+DETERMINISTIC). ε = 0.01 × std AC 3.3271e+05 = **3.3271e+03**.
+
+### Primary endpoint (α = 0.01) — this is a measurement, not a null
+
+| layer | T | C | headroom |
+|---|---|---|---|
+| 12 | 6.7586e-03 | +0.9516 | 1.66e+03× |
+| 13 | 1.1995e-01 | +0.7045 | **26×** |
+| 15 | 1.1996e-01 | +0.7044 | 26× |
+| 31 | 1.1997e-01 | +0.7044 | 26× |
+
+**0 of 20 downstream layers under-powered.** The headroom of 26× at L13+ matches D-013's
+pre-run projection of ~26× at the max coordinate under fp32. Both halves of the null rule
+are satisfied: headroom ≥ 4× everywhere, and the noise floor (0.0) is below the signal.
+
+**Branch C is excluded.** The precision floor did not persist: the assay has dynamic range
+on Evo1 under fp32, the random-coordinate arm is non-flat, and no layer is unmeasured.
+Branch D was already excluded by the STEP 2 gate.
+
+KL at the primary dose: 7.8678e-08.
+
+### Control arms — peak T
+
+| arm | n | peak T (mean) | KL (mean) |
+|---|---|---|---|
+| **SW row** | 1 | **1.1997e-01** | 7.868e-08 |
+| random-coordinate | 5 | 1.1041e-01 | 2.940e-08 |
+| random-dense-direction | 5 | 1.1639e-01 | 3.296e-08 |
+| matched-norm (15 rows in band) | 5 | 1.1696e-01 | 6.885e-08 |
+
+Reported as measured: the SW arm's peak T (1.1997e-01) and the three control arms'
+(1.10–1.17e-01) are within ~9% of each other. The prereg's control requirement — that the
+random-coordinate arm be **non-flat** — is satisfied. What that similarity means is not
+interpreted here.
+
+### The failed dose, recorded not hidden
+
+The α = 1.0 secondary dose raised `CUDA out of memory` (tried to allocate 172 MiB with
+131 MiB free of 39.49 GiB) after the primary dose had already run in the same process.
+
+**No retry was performed.** The single provenance-preserving retry the run spec allows would
+need the secondary dose to run in a fresh process, which the harness cannot do without a
+per-dose flag — a code change, which is not a provenance-preserving retry. The failure is
+therefore written into the results rather than silently excluded, and Evo1's KL column is
+**not measured**, not zero.
 
 ## F. Prereg branch
 
-**Not assignable yet.** Branches A–D are defined by Evo1's outcome. Deferred.
+**C and D are excluded. A vs B is not mechanically determined and is left open.**
+
+- **Branch D** (precondition failed) — excluded at the STEP 2 gate.
+- **Branch C** (precision floor persists, both arms flat) — excluded: 26× headroom, 0
+  under-powered layers, controls non-flat.
+- **Branch A vs B** turns on whether "Evo1 T is low relative to the other four". The peak T
+  values are: EUK 3.79e-02, **Evo1 1.20e-01**, DNABERT-2 8.01e-01, PROK 6.18e+00, NTv3
+  undefined. Evo1 sits above EUK and below DNABERT-2 and PROK. That is not the clean "low
+  relative to the other four" that Branch A names, nor the "comparable to or greater than
+  DNABERT-2's" that the v1 falsifier names.
+
+**No branch is assigned.** Choosing between A and B here would require judging what counts
+as "low", which is the interpretive step this report does not take.
 
 ## What is deliberately absent
 
