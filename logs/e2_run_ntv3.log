@@ -1,0 +1,39 @@
+
+[broadcast:ntv3] sw_layer=11  sw_row=1472
+[broadcast:ntv3] loading model …
+/work/11034/atzanakak/work/11034/atzanakak/miniconda3/envs/grlm/lib/python3.10/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+A new version of the following files was downloaded from https://huggingface.co/InstaDeepAI/ntv3_base_model:
+- tokenization_ntv3.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+`torch_dtype` is deprecated! Use `dtype` instead!
+[broadcast:ntv3] n_tokens=384  n_layers=12
+[broadcast:ntv3] sw_pos=2  d_model=1536
+[broadcast:ntv3] [primary] eps = alpha*std_AC = 0.01 * 5.9647e+01 = 5.9647e-01
+[broadcast:ntv3] param dtype = torch.float32
+[broadcast:ntv3] KL_sw=7.7175e-08   under-powered layers: 0/0
+[ntv3] could not find a down-projection on method; attrs = []
+[broadcast:ntv3] WARNING: matched-norm arm skipped (no W_down)
+
+[broadcast:ntv3] sw_layer=11  sw_row=1472
+[broadcast:ntv3] loading model …
+A new version of the following files was downloaded from https://huggingface.co/InstaDeepAI/ntv3_base_model:
+- tokenization_ntv3.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[broadcast:ntv3] n_tokens=384  n_layers=12
+[broadcast:ntv3] sw_pos=2  d_model=1536
+[broadcast:ntv3] [secondary] eps = alpha*std_AC = 1.0 * 5.9647e+01 = 5.9647e+01
+[broadcast:ntv3] param dtype = torch.float32
+[broadcast:ntv3] KL_sw=1.0919e-05   under-powered layers: 0/0
+[ntv3] could not find a down-projection on method; attrs = []
+[broadcast:ntv3] WARNING: matched-norm arm skipped (no W_down)
+
+  Results saved → /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/sw_broadcast_impulse.json
+  Plot saved → /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/sw_broadcast_impulse.png
+  Heatmap saved → /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/sw_broadcast_heatmap_generator.png
+  Heatmap saved → /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/sw_broadcast_heatmap_generator_prokaryote.png
+  Heatmap saved → /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/sw_broadcast_heatmap_dnabert2.png
+  Heatmap saved → /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/sw_broadcast_heatmap_evo1_fixed_eps_SUPERSEDED.png
+  Heatmap saved → /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/sw_broadcast_heatmap_generator__alpha1.png
+  Heatmap saved → /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/sw_broadcast_heatmap_generator_prokaryote__alpha1.png
+  Heatmap saved → /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/sw_broadcast_heatmap_dnabert2__alpha1.png

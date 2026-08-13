@@ -1,0 +1,190 @@
+{
+  "model": "generator_prokaryote",
+  "dtype": "torch.float32",
+  "sw_layer": 2,
+  "sw_row": 1927,
+  "sw_pos": 0,
+  "eps_ac": 0.01684854030609131,
+  "ac_meta": {
+    "alpha": 0.01,
+    "std_ac": 1.6848540306091309,
+    "dc_mean": 0.051991790533065796,
+    "median_abs_h": 0.16622035205364227,
+    "max_abs_h": 139.62020874023438
+  },
+  "repeats": 3,
+  "per_layer": [
+    {
+      "layer": 3,
+      "noise_dh": 0.0,
+      "signal_dh": 0.0002481568662915379,
+      "snr": Infinity
+    },
+    {
+      "layer": 4,
+      "noise_dh": 0.0,
+      "signal_dh": 0.0005111237987875938,
+      "snr": Infinity
+    },
+    {
+      "layer": 5,
+      "noise_dh": 0.0,
+      "signal_dh": 0.0007736589759588242,
+      "snr": Infinity
+    },
+    {
+      "layer": 6,
+      "noise_dh": 0.0,
+      "signal_dh": 0.0008804131648503244,
+      "snr": Infinity
+    },
+    {
+      "layer": 7,
+      "noise_dh": 0.0,
+      "signal_dh": 0.0010424732463434339,
+      "snr": Infinity
+    },
+    {
+      "layer": 8,
+      "noise_dh": 0.0,
+      "signal_dh": 0.0012290107551962137,
+      "snr": Infinity
+    },
+    {
+      "layer": 9,
+      "noise_dh": 0.0,
+      "signal_dh": 0.001483783358708024,
+      "snr": Infinity
+    },
+    {
+      "layer": 10,
+      "noise_dh": 0.0,
+      "signal_dh": 0.0017829220741987228,
+      "snr": Infinity
+    },
+    {
+      "layer": 11,
+      "noise_dh": 0.0,
+      "signal_dh": 0.0020684257615357637,
+      "snr": Infinity
+    },
+    {
+      "layer": 12,
+      "noise_dh": 0.0,
+      "signal_dh": 0.002303033834323287,
+      "snr": Infinity
+    },
+    {
+      "layer": 13,
+      "noise_dh": 0.0,
+      "signal_dh": 0.0025653846096247435,
+      "snr": Infinity
+    },
+    {
+      "layer": 14,
+      "noise_dh": 0.0,
+      "signal_dh": 0.002859697910025716,
+      "snr": Infinity
+    },
+    {
+      "layer": 15,
+      "noise_dh": 0.0,
+      "signal_dh": 0.003171423217281699,
+      "snr": Infinity
+    },
+    {
+      "layer": 16,
+      "noise_dh": 0.0,
+      "signal_dh": 0.0034770406782627106,
+      "snr": Infinity
+    },
+    {
+      "layer": 17,
+      "noise_dh": 0.0,
+      "signal_dh": 0.003797293407842517,
+      "snr": Infinity
+    },
+    {
+      "layer": 18,
+      "noise_dh": 0.0,
+      "signal_dh": 0.004186179023236036,
+      "snr": Infinity
+    },
+    {
+      "layer": 19,
+      "noise_dh": 0.0,
+      "signal_dh": 0.00458736764267087,
+      "snr": Infinity
+    },
+    {
+      "layer": 20,
+      "noise_dh": 0.0,
+      "signal_dh": 0.00506970938295126,
+      "snr": Infinity
+    },
+    {
+      "layer": 21,
+      "noise_dh": 0.0,
+      "signal_dh": 0.00568847032263875,
+      "snr": Infinity
+    },
+    {
+      "layer": 22,
+      "noise_dh": 0.0,
+      "signal_dh": 0.006606460083276033,
+      "snr": Infinity
+    },
+    {
+      "layer": 23,
+      "noise_dh": 0.0,
+      "signal_dh": 0.007601726800203323,
+      "snr": Infinity
+    },
+    {
+      "layer": 24,
+      "noise_dh": 0.0,
+      "signal_dh": 0.0090751638635993,
+      "snr": Infinity
+    },
+    {
+      "layer": 25,
+      "noise_dh": 0.0,
+      "signal_dh": 0.011387594975531101,
+      "snr": Infinity
+    },
+    {
+      "layer": 26,
+      "noise_dh": 0.0,
+      "signal_dh": 0.013883535750210285,
+      "snr": Infinity
+    },
+    {
+      "layer": 27,
+      "noise_dh": 0.0,
+      "signal_dh": 0.01567479968070984,
+      "snr": Infinity
+    },
+    {
+      "layer": 28,
+      "noise_dh": 0.0,
+      "signal_dh": 0.019192617386579514,
+      "snr": Infinity
+    },
+    {
+      "layer": 29,
+      "noise_dh": 0.0,
+      "signal_dh": 0.1041565015912056,
+      "snr": Infinity
+    }
+  ],
+  "kl_noise_floor": 0.0,
+  "kl_noise_samples": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "kl_signal": 0.0,
+  "kl_snr": Infinity,
+  "deterministic": true,
+  "verdict": "DETERMINISTIC \u2014 noise floor is exactly zero; T/C/KL are measurements."
+}
