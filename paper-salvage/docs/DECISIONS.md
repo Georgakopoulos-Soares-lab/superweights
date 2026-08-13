@@ -301,3 +301,39 @@ happened and is **not** presented as a passed guard:
 - Phase 1b queue (logged, not started): C-010's L7/r603 source-vs-propagator resolution ran
   through Triton at inference and needs re-verification on eager. C-002 is weights-only and
   unaffected. C-027/C-028 are fine-tuning with dropout > 0 and already took the eager branch.
+
+---
+
+## D-015 — T and C are the primary impulse endpoints; KL is secondary/descriptive
+**Date:** Phase 1
+**Builds on:** D-011, D-013. **Resolves:** the STEP 3d blocker recorded in
+`experiments/E2_evo1_broadcast/BLOCKED.md`.
+
+**Timing — material to how this may be described.** STEP 3d was an *explicitly planned
+pre-lock metric-validation probe*. This amendment therefore occurs **before** preregistration
+lock, not after seeing confirmatory results. It must be documented as such wherever the
+prereg is cited, and it must not be presented as a post-hoc rescue.
+
+**Decision:**
+- **T and C are the primary impulse-response measurements.**
+- **KL is secondary and descriptive**, reported only where it is measurable above the
+  model-specific noise floor.
+- A model is **not** required to show measurable KL for the T/C routing assay to be valid.
+- KL is **not** replaced by top-k displacement or token-local KL. Neither becomes a primary
+  metric.
+- The perturbation dose is **not** increased beyond the already-specified dual-dose protocol.
+- Functional criticality continues to be measured independently by the existing
+  ablation/downstream experiments, not by the impulse KL.
+
+**Trigger.** STEP 3d found GENERator PROK's output KL below useful resolution at both
+preregistered doses: 0.0 at α = 0.01 and 9.94e-7 at α = 1.0, with top-10 mean rank shift
+0.000 and top-1 unchanged at both. Both candidate replacement metrics were measured and were
+also flat for PROK.
+
+**Consequences:**
+- E2 proceeds to lock and to the five-model run.
+- R3's endpoints are T and C; KL appears as a descriptive column with each model's noise
+  floor beside it.
+- The null rule is unchanged and still binding: no result is reported as a null unless
+  headroom ≥ 4× at that layer **and** that model's noise floor is below the observed signal.
+- No manuscript thesis is drawn from this decision.
