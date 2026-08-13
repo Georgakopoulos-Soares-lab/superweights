@@ -55,6 +55,16 @@ from models import WRAPPER_MAP
 # FASTA helpers
 # ──────────────────────────────────────────────────────────────────────────────
 
+# Storage dtype for activation shards; overridden by --store_dtype in main().
+# float16 requires clamping at +-60000, which flattens super-weight channels
+# (see the warning in the collection hook below).
+_STORE_DTYPE = torch.float16
+
+
+def _NP_DTYPE():
+    return np.float16 if _STORE_DTYPE == torch.float16 else np.float32
+
+
 def _iter_fasta(fasta_path: str) -> Iterator[tuple[str, str]]:
     """Yield (name, sequence) pairs from a plain FASTA file."""
     name, parts = None, []
@@ -175,8 +185,23 @@ def collect_activations(
             h = output[0] if isinstance(output, tuple) else output
             # Clip before float16 cast to avoid Inf from super-weight overflow
             # (float16 max = 65504; super-weight channels can exceed this).
-            h_f32 = h.detach().float().clamp(-60000.0, 60000.0)
-            _s["h"] = h_f32.cpu().to(torch.float16)  # [B, L, D]
+            #
+            # WARNING: this clamp destroys most of the super-weight signal.
+            # Measured on 262,144 real hg38 tokens, GENERator EUK layer-4
+            # row 2371 sits near 169 for 99.8% of tokens and spikes to
+            # 339,716-452,119 for the remaining 0.195%. Only those 0.195% are
+            # clipped -- but they carry nearly all the variance, so clamping
+            # cuts the channel's variance by 98% (sd 18,698 -> 2,642) and
+            # collapses every spike, i.e. exactly the events that define a
+            # super weight, onto one value. An SAE trained on float16 shards
+            # therefore cannot resolve super-weight activation structure.
+            # Use --store_dtype float32 for any SAE meant to study the super
+            # weight. float16 stays the default so existing collections
+            # reproduce bit-for-bit.
+            h_f32 = h.detach().float()
+            if _STORE_DTYPE == torch.float16:
+                h_f32 = h_f32.clamp(-60000.0, 60000.0)
+            _s["h"] = h_f32.cpu().to(_STORE_DTYPE)  # [B, L, D]
 
         handle = layer_module.register_forward_hook(_hook)
         try:
@@ -194,7 +219,7 @@ def collect_activations(
             all_acts.append(h[seq_idx, :valid_len, :].numpy())  # [L_valid, D]
 
     if not all_acts:
-        return np.empty((0,), dtype=np.float16)
+        return np.empty((0,), dtype=_NP_DTYPE())
 
     return np.concatenate(all_acts, axis=0)   # [total_tokens, D]
 
@@ -219,6 +244,11 @@ def main():
                         help="Directory to save activation shards")
     parser.add_argument("--max_tokens",   type=int, default=50_000_000,
                         help="Stop after collecting this many tokens (default: 50M)")
+    parser.add_argument("--store_dtype", choices=["float16", "float32"],
+                        default="float16",
+                        help="Shard dtype. float16 (default) clamps at +-60000 and "
+                             "therefore FLATTENS super-weight channels; use float32 "
+                             "when the SAE is meant to study the super weight.")
     parser.add_argument("--shard_tokens", type=int, default=500_000,
                         help="Tokens per shard file (default: 500K)")
     parser.add_argument("--chunk_tokens", type=int, default=512,
@@ -228,6 +258,12 @@ def main():
     parser.add_argument("--n_passes",     type=int, default=1,
                         help="Number of passes over the FASTA (PROK: use >1 to reach token target)")
     args = parser.parse_args()
+
+    global _STORE_DTYPE
+    _STORE_DTYPE = torch.float16 if args.store_dtype == "float16" else torch.float32
+    if _STORE_DTYPE == torch.float32:
+        print('[collect] store_dtype=float32 (no clamp) -- 12 KB/token')
+
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -251,7 +287,7 @@ def main():
 
     def flush_shard():
         nonlocal shard_idx, shard_buffer
-        arr  = np.concatenate(shard_buffer, axis=0).astype(np.float16)
+        arr  = np.concatenate(shard_buffer, axis=0).astype(_NP_DTYPE())
         path = out_dir / f"shard_{shard_idx:05d}.npy"
         np.save(str(path), arr)
         print(f"  shard {shard_idx:05d}: {arr.shape[0]:,} tokens → {path}", flush=True)

@@ -24,6 +24,15 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model",     required=True, choices=list(WRAPPER_MAP.keys()))
     parser.add_argument("--probe",     default="actb_500")
+    parser.add_argument(
+        "--pad_to_multiple", type=int, default=0,
+        help="Right-pad the probe with 'A' until its TOKEN length is a multiple of this. "
+             "REQUIRED for NTv3: it is a conv/deconv U-Net with 8 stride-2 conv blocks "
+             "(filter_list has 8 entries), so the deconv tower's skip connections only "
+             "align when the token length is a multiple of 2**8 = 256. NTv3 tokenises at "
+             "nucleotide level (vocab 11), so the canonical 504 bp probes give 504 tokens "
+             "and 504 %% 256 = 248 -> 'The size of tensor a (6) must match tensor b (7)' "
+             "inside modeling_ntv3_pretrained.py. Use --pad_to_multiple 256.")
     parser.add_argument("--threshold", type=float, default=0.1)
     parser.add_argument("--max_iter",  type=int,   default=10)
     parser.add_argument("--out",       default="results/super_weight_index.json")
@@ -45,6 +54,16 @@ def main():
     wrapper.load()
 
     probe = get_probe(args.probe)
+    if args.pad_to_multiple > 0:
+        n0 = len(wrapper.tokenizer(probe)["input_ids"])
+        m = args.pad_to_multiple
+        target = ((n0 + m - 1) // m) * m
+        # nucleotide-level tokenisers map 1 bp -> 1 token, so pad in bp and re-check
+        while len(wrapper.tokenizer(probe)["input_ids"]) < target:
+            probe = probe + "A"
+        n1 = len(wrapper.tokenizer(probe)["input_ids"])
+        print(f"[probe] padded {n0} -> {n1} tokens (multiple of {m}); "
+              f"{len(probe)} bp")
 
     # Plot baseline activation profile
     records = sweep(wrapper, probe)

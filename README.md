@@ -6,13 +6,75 @@ single-forward-pass method from Yu et al. (2024) *"The Super Weight in Large Lan
 
 ---
 
-## Pre-submission status (latest, Nov 2026)
+## Current status (Aug 2026) — mechanism session + corrections
+
+This round moved the project from phenomenology to mechanism, and **retracted or rescoped
+several earlier claims**. Full reports in [`results/mechanism/`](results/mechanism/); start
+with [HANDOFF_ANALYTICAL_SUMMARY.md](results/mechanism/HANDOFF_ANALYTICAL_SUMMARY.md),
+which tags every claim `[MEASURED] / [INFERRED] / [UNTESTED]`.
+
+### What we established
+
+| finding | key numbers | report |
+|---|---|---|
+| DNABERT-2's functional unit is a **redundant pair**, not a single row | top-7 pairs 7/7 structurally related, p = 0.00014 (n=5); splice −26.84 ± 2.56 vs sum-of-parts −3.51 | [SUPERADDITIVITY_AND_COMPOSITION_REPORT.md](results/mechanism/SUPERADDITIVITY_AND_COMPOSITION_REPORT.md) |
+| The pair is **intrinsic to pretraining** (MLM loss, no task head) | same critical pair +2.0118; top pair = 136,521× the random-pair sd; same k=5 cliff | [CHECKPOINT_1_PRETRAINED_EPISTASIS.md](results/mechanism/CHECKPOINT_1_PRETRAINED_EPISTASIS.md) |
+| Mechanism = **joint norm carriage** | pair carries 58% of layer-9 residual norm (17.20 → 7.14) | [CHECKPOINT_1_MECHANISM.md](results/mechanism/CHECKPOINT_1_MECHANISM.md) |
+| **Co-dominance** decides joint vs single-point failure | constant total norm; epistasis −33.6 → −0.7 while single-channel effect −0.02 → −33.0 | [E1_E2_CODOMINANCE_AND_CONFOUND.md](results/mechanism/E1_E2_CODOMINANCE_AND_CONFOUND.md) |
+| **Decoder/encoder dissociation** | decoder: 37.96% attention mass at BOS, 33× uniform, 45,585× activation. encoder: 0/40 windows peak at [CLS]; instead a composition detector (Cohen's d = −1.89) | [CHECKPOINT_2_TIER2.md](results/mechanism/CHECKPOINT_2_TIER2.md) |
+| **Causal steering** of generated composition | GC span 38.6× random rows; quality (perplexity, dinuc KL, homopolymer) flat across the range | [CHECKPOINT_2_TIER2.md](results/mechanism/CHECKPOINT_2_TIER2.md) |
+| Compression: SW-aware exemption is a **no-op** | per-row RTN preserves the row max with 0.000e+00 error at INT8–INT2; exemption benefit mean **+0.032 pp** over 32 cells (t = 0.23) | [CHECKPOINT_3_GROUP_SCALE_PRESERVATION.md](results/mechanism/CHECKPOINT_3_GROUP_SCALE_PRESERVATION.md) |
+
+### 🔴 Retractions and rescopes (read before citing older numbers)
+
+1. **NTv3 splice results were produced on 20%-truncated inputs.** `_MAX_LEN["reconstructed"]
+   = 80` is tuned for DNABERT-2's BPE (400 bp → 86 tokens). NTv3 is *nucleotide-level*
+   (400 bp → 400 tokens), so 80 truncated every splice window to its first 80 bp — the
+   junction was never seen, and all 5 seeds sat at the 0.5658 majority-class floor.
+   **With the fix, NTv3 reaches MCC 0.86–0.91 — and its SW ablation effect disappears
+   (−0.02 pp).** The previously reported ΔMCC = −0.119 ± 0.054 (p = 0.0083) is an artifact
+   of the truncated model and is **withdrawn**. Functional replication of the ensemble
+   effect is therefore **n = 1 (DNABERT-2)**; structural replication is n = 2.
+2. **"Shadow redundancy" is a layer-depth artifact.** `prox_far` prunes all 768 rows of
+   layer 0; `layer_matched_random` (no SW information) reproduces it on all three tasks
+   (promoter −9.09 vs −10.04; histone −2.87 vs −2.74; splice −34.87 vs −34.88).
+3. **SW quantisation-exemption experiments test a no-op by construction** — per-row RTN sets
+   `s = max|w|/qmax`, and the SW *is* that max.
+4. **"Histone-mark prediction intact" is false** — the same k=5 cliff fires in 2/5 seeds.
+5. **Composition claim rescoped** — R² = 0.373 (GC alone 0.035); 2/12 motifs survive a
+   GC-matched null, so "no canonical motifs are enriched" is also false.
+6. **PROK SAE withdrawn** — layer-2 contamination, an fp16 clamp destroying 98% of
+   SW-channel variance, an unnormalised objective, and degenerate `n_active ≈ 1`
+   correlations.
+7. **Norm dominance does not predict criticality** — NTv3's SW is rank 1/1536 with a 29.4×
+   gap (more dominant than DNABERT-2's) and is functionally inert. The joint-norm-carriage
+   mechanism explains DNABERT-2 and does **not** generalise.
+
+### Infrastructure fixes shipped this round
+
+| fix | why it matters |
+|---|---|
+| `scripts/evaluation/run_gue_ablation.py` — `_NTv3Classifier` pads to the next **multiple** of 256 | NTv3 is a conv/deconv U-Net; skip connections only align on exact multiples |
+| `scripts/detection/run_detection.py` — `--pad_to_multiple` | canonical 504 bp probes gave 504 tokens (504 mod 256 = 248) and crashed detection; NTv3 index went **1 → 30 rows** |
+| `sae/collect.py` — `--store_dtype float32` | the fp16 ±60,000 clamp destroyed 98% of SW-channel variance |
+| `sae/train.py` — `--standardize` | SW channel carries 6,888× the median sd; dead features **74.9% → 0.5%** |
+| `sae/model.py` / `sae/analyze.py` — persist and apply `data_scale` | mismatched preprocessing manufactured the `n_active=1 → r = −0.9949` artifact *even with a healthy dictionary* |
+| `scripts/evaluation/run_sw_pairwise_epistasis.py` — `--sw_index`, `--top_n`, `--max_length`, `--out` | required for NTv3 and for the deep index |
+
+**Standing rule adopted:** never report a correlation without its `n_active`.
+
+---
+
+## Pre-submission status (Nov 2026 — superseded in part by the section above)
+
 
 The 5-arc manuscript has been restructured (v4) with two new cross-architecture experiments
 landing in Figures 2 & 4:
 
-- **5-seed NTv3 splice** — ΔMCC = −0.119 ± 0.054, t = −4.86, p = 0.0083, sign-neg 5/5.
-  Majority-class collapse on seeds 4 and 5 (Δacc > 0 but ΔMCC ≪ 0).
+- ~~**5-seed NTv3 splice** — ΔMCC = −0.119 ± 0.054, t = −4.86, p = 0.0083, sign-neg 5/5.~~
+  🔴 **WITHDRAWN (Aug 2026)** — produced on 20%-truncated inputs (`_MAX_LEN` is
+  tokenizer-specific; NTv3 is nucleotide-level). All 5 seeds were at the majority-class
+  floor. Refit models reach MCC 0.86–0.91 and show **no** SW ablation effect (−0.02 pp).
 - **NTv3 ‖U_k‖_F per-layer audit** (all 12 transformer blocks) — only L11 row 1472 ranks
   1 / 1536 (100th percentile); no other layer hosts a registered SW row.
 - **Evo1 bf16-clean residual attribution** across all 32 StripedHyena blocks — corrects
@@ -897,11 +959,39 @@ interesting but unvalidated secondary signal.
 ├── analysis/
 │   ├── visualize_activations.py   # Per-layer activation profile plots
 │   └── ablation.py               # Perplexity / masked-token entropy destruction test
+├── scripts/
+│   ├── detection/                # SW detection (--pad_to_multiple required for NTv3)
+│   ├── evaluation/               # GUE fine-tune / ablation / epistasis harnesses
+│   ├── analysis/                 # figure + composition/motif analyses
+│   ├── mechanism/                # ── mechanism experiments (Aug 2026) ──
+│   │   ├── run_pretrained_epistasis.py     # is the pair intrinsic to pretraining?
+│   │   ├── run_compensation_circuit.py     # how does compensation work? (two geometries)
+│   │   ├── run_norm_matched_control.py     # falsification: SW-specific or just norm?
+│   │   ├── run_direction_vs_magnitude.py   # E1: intervention breaking that confound
+│   │   ├── run_codominance.py              # E2: break-pair / make-pair co-dominance test
+│   │   ├── run_ensemble_encoding.py        # what the ensemble encodes (sae | direct modes)
+│   │   ├── run_attention_sink.py           # attention-sink / implicit-bias diagnostics
+│   │   ├── run_sw_steering.py              # causal steering of generated composition
+│   │   └── run_steering_biological.py      # steering + genomic-realism readouts
+│   └── compression/              # ── compression experiments ──
+│       ├── run_proximity_confound_control.py   # kills "shadow redundancy" (layer-depth)
+│       ├── run_pair_aware_compression.py       # INT2-8 dose-response on the SW pair
+│       ├── run_per_tensor_sw_exemption.py      # exemption across 4 granularities
+│       ├── run_group_scale_preservation.py     # group (top-M) preservation, g=64/128
+│       └── run_destructive_sw_protection.py    # destructive regime + block-size axis
+├── sae/
+│   ├── collect.py                # --store_dtype float32 (fp16 clamp destroys SW variance)
+│   ├── train.py                  # --standardize (SW channel is 6,888x median sd)
+│   ├── model.py                  # persists data_scale in the checkpoint
+│   ├── analyze.py                # applies data_scale; hexamer-probe analysis
+│   └── analyze_real_sequence.py  # real-sequence features, n_active beside every r
 ├── data/
 │   └── regions/hg38/         # BED files for hg38 genomic regions
 │       ├── promoters_262kb.bed
 │       ├── enhancers_ccre_262kb.bed
 │       └── random_262kb.bed
+├── results/
+│   └── mechanism/            # all mechanism reports + JSON/CSV (see HANDOFF summary)
 ├── docs/
 │   └── superweight_paper.txt  # Reference paper (Yu et al. 2024)
 ├── paper/
@@ -974,6 +1064,48 @@ interesting but unvalidated secondary signal.
 └── tests/
     ├── test_hooks.py
     └── test_detection.py
+```
+
+---
+
+## Reproducing the mechanism results (Aug 2026)
+
+All commands assume `PYTHONPATH=.`. DNABERT-2 needs the `dnabert` env
+(transformers 4.29.x); GENERator/NTv3 need the `generator` env.
+
+```bash
+# Is the redundant pair intrinsic to pretraining? (MLM loss, no task head)
+python scripts/mechanism/run_pretrained_epistasis.py \
+    --out results/mechanism/epistasis_pretrained_vs_finetuned.json
+
+# NTv3 detection — --pad_to_multiple 256 is REQUIRED (conv/deconv U-Net)
+python scripts/detection/run_detection.py --model ntv3 --pad_to_multiple 256 \
+    --mode superrow --threshold 0.02 --max_iter 30 \
+    --out results/mechanism/super_weight_index_ntv3_deep.json
+
+# NTv3 splice fine-tuning — --max_length 400 is REQUIRED (nucleotide-level tokenizer)
+python scripts/evaluation/run_gue_multiseed.py --model ntv3 --task splice/reconstructed \
+    --gue_root $GUE --seeds 0 --max_length 400 --batch 8 --epochs 5
+
+# Direction vs magnitude (breaks the norm/super-weight confound)
+python scripts/mechanism/run_direction_vs_magnitude.py --max_seeds 3
+
+# Co-dominance: does breaking the pair move criticality to a singleton?
+python scripts/mechanism/run_codominance.py --mode break_pair --model dnabert2 \
+    --layer 9 --anchor 264 --partner 294 --ratios 1.0 0.5 0.25 0.1 0.03 \
+    --ckpt results/gue_checkpoints_multiseed/dnabert2_reconstructed/seed_0/model_state.pt \
+    --out results/mechanism/codominance_break_dnabert2.json
+
+# Compression: the "shadow redundancy" control, and exemption across granularities
+python scripts/compression/run_proximity_confound_control.py --model dnabert2 \
+    --task prom/prom_core_notata --gue_root $GUE --ckpt_dir <seed_dir> --out <json>
+python scripts/compression/run_per_tensor_sw_exemption.py --task splice/reconstructed \
+    --granularities per_row group_64 group_128 per_tensor --bits 4 3 2 --out <json>
+
+# SAE — float32 collection and standardised training are both required
+python sae/collect.py --model generator --layer 4 --store_dtype float32 --max_tokens 1000000 ...
+python sae/train.py --acts_dir <dir> --standardize --k 64 --dict_mult 4 --steps 50000
+python sae/analyze_real_sequence.py --sae_ckpt <ckpt> --acts_dir <dir> --min_active 100
 ```
 
 ---

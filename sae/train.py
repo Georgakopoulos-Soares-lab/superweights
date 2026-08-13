@@ -143,6 +143,7 @@ def resample_dead_features(
     device: torch.device,
     n_collect_batches: int = 50,
     scale: float = 0.2,
+    data_scale: torch.Tensor | None = None,
 ) -> int:
     """
     Anthropic-style neuron resampling.
@@ -179,7 +180,9 @@ def resample_dead_features(
 
     # ── 1. Collect a pool of inputs ───────────────────────────────────────────
     pool = torch.cat(
-        [streamer.next_batch().to(device) for _ in range(n_collect_batches)],
+        [(streamer.next_batch().to(device) if data_scale is None
+          else streamer.next_batch().to(device) / data_scale)
+         for _ in range(n_collect_batches)],
         dim=0,
     )  # [N, d_in]
 
@@ -242,7 +245,8 @@ def resample_dead_features(
 # ──────────────────────────────────────────────────────────────────────────────
 
 def run_sanity_checks(sae: BatchTopKSAE, streamer: ShardStreamer, out_path: str,
-                      n_eval_batches: int = 500):
+                      n_eval_batches: int = 500,
+                      data_scale: torch.Tensor | None = None):
     """
     Two sanity checks:
       (a) Feature activation frequency histogram
@@ -273,6 +277,8 @@ def run_sanity_checks(sae: BatchTopKSAE, streamer: ShardStreamer, out_path: str,
     with torch.no_grad():
         for _ in range(n_eval_batches):
             x = streamer.next_batch().to(device)
+            if data_scale is not None:
+                x = x / data_scale
 
             out = sae(x, use_aux_loss=False)
             acts = out["acts"]                           # [B, n_features]
@@ -359,11 +365,22 @@ def train(args):
     for _ in range(min(1000, args.steps // 4)):
         norm.update(streamer.next_batch().numpy())
     data_mean = torch.tensor(norm.mean, dtype=torch.float32)
+    data_std  = torch.tensor(norm.std, dtype=torch.float32).clamp_min(1e-6)
+    if args.standardize:
+        _r = (data_std.max() / data_std.median()).item()
+        print(f"[train] standardize=ON  max/median channel sd ratio = {_r:.0f}x")
+        print(f"[train]   worst channel: idx={int(data_std.argmax())} sd={data_std.max():.1f}")
+    else:
+        print("[train] standardize=OFF (raw activations; unsafe on super-weight layers)")
 
     # ── SAE ───────────────────────────────────────────────────────────────────
+    # Standardisation scale applied to every batch (and to pre_bias, so the
+    # bias lives in the same units). scale == 1 when --standardize is off.
+    scale = data_std.to(device) if args.standardize else torch.ones_like(data_std).to(device)
+
     sae = BatchTopKSAE(d_in=d_in, n_features=n_features, k=args.k).to(device)
     with torch.no_grad():
-        sae.pre_bias.data = data_mean.to(device)
+        sae.pre_bias.data = (data_mean.to(device) / scale)
 
     # Initialise decoder columns to unit norm (already done in __init__)
     # Tie encoder weights to decoder transpose initially (optional warm start)
@@ -385,7 +402,7 @@ def train(args):
     print(f"\n[train] Starting training on {device}...\n", flush=True)
 
     for step in range(1, args.steps + 1):
-        x = streamer.next_batch().to(device)
+        x = streamer.next_batch().to(device) / scale
 
         out = sae(x, use_aux_loss=True, lambda_aux=args.lambda_aux)
 
@@ -408,10 +425,11 @@ def train(args):
 
         # Neuron resampling: rescue dead features periodically
         if args.resample_every > 0 and step % args.resample_every == 0:
-            n_resampled = resample_dead_features(
+            n_resampled = resample_dead_features(  # data_scale keeps units consistent
                 sae, optimizer, streamer, device,
                 n_collect_batches=50,
                 scale=args.resample_scale,
+                data_scale=scale if args.standardize else None,
             )
             if n_resampled > 0:
                 print(
@@ -441,12 +459,12 @@ def train(args):
 
         if step % args.save_every == 0:
             ckpt_path = out_dir / f"sae_step_{step:07d}.pt"
-            sae.save(str(ckpt_path))
+            sae.save(str(ckpt_path), data_scale=scale if args.standardize else None)
             print(f"  checkpoint → {ckpt_path}", flush=True)
 
     # ── Final save ────────────────────────────────────────────────────────────
     final_path = out_dir / "sae_final.pt"
-    sae.save(str(final_path))
+    sae.save(str(final_path), data_scale=scale if args.standardize else None)
     print(f"\n[train] Final model → {final_path}")
 
     log_path = out_dir / "training_log.json"
@@ -459,6 +477,7 @@ def train(args):
     sanity = run_sanity_checks(
         sae, streamer,
         out_path=str(out_dir / "sanity_check.png"),
+        data_scale=scale if args.standardize else None,
     )
 
     if sanity:
@@ -495,6 +514,18 @@ def main():
                         help="Directory for checkpoints, logs, and sanity plots")
     parser.add_argument("--dict_mult",  type=int,   default=4,
                         help="Dictionary size = dict_mult × d_in (default: 4)")
+    parser.add_argument("--standardize", action="store_true",
+
+                        help="Divide each channel by its running std before the SAE "
+
+                             "loss. REQUIRED for super-weight layers: the SW channel "
+
+                             "carries ~2000x a typical channel's sd (18698 vs 9.4), so an "
+
+                             "unnormalised MSE is dominated by it and the dictionary "
+
+                             "collapses (75% dead features).")
+
     parser.add_argument("--k",          type=int,   default=64,
                         help="TopK budget per token / target L0 (default: 64)")
     parser.add_argument("--lr",         type=float, default=2e-4,
