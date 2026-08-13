@@ -15,9 +15,9 @@ is not yet measured)
 
 | ID | Section | Claim (as it will appear) | Evidence path | Controls | Strength | Status |
 |---|---|---|---|---|---|---|
-| C-001 | R1 | ‖U_k‖_F ranks the empirical SW row 1/3,072 at the step-up layer in GENERator EUK and PROK | | layer median, 12× / 18× ratio | established | migrate |
+| C-001 | R1 | ‖U_k‖_F ranks the empirical SW row 1/3,072 at the step-up layer in GENERator EUK and PROK | | layer median, 12× / 18× ratio | **hold — see N-009** | **do not migrate until the PROK layer is pinned** |
 | C-002 | R1 | Predictor places 9/10 DNABERT-2 SW rows in the top 3 of their layer (median rank 1.4 / 768) | | | established | migrate |
-| C-003 | R1 | Predictor ranks the NTv3 SW row 1/1,536 at L11 | | | established | migrate |
+| C-003 | R1 | Predictor ranks the NTv3 SW row 1/1,536 at L11 | `e4_granularity.json` | max/median 3.6× | established | **confirmed by E4** |
 | C-004 | R1 | Predictor recovers published NLP super-weight **output rows** in Llama/Mistral/OLMo from cold weights: rank **1/4,096 in all three** | `e1_nlp_retrospective.json` | layer median (max/median 26.8–37.8×) | established | E1 done |
 | C-005 | R1 | Published NLP **scalar** index dominates within the recovered row: rank **1** in all three, top1_share 0.89–0.99 | `e1_nlp_retrospective.json` | participation ratio 1.02–1.24 | established | E1 done |
 | C-006 | R1 | Prospective cold-weight prediction on an unseen NLP model matches the forward-pass sweep | | timestamped lock | pending | E1 |
@@ -46,7 +46,7 @@ is not yet measured)
 | C-029 | R6 | NTv3 splice replicates: ΔMCC = −0.119 ± 0.054, 5/5 seeds negative, p = 0.008 | | random \|Δ\| < 3e−4 | supported | **metric issue — PHASE_0 §0.4** |
 | C-030 | R6 | Structurally related amplifiers are recruited for different functions across models | C-026 + C-027 | | supported | write |
 | C-031 | R7 | The NLP SW-preservation heuristic does not transfer; INT4 with vs. without SW exemption differs below resolution | | | established | migrate, compress to 1 para |
-| C-032 | R2/R3/R6 | Granularity of the causal object (scalar / row / ensemble) differs across models | | | pending | E4 |
+| C-032 | R2/R3/R6 | Granularity of the causal object differs across models: PR 3.64 (DNABERT-2) / 4.56 (EUK) / 22.7 (NTv3) / 122 (Evo1) / 2192 (PROK) vs 1.02–1.24 for published NLP SWs | `e4_granularity.json`, `e1_nlp_retrospective.json` | shape-verified per model | supported | E4 done — association only |
 
 ## Ledger notes
 
@@ -162,6 +162,27 @@ The numbers are probably sound: the STEP 2 gate measured both paths and they agr
 (L13 median |h| 4.09e6 fp32 vs 4.23e6 bf16; max 1.2953e9 vs 1.2918e9; std AC 5.64e7 vs
 5.53e7). This is a **labelling** defect, not necessarily a numerical one. Methods must state
 the actual dtype, and the stored JSON's `dtype` field should be corrected or annotated.
+
+**N-009 — GENERator PROK ranks 1289/3,072 at layer 2, not 1. C-001 on hold.**
+E4 measured the PROK SW row (1927) at layer 2 — the layer in `SW_TARGETS` — and found rank
+**1289 / 3,072**, top-1 share 0.0047, PR 2191.6. EUK at layer 4 does rank 1, as C-001 claims.
+
+Most likely a **layer mismatch rather than a contradiction**: `SW_TARGETS` layer 2 is the
+*impulse source layer*, while C-001 refers to the *step-up layer*, which for PROK may be a
+different layer. Not investigated — deciding which layer C-001 means is a call about an
+existing claim, not an E4 measurement. C-001 is left as written and must not be migrated
+until the layer is pinned. Evidence: `results/e4_granularity.json`.
+
+**N-010 — `uk_frobenius` ADAPTERS registry is wrong for NTv3.**
+`ADAPTERS["ntv3"] = adapter_llama_swiglu` (flagged "verify") would raise: NTv3 has no
+`model.model.layers` and no `mlp` module. Its `SelfAttentionBlock` carries the FFN inline as
+`fc1` (12288, 1536) and `fc2` (1536, 6144) with SiLU — `fc1` is **packed** gate+up, the
+DNABERT-2 layout. Corrected in `experiments/E4_granularity/run_e4_granularity.py`;
+`src/uk_frobenius.py` is **not** edited, since it is shared with E1 and the fix belongs with
+a test. Any future use of the registry for NTv3 will be wrong until it is.
+
+Gate/up ordering within the packed half is unresolvable from shapes and immaterial: c_{k,i}
+is symmetric under swapping them.
 
 ## Retired claims
 

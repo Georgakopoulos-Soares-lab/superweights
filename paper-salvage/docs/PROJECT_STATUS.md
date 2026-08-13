@@ -55,7 +55,7 @@ Phases 1 and 2 run **in parallel**. R1, R2, R4, R6, R7 do not depend on the Evo1
 | E1 | NLP cold-weight validation (row + scalar) + prospective lock | **retrospective DONE (3/3 both levels)**; prospective not started | | `prereg/PREREG_nlp_prospective.md` |
 | E2 | Evo1 standardized broadcast | **BLOCKED at STEP 3d — KL flat for PROK at both doses** | | `prereg/PREREG_evo1_broadcast.md` **v2, NOT locked** |
 | E3 | Bidirectional steering w/ degradation controls | not started | | `prereg/PREREG_steering.md` |
-| E4 | c_{k,i} granularity decomposition, all genomic gated FFNs | not started | | free alongside E1 |
+| E4 | c_{k,i} granularity decomposition, all genomic gated FFNs | **DONE — 5/5 models** | | free alongside E1 |
 
 **Stop rule:** finish E1–E4, then re-assess before starting anything else.
 
@@ -146,4 +146,9 @@ YYYY-MM-DD  |  scaffold created; outline frozen  |  next: run PHASE_0 inventory
             |  contributor all three (Level 2). Scalar recovery claimable. C-004, C-005 ->
             |  established. Prospective arm NOT run (needs model choice + lock).
             |  next: queue item 4 (E4 granularity)
+2026-08-12  |  E4 COMPLETE, 5/5 models, all shape-verified. PR: DNABERT-2 3.64, EUK 4.56,
+            |  NTv3 22.7, Evo1 122, PROK 2192; NLP published SWs 1.02-1.24. C-032 supported.
+            |  Two flags: PROK ranks 1289/3072 at L2 (C-001 on hold, N-009), and the
+            |  uk_frobenius ntv3 adapter is wrong -- NTv3 is packed like DNABERT-2 (N-010).
+            |  next: E2 metric decision (BLOCKED.md); E1 prospective arm needs model + lock
 ```
