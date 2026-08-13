@@ -37,9 +37,15 @@ Controls per SW (four arms, per the prereg):
   random_coord  : axis-aligned ε perturbation at a uniformly random coordinate
   neighbour_row : axis-aligned ε perturbation at row ± 1
   random_dir    : dense random-unit-direction perturbation of the same ε norm
-  matched_norm  : random coordinate, ε rescaled so the first downstream layer sees the
-                  same perturbation norm the SW injection produced there (added here;
-                  the prereg names four arms but only three were ever implemented)
+  matched_norm  : "equal-norm random row" — same ε at a random row k' whose output-write
+                  norm ‖W_down[k',:]‖ is within ±10% of the SW row's. Matches the ablation
+                  control in v15 Fig 1B, so impulse and ablation controls sit on the same
+                  footing. Added here: the prereg has always named four arms but only three
+                  were ever implemented, so prior "four control arms" statements are wrong.
+
+Dual dose (prereg v2): PRIMARY α = 0.01 is the small-signal linear-response probe and is
+where T and C are read; SECONDARY α = 1.0 is the AC-matched large-signal probe and is where
+KL is read (at α = 0.01 the output KL is ~0 for every model). Neither is tuned per model.
 
 Usage:
   python scripts/interpretability/run_sw_broadcast_impulse.py --model generator
@@ -123,6 +129,7 @@ def _load_model(model_name: str, device: str):
         model.eval()
         if device == "cuda":
             model = model.cuda()
+        _dnabert2_force_eager_attention()
         return model, tok
 
     if arch == "ntv3":
@@ -140,6 +147,44 @@ def _load_model(model_name: str, device: str):
         return _load_evo1_fp32(device)
 
     raise ValueError(f"Unknown arch: {arch}")
+
+
+def _dnabert2_force_eager_attention() -> bool:
+    """Force DNABERT-2 onto its PyTorch attention path instead of the Triton kernel.
+
+    Fixes two defects at once, both in `BertUnpadSelfAttention.forward`:
+
+    1. NONDETERMINISM (N-004). The Triton flash-attn kernel makes the forward pass
+       irreproducible: two identical passes differed by KL = 0.305 against an injected
+       signal of 0.277, i.e. SNR ~0.9. Every impulse number measured through it was noise.
+
+    2. SILENT fp16. The kernel supports only fp16/bf16, so the remote code does
+           convert_dtype = qkv.dtype not in [torch.float16, torch.bfloat16]
+       and casts qkv (and the bias) to **fp16** for attention, then casts back. Under our
+       fp32 mandate (D-013) DNABERT-2's attention was still running in fp16 and nobody knew.
+
+    The module guards the kernel behind
+        if self.p_dropout or flash_attn_qkvpacked_func is None:  -> PyTorch path
+    so setting the module-global to None selects the eager path, which stays in fp32 and is
+    deterministic. `self.dropout` is identity in eval() mode, so the branch is equivalent
+    apart from kernel choice.
+
+    This changes the model's computation, so it is gated on a perplexity guard —
+    see scripts/interpretability/dnabert2_kernel_guard.py. Returns True if patched.
+    """
+    import sys as _sys
+    patched = False
+    for name, mod in list(_sys.modules.items()):
+        if name.endswith("bert_layers") and hasattr(mod, "flash_attn_qkvpacked_func"):
+            if getattr(mod, "flash_attn_qkvpacked_func") is not None:
+                mod.flash_attn_qkvpacked_func = None
+                patched = True
+            print(f"[dnabert2] eager attention forced in {name} "
+                  f"(patched={patched}); Triton flash-attn disabled")
+    if not patched:
+        print("[dnabert2] WARNING: bert_layers module not found or already patched; "
+              "attention kernel unchanged")
+    return patched
 
 
 def _load_evo1_fp32(device: str):
@@ -221,6 +266,47 @@ def _get_blocks(model, arch: str) -> list:
     if arch == "evo1":
         return list(model.blocks)
     raise ValueError(arch)
+
+
+def _sw_output_matrix(model, arch: str, layer: int):
+    """W_down for the MLP at `layer`, in the canonical [d_model, d_ffn] convention.
+
+    Used by the matched-norm control arm, which selects random rows whose
+    ||W_down[k',:]|| lies within +/-10% of the SW row's. Row k of the returned matrix is
+    the output projection of hidden unit block k into the residual stream, so its norm is
+    the row's write magnitude.
+
+    Module paths follow _get_blocks (verified for all five models) rather than the
+    uk_frobenius adapter registry, whose ntv3 entry is flagged unverified. Returns None if
+    the projection cannot be located, so the caller can skip the arm rather than guess.
+    """
+    try:
+        blocks = _get_blocks(model, arch)
+        blk = blocks[layer]
+        if arch in ("llama",):
+            W = blk.mlp.down_proj.weight
+        elif arch == "bert":
+            W = blk.mlp.wo.weight
+        elif arch == "evo1":
+            W = blk.mlp.l3.weight
+        elif arch == "ntv3":
+            mlp = getattr(blk, "mlp", None) or getattr(blk, "ffn", None)
+            W = None
+            for attr in ("down_proj", "wo", "w2", "fc2", "output_proj", "l3"):
+                if mlp is not None and hasattr(mlp, attr):
+                    W = getattr(mlp, attr).weight
+                    break
+            if W is None:
+                print(f"[{arch}] could not find a down-projection on {type(mlp).__name__}; "
+                      f"attrs = {[a for a in dir(mlp) if not a.startswith('_')][:20]}")
+                return None
+        else:
+            return None
+
+        return W.detach()
+    except Exception as exc:
+        print(f"[{arch}] _sw_output_matrix failed: {exc}")
+        return None
 
 
 def _tokenize(tokenizer, seq: str, arch: str, device: str) -> dict:
@@ -354,7 +440,8 @@ def run_pass(model, inp_dict: dict, blocks: list, arch: str,
 
 # ─── Epsilon and precision headroom (D-011, D-013) ───────────────────────────
 
-ALPHA = 0.01          # FIXED for all five models. Not tuned per model. See D-011.
+ALPHA = 0.01          # PRIMARY dose. FIXED for all five models, not tuned. See D-011.
+ALPHA_KL = 1.0        # SECONDARY dose, AC-matched. KL is reported from this one.
 HEADROOM_MIN = 4.0    # below this a layer is under-powered -> UNMEASURED, not zero.
 
 
@@ -487,7 +574,8 @@ def kl_divergence(logits_clean: torch.Tensor, logits_pert: torch.Tensor,
 # ─── Per-model assay ──────────────────────────────────────────────────────────
 
 def run_model_assay(model_name: str, epsilon: float, n_controls: int,
-                    seed: int, device: str, fixed_eps: float | None = None) -> dict:
+                    seed: int, device: str, fixed_eps: float | None = None,
+                    alpha: float = ALPHA, dose_label: str = "primary") -> dict:
     rng = random.Random(seed)
     np_rng = np.random.default_rng(seed)
 
@@ -529,9 +617,13 @@ def run_model_assay(model_name: str, epsilon: float, n_controls: int,
         eps_meta = {"mode": "fixed", "alpha": None, "epsilon": epsilon}
         print(f"[broadcast:{model_name}] FIXED eps={epsilon:g}  (superseded protocol)")
     else:
-        epsilon, eps_meta = ac_epsilon(src_hs, ALPHA)
-        eps_meta.update({"mode": "ac_relative", "epsilon": epsilon})
-        print(f"[broadcast:{model_name}] eps = alpha*std_AC = {ALPHA} * "
+        epsilon, eps_meta = ac_epsilon(src_hs, alpha)
+        eps_meta.update({"mode": "ac_relative", "epsilon": epsilon,
+                         "dose": dose_label,
+                         "regime": ("small-signal linear response (T, C reported here)"
+                                    if alpha <= 0.01 else
+                                    "large-signal AC-matched (KL reported here)")})
+        print(f"[broadcast:{model_name}] [{dose_label}] eps = alpha*std_AC = {alpha} * "
               f"{eps_meta['std_ac']:.4e} = {epsilon:.4e}")
 
     param_dtype = next(model.parameters()).dtype
@@ -600,49 +692,57 @@ def run_model_assay(model_name: str, epsilon: float, n_controls: int,
                                  "metrics": {str(k): v_m for k, v_m in rm2.items()}})
     controls["random_dir"] = rand_dir_results
 
-    # Control D: matched-norm.
+    # Control D: matched-norm — "equal-norm random row".
     #
-    # The prereg names four arms; this harness only ever implemented three, so every
-    # existing "four control arms" statement about the other models is inaccurate. See
-    # RESULTS.md. Definition adopted here, stated explicitly because the prereg does not
-    # define it and it is being locked:
+    # Definition (signed off, and written into the prereg, not just here): single-coordinate
+    # injection of the same eps at a random row k' whose output-projection norm
+    # ||W_down[k',:]|| falls within +/-10% of the SW row's ||W_down[k,:]||.
     #
-    #   Inject at a random coordinate, but rescale eps so the perturbation's norm at the
-    #   FIRST downstream layer matches what the SW injection produced there. This asks a
-    #   different question from Control A: not "does an arbitrary coordinate of the same
-    #   injected size broadcast as far" but "does an arbitrary coordinate that starts with
-    #   the same downstream footprint stay as large". It isolates propagation from the
-    #   immediate local response.
+    # This is the same control already used for ablation in v15 Fig 1B, so the impulse and
+    # ablation control sets sit on the same footing: both ask whether the SW row is special
+    # among rows of comparable write magnitude, rather than among all rows.
     #
-    # Control C already matches the injected norm, so norm-matching at the injection site
-    # is covered; matching at the first downstream layer is the non-redundant reading.
-    first_down = min(sw_metrics.keys()) if sw_metrics else None
+    # NOTE: the prereg has always named four arms; this harness implemented three
+    # (random_coord, neighbour_row, random_dir). Every prior "four control arms" statement
+    # about the other models is inaccurate and is corrected in the ledger and prereg.
     matched_results = []
-    if first_down is not None:
-        sw_dnorm = sw_metrics[first_down]["T_mean"] * abs(epsilon)   # un-normalise
-        for rr in [rng.choice(non_sw) for _ in range(n_controls)]:
-            probe_h, _ = run_pass(model, inp, blocks, arch,
+    w_down = _sw_output_matrix(model, arch, sw_layer)
+    if w_down is not None and w_down.shape[0] != d_model:
+        # A silent transpose produces a plausible-looking but wrong ranking. Refuse it.
+        print(f"[broadcast:{model_name}] WARNING: W_down is {tuple(w_down.shape)}, expected "
+              f"[d_model={d_model}, d_ffn]; matched-norm arm skipped rather than guess")
+        w_down = None
+    if w_down is None:
+        controls["matched_norm"] = {"error": "could not locate W_down for this arch; "
+                                             "matched-norm arm not run"}
+        print(f"[broadcast:{model_name}] WARNING: matched-norm arm skipped (no W_down)")
+    else:
+        row_norms = w_down.float().norm(dim=1)           # [d_model]
+        target = float(row_norms[sw_row])
+        lo, hi = 0.9 * target, 1.1 * target
+        band = [int(r) for r in torch.nonzero((row_norms >= lo) & (row_norms <= hi),
+                                              as_tuple=True)[0].tolist() if r != sw_row]
+        print(f"[broadcast:{model_name}] matched-norm band: |W_down[k,:]|={target:.4e}, "
+              f"{len(band)} rows within +/-10%")
+        if not band:
+            controls["matched_norm"] = {
+                "error": "no rows within +/-10% of the SW row's ||W_down||",
+                "sw_row_norm": target, "n_candidates": 0}
+        else:
+            picks = [rng.choice(band) for _ in range(min(n_controls, len(band)))]
+            for rr in picks:
+                mh, mo = run_pass(model, inp, blocks, arch,
                                   inject_layer=sw_layer, inject_pos=sw_pos,
                                   inject_row=rr, epsilon=epsilon)
-            pm = broadcast_metrics(clean_hs, probe_h, rr, sw_layer, epsilon, param_dtype)
-            ctrl_dnorm = pm[first_down]["T_mean"] * abs(epsilon)
-            if ctrl_dnorm <= 0:
-                matched_results.append({"row": rr, "scale": None,
-                                        "note": "control produced no downstream response; "
-                                                "cannot norm-match"})
-                continue
-            scale = sw_dnorm / ctrl_dnorm
-            eps_m = epsilon * scale
-            mh, mo = run_pass(model, inp, blocks, arch,
-                              inject_layer=sw_layer, inject_pos=sw_pos,
-                              inject_row=rr, epsilon=eps_m)
-            mm = broadcast_metrics(clean_hs, mh, rr, sw_layer, eps_m, param_dtype)
-            kl_m = kl_divergence(logits_clean, _get_logits(mo, arch), sw_pos, is_causal)
-            matched_results.append({
-                "row": rr, "scale": scale, "epsilon_matched": eps_m, "kl": kl_m,
-                "metrics": {str(k): v_m for k, v_m in mm.items()},
-            })
-    controls["matched_norm"] = matched_results
+                mm = broadcast_metrics(clean_hs, mh, rr, sw_layer, epsilon, param_dtype)
+                kl_m = kl_divergence(logits_clean, _get_logits(mo, arch), sw_pos, is_causal)
+                matched_results.append({
+                    "row": rr, "row_norm": float(row_norms[rr]),
+                    "sw_row_norm": target,
+                    "norm_ratio": float(row_norms[rr]) / target, "kl": kl_m,
+                    "metrics": {str(k): v_m for k, v_m in mm.items()},
+                })
+            controls["matched_norm"] = matched_results
 
     ctrl_unpowered = {}
     for cname, centry in controls.items():
@@ -676,7 +776,9 @@ def run_model_assay(model_name: str, epsilon: float, n_controls: int,
             "under_powered_controls": ctrl_unpowered,
         },
         "epsilon_meta": eps_meta,
-        "protocol": "D-011 AC-relative eps + D-013 fp32/headroom",
+        "alpha": alpha,
+        "dose": dose_label,
+        "protocol": "D-011 AC-relative eps + D-013 fp32/headroom + dual-dose",
     }
 
 
@@ -847,14 +949,28 @@ def main():
         models_to_run = list(SW_TARGETS) if args.model == "all" else [args.model]
         # Load previously accumulated results so per-model runs merge rather than overwrite
         all_results: dict = json.loads(out_json.read_text()) if out_json.exists() else {}
+
+        # Dual dose (prereg v2, D-011 amendment):
+        #   PRIMARY   alpha = 0.01 — small-signal linear-response probe; T and C come from here.
+        #   SECONDARY alpha = 1.0  — large-signal AC-matched probe; KL comes from here.
+        # Justified by the PROK linearity probe: T is eps-invariant across eps 1e-2..10, so
+        # the two doses are comparable. KL is a functional metric and needs a perturbation
+        # large enough to move the output distribution — at alpha = 0.01 it is ~0 for every
+        # model. Neither dose is tuned per model.
+        doses = [(ALPHA, "primary", ""), (ALPHA_KL, "secondary", f"__alpha{ALPHA_KL:g}")]
+        if args.fixed_eps is not None:
+            doses = [(None, "fixed_eps", f"__fixed_eps{args.fixed_eps:g}")]
+
         for mname in models_to_run:
-            try:
-                all_results[mname] = run_model_assay(
-                    mname, 0.0, args.n_controls, args.seed, args.device,
-                    fixed_eps=args.fixed_eps)
-            except Exception as exc:
-                print(f"[broadcast:{mname}] FAILED — {exc}")
-                import traceback; traceback.print_exc()
+            for a, label, suffix in doses:
+                try:
+                    all_results[mname + suffix] = run_model_assay(
+                        mname, 0.0, args.n_controls, args.seed, args.device,
+                        fixed_eps=args.fixed_eps,
+                        alpha=(a if a is not None else ALPHA), dose_label=label)
+                except Exception as exc:
+                    print(f"[broadcast:{mname}/{label}] FAILED — {exc}")
+                    import traceback; traceback.print_exc()
 
         Path(out_json).parent.mkdir(parents=True, exist_ok=True)
         out_json.write_text(json.dumps(all_results, indent=2))

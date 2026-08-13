@@ -2,24 +2,34 @@
 
 **Last updated:** 2026-08-12
 **Current phase:** Phase 1 — Blocking experiments (E2 halted at STEP 3)
-**Blocking on:** a decision about DNABERT-2's impulse noise floor. **The prereg was not
+**Blocking on:** a decision about which attention kernel is DNABERT-2. **The prereg was not
 locked and the five-model re-run was not started** — see the blocker below.
 
-> ## ⛔ BLOCKER — DNABERT-2 impulse assay is noise-dominated
+> ## ⛔ BLOCKER — DNABERT-2 attention kernel: determinism fixed, guard failed
 >
-> Two identical DNABERT-2 forward passes with **no injection** differ by KL = 0.305; the SW
-> injection gives KL = 0.277. Per-layer SNR 0.93–1.00. C-014's published "largest impulse
-> KL ≈ 0.31" matches the noise floor to two significant figures.
+> **Determinism: solved.** Attempt 1 of the STEP 3a ladder worked — forcing the eager
+> PyTorch attention path gives an **exactly zero** noise floor. Attempts 2 and 3 not needed.
+> The real DNABERT-2 impulse signal is ‖Δh‖ = 2.4e-3, KL = 1.8e-8 — about 1,800× smaller
+> than the 4.50 / 0.277 previously measured, which was entirely noise. C-014's "largest
+> impulse KL ≈ 0.31" does not survive.
 >
-> GENERator EUK/PROK and NTv3 have an exactly-zero noise floor on the same harness and path,
-> so this is DNABERT-2-specific (likely its Triton flash-attn kernels).
+> **Guard: FAILED.** MLM perplexity, same weights and inputs, kernel the only difference:
+> Triton/fp16 = 687.9 (nondeterministic, 8.48% spread across repeats) vs eager/fp32 = 176.9
+> (0.000% spread). Δ = **−74.3%** against ±1%. Per the standing rule this is reported, not
+> adopted, so the fix is **not** in force for the re-run.
 >
-> Running the five-model table now would place one column of run-to-run noise beside four
-> real ones, certified as adequately powered by a headroom column that measures
-> representability rather than determinism. That is the D-011 error class again.
+> The Triton path silently casts qkv to fp16 and its own perplexity varies by 8.5%, so it is
+> not a fixed quantity to match against; the eager path is 3.9× better and bit-reproducible.
+> That suggests Triton is the defective path — but deciding which path *is* DNABERT-2 is a
+> substantive call and is not made here.
 >
-> Full analysis: `experiments/E2_evo1_broadcast/INSTRUMENT_VALIDATION.md`. Ledger: N-004, N-005.
-> No fix attempted, nothing interpreted, no thesis sentence drafted.
+> **Unaudited scope:** the loaded config has `attention_probs_dropout_prob = 0.0`, so Triton
+> was the *default* inference path. Every inference-time DNABERT-2 analysis went through it.
+> Whether C-002, C-010, C-027 or C-028 are affected has not been checked.
+>
+> Ledger: N-004, N-006, N-007, N-008. Detail:
+> `experiments/E2_evo1_broadcast/INSTRUMENT_VALIDATION.md`.
+> Everything else in STEP 3b/3c is complete; the prereg is ready to lock once this is decided.
 
 ---
 
@@ -126,4 +136,9 @@ YYYY-MM-DD  |  scaffold created; outline frozen  |  next: run PHASE_0 inventory
             |  matched-norm arm; instrument validation found DNABERT-2 impulse assay is
             |  noise-dominated (N-004). Prereg NOT locked, re-run NOT started.
             |  next: decide DNABERT-2 determinism before locking
+2026-08-12  |  STEP 3a: eager attention gives zero noise floor, but perplexity guard FAILS
+            |  (-74.3%, N-007). STEP 3b/3c complete: matched-norm redefined as equal-norm
+            |  random row, dual dose (a=0.01 T/C, a=1.0 KL), sanity expectation corrected,
+            |  v1 declared not-preregistered, reconstruction deleted (N-008 fp32 mislabel).
+            |  next: decide DNABERT-2 kernel, then lock and run
 ```

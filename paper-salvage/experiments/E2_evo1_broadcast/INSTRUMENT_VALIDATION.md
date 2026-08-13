@@ -142,3 +142,88 @@ not determinism. That is the same class of error D-011 was raised to correct.
 
 Nothing here has been interpreted, no thesis sentence drafted, no AC/DC decomposition begun,
 and the Phase 1b relative-change observation has not been pursued.
+
+---
+
+# Addendum — STEP 3a/3b/3c (2026-08-12)
+
+## STEP 3a — determinism ladder
+
+**Attempt 1 succeeded; attempts 2 and 3 were not needed.**
+
+Disable Triton flash-attn, force the eager PyTorch path. Implemented as
+`_dnabert2_force_eager_attention()`: the remote code guards the kernel behind
+`if self.p_dropout or flash_attn_qkvpacked_func is None:`, so setting that module-global to
+`None` selects the eager branch. `self.dropout` is identity in `eval()`.
+
+| | before (Triton) | after (eager) |
+|---|---|---|
+| noise floor ‖Δh‖, L6–L11 | 4.50 → 2.54 | **0.0 exact** |
+| KL noise floor | 0.305 | **0.0 exact** |
+| SW signal ‖Δh‖ | 4.50 (= noise) | 2.42e-3 |
+| SW signal KL | 0.277 (= noise) | 1.82e-8 |
+
+The real signal is ~1,800× smaller than what the Triton path reported. **C-014's "largest
+impulse KL ≈ 0.31" does not survive in any form** — the true value at the primary dose is
+1.8e-8.
+
+## STEP 3a guard — FAILED
+
+Same weights, same inputs, same process; attention kernel the only difference. Three
+repeats per arm, because the Triton path is not deterministic and a single value from it is
+not a fixed quantity.
+
+| Attention path | mean PPL | repeats | spread |
+|---|---|---|---|
+| Triton kernel, fp16 attention | 687.9 | 720.6 / 681.1 / 662.2 | **8.48%** |
+| eager PyTorch, fp32 attention | **176.9** | 176.9 / 176.9 / 176.9 | **0.000%** |
+
+**Δ = −74.29%, tolerance ±1%. The fix is not adopted.**
+
+Interpretation is left open deliberately, but two facts constrain it:
+
+- The Triton arm's perplexity varies by 8.5% run to run, so there is no stable "original"
+  value for the fixed arm to match.
+- The Triton path casts qkv and the attention bias to **fp16** (`convert_dtype` in
+  `BertUnpadSelfAttention.forward`), so DNABERT-2's attention was never running the fp32
+  D-013 mandates — the fp32 parameter dtype was cosmetic for attention.
+
+The eager path is 3.9× better on perplexity and bit-reproducible. The natural reading is
+that Triton is the defective path rather than that the fix damaged the model. That call is
+substantive and is not made here.
+
+### Unaudited scope
+
+The loaded config has `attention_probs_dropout_prob = 0.0`, so `p_dropout` is falsy and the
+guard selects **Triton by default**. (A second cached snapshot under the `transformers/`
+cache carries 0.1, but it is not the one that loads.) Consequently every *inference-time*
+DNABERT-2 analysis in the manuscript ran through Triton/fp16; fine-tuning runs, which set
+dropout > 0, would have taken the eager path. Whether C-002, C-010, C-027 or C-028 are
+affected **has not been audited** — flagged, not investigated, per the stop rule.
+
+## STEP 3b — protocol corrections, all applied
+
+1. **Matched-norm arm** redefined as the equal-norm random row: ε at a random k′ with
+   ‖W_down[k′,:]‖ within ±10% of the SW row's, matching the v15 Fig 1B ablation control.
+   Written into the prereg, not only the code. All "four control arms" statements corrected
+   — the harness had three.
+2. **Dual dose.** PRIMARY α = 0.01 (small-signal, T and C); SECONDARY α = 1.0 (AC-matched,
+   KL). Necessary because at α = 0.01 the output KL is ~0 everywhere (EUK and PROK exactly
+   0.0, DNABERT-2 1.8e-8). Both doses run for all five models and every arm.
+3. **Sanity expectation corrected.** The "α = 0.01 lands near ε = 1.0" text is struck and
+   replaced with the measured AC table; comparability now rests on ε-invariance of T,
+   evidenced by the PROK linearity probe, not on ε being similar across models.
+
+## STEP 3c — provenance
+
+The prereg now carries the plain statement: *"The impulse protocol was revised twice during
+instrument validation. Only the final protocol (v2, locked `<hash>`, `<date>`) was
+preregistered; earlier versions were not."* The v1 transcript reconstruction has been
+**deleted** and `docs/prereg/archive/README.md` records why. N-008 logs the
+`run_evo1_residual_attribution_fp32.py` dtype mislabel.
+
+## State
+
+Everything in STEP 3b and 3c is done. The prereg is ready to lock the moment the DNABERT-2
+kernel question is decided. Nothing has been interpreted, no thesis sentence drafted, no
+AC/DC decomposition begun, and the Phase 1b observation is untouched.

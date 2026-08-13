@@ -114,12 +114,76 @@ false as written and should be corrected before locking; the comparability it wa
 protect is delivered by ε-invariance instead.
 Evidence: `results/impulse_linearity_generator_prokaryote.json`.
 
+**N-007 — DNABERT-2 determinism is fixable, but the fix fails the perplexity guard. OPEN.**
+Attempt 1 of the STEP 3a ladder succeeded on determinism: forcing the eager PyTorch
+attention path (module-global `flash_attn_qkvpacked_func = None`) gives an **exactly zero**
+noise floor. Attempts 2 and 3 were not needed.
+
+The signal that emerges is nothing like what was published. Through the Triton path the
+"signal" was ‖Δh‖ = 4.50 and KL = 0.277 — all of it noise. Through the eager path the real
+signal is **‖Δh‖ = 2.4e-3 and KL = 1.8e-8**, roughly 1,800× smaller. C-014's "largest
+impulse KL ≈ 0.31" does not survive in any form.
+
+**But the guard fails.** Masked-LM perplexity, same weights, same inputs, same process,
+kernel the only difference:
+
+| Attention path | PPL | repeats | spread |
+|---|---|---|---|
+| Triton kernel, fp16 attention (original) | 687.9 | 720.6 / 681.1 / 662.2 | **8.48%** |
+| eager PyTorch, fp32 attention (fixed) | **176.9** | 176.9 / 176.9 / 176.9 | **0.000%** |
+
+Δ = **−74.3%** against a ±1% tolerance. Per the standing rule this is reported, not adopted.
+
+Two facts constrain the interpretation. The Triton path's perplexity is itself
+nondeterministic by 8.5%, so it is not a fixed quantity to be matched against. And the
+Triton path silently casts qkv to **fp16** (the kernel takes only fp16/bf16), so it was
+never running the fp32 that D-013 mandates. The eager path is 3.9× better on perplexity and
+bit-reproducible. That points to the Triton path being the defective one rather than the fix
+having damaged the model — but adjudicating which path *is* DNABERT-2 is a substantive call,
+not a harness detail, and it is not made here.
+
+Scope: the loaded config has `attention_probs_dropout_prob = 0.0`, so `p_dropout` is falsy
+and the guard `if self.p_dropout or flash_attn_qkvpacked_func is None` selects **Triton by
+default**. Every inference-time DNABERT-2 analysis in the manuscript therefore went through
+the Triton/fp16 path. Fine-tuning runs with dropout > 0 would have taken the eager path.
+Which of C-002, C-010, C-027, C-028 that touches has **not** been audited.
+
+Evidence: `results/dnabert2_kernel_guard.json`, `results/impulse_determinism_dnabert2.json`,
+`logs/dnabert2_guard.log`.
+
+**N-008 — the fp32 residual-attribution figures were bf16 under an fp32 label.**
+`scripts/analysis/run_evo1_residual_attribution_fp32.py` is named `_fp32`, writes
+`"dtype": "float32"` into `results/sw_residual_attribution_evo1_fp32.json`, and runs
+**bf16** — it casts every parameter except poles/residues to bfloat16 and says so in its own
+comment. The manuscript's Evo1 residual-attribution figures are therefore bf16 results
+carrying an fp32 label.
+
+The numbers are probably sound: the STEP 2 gate measured both paths and they agree closely
+(L13 median |h| 4.09e6 fp32 vs 4.23e6 bf16; max 1.2953e9 vs 1.2918e9; std AC 5.64e7 vs
+5.53e7). This is a **labelling** defect, not necessarily a numerical one. Methods must state
+the actual dtype, and the stored JSON's `dtype` field should be corrected or annotated.
+
 ## Retired claims
 
 | ID | Claim | Why retired |
 |---|---|---|
 | X-001 | "SW neighbourhood is extremely tolerant to pruning" / shadow redundancy | Contradicted by our own pruning sweep: near-SW −1.60 pp vs. random −0.82 pp at 20% |
 | X-002 | "We scanned eight genomic language models" (as a uniform benchmark) | Coverage is asymmetric; replaced by the coverage table |
-| X-003 | (‖U_k‖_F, C) jointly predict criticality | Falsified by DNABERT-2 (C ≈ 0, largest KL) |
+| X-003 | (‖U_k‖_F, C) jointly predict criticality | Falsified by DNABERT-2 (C ≈ 0, largest KL) — **⚠ MAY BE UN-RETIRED, see note below** |
 | X-004 | DNABERT-2 ensemble behaviour is a *consequence* of C ≈ 0 | Association only; no causal evidence. May return as `consistent-with` after E4 |
 | X-005 | Broadcast headroom bounds broadcast | One extreme case; demoted to methodological covariate (C-018) |
+
+**N-006 — X-003 may be un-retired.**
+X-003 was retired on exactly one piece of evidence: DNABERT-2 having C ≈ 0 alongside the
+largest impulse KL. N-004 shows that measurement was taken through a noise-dominated
+instrument. The retirement is therefore **conditional on the E2 re-measurement**:
+
+- Re-measured DNABERT-2 C ≈ 0 → X-003 stays retired, C-015 restored, `CLAUDE.md`'s
+  constraint becomes final.
+- Re-measured DNABERT-2 C high → **X-003 returns to the live ledger**, D-004's rationale
+  fails, and `CLAUDE.md`'s "C is not necessary for criticality" is wrong as written.
+
+Both outcomes are reportable and neither is preferred. The existing framing is not to be
+protected. Same applies to X-004, which depends on the same C ≈ 0 value.
+
+Unaffected either way: C-027, C-028. The ablation phenotype is independent evidence.

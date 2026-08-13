@@ -29,9 +29,19 @@ supplement or is cut. No exceptions, no "but it's interesting."
 These are not style preferences. Violating them reintroduces the errors that made v15
 unpublishable.
 
-- **C (coordinate preservation) is NOT necessary for criticality.** DNABERT-2 has
+- **[PROVISIONAL — pending E2 re-measurement, see `docs/CLAIMS_LEDGER.md` N-004]**
+  **C (coordinate preservation) is NOT necessary for criticality.** DNABERT-2 has
   C ≈ 0 and the strongest encoder phenotype. Never write that (‖U_k‖_F, C) jointly
   predict criticality. C describes *routing geometry*.
+
+  This constraint was derived from DNABERT-2's impulse C ≈ 0, which was measured through
+  a noise-dominated instrument (identical passes differ by KL = 0.305 against a signal of
+  0.277; per-layer SNR 0.93–1.00). **If the re-measurement shows DNABERT-2 has high C,
+  this constraint is wrong**, D-004's rationale fails, and X-003 comes out of retirement.
+  Report that outcome if the data show it. Do not protect the existing framing.
+
+  Unaffected either way: DNABERT-2's *ablation* phenotype (C-027 splice −25.5 pp, C-028
+  ensemble behaviour) is a different experiment. Only the routing number is in question.
 - **Do not claim T predicts criticality** until the Evo1 broadcast run lands. The
   R3 thesis sentence is a slot with two drafted variants — see `docs/PHASE_1_BLOCKING.md`.
 - **"Recovers the published super-weight output rows"** unless the scalar index *i*

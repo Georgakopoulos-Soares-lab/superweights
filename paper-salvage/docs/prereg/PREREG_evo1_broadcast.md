@@ -54,6 +54,25 @@ Everything else is unchanged from v1: injection at the SW row / SW token / **sou
 (Evo1 row 3776, L11); tracked across all downstream layers; metrics T, C, KL; all four
 control arms — random-coordinate, neighbouring-row, random-dense-direction, matched-norm.
 
+### Control arms, defined (correction)
+
+**The harness implemented three arms, not four.** `random_coord`, `neighbour_row` and
+`random_dir` existed; `matched_norm` did not. Every statement in v1, in the ledger and in
+drafted text claiming "four control arms" for the other models is **inaccurate** and is
+corrected wherever it appears. The fourth arm is defined here and implemented for the
+re-run:
+
+1. **random-coordinate** — axis-aligned ε at a uniformly random row.
+2. **neighbouring-row** — axis-aligned ε at row k ± 1.
+3. **random-dense-direction** — dense random unit vector scaled to the same ε norm.
+4. **matched-norm ("equal-norm random row")** — axis-aligned ε at a random row k' whose
+   output-write norm ‖W_down[k′,:]‖ lies within **±10%** of the SW row's ‖W_down[k,:]‖.
+
+Arm 4 is the control already used for ablation in v15 Fig 1B, so the impulse and ablation
+control sets sit on the same footing: both ask whether the SW row is special *among rows of
+comparable write magnitude*, not merely among all rows. Arm 1 is the weaker question and is
+retained because the existing runs used it.
+
 **Applied to all five models.** GENERator EUK, GENERator PROK, DNABERT-2, NTv3, Evo1. Only
 re-run numbers are reported in R3.
 
@@ -87,20 +106,21 @@ A flat result is interpretable only where headroom is adequate. This column is r
 every model and every control arm, and it is what allows Branch C to be earned rather than
 asserted.
 
-## v1 provenance (added per D-013)
+## Provenance — v1 was not preregistered
 
-v1 of this preregistration was version-controlled but not machine-locked; `LOCKS.jsonl` did
-not exist at the time. Its provenance is the git commit that introduced it:
+**Statement for Methods, to be reproduced verbatim:**
 
-    commit: ____________________   date: ____________________
-    (git log --follow --diff-filter=A -- docs/prereg/PREREG_evo1_broadcast.md)
+> The impulse protocol was revised twice during instrument validation. Only the final
+> protocol (v2, locked `<hash>`, `<date>`) was preregistered; earlier versions were not.
 
-This is disclosed in Methods. No retroactive LOCKS.jsonl entry is synthesised for v1.
+Nothing requires preregistration. Claiming it falsely is far worse than not having it. v1
+is not reconstructed, no lock is synthesised for it, and no wording anywhere may imply it
+was fixed in advance.
 
-### Result of that recovery: v1 was never committed
+### How that was established
 
-**The block above cannot be filled, and the premise that v1 "was version-controlled" is
-false.** The recovery command returns no commits:
+The premise that v1 "was version-controlled" is false. The recovery command returns no
+commits:
 
 ```
 $ git log --follow --diff-filter=A -- paper-salvage/docs/prereg/PREREG_evo1_broadcast.md
@@ -127,21 +147,52 @@ verbatim in §"What v1 predicted, and what happened" above — but that quotatio
 v2, which was written *after* the first run. It is a post-hoc transcription of a
 pre-hoc claim, and it cannot be distinguished from one by any external check.
 
-A reconstruction of the full v1 text, recovered from the working session in which it was
-read before being overwritten, is filed at `archive/PREREG_evo1_broadcast_v1_RECONSTRUCTED.md`.
-It is labelled as a reconstruction. **It is not evidence and must not be cited as a
-preregistration record.**
-
 **Bearing on v2.** None. v2 is being locked *before* its confirming run, with `LOCKS.jsonl`
 now in place, which is the property v1 turned out to lack. The v1 failure is disclosed, not
 repaired.
 
 ## Predictions (state before running)
 
-**Sanity, all models except Evo1:** α = 0.01 should land near ε = 1.0 for GENERator,
-DNABERT-2 and NTv3, whose activations are O(1–100) under normalisation. T/C/KL should
-closely reproduce the fixed-ε values. Any material divergence is itself a finding and must
-be reported, not silently absorbed.
+**Sanity, all models except Evo1** — _corrected; the original text was already known to be
+false when it was written and is retained here struck through for the record:_
+
+> ~~α = 0.01 should land near ε = 1.0 for GENERator, DNABERT-2 and NTv3, whose activations
+> are O(1–100) under normalisation.~~
+
+α = 0.01 does **not** land near ε = 1.0. Measured std of the AC component at each model's
+source layer, and the resulting primary ε:
+
+| Model | source layer | std AC | ε at α = 0.01 | vs ε = 1.0 |
+|---|---|---|---|---|
+| GENERator EUK | L4 | 9.367e2 | **9.367** | 9× larger |
+| GENERator PROK | L2 | 1.685 | **1.685e-2** | 59× smaller |
+| DNABERT-2 | L5 | 3.714e-1 | **3.714e-3** | 269× smaller |
+| NTv3 | L11 | 5.965e1 | **5.965e-1** | ≈ 1.0 |
+| Evo1 | L11 | 3.326e5 | **3.326e3** | — |
+
+ε spans **2,500×** across the four non-Evo1 models. Only NTv3 lands near 1.0.
+
+**Comparability does not rest on ε being similar across models — it rests on T being
+ε-invariant.** Evidenced by the GENERator PROK linearity probe: T is flat to three
+significant figures across ε = 1e-2 … 10 (T = 1.497e-2, 1.473e-2, 1.451e-2, 1.451e-2,
+1.457e-2), and T at the AC-relative ε reproduces T at ε = 1.0 to **1.5%**. Below ε ≈ 1e-3 T
+inflates; that is the fp32 accumulation floor the headroom column exists to flag.
+
+T/C at the primary dose should therefore closely reproduce the fixed-ε values for the
+deterministic models. Any material divergence is itself a finding and must be reported, not
+silently absorbed.
+
+## Dual dose (added per the D-011 amendment)
+
+A single dose cannot serve both metrics: at α = 0.01 the output KL is ~0 for every model
+(GENERator EUK and PROK give exactly 0.0; DNABERT-2 gives 1.8e-8), so KL carries no signal.
+
+- **PRIMARY, α = 0.01** — small-signal linear-response probe. **T and C are reported here.**
+- **SECONDARY, α = 1.0** — AC-matched large-signal probe. **KL is reported here.**
+
+Both doses are run for all five models and every control arm, and every reported number is
+labelled with its regime. The two are comparable because T is ε-invariant across
+1e-2 … 10 (above). Neither dose is tuned per model.
 
 **Evo1 primary:** _(unchanged from v1)_ T low relative to the other four.
 _(Confidence: ___ / 5)_
