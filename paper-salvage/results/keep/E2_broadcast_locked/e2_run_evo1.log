@@ -1,0 +1,50 @@
+
+[broadcast:evo1] sw_layer=11  sw_row=3776
+[broadcast:evo1] loading model …
+[broadcast:evo1] n_tokens=504  n_layers=32
+[broadcast:evo1] sw_pos=324  d_model=4096
+[broadcast:evo1] [primary] eps = alpha*std_AC = 0.01 * 3.3271e+05 = 3.3271e+03
+[broadcast:evo1] param dtype = torch.float32
+[broadcast:evo1] KL_sw=7.8678e-08   under-powered layers: 0/20
+  layer  12  T_mean=6.7586e-03  C=+0.9516  headroom=1.66e+03x
+  layer  13  T_mean=1.1995e-01  C=+0.7045  headroom=26x
+  layer  14  T_mean=1.1996e-01  C=+0.7045  headroom=26x
+  layer  15  T_mean=1.1996e-01  C=+0.7044  headroom=26x
+  layer  16  T_mean=1.1996e-01  C=+0.7044  headroom=26x
+  layer  17  T_mean=1.1996e-01  C=+0.7044  headroom=26x
+  layer  18  T_mean=1.1997e-01  C=+0.7044  headroom=26x
+  layer  19  T_mean=1.1997e-01  C=+0.7044  headroom=26x
+  layer  20  T_mean=1.1997e-01  C=+0.7044  headroom=26x
+  layer  21  T_mean=1.1997e-01  C=+0.7044  headroom=26x
+  layer  22  T_mean=1.1997e-01  C=+0.7044  headroom=26x
+  layer  23  T_mean=1.1997e-01  C=+0.7044  headroom=26x
+  layer  24  T_mean=1.1997e-01  C=+0.7044  headroom=26x
+  layer  25  T_mean=1.1997e-01  C=+0.7044  headroom=26x
+  layer  26  T_mean=1.1997e-01  C=+0.7044  headroom=26x
+  layer  27  T_mean=1.1997e-01  C=+0.7044  headroom=26x
+  layer  28  T_mean=1.1997e-01  C=+0.7044  headroom=26x
+  layer  29  T_mean=1.1997e-01  C=+0.7044  headroom=26x
+  layer  30  T_mean=1.1997e-01  C=+0.7044  headroom=26x
+  layer  31  T_mean=1.1997e-01  C=+0.7044  headroom=26x
+[broadcast:evo1] matched-norm band: |W_down[k,:]|=2.1350e+00, 15 rows within +/-10%
+
+[broadcast:evo1] sw_layer=11  sw_row=3776
+[broadcast:evo1] loading model …
+[broadcast:evo1/secondary] FAILED — CUDA out of memory. Tried to allocate 172.00 MiB. GPU 0 has a total capacity of 39.49 GiB of which 131.56 MiB is free. Including non-PyTorch memory, this process has 39.36 GiB memory in use. Of the allocated memory 37.99 GiB is allocated by PyTorch, and 890.71 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/work/11034/atzanakak/glm_super_weight/genomic-super-weights/scripts/interpretability/run_sw_broadcast_impulse.py", line 967, in main
+    all_results[mname + suffix] = run_model_assay(
+                                  ^^^^^^^^^^^^^^^^
+  File "/work/11034/atzanakak/glm_super_weight/genomic-super-weights/scripts/interpretability/run_sw_broadcast_impulse.py", line 594, in run_model_assay
+    model, tokenizer = _load_model(model_name, device)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/11034/atzanakak/glm_super_weight/genomic-super-weights/scripts/interpretability/run_sw_broadcast_impulse.py", line 147, in _load_model
+    return _load_evo1_fp32(device)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/11034/atzanakak/glm_super_weight/genomic-super-weights/scripts/interpretability/run_sw_broadcast_impulse.py", line 253, in _load_evo1_fp32
+    p.data = p.data.to(torch.float32)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 172.00 MiB. GPU 0 has a total capacity of 39.49 GiB of which 131.56 MiB is free. Including non-PyTorch memory, this process has 39.36 GiB memory in use. Of the allocated memory 37.99 GiB is allocated by PyTorch, and 890.71 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+  Results saved → /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/sw_broadcast_impulse.json
+  [skip plot] matplotlib not available
