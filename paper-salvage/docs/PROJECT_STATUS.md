@@ -52,7 +52,7 @@ Phases 1 and 2 run **in parallel**. R1, R2, R4, R6, R7 do not depend on the Evo1
 
 | ID | Experiment | Status | Owner | Prereg |
 |---|---|---|---|---|
-| E1 | NLP cold-weight validation (row + scalar) + prospective lock | not started | | `prereg/PREREG_nlp_prospective.md` |
+| E1 | NLP cold-weight validation (row + scalar) + prospective lock | **retrospective DONE (3/3 both levels)**; prospective not started | | `prereg/PREREG_nlp_prospective.md` |
 | E2 | Evo1 standardized broadcast | **BLOCKED at STEP 3d — KL flat for PROK at both doses** | | `prereg/PREREG_evo1_broadcast.md` **v2, NOT locked** |
 | E3 | Bidirectional steering w/ degradation controls | not started | | `prereg/PREREG_steering.md` |
 | E4 | c_{k,i} granularity decomposition, all genomic gated FFNs | not started | | free alongside E1 |
@@ -141,4 +141,9 @@ YYYY-MM-DD  |  scaffold created; outline frozen  |  next: run PHASE_0 inventory
             |  STEP 3d probe: KL flat for PROK at alpha=1.0 too (9.9e-7, zero rank shift);
             |  stop condition fired -> BLOCKED.md written, prereg NOT locked, run NOT started
             |  next: functional-metric decision for R3; meanwhile queue items 3 (E1) and 4 (E4)
+2026-08-12  |  E1 retrospective arm COMPLETE. Self-test passes. Llama-7B/Mistral-7B/OLMo-7B:
+            |  row rank 1/4096 all three (Level 1), published scalar index rank 1 and top-1
+            |  contributor all three (Level 2). Scalar recovery claimable. C-004, C-005 ->
+            |  established. Prospective arm NOT run (needs model choice + lock).
+            |  next: queue item 4 (E4 granularity)
 ```

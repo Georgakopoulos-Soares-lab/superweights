@@ -18,8 +18,8 @@ is not yet measured)
 | C-001 | R1 | ‖U_k‖_F ranks the empirical SW row 1/3,072 at the step-up layer in GENERator EUK and PROK | | layer median, 12× / 18× ratio | established | migrate |
 | C-002 | R1 | Predictor places 9/10 DNABERT-2 SW rows in the top 3 of their layer (median rank 1.4 / 768) | | | established | migrate |
 | C-003 | R1 | Predictor ranks the NTv3 SW row 1/1,536 at L11 | | | established | migrate |
-| C-004 | R1 | Predictor recovers published NLP super-weight **output rows** in Llama/Mistral/OLMo from cold weights | | random rows | pending | E1 |
-| C-005 | R1 | Published NLP **scalar** index dominates within the recovered row | | participation ratio | pending | E1 |
+| C-004 | R1 | Predictor recovers published NLP super-weight **output rows** in Llama/Mistral/OLMo from cold weights: rank **1/4,096 in all three** | `e1_nlp_retrospective.json` | layer median (max/median 26.8–37.8×) | established | E1 done |
+| C-005 | R1 | Published NLP **scalar** index dominates within the recovered row: rank **1** in all three, top1_share 0.89–0.99 | `e1_nlp_retrospective.json` | participation ratio 1.02–1.24 | established | E1 done |
 | C-006 | R1 | Prospective cold-weight prediction on an unseen NLP model matches the forward-pass sweep | | timestamped lock | pending | E1 |
 | C-007 | R2 | GENERator EUK SW ablation: PPL 3.40 → 785.5 (+23,026%); 10 matched random rows < 0.01% | | matched random | established | migrate |
 | C-008 | R2 | GENERator PROK SW ablation: +25,975%; random controls within 0.03% | | matched random | established | migrate |
