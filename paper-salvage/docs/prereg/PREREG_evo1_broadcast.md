@@ -195,7 +195,10 @@ labelled with its regime. The two are comparable because T is ε-invariant acros
 1e-2 … 10 (above). Neither dose is tuned per model.
 
 **Evo1 primary:** _(unchanged from v1)_ T low relative to the other four.
-_(Confidence: ___ / 5)_
+_(Confidence: **3** / 5)_ — the prior is the observed ~44% per-block residual survival and the
+conv-mixer redistribution argument; against it, the assay has already failed once on this
+model for dynamic-range reasons, so the probability mass on "uninterpretable again"
+(Branch C) is non-trivial.
 
 **Evo1 secondary:** C decays faster than PROK's, consistent with the ~44% per-block
 survival in the existing residual trace.
@@ -205,6 +208,52 @@ survival in the existing residual trace.
 **Control requirement:** the random-coordinate arm must now be non-flat. If treatment and
 control are both flat again, the assay still lacks dynamic range and the result is again
 uninterpretable — report as such, do not present it as a null finding about Evo1.
+
+## Endpoint amendment following the STEP 3d probe (D-015)
+
+**Timing, stated first because it is what makes this legitimate.** STEP 3d was an
+*explicitly planned pre-lock metric-validation probe*, written into this document before it
+was run. This amendment therefore occurs **after that planned probe and before
+preregistration lock**. No confirmatory five-model result existed when it was made, and none
+had been generated. It is not a post-hoc revision.
+
+**What STEP 3d found.** GENERator PROK's output KL is below useful resolution at **both**
+preregistered doses:
+
+| | α = 0.01 (primary) | α = 1.0 (secondary) |
+|---|---|---|
+| ε | 1.685e-2 | 1.685 |
+| KL (protocol definition) | 0.0 | 9.940e-7 |
+| KL at the SW token position | −1.704e-7 (float cancellation) | 1.064e-6 |
+| top-10 mean rank shift | 0.000 | 0.000 |
+| top-1 token changed | False | False |
+
+Eager DNABERT-2 *is* measurable at α = 1.0 (KL 4.627e-5, top-1 changes).
+
+**No dose escalation was performed.** The dual-dose protocol stands exactly as specified.
+
+**Amended endpoints:**
+
+- **T and C are the primary routing endpoints.** They carry the R3 result.
+- **KL is retained as a secondary, descriptive endpoint.** It is interpreted **only relative
+  to each model's measured noise floor**, and is reported as tiny when it is tiny rather
+  than relabelled zero.
+- **A model is not required to show measurable KL for the T/C routing assay to be valid.**
+- **Functional importance is not inferred from KL alone.** Functional criticality continues
+  to be measured by the existing ablation/downstream experiments, not by this assay.
+- KL is **not** replaced by top-k rank displacement or token-local KL. Neither becomes a
+  primary metric, although both were measured during STEP 3d and are reported.
+
+**Kernel and retired-claim conditions carried into the run:**
+
+- **DNABERT-2 runs on eager attention (D-014).** The Triton path is not used: it casts qkv
+  and the attention bias to fp16 and is nondeterministic (8.48% perplexity spread). The
+  guard disclosure (Δ = −74.3%) is reported verbatim and is **not** described as passed.
+- **C-014 remains RETIRED (X-006) and must never be resurrected.** Its "largest impulse
+  KL ≈ 0.31" was the noise floor of the nondeterministic kernel.
+
+**Null rule, unchanged and binding.** No result is reported as a null unless headroom ≥ 4×
+at that layer **and** that model's measured noise floor is below the observed signal.
 
 ## Pre-committed reporting
 
