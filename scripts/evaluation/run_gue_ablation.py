@@ -223,11 +223,19 @@ class _NTv3Classifier(nn.Module):
         # NTv3 conv tower halves the sequence num_downsamples times.
         # Minimum safe input length = 2^(num_downsamples+1) to avoid avg_pool1d
         # producing output size 0 when sequences are short (e.g. GUE prom ~249bp).
+        # NTv3 is a conv/deconv U-Net: the conv tower halves the sequence once per
+        # block and the deconv tower's skip connections (`y = y + r`) only align when
+        # the length is an exact MULTIPLE of 2**n_conv_blocks. Padding merely up to a
+        # minimum is not enough -- a 400-token splice input is >min_len but
+        # 400 % 256 = 144, which raises
+        #   "The size of tensor a (24) must match the size of tensor b (25)".
+        # Pad up to the next multiple instead.
         nd = getattr(self.backbone.config, "num_downsamples", 7)
         min_len = 2 ** (nd + 1)
         seq_len = input_ids.shape[1]
-        if seq_len < min_len:
-            pad = min_len - seq_len
+        target = ((seq_len + min_len - 1) // min_len) * min_len
+        if seq_len < target:
+            pad = target - seq_len
             pad_id = getattr(self.backbone.config, "pad_token_id", 1)
             input_ids     = torch.nn.functional.pad(input_ids,     (0, pad), value=pad_id)
             if attention_mask is not None:

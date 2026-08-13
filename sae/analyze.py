@@ -188,6 +188,12 @@ def collect_hexamer_sae_acts(
         h_target = h_target.to(sae_device).float()
 
         with torch.no_grad():
+            # Match training-time preprocessing. Without this the SAE receives
+            # inputs whose SW channel is ~6900x the median sd and the dictionary
+            # degenerates to single-hexamer detectors.
+            _sc = getattr(sae, "data_scale", None)
+            if _sc is not None:
+                h_target = h_target / _sc
             enc = sae.encode(h_target)
             acts = enc["acts"].cpu().numpy()                    # [B, n_features]
 
@@ -283,6 +289,11 @@ def main():
 
     print("[analyze] Loading SAE...", flush=True)
     sae = BatchTopKSAE.load(args.sae_ckpt, device=str(device))
+    if getattr(sae, "data_scale", None) is not None:
+        print(f"[analyze] checkpoint is STANDARDIZED — applying saved per-channel scale "
+              f"(max/median = {(sae.data_scale.max()/sae.data_scale.median()).item():.0f}x)")
+    else:
+        print("[analyze] checkpoint has no data_scale (raw-activation training)")
     sae.eval()
 
     # ── Hexamers ───────────────────────────────────────────────────────────────

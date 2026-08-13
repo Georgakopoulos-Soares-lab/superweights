@@ -204,8 +204,15 @@ class BatchTopKSAE(nn.Module):
 
     # ── Save / load ─────────────────────────────────────────────────────────────
 
-    def save(self, path: str):
-        """Save model state + hyperparameters."""
+    def save(self, path: str, data_scale=None):
+        """Save model state + hyperparameters.
+
+        data_scale: per-channel std used to standardise inputs during training,
+        or None if the SAE was trained on raw activations. Downstream analysis
+        MUST divide inputs by this vector or the SAE sees out-of-distribution
+        inputs (on super-weight layers channel 2371 is ~6900x the median sd,
+        so mismatched preprocessing degenerates the dictionary entirely).
+        """
         torch.save(
             {
                 "state_dict":  self.state_dict(),
@@ -213,6 +220,8 @@ class BatchTopKSAE(nn.Module):
                 "n_features":  self.n_features,
                 "k":           self.k,
                 "k_aux":       self.k_aux,
+                "data_scale":  None if data_scale is None else data_scale.detach().cpu(),
+                "standardized": data_scale is not None,
             },
             path,
         )
@@ -228,4 +237,9 @@ class BatchTopKSAE(nn.Module):
             k_aux      = ckpt["k_aux"],
         )
         sae.load_state_dict(ckpt["state_dict"])
+        # Per-channel scale used at training time (None if trained on raw acts).
+        # Analysis code MUST divide inputs by this before encoding.
+        ds = ckpt.get("data_scale", None)
+        sae.data_scale = None if ds is None else ds.to(device)
+        sae.standardized = bool(ckpt.get("standardized", False))
         return sae.to(device)
