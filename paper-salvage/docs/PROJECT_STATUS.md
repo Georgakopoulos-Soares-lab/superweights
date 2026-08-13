@@ -178,4 +178,9 @@ YYYY-MM-DD  |  scaffold created; outline frozen  |  next: run PHASE_0 inventory
             |  Secondary dose FAILED (CUDA OOM) -- recorded, no retry (would need a code
             |  change, not a provenance-preserving retry). C-016 -> supported.
             |  next: items 6 and 8; author to choose branch A vs B
+2026-08-13  |  Item 6 DONE: canonical E4 table at experiments/E4_granularity/
+            |  CANONICAL_TABLE.md, built from stored artifacts only (no model loads).
+            |  PROK row included at its own layer 2 and marked CONTESTED / C-001 ON HOLD;
+            |  no other layer examined. Unavailable cells marked n/s, not recomputed.
+            |  next: item 7c (mechanical cleanup), item 8 (provenance backfill)
 ```
