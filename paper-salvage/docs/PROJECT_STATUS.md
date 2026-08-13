@@ -1,16 +1,22 @@
 # PROJECT_STATUS.md
 
-**Last updated:** 2026-08-13 (reconciliation pass, second session of the day)
-**Current phase:** Post-reconciliation. Evidence audit, ledger, decisions, and outline are
-reconciled against a new thesis (`DECISIONS.md` D-016). **No experiment was run this
-session.** The next phase is writing prose against R1 and R6 (the only two sections with
-enough evidence to draft) and/or closing the three flagged provenance conflicts — see
-`NEXT_SESSION.md`.
+**Last updated:** 2026-08-13 (E5 Gate 0 — third session of the day)
+**Current phase:** A new, separate experiment (E5 — structural/realized/causal dimensionality
+of gated-FFN high-gain rows) was opened this session under its own directory
+(`experiments/E5_dimensionality/`) and its own prereg. Its Gate 0 ran and **stopped at the
+exactness robustness check (§0B)**, before the factor-decomposition/permutation-test machinery
+ever touched real weights — see `experiments/E5_dimensionality/GATE0_RESULTS.md`. This does
+not change anything from the 2026-08-13 reconciliation pass below: R1/R6 are still the
+draftable sections, R2–R5 are still blocked, and the manuscript was not touched.
 
 **Blocking on:** author review of three flagged provenance conflicts (N-013, N-014, N-015 in
 `CLAIMS_LEDGER.md`) and author decisions on the pre-existing open items below (Evo1 Branch A
 vs B, N-009/C-001, the missing Evo1 secondary-dose KL, empty matched-norm arms) — none of
-which changed this session.
+which changed this session. **New this session:** E5 Gate 0's finding that the diagonal
+`c_{k,i}` decomposition underlying C-002/C-003/C-032's granularity comparison captures 81–93%
+of the exact row norm for the three NLP models but only 17–79% for the three clean genomic
+models is flagged for the author (see `GATE0_RESULTS.md`'s interpretive note) — not acted on,
+not written into the ledger, in this pass.
 
 > ## 🔒 E2 PREREGISTRATION LOCKED — unchanged, re-verified this session
 >
@@ -56,6 +62,42 @@ exist. Full trace: `docs/NEW_DIRECTION_EVIDENCE_AUDIT.md`. Consequences, in orde
 
 **Nothing about the pre-2026-08-13 state changed except the four ledger-status edits above.**
 E1/E2/E4 results, the prereg lock, and every previously-established claim are untouched.
+
+---
+
+## What changed this session (2026-08-13, E5 Gate 0 — third session of the day)
+
+A new, narrower hypothesis was scoped: does the *within-row* structural dimensionality of a
+gated-FFN high-gain row (top-1 share / participation ratio of the diagonal `c_{k,i}`
+decomposition) reflect an unusually strong multiplicative alignment between the down-
+projection term and the gated-amplifier term in NLP specifically, versus the clean genomic
+models? This is explicitly **not** a re-test of row-level recovery, which the immediately
+preceding feasibility audit (this session, earlier) already showed is strong in both groups.
+
+New, self-contained experiment directory: `paper-salvage/experiments/E5_dimensionality/`
+(own README with the premise correction, own prereg, own library + tests, does not modify
+`results/`, `CLAIMS_LEDGER.md`, `PAPER_OUTLINE.md`, or `CLAUDE.md`).
+
+1. Premise correction recorded in `experiments/E5_dimensionality/README.md`: row-level
+   recovery is rank 1/N in 5 of 6 primary-panel models (Evo1 48/4096, excluded from this
+   panel anyway); the real contrast is within-row granularity; NLP has published scalar
+   ground truth genomic models lack; DNABERT-2's L7 706/768 finding is a separate local
+   result, not cited here.
+2. `docs/prereg/PREREG_dimensionality_gate0.md` locked (sha256 `7e508315...`, UTC
+   2026-08-13T18:13:24Z) after `dimensionality_lib.py`'s 12 synthetic-tensor tests passed
+   green (cross-validated exactly against the existing `uk_frobenius` predictor and a
+   from-scratch brute-force `U_k` materialization). No real checkpoint weight was touched
+   before the lock.
+3. Gate 0 ran on the six-model primary panel (Llama-7B, Mistral-7B, OLMo-7B, GENERator EUK,
+   DNABERT-2, NTv3 — PROK and Evo1 excluded per the prereg's fixed exclusion list) and
+   **stopped at §0B**, the preregistered exactness-vs-diagonal robustness check: cross terms
+   in the exact quadratic form exceed the locked 20% threshold for all three genomic models
+   (GENERator EUK 82.9%, DNABERT-2 50.7%, NTv3 20.7%) and none of the three NLP models
+   (6.7%–19.3%). Per the prereg's own mechanical stop rule, §0C (factor decomposition) and
+   §0D (permutation test) were never run on any real weight. Full numbers and the interpretive
+   flag for existing claims C-002/C-003/C-032: `experiments/E5_dimensionality/GATE0_RESULTS.md`.
+4. **Gate 1 is not authorized.** No replacement hypothesis was generated in this pass, per
+   the governing instruction for this experiment.
 
 ---
 
@@ -222,4 +264,17 @@ YYYY-MM-DD  |  scaffold created; outline frozen  |  next: run PHASE_0 inventory
             |  now); CLAUDE.md rewritten; MANUSCRIPT_MIGRATION_MAP.md and PAPER_READINESS.md
             |  created. Prereg lock re-verified OK, untouched.
             |  next: see NEXT_SESSION.md -- writing R1/R6, or resolving N-013/014/015.
+2026-08-13  |  E5 Gate 0 opened and STOPPED at 0B. New experiment dir
+            |  experiments/E5_dimensionality/; prereg locked (sha256 7e508315...); 12/12
+            |  synthetic tests green pre-lock. Confirmatory run on 6-model panel (Llama-7B,
+            |  Mistral-7B, OLMo-7B, GENERator EUK, DNABERT-2, NTv3): exact-vs-diagonal
+            |  cross-term fraction f_cross exceeds the locked 0.20 stop threshold for all
+            |  three genomic models (EUK 0.829, DNABERT-2 0.507, NTv3 0.207) and none of the
+            |  three NLP models (0.067-0.193). 0C/0D never run on real weights, per the
+            |  prereg's own mechanical rule. Gate 1 NOT authorized. Interpretive flag (not
+            |  acted on): existing C-002/C-003/C-032 granularity numbers rest on the same
+            |  diagonal decomposition now shown unreliable specifically for the genomic side.
+            |  next: author call on whether E5 continues (a cross-term-aware granularity
+            |  metric would need its own new preregistration) or the R1/R6 writing /
+            |  N-013/014/015 resolution work from the prior session resumes.
 ```
