@@ -1,23 +1,33 @@
 # PROJECT_STATUS.md
 
-**Last updated:** 2026-08-14 (E6 Stage A — fourth session, direct continuation of the E5 Gate-0
-session)
-**Current phase:** A second new experiment (E6 — independent confirmation of exact
-cross-pathway interaction geometry, `experiments/E6_cross_geometry/`) was opened this session,
-built on E5's finding but tested on a panel frozen from evidence that predates E5 entirely
-(additional Yu et al. Table 2 rows, this repo's own pre-existing activation-detection sweep).
-Its Stage A ran to completion and was assigned **Branch C** (no independent replication) by
-its own locked, mechanical decision rule — but the miss was on effect-size *magnitude* only
-(0.28% short of the pre-committed margin), not on *direction* (complete separation, exact
-p = 0.0035). Full nuance: `experiments/E6_cross_geometry/RESULTS.md`. Per Branch C's governing
-rule, E6 stops here — no causal follow-up, no new metric, no added models. This does not
-change anything from the 2026-08-13 reconciliation pass below: R1/R6 are still the draftable
-sections, R2–R5 are still blocked, and the manuscript was not touched by either E5 or E6.
+**Last updated:** 2026-08-14 (E7 exact operator dimensionality — fifth session, direct
+continuation of E5/E6)
+**Current phase:** A third new experiment (E7 — exact bilinear-operator dimensionality,
+`experiments/E7_exact_dimensionality/`) reformulated E5/E6's question around the exact `U_k`
+singular spectrum rather than the diagonal approximation, and around model/checkpoint as the
+primary unit rather than row (fixing E6's OLMo/DNABERT-2 pseudoreplication). A four-model
+confirmatory panel (Phi-3, Qwen2.5-7B; Evo 2 7B, GenomeOcean-4B) was audited, downloaded, and
+run — but **Evo 2 returned a Phase-1 detection null** (no down-projection spike anywhere in
+32 layers cleared the preregistered 5x threshold under the frozen ACTB probe), degrading the
+genomic group to one surviving model and disqualifying the panel from a formal Branch A/B/C/D
+call, per the prereg's own rule. The Phase-6 legacy reanalysis (run only after Phase 5 froze)
+then showed why forcing a branch would have been wrong regardless: **GENERator EUK's exact
+q1 (0.969) exceeds one of the four NLP models' (OLMo-7B, 0.965)**, and GenomeOcean-4B sits
+essentially on top of Phi-3 — no clean NLP-vs-genomic separation survives under the exact
+metric across either panel. NTv3 remains a genuine, substantial outlier. Full picture, an
+unconfirmed but visually clean encoder-vs-decoder observation, and claim recommendations:
+`experiments/E7_exact_dimensionality/RESULTS.md`. This does not change anything from the
+2026-08-13 reconciliation pass below: R1/R6 are still the draftable sections, R2–R5 are still
+blocked, and the manuscript was not touched by E5, E6, or E7.
 
 **Blocking on:** author review of three flagged provenance conflicts (N-013, N-014, N-015 in
 `CLAIMS_LEDGER.md`) and author decisions on the pre-existing open items below (Evo1 Branch A
 vs B, N-009/C-001, the missing Evo1 secondary-dose KL, empty matched-norm arms) — none of
-which changed this session. **New this session:** E6 recommends C-002/C-003 be **retained**
+which changed this session. **New this session:** E7 recommends C-032 (the diagonal-PR
+granularity claim) be **RETIRED** — the exact spectral metric does not reproduce its
+NLP-vs-genomic qualitative distinction — and proposes a new claim ID (C-034, not yet added to
+the ledger) capturing the actual pattern found: heterogeneous exact dimensionality within the
+genomic group, not a clean domain split. C-002/C-003 recommendation from E6 (**retained**)
 (row-ranking survives independently under the exact form on 12 of 13 confirmation-panel rows)
 and C-032 be **held** (E5's measurement-validity flag is neither confirmed nor refuted by
 E6's near-miss result) — both are recommendations only; no `CLAIMS_LEDGER.md` row was edited.
@@ -156,6 +166,52 @@ New, self-contained experiment: `paper-salvage/experiments/E6_cross_geometry/`.
    row-ranking under the exact form held on 12 of 13 confirmation-panel rows, not just E5's
    six. C-032 (granularity/PR) — **hold**; E5's flag is neither confirmed nor refuted by a
    near-miss result, and this pass does not invent a cross-term-aware replacement metric.
+
+---
+
+## What changed this session (2026-08-14, E7 exact operator dimensionality — fifth session,
+continuation)
+
+E6's row-level confirmatory near-miss motivated a reformulated hypothesis about the exact
+`U_k` operator (not its diagonal approximation) and a model-level (not row-level) confirmatory
+design, explicitly to fix the pseudoreplication E6 disclosed in its own panel (3 OLMo-7B rows,
+9 DNABERT-2 rows). New, self-contained experiment: `paper-salvage/experiments/
+E7_exact_dimensionality/`.
+
+1. **Phase 0 model audit** (`MODEL_PANEL.md`): Gene42 — **UNAVAILABLE**, no public checkpoint
+   exists anywhere on HuggingFace despite the paper's claim (only empty placeholder finetune
+   repos found). Evo 2 7B — initially appeared broken (`transformer_engine` ABI mismatch from
+   a stale host-side package); **the user corrected this** — the repo's own existing sbatch
+   convention (`--cleanenv --env PYTHONNOUSERSITE=1`) resolves it, confirmed working.
+   GenomeOcean-4B selected as Gene42's one authorized replacement (serves the same
+   LLaMA-style-on-genomic-data bridge-diagnostic role; `MistralForCausalLM`, confirmed
+   compatible). Phi-3-mini-4k-instruct and Qwen2.5-7B confirmed ELIGIBLE. Gemma 2 —
+   UNAVAILABLE, gated, no valid HF token in this environment.
+2. **Phase 2/3**: `spectral_lib.py` implements `q1`/`PR_spec` from `U_k`'s exact singular
+   spectrum. 6/6 synthetic tests green pre-lock, including a cancellation case showing the old
+   diagonal PR reports near-maximal apparent dimensionality on a construction whose exact
+   operator is the zero matrix.
+3. **Phase 4**: `docs/prereg/PREREG_exact_operator_dimensionality.md` locked (sha256
+   `7da30f81...`) — 4-model confirmatory panel, a frozen activation-detection protocol for
+   the three models without published coordinates, model-level aggregation, and a mechanical
+   decision tree requiring both members of a 2-vs-2 group to separate.
+4. **Phase 5**: Phi-3 (6 rows, median `q1`=0.903) and Qwen2.5-7B (`q1`=0.953) detected/measured
+   cleanly. GenomeOcean-4B detected cleanly (`q1`=0.899). **Evo 2 7B returned a Phase-1 null**
+   — no layer's down-projection spike cleared the preregistered 5x ratio anywhere across 32
+   blocks. Per the locked rule this degrades the genomic group to one surviving model,
+   disqualifying Branch A outright — **mechanical result: EXPLORATORY, not A/B/C/D.**
+5. **Phase 6** (run only after Phase 5 froze, per the binding ordering rule): reanalyzed
+   E5/E6's six legacy rows under the identical exact metric. **GENERator EUK's exact `q1`
+   (0.969) exceeds OLMo-7B's (0.965)** — a genomic model is more rank-1 than an NLP model.
+   NTv3 remains a substantial outlier (`q1`=0.389). No clean domain split survives.
+6. **No causal-feasibility document was written** (conditional on Branch A only; did not
+   occur). No replacement geometry hypothesis invented; a visually clean but explicitly
+   **unconfirmed** encoder-vs-decoder pattern is recorded descriptively in `RESULTS.md`, not
+   asserted as a finding.
+7. **Claim-ledger recommendations (not enacted):** C-002/C-003 unchanged (retain). **C-032
+   recommended RETIRE** — the exact metric does not reproduce its domain-general qualitative
+   claim. A new claim ID (**C-034, proposed, not added**) is drafted in `RESULTS.md` for the
+   actual pattern found (heterogeneous exact dimensionality within the genomic group).
 
 ---
 
@@ -350,4 +406,22 @@ YYYY-MM-DD  |  scaffold created; outline frozen  |  next: run PHASE_0 inventory
             |  E6 continuation (larger/more independent NLP arm, or a principled cross-term-
             |  aware granularity metric) is worth running, or the R1/R6 writing /
             |  N-013/014/015 resolution work resumes instead.
+2026-08-14  |  E7 exact operator dimensionality: EXPLORATORY (not A/B/C/D). New experiment
+            |  dir experiments/E7_exact_dimensionality/; prereg locked (sha256 7da30f81...).
+            |  Model audit: Gene42 UNAVAILABLE (no public checkpoint anywhere); Evo2 initially
+            |  looked broken (transformer_engine ABI mismatch) but user corrected -- fixed
+            |  via this repo's own --cleanenv --env PYTHONNOUSERSITE=1 convention; GenomeOcean
+            |  -4B selected as Gene42's replacement. 4-model confirmatory panel (Phi-3,
+            |  Qwen2.5-7B / Evo2-7B, GenomeOcean-4B): Phi-3 q1=0.903 (median of 6 rows),
+            |  Qwen2.5 q1=0.953, GenomeOcean q1=0.899 all measured cleanly; Evo2 returned a
+            |  Phase-1 detection NULL (max spike ratio 2.22 < 5.0x threshold, all 32 layers)
+            |  -- degrades genomic group to 1 survivor, disqualifies Branch A per the prereg's
+            |  own rule. Phase 6 legacy reanalysis (run only after Phase 5 froze): GENERator
+            |  EUK exact q1=0.969 EXCEEDS OLMo-7B's 0.965; NTv3 remains a genuine outlier
+            |  (q1=0.389). No clean NLP-vs-genomic separation survives under the exact metric
+            |  across either panel. No causal-feasibility doc (Branch A only, not reached).
+            |  Recommend (not enacted): C-032 RETIRE; new claim C-034 proposed (not added) for
+            |  the heterogeneous-within-genomic-group pattern actually found.
+            |  next: author call on Evo2 (retry with a different native input distribution?
+            |  needs its own new prereg either way), or resume R1/R6 writing / N-013/014/015.
 ```
