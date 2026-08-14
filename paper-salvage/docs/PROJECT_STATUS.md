@@ -1,22 +1,26 @@
 # PROJECT_STATUS.md
 
-**Last updated:** 2026-08-13 (E5 Gate 0 — third session of the day)
-**Current phase:** A new, separate experiment (E5 — structural/realized/causal dimensionality
-of gated-FFN high-gain rows) was opened this session under its own directory
-(`experiments/E5_dimensionality/`) and its own prereg. Its Gate 0 ran and **stopped at the
-exactness robustness check (§0B)**, before the factor-decomposition/permutation-test machinery
-ever touched real weights — see `experiments/E5_dimensionality/GATE0_RESULTS.md`. This does
-not change anything from the 2026-08-13 reconciliation pass below: R1/R6 are still the
-draftable sections, R2–R5 are still blocked, and the manuscript was not touched.
+**Last updated:** 2026-08-14 (E6 Stage A — fourth session, direct continuation of the E5 Gate-0
+session)
+**Current phase:** A second new experiment (E6 — independent confirmation of exact
+cross-pathway interaction geometry, `experiments/E6_cross_geometry/`) was opened this session,
+built on E5's finding but tested on a panel frozen from evidence that predates E5 entirely
+(additional Yu et al. Table 2 rows, this repo's own pre-existing activation-detection sweep).
+Its Stage A ran to completion and was assigned **Branch C** (no independent replication) by
+its own locked, mechanical decision rule — but the miss was on effect-size *magnitude* only
+(0.28% short of the pre-committed margin), not on *direction* (complete separation, exact
+p = 0.0035). Full nuance: `experiments/E6_cross_geometry/RESULTS.md`. Per Branch C's governing
+rule, E6 stops here — no causal follow-up, no new metric, no added models. This does not
+change anything from the 2026-08-13 reconciliation pass below: R1/R6 are still the draftable
+sections, R2–R5 are still blocked, and the manuscript was not touched by either E5 or E6.
 
 **Blocking on:** author review of three flagged provenance conflicts (N-013, N-014, N-015 in
 `CLAIMS_LEDGER.md`) and author decisions on the pre-existing open items below (Evo1 Branch A
 vs B, N-009/C-001, the missing Evo1 secondary-dose KL, empty matched-norm arms) — none of
-which changed this session. **New this session:** E5 Gate 0's finding that the diagonal
-`c_{k,i}` decomposition underlying C-002/C-003/C-032's granularity comparison captures 81–93%
-of the exact row norm for the three NLP models but only 17–79% for the three clean genomic
-models is flagged for the author (see `GATE0_RESULTS.md`'s interpretive note) — not acted on,
-not written into the ledger, in this pass.
+which changed this session. **New this session:** E6 recommends C-002/C-003 be **retained**
+(row-ranking survives independently under the exact form on 12 of 13 confirmation-panel rows)
+and C-032 be **held** (E5's measurement-validity flag is neither confirmed nor refuted by
+E6's near-miss result) — both are recommendations only; no `CLAIMS_LEDGER.md` row was edited.
 
 > ## 🔒 E2 PREREGISTRATION LOCKED — unchanged, re-verified this session
 >
@@ -98,6 +102,60 @@ New, self-contained experiment directory: `paper-salvage/experiments/E5_dimensio
    flag for existing claims C-002/C-003/C-032: `experiments/E5_dimensionality/GATE0_RESULTS.md`.
 4. **Gate 1 is not authorized.** No replacement hypothesis was generated in this pass, per
    the governing instruction for this experiment.
+
+---
+
+## What changed this session (2026-08-14, E6 Stage A — fourth session, continuation)
+
+E5's discovery-panel cross-term split (six rows, chosen as the E5 primary panel) suggested a
+narrower, testable hypothesis: are NLP high-gain rows approximately coordinate-separable
+while genomic ones derive real strength from coherent cross-pathway interactions? Because the
+hypothesis was generated *after* seeing E5's six rows, those six do not count as evidence for
+it — a genuinely independent panel was required.
+
+New, self-contained experiment: `paper-salvage/experiments/E6_cross_geometry/`.
+
+1. **Task 1 — panel frozen before any cross-term value was computed.**
+   `experiments/E6_cross_geometry/CONFIRMATION_PANEL.md` selects 13 candidate rows using only
+   evidence on record in git history *before* E5's lock: three additional OLMo-7B rows from
+   Yu et al.'s own Table 2 (layers 2, 7, 24, all sharing output row 269 — the E5 primary was
+   layer 1), and ten genomic rows from this repository's pre-existing activation-detection
+   sweep (`results/super_weight_index.json`, added May 2026) — nine additional DNABERT-2 rows
+   and one additional GENERator EUK row. GENERator PROK (both checkpoints) and Evo1 are
+   mechanically excluded, one of them (the 1.2B PROK variant) doubly so — its checkpoint
+   isn't even locally cached. The panel's own limitation (the NLP arm is one model's
+   recurring channel across layers, not three independent models) is disclosed in the panel
+   document itself, before any measurement.
+2. **Task 2 — `cross_geometry_lib.py`** implements the exact pairwise cross-term
+   decomposition (`X_ij`, positive/negative cross mass, a single preregistered `kappa`
+   coherence statistic, and a layer-wide `f_cross` reference distribution), reusing E5's
+   `exact_uk_all_rows` and `uk_frobenius.uk_frobenius` unmodified. 7/7 synthetic tests green
+   (orthogonal / constructive / cancellation cases matched to hand computation), plus a
+   pre-lock regression check reproducing all six of E5's published `f_cross` values to
+   ~1e-14 relative error.
+3. **Task 3 — `docs/prereg/PREREG_cross_geometry_stageA.md` locked** (sha256 `4cbe4416...`,
+   UTC 2026-08-14T12:08:49+00:00) with three primary endpoints and a three-step mechanical
+   decision tree (Q1 replication → Q2 layer-specificity → Q3 coherence), each threshold
+   (1.5× margin, 75th-percentile, kappa ≥ 0.3) chosen and justified before any panel weight
+   was loaded.
+4. **Task 4 — Stage A ran to completion** on all 13 candidates, weight-only.
+5. **Task 5 — mechanical decision: Branch C.** Complete separation held (every genomic
+   `f_cross` exceeds every NLP `f_cross`; exact non-asymptotic rank-sum p = 0.0035) but the
+   pre-committed 1.5× effect-size margin narrowly failed — the genomic minimum (DNABERT-2
+   L7/r603, `f_cross` 0.1134) fell 0.28% short of the required 0.1137. That specific row was
+   already flagged as structurally atypical in this repository's own ledger (C-010,
+   "propagator not source") before E6 existed. Per Branch C's rule, **the row was not
+   excluded and the decision was not recomputed** — the near-miss is reported, not rescued.
+   Full numbers, the descriptive (non-decision) Q2/Q3 values, and the reasoning: `experiments/
+   E6_cross_geometry/RESULTS.md`.
+6. **Task 6 (causal-feasibility audit) was not written** — it is conditional on Branch A
+   only. **E6 stops here per its own governing rule:** no alternative metric, no threshold
+   change, no added models, no causal experiment.
+7. **Claim-ledger recommendations (not enacted):** C-002/C-003 (row-ranking) — **retain**,
+   with a Methods clarification distinguishing row-level from scalar-level recovery;
+   row-ranking under the exact form held on 12 of 13 confirmation-panel rows, not just E5's
+   six. C-032 (granularity/PR) — **hold**; E5's flag is neither confirmed nor refuted by a
+   near-miss result, and this pass does not invent a cross-term-aware replacement metric.
 
 ---
 
@@ -277,4 +335,19 @@ YYYY-MM-DD  |  scaffold created; outline frozen  |  next: run PHASE_0 inventory
             |  next: author call on whether E5 continues (a cross-term-aware granularity
             |  metric would need its own new preregistration) or the R1/R6 writing /
             |  N-013/014/015 resolution work from the prior session resumes.
+2026-08-14  |  E6 Stage A: STOPPED at Branch C (near-miss, not clean fail). New experiment
+            |  dir experiments/E6_cross_geometry/; panel of 13 rows frozen from pre-E5
+            |  evidence (Yu Table 2 + this repo's own pre-existing detection sweep); prereg
+            |  locked (sha256 4cbe4416...); 7/7 synthetic tests + 6/6 E5-regression checks
+            |  green pre-lock. Confirmatory run: complete separation held (genomic f_cross
+            |  0.11-0.83 all exceed NLP f_cross -0.004-0.076; exact p=0.0035) but the locked
+            |  1.5x margin missed by 0.28% (DNABERT-2 L7/r603, already flagged atypical by
+            |  C-010, pulled the genomic minimum down). Row not excluded, decision not
+            |  recomputed, per Branch C's own rule. No Task 6, no new metric, no added
+            |  models. Recommend (not enacted): C-002/C-003 retain w/ Methods clarification;
+            |  C-032 hold.
+            |  next: author call on whether a freshly-independent, separately-preregistered
+            |  E6 continuation (larger/more independent NLP arm, or a principled cross-term-
+            |  aware granularity metric) is worth running, or the R1/R6 writing /
+            |  N-013/014/015 resolution work resumes instead.
 ```
