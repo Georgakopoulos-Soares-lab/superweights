@@ -67,11 +67,13 @@ superseding decisions and `docs/PAPER_READINESS.md` for the main-text-sufficienc
 | C-026 | R6 | GENERator SW ablation is bimodal: fungal species −82.5% acc / −85.3% MCC vs. splice −0.05% | | 35/35 random controls within ±0.1 pp | established | migrate |
 | C-027 | R6 | DNABERT-2 SW-ensemble ablation costs −25.5 ± 0.7 pp on splice (p = 0.0004, n = 3) | | random < 0.05 pp | supported | migrate |
 | C-028 | R6 | Max single-row DNABERT-2 effect is −1.45%; full effect requires all ten rows | | random-1-row mean −0.03% | established | migrate |
-| C-029 | R6 | NTv3 splice replicates: ΔMCC = −0.119 ± 0.054, 5/5 seeds negative, p = 0.008 | `results/gue_multiseed_ntv3_splice.json` | random \|Δ\| < 3e−4 | **contested — see N-014** | **metric issue — PHASE_0 §0.4 — AND do not present as a confirmed positive replication pending author review of N-014** |
+| C-029 | R6 | ~~NTv3 splice replicates: ΔMCC = −0.119 ± 0.054, 5/5 seeds negative, p = 0.008~~ — **old result invalidated 2026-08-14, see N-014 (updated)**; corrected replacement not yet established | `results/gue_multiseed_ntv3_splice.json` | random \|Δ\| < 3e−4 | **pending-rerun — see N-014 (updated)** | **do not present the old ΔMCC/p=0.008 as valid; do not insert any corrected replacement number until its own artifact (retrained checkpoint + eval JSON) is recovered or reproduced** |
 | C-030 | R6 | Structurally related amplifiers are recruited for different functions across models | C-026 + C-027 | | supported | write |
 | C-031 | R7 | The NLP SW-preservation heuristic does not transfer; INT4 with vs. without SW exemption differs below resolution | | | established | migrate, compress to 1 para. See C-033 for the mathematical mechanism now available to explain this null. |
-| C-032 | R2/R3/R6 | Granularity of the causal object differs across models: PR 3.64 (DNABERT-2) / 4.56 (EUK) / 22.7 (NTv3) / 122 (Evo1) / **2192 (PROK, contested)** vs 1.02–1.24 for published NLP SWs | **`experiments/E4_granularity/CANONICAL_TABLE.md`** | shape-verified per model; PROK row marked CONTESTED (C-001 on hold) | supported | E4 canonical table done — association only |
-| C-033 | R6 | Under the per-row RTN quantization rule already implemented in this repo (`scale = max\|row\| / maxval`), the element defining a row's scale is mapped exactly to the quantizer endpoint and is therefore preserved by construction — an SW that sets its own row's scale is trivially exempt from further precision loss regardless of whether it is separately protected | `scripts/compression/run_quantization_ablation.py` (docstring, lines 12–14), `scripts/compression/run_whole_model_quantization.py:300-303` (`amax = rows.abs().amax(dim=1, keepdim=True)`) | none needed — this is a mathematical property of the code as written, not a measured effect | established | **new 2026-08-13, added from direct code inspection, no run performed.** Scoped strictly to the per-row rule as implemented; group-wise quantization was not found anywhere in this repo and this claim must not be generalized to it. "Consistent with" C-031's empirical null, not proven to be its cause — C-031 itself has no recorded evidence path (see `results/keep/UNMIGRATED.md`), so the link is disclosed as an inference, not a demonstration. |
+| C-032 | R2/R3/R6 | _(retired 2026-08-14 — see X-007; superseded in part by C-034)_ | **`experiments/E4_granularity/CANONICAL_TABLE.md`** | shape-verified per model; PROK row marked CONTESTED (C-001 on hold) | **RETIRED** | E4 canonical table preserved historically; do not migrate the old PR numbers as a domain-general contrast |
+| C-033 | R6 | Under the per-row RTN quantization rule already implemented in this repo (`scale = max\|row\| / maxval`), the element defining a row's scale is mapped exactly to the quantizer endpoint and is therefore preserved by construction — an SW that sets its own row's scale is trivially exempt from further precision loss regardless of whether it is separately protected | `scripts/compression/run_quantization_ablation.py` (docstring, lines 12–14), `scripts/compression/run_whole_model_quantization.py:300-303` (`amax = rows.abs().amax(dim=1, keepdim=True)`) | none needed — this is a mathematical property of the code as written, not a measured effect | established | **new 2026-08-13, added from direct code inspection, no run performed.** Scoped strictly to the per-row rule as implemented; group-wise quantization was not found anywhere in this repo and this claim must not be generalized to it. "Consistent with" C-031's empirical null, not proven to be its cause — C-031 itself has no recorded evidence path (see `results/keep/UNMIGRATED.md`), so the link is disclosed as an inference, not a demonstration. **2026-08-14 addendum:** an independently-authored implementation on a since-integrated branch (`scripts/compression/run_pair_aware_compression.py`, `run_per_tensor_sw_exemption.py`) uses the identical `scale = max\|w\|/qmax` formula and reports a directly-measured 0.000e+00 element-level quantization error for two SW rows under this rule — corroborating evidence from a second, independent implementation. The corresponding empirical artifacts are not committed in this repo; this addendum does not change C-033's status, which was already `established` from code alone. |
+| C-034 | R2/R6/R7 | Exact bilinear-operator dimensionality (`q1`, `PR_spec`) of gated-FFN high-gain rows tracks encoder/decoder organization more closely than text-vs-genomic domain across the nine models tested (7 decoders, `q1` range 0.90–0.99; 4 encoders — 2 new, 2 discovery — `q1` range 0.39–0.90): one genomic model (NTv3) is substantially more distributed than every other model measured, one (DNABERT-2) is intermediate, and two (GENERator EUK, GenomeOcean-4B) are statistically indistinguishable from the NLP decoder cluster. The two newly, prospectively confirmed text encoders (MosaicBERT, ModernBERT) both cleared the pre-registered decoder-floor criterion, though ModernBERT's margin was narrow (0.21% relative on `q1`) | `experiments/E7_exact_dimensionality/RESULTS.md`, `experiments/E8_encoder_decoder/RESULTS.md`, `experiments/E7_exact_dimensionality/spectral_lib.py` | pre-registered decoder floor/ceiling fixed from a held-out reference table before either E8 model was measured; same-layer control rows (5 seeded, per model) | supported | **new 2026-08-14.** Folds E7's proposed claim and E8's confirmatory narrowing into one row per E8's own instruction not to duplicate. Explicitly **supersedes** C-032's specific numeric contrast (C-032's own diagonal-PR numbers are preserved historically, not mutated) — do not present this as a clean, universal domain split; it is descriptive and heterogeneous (NTv3 outlier, DNABERT-2 intermediate, ModernBERT thin margin). |
+| C-035 | R2/R6 | On the two models where E8 measured same-layer control rows (MosaicBERT, ModernBERT), the detected high-gain row is far more concentrated than ordinary rows at the same layer: MosaicBERT candidate `q1`=0.477 vs. 5 control rows 0.03–0.05 (`PR_spec` 4.1 vs. 140–170); ModernBERT candidate `q1`=0.897 vs. controls 0.02–0.05 (`PR_spec` 1.2 vs. 90–120) | `experiments/E8_encoder_decoder/RESULTS.md` §"Same-layer control rows" | 5 seeded random rows per model, fixed `numpy.random.SeedSequence(42)` | established | **new 2026-08-14.** Secondary, descriptive observation from E8 — dramatic, unambiguous effect requiring no threshold judgment (unlike the primary Branch A/B decoder-floor decision behind C-034). Not part of E8's preregistered decision rule. |
 
 ## Ledger notes
 
@@ -299,6 +301,28 @@ If a truncation-bug fix and retrain genuinely happened, the artifacts (config di
 checkpoint, new eval JSON) need to be located or reproduced in a future session before this
 note can be closed either way — this pass does not retrain anything.
 
+**UPDATE 2026-08-14 — bug independently confirmed by direct code trace; C-029 moved from
+`contested` to `pending-rerun`.** A colleague branch (`mechanism-and-negative-results`,
+integrated `5b0220c`) was located and audited (`paper-salvage/docs/COLLEAGUE_BRANCH_AUDIT.md`
+§4.3). Independently of that branch's own prose, this trace was performed directly against
+this repo's own code, before and confirmed after integration: the max-length figure this note
+originally cited (`ntv3_wrapper.py:21`, `run_gue_multiseed.py:269`, hardcoded 512) is not what
+actually governs the splice task. `run_gue_multiseed.py:269` resolves
+`max_length = args.max_length or _MAX_LEN.get(tkey, 512)`; for `tkey="reconstructed"` (the
+splice task), `scripts/evaluation/run_gue_ablation.py`'s `_MAX_LEN["reconstructed"] = 80`
+fires instead of the 512 fallback. `scripts/evaluation/submit_ntv3_splice_multiseed.sh` — the
+exact launch script that produced `results/gue_multiseed_ntv3_splice.json`, C-029's own
+backing artifact — never passes `--max_length`, so this resolves to 80 for that exact run.
+NTv3 tokenizes at nucleotide level (1bp = 1 token), so 80 tokens truncates every splice window
+to its first 80bp, before the splice junction the task is about. **This is a real, confirmed
+bug in C-029's own production run**, found by tracing this repo's code, not by taking the
+colleague's word for it. What remains missing: any corrected retrained checkpoint or
+evaluation JSON — the colleague's reports describe a refit (MCC 0.86–0.91, SW ablation effect
+reduced to −0.02pp) but no artifact for it exists anywhere in this repository
+(`paper-salvage/docs/MISSING_COLLEAGUE_ARTIFACTS.md` §G). Per this project's standing
+discipline, the old number is retired but no replacement number is written in until it has its
+own artifact — hence `pending-rerun`, not `established` and not silently dropped.
+
 **N-015 — C-020/C-021(PROK half): contested on the strength of an existing, repo-native
 reason, not the unaudited "wrong-probe" mechanism offered downstream.** _(2026-08-13)_
 
@@ -322,6 +346,49 @@ eukaryotic-probe diagnosis and the L8/r260 relocation are real findings from wor
 this repository, the artifacts (probe-provenance check, L8/r260 detection sweep output) need
 to be added to the repo before either can be written into the manuscript.
 
+**UPDATE 2026-08-14 — the external work this note asked for has been located; its numeric
+artifacts have not.** A colleague branch (`mechanism-and-negative-results`, integrated
+`5b0220c`) was audited (`paper-salvage/docs/COLLEAGUE_BRANCH_AUDIT.md` §4.2). It contains a
+detailed contamination trace (`results/mechanism/prok_contamination_audit.md`,
+`D1_PROK_RERUN_REPORT.md`): old detection used `--probe human_promoter` (a human ACTB
+sequence) against the prokaryote-specialized model; a corrected sweep with the
+already-present `pseudomonadota` probe (`probes/dna_probes.py`, not a new resource) finds
+L8/r260. **One specific, credible corroboration**: the colleague's independently-computed
+`‖U_k‖_F` rank for the contaminated L2/r1927 channel is **1289/3072** — matching this repo's
+own N-009 recomputation (`uk_frobenius` decomposition: rank 1289/3072) **exactly**, via a
+different computational method. This does not resolve N-009's "cause not determined," but it
+is a specific, independently-motivated candidate explanation for the same gap, not a
+generic assertion. What is still missing, confirmed absent from the pushed branch and this
+filesystem (`paper-salvage/docs/MISSING_COLLEAGUE_ARTIFACTS.md` §H): the corrected
+`super_weight_index.json` entry (the colleague's own reports claim this file was updated to
+L8/r260 with the old entry archived — **the pushed file is byte-identical to this repo's
+pre-existing, uncorrected version**, still showing L2/r1927), the archived
+`_ORIGINAL_SUSPECT.json`, and all D1 rerun outputs (corrected hexamer causal test, now
+reported as ρ=+0.0007/p=0.96 rather than the old r=−0.710, though that number too has no
+committed artifact). **C-001, C-020, C-021 remain unchanged — still on hold / contested** —
+this update only narrows what "flagged for the author" is now waiting on.
+
+**N-016 — Evo1 "2^24" (colleague claim): the colleague's own later work already retracted the
+literal version; the corrected value does not contradict N-001/N-002. No headline claim
+change.** _(2026-08-14)_
+
+`CLAUDE.md` §B instructs: do not claim Evo1's SW value was pinned at 2^24, since no artifact
+in this repo names it. That constraint is unaffected by this note — no artifact for the
+corrected value exists here either (`paper-salvage/docs/MISSING_COLLEAGUE_ARTIFACTS.md` §F).
+What changed is narrower: a colleague branch (`mechanism-and-negative-results`, integrated
+`5b0220c`) was audited, and its own internal timeline shows the "exactly 2^24" claim was the
+colleague's own early (2026-08-03), less careful observation, which their own later
+(2026-08-07) fp64 adjudication explicitly re-tested and rejected: *"Frozen at exactly 2²⁴? No.
+Plateau = 29,360,128 = 1.75 × 2²⁴; no block hits 2²⁴ exactly."* That corrected value
+(2.94e7) falls inside this repo's own independently-measured N-001 settling range
+(~4.2e6–3e7, measured via a different code path, `run_sw_broadcast_impulse.py`, months
+earlier). **This is convergent evidence via a different instrument, not a contradiction to
+resolve** — the colleague's corrected account is directionally consistent with, and adds
+mechanistic detail (an MLP-then-mixer contribution decomposition) to, C-009/C-011's existing
+"structurally concentrated but functionally null" account. No headline claim (C-009, C-011)
+changes as a result of this note; the fp64-adjudication artifact itself remains unrecovered
+and is not cited as evidence for anything beyond this note.
+
 ## Retired claims
 
 | ID | Claim | Why retired |
@@ -330,6 +397,7 @@ to be added to the repo before either can be written into the manuscript.
 | X-002 | "We scanned eight genomic language models" (as a uniform benchmark) | Coverage is asymmetric; replaced by the coverage table |
 | X-003 | (‖U_k‖_F, C) jointly predict criticality | Falsified by DNABERT-2 C ≈ 0. **STAYS RETIRED** — re-measured on the clean eager kernel, C peaks at +0.0625 and ends −0.0221, i.e. still ≈ 0. The falsification never depended on the retracted KL value. See N-011. |
 | X-006 | "DNABERT-2 has C ≈ 0 immediately and the largest impulse KL (≈0.31)" (was C-014) | The 0.31 was the **noise floor of a nondeterministic Triton kernel**, not a measurement. Two identical passes differed by KL = 0.305. On the deterministic eager path the primary-dose value is **1.8e-8**. Retired, not revised — the number was never a measurement of anything. See D-014, N-007. |
+| X-007 | Granularity of the causal object differs across models: PR 3.64 (DNABERT-2) / 4.56 (EUK) / 22.7 (NTv3) / 122 (Evo1) / 2192 (PROK, contested) vs 1.02–1.24 for published NLP SWs, presented as a general NLP-vs-genomic granularity contrast (was C-032) | E7's exact spectral metric (`q1`, `PR_spec`, not the diagonal approximation) does not reproduce this as a domain-general distinction: GENERator EUK's exact `PR_spec` (1.0653) sits squarely inside the published-NLP range (1.02–1.24), not the genomic pole the old claim implies. Every genomic model's diagonal PR overstates its exact `PR_spec` by a large, consistently-directional factor (EUK 4.3×, DNABERT-2 2.4×, NTv3 3.5×) — a systematic bias in the diagonal approximation itself, matching E5's independent `f_cross` finding. Not a colleague finding — decided from this repo's own E5–E7 work alone. Old PR values and their evidence path (`experiments/E4_granularity/CANONICAL_TABLE.md`) preserved historically, not mutated. Superseded in part by C-034. See `experiments/E7_exact_dimensionality/C032_RETIREMENT_RECOMMENDATION.md`. |
 | X-004 | DNABERT-2 ensemble behaviour is a *consequence* of C ≈ 0 | Association only; no causal evidence. May return as `consistent-with` after E4 |
 | X-005 | Broadcast headroom bounds broadcast | One extreme case; demoted to methodological covariate (C-018) |
 

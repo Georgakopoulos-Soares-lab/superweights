@@ -1,8 +1,41 @@
 # PROJECT_STATUS.md
 
-**Last updated:** 2026-08-14 (E8 encoder-vs-decoder dimensionality — sixth session, direct
-continuation of E5/E6/E7)
-**Current phase:** A fourth new experiment (E8 — `experiments/E8_encoder_decoder/`) tested the
+**Last updated:** 2026-08-14 (colleague branch integration — seventh session, continuation of
+E5–E8)
+**Current phase:** A colleague's independent mechanism/negative-results branch
+(`origin/mechanism-and-negative-results`, diverged mid-June, worked in parallel with this
+project's whole E5–E8 arc) was audited (`docs/COLLEAGUE_BRANCH_AUDIT.md`), then — on explicit
+author approval — integrated onto a dedicated branch, `integrate/mechanism-and-negative-
+results`, **not onto `main`**. The colleague's single commit (`5b0220c`) cherry-picked
+cleanly; `paper-salvage/` never overlapped with it (zero path collision, confirmed by the
+audit), so **nothing in E5–E8 was touched by the integration**. Two files needed manual
+reconciliation: `README.md` (the colleague's imported "current status" section was rescoped
+down to reference material — pointers to `results/mechanism/` reports, a script inventory, and
+an explicit warning that the underlying JSON/CSV artifacts are absent — rather than left to
+assert unaudited numeric findings; a caveat was added next to the pre-existing PROK
+write-direction-convention material flagging that a colleague report disputes the channel
+identity itself, without adjudicating between them) and `scripts/evaluation/
+run_gue_ablation.py` (both sides' additions — current main's `_GeneratorClassifier`, the
+colleague's `_NTv3Classifier` padding-to-multiple fix — coexist with zero actual line overlap,
+confirmed by diffing the reconciled file against pre-integration `main`). A
+`docs/MISSING_COLLEAGUE_ARTIFACTS.md` manifest records every raw result artifact the
+colleague's reports cite that is not present anywhere in the pushed branch or this filesystem,
+grouped P0–P2 for future recovery/reproduction (**no reproduction was attempted this
+session**). Ledger bookkeeping enacted only where independently justified without the missing
+artifacts: **C-032 retired** (moved to `X-007`, on this repo's own E7 evidence, not colleague
+work), **C-034/C-035 added** (E7+E8's exact-dimensionality/encoder-decoder result, previously
+only "proposed"), **C-029 downgraded from `contested` to `pending-rerun`** (the NTv3
+truncation bug is now independently confirmed by a direct code trace performed by this
+integration — not taken from colleague prose — as applying to C-029's own backing artifact;
+no corrected replacement number was inserted, since none has its own artifact yet), and three
+notes appended in place (N-014, N-015 updated; N-016 added for Evo1) recording what the
+colleague branch resolves, narrows, or leaves open for N-009/N-013/N-014/N-015 — no claim's
+headline status beyond C-029 changed. Full detail: `docs/COLLEAGUE_BRANCH_AUDIT.md`,
+`docs/MISSING_COLLEAGUE_ARTIFACTS.md`. **`main` itself was not merged into** — the integration
+branch is a separate, explicitly-not-yet-merged branch, per the author's instruction; the
+former "sixth session" work below is unchanged.
+
+The prior phase (E8 encoder-vs-decoder dimensionality, sixth session) tested the
 one clean hypothesis E7's post-hoc observation generated: does exact operator dimensionality
 track encoder-vs-decoder organization rather than text-vs-genomic domain? Two independently
 selected, previously unmeasured text encoders (MosaicBERT — shares DNABERT-2's exact FFN
@@ -39,16 +72,23 @@ unconfirmed but visually clean encoder-vs-decoder observation, and claim recomme
 2026-08-13 reconciliation pass below: R1/R6 are still the draftable sections, R2–R5 are still
 blocked, and the manuscript was not touched by E5, E6, E7, or E8.
 
-**Blocking on:** author review of three flagged provenance conflicts (N-013, N-014, N-015 in
-`CLAIMS_LEDGER.md`) and author decisions on the pre-existing open items below (Evo1 Branch A
-vs B, N-009/C-001, the missing Evo1 secondary-dose KL, empty matched-norm arms) — none of
-which changed this session. **New this session:** C-002/C-003 recommendation unchanged
-(retain). **C-032 recommended RETIRED**, decisively, independent of E8's outcome — see
-`experiments/E7_exact_dimensionality/C032_RETIREMENT_RECOMMENDATION.md`. A new claim
-(proposed, not added) narrows C-034's wording with E8's confirmatory result: exact operator
-dimensionality tracked encoder/decoder organization on both of two independently selected
-text encoders. All recommendations remain recommendations only — no `CLAIMS_LEDGER.md` row
-was edited by any session in this arc.
+**Blocking on:** recovering or reproducing the colleague's missing raw artifacts
+(`docs/MISSING_COLLEAGUE_ARTIFACTS.md`, P0 = DNABERT-2 redundant pair / pretrained-intrinsic /
+norm-codominance mechanism) before any of claims A–E, the corrected NTv3 retrain, or the
+corrected PROK detection can be written as established; and author review of N-013 and the
+remaining, still-open half of N-015 (PROK: colleague diagnosis located and corroborated by an
+exact rank match with this repo's own N-009, but still unverified at the artifact level) —
+plus the pre-existing open items (Evo1 Branch A vs B, the missing Evo1 secondary-dose KL,
+empty matched-norm arms). **This session enacted, rather than merely recommended, four
+ledger changes** (the only prior session's edits were the C-033 row itself): C-032 → `X-007`
+retired; C-034/C-035 added (E7+E8's exact-dimensionality/encoder-decoder result, folded from
+"proposed" into a live row); C-029 → `pending-rerun` (old ΔMCC/p=0.008 invalidated by an
+independently code-confirmed truncation bug — see N-014's 2026-08-14 update — no replacement
+number inserted); N-015 narrowed (the "wrong-probe" mechanism it flagged as unaudited now has
+located, partially-corroborating colleague code, but is still not artifact-complete); N-016
+added (Evo1 "2^24": a colleague's own early claim, retracted by their own later work, found
+consistent with — not contradicting — this repo's existing N-001/N-002, no headline claim
+changed). C-002/C-003 unchanged (retain).
 
 > ## 🔒 E2 PREREGISTRATION LOCKED — unchanged, re-verified this session
 >
@@ -276,6 +316,63 @@ hypothesis E7's post-hoc observation generated (encoder/decoder organization, no
 8. **Claim-ledger note:** C-034's proposed wording is narrowed with E8's result (encoder/
    decoder tracking, not domain) rather than restated as a new headline claim — still not
    added to `CLAIMS_LEDGER.md`.
+
+---
+
+## What changed this session (2026-08-14, colleague branch integration — seventh session,
+continuation)
+
+Two sequential passes on the same colleague branch, `origin/mechanism-and-negative-results`
+(a single commit, `5b0220c`, diverged from this project at the 2026-06-17 merge-base and
+worked entirely independently, in parallel, through the whole E5–E8 arc):
+
+**Pass 1 — provenance audit only** (no merge, no rerun): `docs/COLLEAGUE_BRANCH_AUDIT.md`.
+Established the branch relationship (39 commits unique to current vs. 1 colleague commit;
+`paper-salvage/` does not exist on the colleague branch or at the merge-base — zero path
+collision with any of E5–E8); audited all 9 claims the colleague's reports make (A–I) back to
+their producing scripts and raw artifacts; found every raw JSON/CSV output the reports cite
+absent from the pushed branch (only `.md` reports and `.py` scripts were committed —
+`results/`'s gitignore evidently didn't carve out the JSON/CSV siblings the way it did the
+markdown). Two findings were resolved with specific care, as instructed: **Evo1's "2^24"**
+claim was the colleague's own early (2026-08-03), since-self-retracted hypothesis — their
+later (2026-08-07) fp64 adjudication found the real plateau at 1.75×2^24, which falls inside
+this repo's own independently-measured N-001 range — **not a contradiction**. **The NTv3
+truncation bug** was independently re-derived from this repo's own code (not colleague
+prose): `run_gue_multiseed.py`'s `_MAX_LEN["reconstructed"]=80` fallback fires on C-029's own
+launch script, which never passes `--max_length` — **confirmed real and load-bearing on
+C-029's own backing artifact.**
+
+**Pass 2 — integration, on explicit author approval** (branch, cherry-pick, reconcile,
+bookkeeping only — no scientific rerun): new branch `integrate/mechanism-and-negative-
+results`, off this session's HEAD, **not `main`**. `5b0220c` cherry-picked with zero conflicts
+git couldn't auto-merge; both flagged files (`README.md`, `run_gue_ablation.py`) were then
+hand-checked (not just trusted) against pre-integration `main` to confirm nothing current
+main added was lost. `README.md`'s imported colleague section was rescoped from an
+"established findings" table down to reference material with an explicit "not yet citable"
+warning and pointers to the audit/manifest; a caveat was added beside the pre-existing PROK
+write-direction-convention material (itself from an earlier, independent reconciliation,
+commit `4ba1686`) noting a colleague report disputes the channel identity at a level below
+that convention, without resolving which is right. `docs/MISSING_COLLEAGUE_ARTIFACTS.md`
+catalogues every missing artifact by claim, script, and priority (P0: DNABERT-2 pair/
+pretrained-pair/norm-codominance; P1: steering, attention sink; P2: corrected NTv3, corrected
+PROK, destructive-quantization controls, Evo1 supplements) — **nothing in it was reproduced
+this session.**
+
+**Ledger changes actually enacted** (not just recommended, unlike prior sessions' C-032/C-034
+notes): C-032 → `X-007` (retired, on this repo's own E7 evidence — not attributed to
+colleague work); C-034 and C-035 added (folding E7's proposed claim and E8's confirmatory
+narrowing into live rows, exactly as E8's own `RESULTS.md` asked for); C-029 → `pending-rerun`
+(old ΔMCC/p=0.008 invalidated by the independently-confirmed bug; no replacement number
+written in — none has its own artifact); N-014 and N-015 each got a dated update appended in
+place (originals preserved, not rewritten) narrowing what each is still waiting on; N-016
+added for the Evo1 note; C-033's evidence cell got one corroborating addendum (a second,
+independent implementation uses the identical scale-endpoint formula) with no status change.
+
+Provenance: `docs/COLLEAGUE_BRANCH_AUDIT.md`, `docs/MISSING_COLLEAGUE_ARTIFACTS.md`, commits
+on `integrate/mechanism-and-negative-results` (cherry-pick `3d3bbb0`, README reconciliation,
+manifest+bookkeeping). **The integration branch has not been merged into `main`** and no
+further action (merge, further cherry-pick, artifact reproduction) proceeds without separate
+explicit author approval.
 
 ---
 
