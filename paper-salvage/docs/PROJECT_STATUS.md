@@ -1,8 +1,27 @@
 # PROJECT_STATUS.md
 
-**Last updated:** 2026-08-14 (E7 exact operator dimensionality — fifth session, direct
-continuation of E5/E6)
-**Current phase:** A third new experiment (E7 — exact bilinear-operator dimensionality,
+**Last updated:** 2026-08-14 (E8 encoder-vs-decoder dimensionality — sixth session, direct
+continuation of E5/E6/E7)
+**Current phase:** A fourth new experiment (E8 — `experiments/E8_encoder_decoder/`) tested the
+one clean hypothesis E7's post-hoc observation generated: does exact operator dimensionality
+track encoder-vs-decoder organization rather than text-vs-genomic domain? Two independently
+selected, previously unmeasured text encoders (MosaicBERT — shares DNABERT-2's exact FFN
+class; ModernBERT — an independent codebase) were audited, detected, and measured under a
+locked prereg. **Both produced clean high-gain candidates (detection ratios 289x and 561x)
+and both fell below the decoder-cluster floor on the pre-registered criterion — mechanical
+Branch A** — though MosaicBERT's shift was dramatic (`q1`=0.477 vs. a 0.899 floor) while
+ModernBERT's was thin (`q1`=0.897, a 0.21% relative margin). A striking secondary finding:
+in both encoders, the detected high-gain row is far *more* concentrated than its own layer's
+ordinary rows (control `q1` ≈ 0.03–0.05), the reverse of what a naive "encoders are generally
+distributed" reading would suggest. Full 2x2 table, both-metric decision trace, and a
+design-only causal-feasibility note (concluding the needed intervention tooling does not yet
+exist): `experiments/E8_encoder_decoder/RESULTS.md`. **C-032 was separately, decisively
+recommended for retirement** independent of E8's outcome
+(`experiments/E7_exact_dimensionality/C032_RETIREMENT_RECOMMENDATION.md`), and an E7
+provenance addendum resolved immutable checkpoint hashes for all four E7 models
+(`experiments/E7_exact_dimensionality/PROVENANCE_ADDENDUM.md`). None of this touches the
+manuscript. The third new experiment before this one (E7 — exact bilinear-operator
+dimensionality,
 `experiments/E7_exact_dimensionality/`) reformulated E5/E6's question around the exact `U_k`
 singular spectrum rather than the diagonal approximation, and around model/checkpoint as the
 primary unit rather than row (fixing E6's OLMo/DNABERT-2 pseudoreplication). A four-model
@@ -18,19 +37,18 @@ metric across either panel. NTv3 remains a genuine, substantial outlier. Full pi
 unconfirmed but visually clean encoder-vs-decoder observation, and claim recommendations:
 `experiments/E7_exact_dimensionality/RESULTS.md`. This does not change anything from the
 2026-08-13 reconciliation pass below: R1/R6 are still the draftable sections, R2–R5 are still
-blocked, and the manuscript was not touched by E5, E6, or E7.
+blocked, and the manuscript was not touched by E5, E6, E7, or E8.
 
 **Blocking on:** author review of three flagged provenance conflicts (N-013, N-014, N-015 in
 `CLAIMS_LEDGER.md`) and author decisions on the pre-existing open items below (Evo1 Branch A
 vs B, N-009/C-001, the missing Evo1 secondary-dose KL, empty matched-norm arms) — none of
-which changed this session. **New this session:** E7 recommends C-032 (the diagonal-PR
-granularity claim) be **RETIRED** — the exact spectral metric does not reproduce its
-NLP-vs-genomic qualitative distinction — and proposes a new claim ID (C-034, not yet added to
-the ledger) capturing the actual pattern found: heterogeneous exact dimensionality within the
-genomic group, not a clean domain split. C-002/C-003 recommendation from E6 (**retained**)
-(row-ranking survives independently under the exact form on 12 of 13 confirmation-panel rows)
-and C-032 be **held** (E5's measurement-validity flag is neither confirmed nor refuted by
-E6's near-miss result) — both are recommendations only; no `CLAIMS_LEDGER.md` row was edited.
+which changed this session. **New this session:** C-002/C-003 recommendation unchanged
+(retain). **C-032 recommended RETIRED**, decisively, independent of E8's outcome — see
+`experiments/E7_exact_dimensionality/C032_RETIREMENT_RECOMMENDATION.md`. A new claim
+(proposed, not added) narrows C-034's wording with E8's confirmatory result: exact operator
+dimensionality tracked encoder/decoder organization on both of two independently selected
+text encoders. All recommendations remain recommendations only — no `CLAIMS_LEDGER.md` row
+was edited by any session in this arc.
 
 > ## 🔒 E2 PREREGISTRATION LOCKED — unchanged, re-verified this session
 >
@@ -212,6 +230,52 @@ E7_exact_dimensionality/`.
    recommended RETIRE** — the exact metric does not reproduce its domain-general qualitative
    claim. A new claim ID (**C-034, proposed, not added**) is drafted in `RESULTS.md` for the
    actual pattern found (heterogeneous exact dimensionality within the genomic group).
+
+---
+
+## What changed this session (2026-08-14, E8 encoder-vs-decoder — sixth session, continuation)
+
+Two housekeeping items, then the new experiment:
+
+1. **E7 provenance addendum** (`experiments/E7_exact_dimensionality/PROVENANCE_ADDENDUM.md`,
+   `EVO2_SHA256.txt`): resolved immutable HF commit hashes and weight-shard SHA256 for all
+   four E7 checkpoints (Phi-3, Qwen2.5-7B, GenomeOcean-4B, Evo2-7B). Documentation only — no
+   E7 result changed or rerun.
+2. **C-032 retirement, decided now, independent of E8**
+   (`experiments/E7_exact_dimensionality/C032_RETIREMENT_RECOMMENDATION.md`): GENERator EUK's
+   exact `PR_spec` already sits inside the published-NLP range, and every genomic model's
+   diagonal PR overstates its exact value in the same direction — sufficient on its own,
+   without waiting for E8.
+
+New experiment: `paper-salvage/experiments/E8_encoder_decoder/`, testing the one clean
+hypothesis E7's post-hoc observation generated (encoder/decoder organization, not domain).
+
+3. **Model audit** (`MODEL_AUDIT.md`): MosaicBERT (`mosaicml/mosaic-bert-base`) confirmed to
+   use the **identical** `BertGatedLinearUnitMLP` class DNABERT-2 uses (verified from the
+   actual remote-code source) — the strongest possible architecture bridge to DNABERT-2 while
+   changing domain. ModernBERT (`answerdotai/ModernBERT-base`) confirmed independent
+   (`ModernBertMLP`, a different codebase, verified from installed `transformers` source).
+   Both ELIGIBLE; hard gate (≥2 independent bidirectional encoder families) passes.
+4. **Prereg locked** (`docs/prereg/PREREG_encoder_decoder_dimensionality.md`, sha256
+   `7a5dc793...`): reuses E7's frozen WikiText-2 detection protocol and 5.0x threshold
+   verbatim; fixes the Branch-A criterion as `q1` strictly below 0.8989 (the decoder
+   cluster's own observed floor, GenomeOcean-4B, used unadjusted).
+5. **Confirmatory run:** both models detected cleanly (ratios 289x, 561x). **MosaicBERT
+   `q1`=0.4766 (dramatically below the floor); ModernBERT `q1`=0.8970 (below the floor by
+   only 0.21% relative — thin but genuine).** Both shift on both `q1` and the secondary
+   `PR_spec` check. **Mechanical result: Branch A.**
+6. **Secondary finding, reported prominently:** in both encoders, the detected candidate row
+   is far *more* concentrated than 5 seeded same-layer control rows (control `q1` ≈
+   0.03–0.05 vs. candidates' 0.48/0.90) — the opposite of a naive "encoder rows are generally
+   distributed" reading; the high-gain phenotype, where present, is a local exception.
+7. **Causal-feasibility note written** (Branch A triggers this; design-only, no run):
+   concludes the needed activation-space intervention tooling does not yet exist in this
+   repository — a genuinely new engineering effort, not a quick reuse of existing scalar/row
+   ablation scripts (which are keyed to the diagonal decomposition this whole arc has been
+   moving away from).
+8. **Claim-ledger note:** C-034's proposed wording is narrowed with E8's result (encoder/
+   decoder tracking, not domain) rather than restated as a new headline claim — still not
+   added to `CLAIMS_LEDGER.md`.
 
 ---
 
@@ -424,4 +488,23 @@ YYYY-MM-DD  |  scaffold created; outline frozen  |  next: run PHASE_0 inventory
             |  the heterogeneous-within-genomic-group pattern actually found.
             |  next: author call on Evo2 (retry with a different native input distribution?
             |  needs its own new prereg either way), or resume R1/R6 writing / N-013/014/015.
+2026-08-14  |  E7 provenance addendum (hashes/revisions for all 4 E7 checkpoints, no result
+            |  change) and C-032 retirement recommendation (decided now, independent of E8:
+            |  GENERator EUK's exact PR_spec already sits inside the NLP range). E8 encoder-
+            |  vs-decoder: prereg locked (sha256 7a5dc793...), reusing E7's frozen WikiText-2
+            |  detector + 5.0x threshold verbatim. MosaicBERT (identical FFN class to
+            |  DNABERT-2) and ModernBERT (independent codebase) both audited ELIGIBLE, both
+            |  detected cleanly (ratios 289x, 561x). MosaicBERT q1=0.4766 (dramatically below
+            |  the 0.8989 decoder floor); ModernBERT q1=0.8970 (below by only 0.21% relative
+            |  -- thin but genuine, reported as such). Mechanical result: BRANCH A. Secondary
+            |  finding: both candidates are far MORE concentrated than 5 seeded same-layer
+            |  control rows (control q1 ~0.03-0.05) -- the high-gain phenotype is a local
+            |  exception, not typical of encoder rows generally. Design-only causal-
+            |  feasibility note written (Branch A triggers it): concludes the needed
+            |  activation-space intervention tooling does not exist yet, new engineering
+            |  effort required. C-034's proposed wording narrowed with this result, not
+            |  restated as new. No CLAIMS_LEDGER.md edit.
+            |  next: author review of C-032 retirement + C-034 proposal; separately, whether
+            |  to scope the causal-feasibility gap as new infrastructure work, or resume
+            |  R1/R6 writing / N-013/014/015.
 ```
