@@ -6,62 +6,65 @@ single-forward-pass method from Yu et al. (2024) *"The Super Weight in Large Lan
 
 ---
 
-## Current status (Aug 2026) — mechanism session + corrections
+## Mechanism session reports (Aug 2026) — reference material, not yet citable claims
 
-This round moved the project from phenomenology to mechanism, and **retracted or rescoped
-several earlier claims**. Full reports in [`results/mechanism/`](results/mechanism/); start
-with [HANDOFF_ANALYTICAL_SUMMARY.md](results/mechanism/HANDOFF_ANALYTICAL_SUMMARY.md),
-which tags every claim `[MEASURED] / [INFERRED] / [UNTESTED]`.
+A separate mechanism/negative-results session produced a large set of markdown reports and
+new scripts under [`results/mechanism/`](results/mechanism/) and `scripts/mechanism/`,
+`scripts/compression/`, `sae/`. Start with
+[HANDOFF_ANALYTICAL_SUMMARY.md](results/mechanism/HANDOFF_ANALYTICAL_SUMMARY.md), which tags
+every claim `[MEASURED] / [INFERRED] / [UNTESTED]`.
 
-### What we established
+**Status: the reports and producing scripts are real and carefully self-critical, but the raw
+JSON/CSV/PNG outputs they cite are not present in this repository** (only the `.md` reports
+and the `.py` scripts that would produce them were committed). Full provenance audit, per-claim
+evidence table, and the still-missing-artifact manifest:
+[`paper-salvage/docs/COLLEAGUE_BRANCH_AUDIT.md`](paper-salvage/docs/COLLEAGUE_BRANCH_AUDIT.md),
+[`paper-salvage/docs/MISSING_COLLEAGUE_ARTIFACTS.md`](paper-salvage/docs/MISSING_COLLEAGUE_ARTIFACTS.md).
+**None of the numeric findings below (redundant-pair epistasis, norm-carriage mechanism,
+attention-sink/steering numbers, corrected PROK or NTv3 replacement numbers, destructive
+quantization controls) should be cited as established until their artifacts are recovered or
+reproduced and independently audited.**
 
-| finding | key numbers | report |
-|---|---|---|
-| DNABERT-2's functional unit is a **redundant pair**, not a single row | top-7 pairs 7/7 structurally related, p = 0.00014 (n=5); splice −26.84 ± 2.56 vs sum-of-parts −3.51 | [SUPERADDITIVITY_AND_COMPOSITION_REPORT.md](results/mechanism/SUPERADDITIVITY_AND_COMPOSITION_REPORT.md) |
-| The pair is **intrinsic to pretraining** (MLM loss, no task head) | same critical pair +2.0118; top pair = 136,521× the random-pair sd; same k=5 cliff | [CHECKPOINT_1_PRETRAINED_EPISTASIS.md](results/mechanism/CHECKPOINT_1_PRETRAINED_EPISTASIS.md) |
-| Mechanism = **joint norm carriage** | pair carries 58% of layer-9 residual norm (17.20 → 7.14) | [CHECKPOINT_1_MECHANISM.md](results/mechanism/CHECKPOINT_1_MECHANISM.md) |
-| **Co-dominance** decides joint vs single-point failure | constant total norm; epistasis −33.6 → −0.7 while single-channel effect −0.02 → −33.0 | [E1_E2_CODOMINANCE_AND_CONFOUND.md](results/mechanism/E1_E2_CODOMINANCE_AND_CONFOUND.md) |
-| **Decoder/encoder dissociation** | decoder: 37.96% attention mass at BOS, 33× uniform, 45,585× activation. encoder: 0/40 windows peak at [CLS]; instead a composition detector (Cohen's d = −1.89) | [CHECKPOINT_2_TIER2.md](results/mechanism/CHECKPOINT_2_TIER2.md) |
-| **Causal steering** of generated composition | GC span 38.6× random rows; quality (perplexity, dinuc KL, homopolymer) flat across the range | [CHECKPOINT_2_TIER2.md](results/mechanism/CHECKPOINT_2_TIER2.md) |
-| Compression: SW-aware exemption is a **no-op** | per-row RTN preserves the row max with 0.000e+00 error at INT8–INT2; exemption benefit mean **+0.032 pp** over 32 cells (t = 0.23) | [CHECKPOINT_3_GROUP_SCALE_PRESERVATION.md](results/mechanism/CHECKPOINT_3_GROUP_SCALE_PRESERVATION.md) |
+One item *is* independently confirmed, by tracing this repository's own code rather than the
+reports' prose:
 
-### 🔴 Retractions and rescopes (read before citing older numbers)
+- **The NTv3 splice result (`results/gue_multiseed_ntv3_splice.json`, backing the "5-seed
+  NTv3 splice" line below) was produced with an effective `max_length` of 80.**
+  `run_gue_multiseed.py`'s task-key fallback resolves `_MAX_LEN["reconstructed"] = 80`
+  (tuned for DNABERT-2's BPE tokenizer) whenever `--max_length` isn't passed, and the launch
+  script that produced this result never passed it. NTv3 tokenizes at nucleotide level, so
+  this truncated every splice window to its first 80 bp, before the splice junction. **The old
+  ΔMCC = −0.119 ± 0.054 (p = 0.0083) result is therefore invalidated** by a confirmed bug in
+  its own backing run. A corrected retrained result is reported in the mechanism session but
+  has no artifact in this repository yet — do not cite a specific corrected number until one
+  is recovered or reproduced.
 
-1. **NTv3 splice results were produced on 20%-truncated inputs.** `_MAX_LEN["reconstructed"]
-   = 80` is tuned for DNABERT-2's BPE (400 bp → 86 tokens). NTv3 is *nucleotide-level*
-   (400 bp → 400 tokens), so 80 truncated every splice window to its first 80 bp — the
-   junction was never seen, and all 5 seeds sat at the 0.5658 majority-class floor.
-   **With the fix, NTv3 reaches MCC 0.86–0.91 — and its SW ablation effect disappears
-   (−0.02 pp).** The previously reported ΔMCC = −0.119 ± 0.054 (p = 0.0083) is an artifact
-   of the truncated model and is **withdrawn**. Functional replication of the ensemble
-   effect is therefore **n = 1 (DNABERT-2)**; structural replication is n = 2.
-2. **"Shadow redundancy" is a layer-depth artifact.** `prox_far` prunes all 768 rows of
-   layer 0; `layer_matched_random` (no SW information) reproduces it on all three tasks
-   (promoter −9.09 vs −10.04; histone −2.87 vs −2.74; splice −34.87 vs −34.88).
-3. **SW quantisation-exemption experiments test a no-op by construction** — per-row RTN sets
-   `s = max|w|/qmax`, and the SW *is* that max.
-4. **"Histone-mark prediction intact" is false** — the same k=5 cliff fires in 2/5 seeds.
-5. **Composition claim rescoped** — R² = 0.373 (GC alone 0.035); 2/12 motifs survive a
-   GC-matched null, so "no canonical motifs are enriched" is also false.
-6. **PROK SAE withdrawn** — layer-2 contamination, an fp16 clamp destroying 98% of
-   SW-channel variance, an unnormalised objective, and degenerate `n_active ≈ 1`
-   correlations.
-7. **Norm dominance does not predict criticality** — NTv3's SW is rank 1/1536 with a 29.4×
-   gap (more dominant than DNABERT-2's) and is functionally inert. The joint-norm-carriage
-   mechanism explains DNABERT-2 and does **not** generalise.
+Everything else under `results/mechanism/` (the redundant-pair/pretraining-intrinsic/
+norm-carriage chain for DNABERT-2, attention-sink and causal-steering numbers for GENERator,
+the corrected PROK L8/r260 detection, and the destructive-quantization controls) is real,
+inspectable methodology with no raw artifact behind it yet, and is tracked as **PARTIAL** in
+the audit above pending artifact recovery.
 
-### Infrastructure fixes shipped this round
+### New scripts shipped this round
 
-| fix | why it matters |
-|---|---|
-| `scripts/evaluation/run_gue_ablation.py` — `_NTv3Classifier` pads to the next **multiple** of 256 | NTv3 is a conv/deconv U-Net; skip connections only align on exact multiples |
-| `scripts/detection/run_detection.py` — `--pad_to_multiple` | canonical 504 bp probes gave 504 tokens (504 mod 256 = 248) and crashed detection; NTv3 index went **1 → 30 rows** |
-| `sae/collect.py` — `--store_dtype float32` | the fp16 ±60,000 clamp destroyed 98% of SW-channel variance |
-| `sae/train.py` — `--standardize` | SW channel carries 6,888× the median sd; dead features **74.9% → 0.5%** |
-| `sae/model.py` / `sae/analyze.py` — persist and apply `data_scale` | mismatched preprocessing manufactured the `n_active=1 → r = −0.9949` artifact *even with a healthy dictionary* |
-| `scripts/evaluation/run_sw_pairwise_epistasis.py` — `--sw_index`, `--top_n`, `--max_length`, `--out` | required for NTv3 and for the deep index |
+New, non-colliding additions — safe to use, not yet run end-to-end in this repository's own
+CI/tests:
 
-**Standing rule adopted:** never report a correlation without its `n_active`.
+- `scripts/mechanism/` — `run_attention_sink.py`, `run_codominance.py`,
+  `run_compensation_circuit.py`, `run_direction_vs_magnitude.py`, `run_ensemble_encoding.py`,
+  `run_norm_matched_control.py`, `run_pretrained_epistasis.py`, `run_steering_biological.py`,
+  `run_sw_steering.py`
+- `scripts/compression/` — `run_destructive_sw_protection.py`,
+  `run_group_scale_preservation.py`, `run_pair_aware_compression.py`,
+  `run_per_tensor_sw_exemption.py`, `run_proximity_confound_control.py`
+- `scripts/evaluation/run_sw_pairwise_epistasis.py`
+- `sae/analyze_real_sequence.py`, plus float32-storage/standardization fixes to
+  `sae/collect.py`, `sae/train.py`, `sae/model.py`, `sae/analyze.py` (avoids an fp16 clamp
+  that was destroying SW-channel activation variance)
+- `scripts/detection/run_detection.py --pad_to_multiple` and
+  `scripts/evaluation/run_gue_ablation.py`'s `_NTv3Classifier` padding fix — both address the
+  same architectural fact (NTv3's conv/deconv U-Net skip connections require sequence length
+  to be an exact multiple of `2**num_downsamples`, not merely above a minimum)
 
 ---
 
@@ -821,6 +824,19 @@ Output: per-sequence Spearman ρ, aggregate t-tests by genomic context, overlay 
 
 ## Prokaryote Interpretability — GENERator Prokaryote 3B SW Row 1927
 
+> **⚠ Channel identity under audit, not resolved here.** The section below resolves the
+> `r = −0.710` sign as a write-direction convention while keeping layer 2 / row 1927 as the
+> channel. A separate mechanism-session report
+> ([`prok_contamination_audit.md`](results/mechanism/prok_contamination_audit.md),
+> [`D1_PROK_RERUN_REPORT.md`](results/mechanism/D1_PROK_RERUN_REPORT.md)) argues this whole
+> channel was detected with a mismatched (eukaryotic) probe and should instead be layer 8 /
+> row 260, where the corrected Spearman correlation is ≈0 (p = 0.96) — a different resolution
+> of the same anomalous number, at a level below the sign-convention question addressed here.
+> Neither account is currently backed by a committed raw artifact for the corrected channel;
+> see [`paper-salvage/docs/COLLEAGUE_BRANCH_AUDIT.md`](paper-salvage/docs/COLLEAGUE_BRANCH_AUDIT.md)
+> §4.2. This document does not adjudicate between them — treat both as open pending the
+> missing artifacts.
+
 Parallel six-step interpretability pipeline applied to the prokaryote model (SW at layer 2,
 row 1927, out\_max = 506 014) on *E. coli* K-12 sequences (promoters, terminators, random).
 
@@ -991,7 +1007,7 @@ interesting but unvalidated secondary signal.
 │       ├── enhancers_ccre_262kb.bed
 │       └── random_262kb.bed
 ├── results/
-│   └── mechanism/            # all mechanism reports + JSON/CSV (see HANDOFF summary)
+│   └── mechanism/            # mechanism .md reports (raw JSON/CSV not yet committed, see MISSING_COLLEAGUE_ARTIFACTS.md)
 ├── docs/
 │   └── superweight_paper.txt  # Reference paper (Yu et al. 2024)
 ├── paper/
