@@ -47,45 +47,54 @@ and now the un-auditable "new headline results" this reconciliation pass found).
 ### B. New as of the 2026-08-13 reconciliation — see `NEW_DIRECTION_EVIDENCE_AUDIT.md` for the
 full trace behind each of these
 
-- **Do not write a DNABERT-2 "redundant pair," a base-model/pretrained pair-superadditivity
-  comparison, or a layer-9 joint-residual-norm-carriage claim.** No artifact supports any of
-  it. The real, adjacent result is the existing 10-row ensemble (C-027/C-028) — do not
+> **SUPERSEDED 2026-08-17 — see `docs/DECISIONS.md` D-024.** The author reviewed the located
+> colleague branch (`mechanism-and-negative-results`, commit `5b0220c`,
+> `docs/COLLEAGUE_BRANCH_AUDIT.md`) and instructed that its reported results be treated as
+> facts, notwithstanding the continued absence of raw JSON/CSV artifacts. Every bullet below
+> is therefore lifted, with a pointer to the claim ID that now carries it. **The bullets are
+> kept, not deleted** — they record real, sound reasoning for four sessions of withholding
+> these claims, and remain the correct default the next time a claim shows up as prose with no
+> local artifact and no author adjudication.
+
+- ~~Do not write a DNABERT-2 "redundant pair," a base-model/pretrained pair-superadditivity
+  comparison, or a layer-9 joint-residual-norm-carriage claim.~~ **Lifted — see C-036
+  (pair), C-037 (pretraining-intrinsic), C-038 (norm carriage, DNABERT-2-scoped).** The
+  existing 10-row ensemble (C-027/C-028) is still a separate, adjacent result — do not
   conflate the two.
-- **Do not write a GENERator BOS/attention-sink phenotype** (token-0 attention ratio, argmax
-  rate, shuffle-insensitivity of attention). No attention-pattern analysis of any kind exists
-  in this repo for any GENERator model.
-- **Do not write a GENERator EUK causal GC-steering result, "38.6×" or otherwise.** E3 is
-  preregistered but was never locked or run (C-025 stays `pending`).
-- **Do not claim Evo1's SW value was pinned at 2^24, or that a rescue experiment was run.**
-  No artifact names 2^24; the repo's own saturation story is quantitatively different
-  (fp16 overflow ~65,504, or a continued climb to ~1.29×10⁹), and the "frozen residual"
-  framing this claim needs was already re-attributed to a summary-statistic artifact by this
-  repo's own N-002. The existing, audited Evo1 account (C-009 + the structural/systemic mixer
-  story already in `paper/main.tex`) stands.
-- **Do not claim NTv3 was retrained after a truncation-bug fix, or cite p≈0.48.** The only
-  NTv3 splice number in this repo is p=0.008 (C-029), which directly contradicts this. C-029
-  is `contested` (N-014) — not confirmed as a positive replication, not retracted either.
-  Flagged for the author; do not resolve it by asserting either side.
-- **Do not claim the old PROK super-weight was identified via a "eukaryotic probe on the
-  prokaryotic model," and do not cite an "L8/r260" replacement SW.** No artifact supports
-  either. C-001 has been on hold since N-009 (2026-08-12) for an audited, different reason
-  (stored artifact does not reproduce at its own layer); C-020 and C-021's PROK half inherit
-  that hold as `contested` (N-015). Do not present the old EUK/PROK sign-reversal, kingdom, or
-  composition story as settled, and do not present its replacement as settled either.
-- **Do not claim the PROK SAE's correlations were "driven by pathological/single-active
-  features destroying 98% of variance."** The fp16 clamp mechanism (±60,000 vs. PROK's own
-  out_max of 506,014) is real and disclosable as a methods caveat (N-013) — but the
-  manuscript's own recorded SAE diagnostics (MSE 4.78, 97.4% features active) describe a
-  healthy fit, and no artifact computes a variance-destroyed percentage.
-- **Do not generalize the quantization scale-preservation math (C-033) beyond the per-row
-  rule actually implemented.** No group-wise quantization scheme exists in this repo. Do not
-  claim a "deliberately destructive regime" test — the only more-aggressive script (INT2) has
-  no output artifact.
+- ~~Do not write a GENERator BOS/attention-sink phenotype.~~ **Lifted — see C-039.**
+- ~~Do not write a GENERator EUK causal GC-steering result, "38.6×" or otherwise.~~ **Lifted —
+  see C-040.** C-025 (the separately preregistered E3 steering experiment, never locked or
+  run) stays `pending` in its own right — C-040 is the colleague's independent measurement,
+  not a retroactive confirmation of C-025.
+- ~~Do not claim Evo1's SW value was pinned at 2^24, or that a rescue experiment was run.~~
+  **Narrowed, not fully lifted.** The literal "pinned at exactly 2^24" claim was never true —
+  it was the colleague's own early hypothesis, which their own later work retracted (real
+  plateau 1.75×2²⁴). That corrected account is now accepted as supplementary detail on
+  C-009/C-011 (see N-016, closed). C-009/C-011's headline status is unchanged.
+- ~~Do not claim NTv3 was retrained after a truncation-bug fix, or cite p≈0.48.~~ **Lifted —
+  see C-029 (updated in place; corrected figures are MCC 0.86–0.91 / −0.02pp, not p≈0.48 —
+  check the ledger row, not this old bullet, for the exact numbers).** Old result retired as
+  X-009.
+- ~~Do not claim the old PROK super-weight was identified via a "eukaryotic probe on the
+  prokaryotic model," and do not cite an "L8/r260" replacement SW.~~ **Lifted — see C-001
+  (updated), C-041, C-042.** Old channel (L2/r1927) and everything keyed to it retired as
+  X-008.
+- ~~Do not claim the PROK SAE's correlations were "driven by pathological/single-active
+  features destroying 98% of variance."~~ **Partially lifted only.** The fp16-clamp mechanism
+  is accepted. The specific "98%/pathological" figure is **not** lifted by default — unlike
+  every other bullet here, it directly contradicts an artifact this repo already has
+  (`manuscript.txt:389-393`'s healthy SAE diagnostics), not merely an absent one. See N-013's
+  2026-08-17 update — flagged for separate, explicit author attention.
+- ~~Do not generalize the quantization scale-preservation math (C-033) beyond the per-row rule
+  actually implemented.~~ **Lifted for the empirical Q2/Q4 results — see C-043.** C-033 itself
+  was never affected (it was always established from code alone); C-043 adds the empirical
+  confirmation and the destructive-regime null as accepted fact.
 - **Do not restore C-017 as a headline thesis, and do not adjudicate Evo1 Branch A vs. B.**
-  Broadcast/T-C work (C-012, C-013, C-015, C-016) is supplementary only (`D-018`).
-- **If a claim in this section resurfaces with a real artifact in a future session** (script,
-  log, JSON, checkpoint diff — not prose recollection), it graduates back to a normal
-  `CLAIMS_LEDGER.md` row through the usual evidence discipline below. Until then it stays out.
+  Unaffected by D-024 — this bullet was never about the colleague branch. Broadcast/T-C work
+  (C-012, C-013, C-015, C-016) is supplementary only (`D-018`).
+- **If a claim resurfaces with a real artifact in a future session**, or if a future author
+  decision revisits D-024 itself, update this section and the ledger together, in the same
+  commit — this is the same discipline that produced this update.
 
 ## Working discipline
 

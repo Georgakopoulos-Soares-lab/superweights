@@ -12,8 +12,14 @@ filesystem search — see audit §2). This is a recovery/reproduction checklist,
 that the work didn't happen. **Nothing here is reproduced or recreated in this pass** — this
 document only records what is missing and what would be needed to close each gap.
 
-Do not cite any numeric finding listed below in a manuscript or the claims ledger until its
-row moves from "missing" to "recovered" or "reproduced and audited."
+> **UPDATE 2026-08-17, see `docs/DECISIONS.md` D-024.** The author has since decided to adopt
+> the findings below as established results facts, notwithstanding the artifacts remaining
+> physically absent — see `docs/CLAIMS_LEDGER.md` C-036–C-043, C-001, C-029. **This manifest
+> is no longer a precondition for citing these numbers.** It stays open as a genuine
+> reproducibility gap: recovering or reproducing these artifacts is still worthwhile for
+> independent verification, checkpoint provenance, and anything that would need the actual
+> data (plots, error bars beyond what the reports state, re-analysis) — just not as a gate on
+> claim status anymore.
 
 ---
 

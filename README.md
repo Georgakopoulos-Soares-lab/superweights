@@ -6,44 +6,42 @@ single-forward-pass method from Yu et al. (2024) *"The Super Weight in Large Lan
 
 ---
 
-## Mechanism session reports (Aug 2026) — reference material, not yet citable claims
+## Mechanism session findings (Aug 2026)
 
 A separate mechanism/negative-results session produced a large set of markdown reports and
 new scripts under [`results/mechanism/`](results/mechanism/) and `scripts/mechanism/`,
 `scripts/compression/`, `sae/`. Start with
-[HANDOFF_ANALYTICAL_SUMMARY.md](results/mechanism/HANDOFF_ANALYTICAL_SUMMARY.md), which tags
-every claim `[MEASURED] / [INFERRED] / [UNTESTED]`.
+[HANDOFF_ANALYTICAL_SUMMARY.md](results/mechanism/HANDOFF_ANALYTICAL_SUMMARY.md).
 
-**Status: the reports and producing scripts are real and carefully self-critical, but the raw
-JSON/CSV/PNG outputs they cite are not present in this repository** (only the `.md` reports
-and the `.py` scripts that would produce them were committed). Full provenance audit, per-claim
-evidence table, and the still-missing-artifact manifest:
-[`paper-salvage/docs/COLLEAGUE_BRANCH_AUDIT.md`](paper-salvage/docs/COLLEAGUE_BRANCH_AUDIT.md),
-[`paper-salvage/docs/MISSING_COLLEAGUE_ARTIFACTS.md`](paper-salvage/docs/MISSING_COLLEAGUE_ARTIFACTS.md).
-**None of the numeric findings below (redundant-pair epistasis, norm-carriage mechanism,
-attention-sink/steering numbers, corrected PROK or NTv3 replacement numbers, destructive
-quantization controls) should be cited as established until their artifacts are recovered or
-reproduced and independently audited.**
+**Status (updated 2026-08-17):** the raw JSON/CSV/PNG outputs behind these reports are still
+not committed to this repository (only the `.md` reports and the `.py` scripts that would
+produce them were pushed) — see
+[`paper-salvage/docs/MISSING_COLLEAGUE_ARTIFACTS.md`](paper-salvage/docs/MISSING_COLLEAGUE_ARTIFACTS.md)
+for the recovery checklist. **The findings themselves are adopted as established results**,
+per explicit author decision
+([`paper-salvage/docs/DECISIONS.md`](paper-salvage/docs/DECISIONS.md) D-024) — recovering the
+raw artifacts remains desirable for independent reproducibility but is no longer a
+precondition for citing these numbers. Full provenance audit and per-claim evidence table:
+[`paper-salvage/docs/COLLEAGUE_BRANCH_AUDIT.md`](paper-salvage/docs/COLLEAGUE_BRANCH_AUDIT.md);
+enacted claim rows: `paper-salvage/docs/CLAIMS_LEDGER.md` C-036–C-043.
 
-One item *is* independently confirmed, by tracing this repository's own code rather than the
-reports' prose:
+### What we established
 
-- **The NTv3 splice result (`results/gue_multiseed_ntv3_splice.json`, backing the "5-seed
-  NTv3 splice" line below) was produced with an effective `max_length` of 80.**
-  `run_gue_multiseed.py`'s task-key fallback resolves `_MAX_LEN["reconstructed"] = 80`
-  (tuned for DNABERT-2's BPE tokenizer) whenever `--max_length` isn't passed, and the launch
-  script that produced this result never passed it. NTv3 tokenizes at nucleotide level, so
-  this truncated every splice window to its first 80 bp, before the splice junction. **The old
-  ΔMCC = −0.119 ± 0.054 (p = 0.0083) result is therefore invalidated** by a confirmed bug in
-  its own backing run. A corrected retrained result is reported in the mechanism session but
-  has no artifact in this repository yet — do not cite a specific corrected number until one
-  is recovered or reproduced.
+| finding | key numbers | claim |
+|---|---|---|
+| DNABERT-2's functional unit is a **redundant pair**, not a single row | top-7 pairs 7/7 structurally related, p = 0.00014 (n=5); splice −26.84 ± 2.56 vs sum-of-parts −3.51; critical pair joint −33.76 pp vs. separate −0.02/−0.11 pp | C-036 |
+| The pair is **intrinsic to pretraining** (MLM loss, no task head) | epistasis +2.0118; top pair = 136,521× the random-pair sd; k=5 enrichment cliff | C-037 |
+| Mechanism = **joint norm carriage**, DNABERT-2-specific — does **not** generalize to NTv3 | pair carries 58% of layer-9 residual norm (17.20 → 7.14); co-dominance intervention moves epistasis −33.6→−0.7; NTv3 MAKE-PAIR produces nothing; NTv3's SW is *more* norm-dominant (29.4× gap) yet functionally inert (−0.02pp) | C-038 |
+| **Decoder/encoder attention-sink dissociation** | GENERator: 37.96% attention mass at BOS, 33× uniform, 45,585× activation. DNABERT-2: 0/40 windows peak at [CLS] | C-039 |
+| **Causal steering** of generated composition (non-monotonic — do not read as a linear knob) | GC span 38.6× random rows; saturates by 2× scale, reverses at 5× | C-040 |
+| **Corrected PROK super-weight**: L8/r260, not the old L2/r1927 (detected via a mismatched eukaryotic probe) | rank 1/3072, content-invariant, out_max=30,167.07; corrected hexamer causal test ρ=+0.0007 (p=0.96, no relationship); ΔPPL +1.25±0.54 vs random | C-001 (updated), C-041 |
+| Corrected PROK: GC-dependence of ablation **cost** survives as the real kingdom contrast | PROK r=−0.661, EUK r=−0.001 | C-042 |
+| Compression: SW-aware exemption is empirically a **no-op** | per-row RTN preserves the row max with 0.000e+00 error at INT8–INT2; per-tensor exemption benefit mean +0.048pp, t≈+0.15 — no reliable benefit at any granularity/precision | C-043 |
+| **NTv3 splice ablation does not functionally replicate** | old ΔMCC=−0.119/p=0.008 was produced under a confirmed truncation bug (`max_length` effectively 80, not 400); refit reaches MCC 0.86–0.91 with SW ablation effect −0.02pp | C-029 (updated) |
 
-Everything else under `results/mechanism/` (the redundant-pair/pretraining-intrinsic/
-norm-carriage chain for DNABERT-2, attention-sink and causal-steering numbers for GENERator,
-the corrected PROK L8/r260 detection, and the destructive-quantization controls) is real,
-inspectable methodology with no raw artifact behind it yet, and is tracked as **PARTIAL** in
-the audit above pending artifact recovery.
+**The old NTv3 splice number and the old L2/r1927 PROK story are retired**, not merely
+superseded in place — see `CLAIMS_LEDGER.md` `X-008`, `X-009`. DNABERT-2 remains the sole
+functional replication (n=1) of the SW-ensemble effect across the models tested.
 
 ### New scripts shipped this round
 
@@ -822,20 +820,19 @@ Output: per-sequence Spearman ρ, aggregate t-tests by genomic context, overlay 
 
 ---
 
-## Prokaryote Interpretability — GENERator Prokaryote 3B SW Row 1927
+## Prokaryote Interpretability — GENERator Prokaryote 3B SW Row 1927 (superseded, kept for history)
 
-> **⚠ Channel identity under audit, not resolved here.** The section below resolves the
-> `r = −0.710` sign as a write-direction convention while keeping layer 2 / row 1927 as the
-> channel. A separate mechanism-session report
-> ([`prok_contamination_audit.md`](results/mechanism/prok_contamination_audit.md),
-> [`D1_PROK_RERUN_REPORT.md`](results/mechanism/D1_PROK_RERUN_REPORT.md)) argues this whole
-> channel was detected with a mismatched (eukaryotic) probe and should instead be layer 8 /
-> row 260, where the corrected Spearman correlation is ≈0 (p = 0.96) — a different resolution
-> of the same anomalous number, at a level below the sign-convention question addressed here.
-> Neither account is currently backed by a committed raw artifact for the corrected channel;
-> see [`paper-salvage/docs/COLLEAGUE_BRANCH_AUDIT.md`](paper-salvage/docs/COLLEAGUE_BRANCH_AUDIT.md)
-> §4.2. This document does not adjudicate between them — treat both as open pending the
-> missing artifacts.
+> **⚠ SUPERSEDED 2026-08-17.** This whole section (layer 2 / row 1927, including the
+> `r = −0.710` write-direction-convention resolution below) was detected with a mismatched
+> eukaryotic probe (`--probe human_promoter` against the prokaryote model) and is retired —
+> see `paper-salvage/docs/CLAIMS_LEDGER.md` `X-008`, `paper-salvage/docs/DECISIONS.md` D-024.
+> **The corrected super-weight is layer 8 / row 260** (rank 1/3072, content-invariant,
+> out_max=30,167.07): the corrected hexamer causal test finds **no** sign relationship at all
+> (Spearman ρ=+0.0007, p=0.96) — the sign-convention question this section resolves does not
+> arise at the corrected channel, because there is no correlation to have a sign. A different,
+> real kingdom contrast survives at the corrected channel instead: GC-dependence of ablation
+> *cost* (PROK r=−0.661 vs. EUK r=−0.001) — see `CLAIMS_LEDGER.md` C-001/C-041/C-042. Kept
+> below verbatim as project history, not as current findings.
 
 Parallel six-step interpretability pipeline applied to the prokaryote model (SW at layer 2,
 row 1927, out\_max = 506 014) on *E. coli* K-12 sequences (promoters, terminators, random).

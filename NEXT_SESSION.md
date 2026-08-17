@@ -1,169 +1,127 @@
 # NEXT_SESSION.md
 
-**Session:** 2026-08-14, colleague branch (`mechanism-and-negative-results`) audit +
-integration (seventh session, continuation of E5–E8).
-**Status:** A colleague's independent mechanism/negative-results branch was audited, then —
-on explicit author approval — integrated onto a **separate, not-yet-merged** branch,
-`integrate/mechanism-and-negative-results`. `main` is untouched by the integration itself
-(only by the audit's own documentation commits, which are ordinary, safe additions). No
-scientific experiment was run or reproduced this session.
+**Session:** 2026-08-17, author decision D-024 — colleague mechanism-session results adopted
+as facts (same-day continuation of the seventh session's colleague-branch integration).
+**Status:** The author reviewed the colleague-branch audit and missing-artifact manifest and
+instructed that the colleague's reported results be treated as facts, notwithstanding the
+continued absence of raw JSON/CSV artifacts. This is recorded as `docs/DECISIONS.md` **D-024**
+and has been fully enacted in the ledger, `CLAUDE.md`, and `README.md` this same session. The
+integration branch (`integrate/mechanism-and-negative-results`) is still **not merged into
+`main`**.
 
 ---
 
 ## 1. What happened this session
 
-**Pass 1 — audit** (`paper-salvage/docs/COLLEAGUE_BRANCH_AUDIT.md`, on `main`, no merge):
+1. **`docs/DECISIONS.md` D-024 recorded** — explicitly supersedes D-019 (Evo1), D-020 (PROK),
+   D-021 (NTv3), and `CLAUDE.md` §B in full.
+2. **`CLAIMS_LEDGER.md` updated:**
+   - `C-001` updated in place — corrected PROK super-weight is **L8/r260**, not L2/r1927.
+   - `C-020` retired (`X-008`) → replaced by `C-041` (corrected hexamer causal test: ρ=+0.0007,
+     p=0.96 — no sign relationship at the corrected channel).
+   - `C-021`'s PROK half retired (`X-008`) → replaced by `C-042` (GC-dependence of ablation
+     *cost* is the real surviving kingdom contrast: PROK r=−0.661, EUK r=−0.001). EUK half of
+     C-021 unaffected.
+   - `C-029` updated in place — old ΔMCC=−0.119/p=0.008 retired (`X-009`, confirmed truncation
+     bug); corrected: MCC 0.86–0.91, SW ablation effect **−0.02pp (no effect)**. NTv3 no
+     longer counts as a functional replication of the SW-ensemble effect; DNABERT-2 remains
+     the sole one (n=1).
+   - Five new claims added: `C-036` (DNABERT-2 redundant pair), `C-037` (pretraining-
+     intrinsic), `C-038` (norm/codominance mechanism — explicitly DNABERT-2-scoped, the NTv3
+     null is part of the claim), `C-039` (attention sink), `C-040` (causal steering,
+     non-monotonic).
+   - `C-043` added — quantization Q2/Q4 empirical results, on top of C-033 (unchanged, still
+     established from code alone).
+   - N-012, N-014, N-015, N-016 closed. **N-013 only partially closed** — see below.
+3. **`CLAUDE.md` §B annotated** — every bullet marked superseded/lifted with a pointer to the
+   claim ID that now carries it. Bullets kept, not deleted, as the historical record of why
+   these claims were withheld for four sessions.
+4. **`README.md` updated** — "reference material, not yet citable" framing replaced with a
+   findings table; the old PROK section (row 1927) marked superseded and kept for history, not
+   deleted.
+5. **`docs/MISSING_COLLEAGUE_ARTIFACTS.md`** — header note added: no longer gates claim
+   status, still tracks a genuine reproducibility gap.
 
-- Identified `origin/mechanism-and-negative-results` (single commit `5b0220c`, diverged
-  2026-06-17, authored 2026-08-13) as the only candidate colleague branch.
-- Confirmed `paper-salvage/` — and therefore every E5–E8 file — does not exist on that branch
-  or at the merge-base: zero path collision.
-- Audited all 9 claims (A–I) the colleague's reports make, back to producing scripts and raw
-  artifacts. **Every raw JSON/CSV artifact the reports cite is absent from the pushed
-  branch** — only `.md` reports and `.py` scripts were committed. Classified essentially every
-  claim PARTIAL, with two exceptions resolved by careful, specific tracing (as instructed):
-  - **Evo1 "2^24"**: the colleague's own early (2026-08-03) hypothesis, retracted by their own
-    later (2026-08-07) fp64 adjudication (real plateau = 1.75×2^24), which falls inside this
-    repo's own N-001 range. **Not a contradiction.**
-  - **NTv3 truncation bug**: independently re-derived from this repo's own code (not
-    colleague prose) — `run_gue_multiseed.py`'s `_MAX_LEN["reconstructed"]=80` fallback fires
-    on C-029's own launch script. **Confirmed real, applies to C-029's own backing artifact.**
-  - **PROK**: colleague's independently-computed contaminated-row rank (1289/3072) matches
-    this repo's own N-009 rank exactly — corroborating, not resolving, the "cause not
-    determined" gap. The claimed `super_weight_index.json` correction is **not actually
-    present** in the pushed branch (byte-identical to the pre-existing, uncorrected file).
+## 2. One item deliberately NOT swept in — needs separate author attention
 
-**Pass 2 — integration** (`integrate/mechanism-and-negative-results`, off this session's
-`main` HEAD, not merged into `main`):
+**N-013 — the PROK SAE's "98% variance destroyed / pathological features" figure.** Unlike
+every other item D-024 covers, this one directly **contradicts an artifact this repo already
+has** (`manuscript.txt:389-393`'s own recorded SAE diagnostics: MSE 4.78, 97.4% of dictionary
+features active — describing a healthy fit, not a destroyed one). D-024's rationale (trusting
+a colleague's report where this repo has no competing measurement) does not obviously extend
+to overriding a measurement this repo already made. The fp16-clamp *mechanism* is adopted (it
+is real and uncontroversial); the specific 98% figure is not. **Flagged for the author**:
+either the manuscript's own recorded SAE diagnostic needs to be treated as stale/wrong, or the
+colleague's 98% figure needs to be treated as an overstatement — this pass does not decide
+which.
 
-1. Committed the audit doc on `main` (`a43020a`), verified all 5 prereg locks (`OK`).
-2. Branched `integrate/mechanism-and-negative-results` from `main`.
-3. Cherry-picked `5b0220c` — **zero unresolved conflicts**; git auto-merged both
-   flagged files. Hand-verified (not just trusted) against pre-integration `main`:
-   `_GeneratorClassifier` byte-identical, only hunk touched in `run_gue_ablation.py` is the
-   `_NTv3Classifier` padding-to-multiple fix.
-4. Rescoped the cherry-picked `README.md` section from an "established findings" table down
-   to reference material (pointers to the audit + manifest, explicit "not yet citable"
-   warning), kept only the code-verified NTv3-bug summary as a real finding, fixed one
-   directory-tree comment that incorrectly implied JSON/CSV artifacts were present. Added a
-   caveat beside the pre-existing PROK write-direction-convention material (from an earlier,
-   independent `main` commit, `4ba1686`) flagging that a colleague report disputes the channel
-   identity beneath that convention — without resolving which is right.
-5. Wrote `paper-salvage/docs/MISSING_COLLEAGUE_ARTIFACTS.md` — every missing raw artifact,
-   grouped by claim, producing script, and priority (P0/P1/P2). **Nothing in it was
-   reproduced.**
-6. Enacted ledger changes that were justified **independent of the missing artifacts**:
-   - `C-032` → `X-007` (retired; this repo's own E7 evidence, not colleague-attributed).
-   - `C-034`, `C-035` added (E7+E8's exact-dimensionality/encoder-decoder result, folded from
-     "proposed" into live rows — this was already fully decided pre-integration, just not yet
-     enacted).
-   - `C-029` → `pending-rerun` (old ΔMCC/p=0.008 invalidated by the independently-confirmed
-     bug; **no replacement number inserted** — it has no artifact yet).
-   - `N-014`, `N-015` updated in place (dated addenda, originals preserved); `N-016` added
-     (Evo1, no headline change); `C-033`'s evidence cell got one corroborating addendum
-     (independent second implementation, same formula) — no status change.
-7. Updated `paper-salvage/docs/PROJECT_STATUS.md` (new top summary + new session-log block).
+## 3. Blockers
 
-Full detail: `paper-salvage/docs/COLLEAGUE_BRANCH_AUDIT.md`,
-`paper-salvage/docs/MISSING_COLLEAGUE_ARTIFACTS.md`.
+None mechanical. The one open item is N-013 above, which needs an author call, not more
+tracing — this pass could not find local grounds to prefer either side.
 
-## 2. Blockers
-
-**The integration branch has not been merged into `main`.** No further merge, cherry-pick, or
-rebase happens without separate, explicit author approval — this was the standing instruction
-for this entire task.
-
-The single largest blocker for turning any of this into manuscript prose: **recovering or
-reproducing the colleague's raw artifacts**, starting with P0 (DNABERT-2 redundant-pair,
-pretrained-intrinsic-pair, and norm/codominance mechanism — see
-`MISSING_COLLEAGUE_ARTIFACTS.md`). Ask the colleague first (most likely explanation: `results/`
-is gitignored and the `.md`-only carve-out didn't extend to JSON/CSV/PNG). Only plan a bounded
-reproduction, with its own preregistration, if the colleague confirms the artifacts are
-permanently unrecoverable.
-
-Carried over, still open: N-013 (unchanged), the still-open half of N-015 (PROK — corroborated
-but not artifact-complete), Evo1 Branch A vs. B, the missing Evo1 secondary-dose KL, empty
+Carried over, unchanged: Evo1 Branch A vs. B, the missing Evo1 secondary-dose KL, empty
 matched-norm arms.
 
-## 3. Canonical report paths (this session)
+## 4. Canonical report paths (this session)
 
 | What | Path |
 |---|---|
-| Colleague branch provenance audit | `paper-salvage/docs/COLLEAGUE_BRANCH_AUDIT.md` |
-| Missing-artifact manifest (P0/P1/P2) | `paper-salvage/docs/MISSING_COLLEAGUE_ARTIFACTS.md` |
-| Integration branch | `integrate/mechanism-and-negative-results` (cherry-pick `3d3bbb0`, README reconciliation, bookkeeping commits on top) |
-| Colleague's own reports (imported, reference only) | `results/mechanism/*.md` on the integration branch |
-| Updated ledger | `paper-salvage/docs/CLAIMS_LEDGER.md` (`C-032`→`X-007`, `C-034`, `C-035`, `C-029`, `N-014`/`N-015`/`N-016`) |
+| The decision itself | `paper-salvage/docs/DECISIONS.md` D-024 |
+| Updated claims | `paper-salvage/docs/CLAIMS_LEDGER.md` (C-001, C-020→X-008/C-041, C-021→X-008/C-042, C-029→X-009, C-036–C-040, C-043) |
+| Constraint annotations | `paper-salvage/CLAUDE.md` §B |
+| Updated findings summary | `README.md` §"Mechanism session findings (Aug 2026)" |
+| Residual open item | `paper-salvage/docs/CLAIMS_LEDGER.md` N-013 (2026-08-17 update) |
 
-Everything from the prior six sessions is unchanged — see `paper-salvage/docs/
-PROJECT_STATUS.md`'s session log.
+Everything from the prior seven sessions is unchanged except where D-024 explicitly updates
+it — see `paper-salvage/docs/PROJECT_STATUS.md`'s session log.
 
-## 4. What this session did NOT do (deliberately)
+## 5. What this session did NOT do (deliberately)
 
-- Did not merge, rebase, or cherry-pick anything into `main`.
-- Did not rewrite either branch's history.
+- Did not merge the integration branch into `main`.
+- Did not resolve N-013's residual conflict either way.
+- Did not recover or reproduce any of the still-missing raw artifacts — D-024 changes
+  evidentiary *policy* toward the colleague's reports, it does not manufacture the files.
+- Did not touch E5–E8 (`C-034`/`C-035`, the encoder/decoder result) — unrelated to this
+  decision.
 - Did not run any scientific experiment, rerun, or GPU job.
-- Did not reproduce or recreate any of the colleague's missing raw artifacts.
-- Did not update any manuscript claim from colleague prose alone — every ledger change made
-  this session traces to either this repo's own prior E5–E8 work (C-032/C-034/C-035) or an
-  independently-performed code trace by this integration itself (C-029/N-014), not to the
-  colleague's reports as such.
-- Did not enact the L8/r260 PROK replacement or any corrected NTv3 number.
-- Did not touch `CLAUDE.md`'s hard constraints (Section B) — every one of them remains fully
-  in force; nothing that surfaced this session clears any of their "no artifact" bars.
 
-## 5. What a future session should actually do — pick one lane
+## 6. What a future session should actually do — pick one lane
 
-**Lane A — recover P0 artifacts.** Ask the colleague for the raw `results/mechanism/*.json`
-outputs backing the DNABERT-2 pair/pretraining/norm-codominance chain. If recovered, audit
-them before writing anything into the ledger.
+**Lane A — resolve N-013.** Needs an author call on whether the manuscript's existing SAE
+diagnostic or the colleague's 98% figure is the one to trust — not more code tracing.
 
-**Lane B — bounded reproduction of one P0 claim**, only if Lane A is exhausted and the
-colleague confirms the artifacts are gone. Needs its own preregistration; do not reuse E5–E8's
-locks.
+**Lane B — merge the integration branch into `main`**, only on explicit instruction.
 
-**Lane C — write** (unchanged from prior sessions). R1 and R6 have enough real evidence to
-draft now, independent of anything in this session.
+**Lane C — write.** The ledger now has real numbers for R2 (Evo1/GENERator mechanism), R4
+(PROK kingdom contrast), R5 (steering), R6 (DNABERT-2 pair, NTv3 null, quantization) that were
+previously blocked. `PAPER_OUTLINE.md` should be checked against the new claim set before
+drafting.
 
-**Lane D — merge the integration branch into `main`**, only on the author's explicit
-instruction — this session's mandate was integrate-and-report, not merge.
+**Lane D — recover the raw artifacts anyway**, for independent reproducibility, even though
+it no longer gates claim status. Ask the colleague first per
+`MISSING_COLLEAGUE_ARTIFACTS.md`'s recovery-path ordering.
 
 **Do not** mix lanes.
-
-## 6. Unresolved scientific decisions carried over (unchanged, still open)
-
-Identical to the prior `NEXT_SESSION.md` versions' §6 (Evo1 Branch A vs B, C-017,
-C-001/N-009, Evo1's missing secondary-dose KL, empty matched-norm arms, C-010 on eager,
-ref [11]) — nothing in this session touched any of them.
 
 ## 7. Exact next commands
 
 ```bash
 cd /work/11034/atzanakak/glm_super_weight/genomic-super-weights
+git branch --show-current   # should be integrate/mechanism-and-negative-results
 
-# verify all five prereg locks still hold (E2, E5 Gate-0, E6 Stage-A, E7, E8)
+# verify all five prereg locks still hold
 python3 paper-salvage/src/prereg_lock.py verify --all
-
-# inspect the integration branch without switching off main's working tree
-git log --oneline --decorate -n 8 integrate/mechanism-and-negative-results
 ```
 
-## 8. Environment traps (unchanged from prior sessions, plus one new note)
+## 8. Environment traps (unchanged from prior sessions)
 
 - Container has **no `python`**, only `python3`.
 - Host `SSL_CERT_FILE` points outside the container; use `env -u SSL_CERT_FILE -u
   REQUESTS_CA_BUNDLE` for any `huggingface_hub` network call.
-- `grlm` needs `LD_LIBRARY_PATH=$ENV/lib`, and both `HF_HOME=/work/11034/atzanakak/ls6/
-  huggingface/.hf-cache` and `TRANSFORMERS_CACHE=/work/11034/atzanakak/ls6/nonbdna/cache/hf`
-  set simultaneously — a full-model download and a targeted `hf_hub_download` call can land
-  in **different** cache directories in the same session.
-- MosaicBERT ships no tokenizer files of its own — load `BertTokenizer.from_pretrained(
-  "bert-base-uncased")` instead of `AutoTokenizer`.
+- Live `git fetch` fails non-interactively in this environment (no askpass, no cached
+  credentials) — pre-existing `refs/remotes/origin/*` are reliable and fully walkable.
+- `paper-salvage/results/` is gitignored via the `results/` pattern — use `git add -f`.
 - Background shell `cd` does not persist across separate Bash tool calls; always
   `cd <absolute path> &&` at the start of every background command.
-- `paper-salvage/results/` is gitignored via the `results/` pattern — use `git add -f`.
-- **New — live `git fetch` fails non-interactively in this environment** (no askpass, no
-  cached HTTPS credentials). Pre-existing `refs/remotes/origin/*` from an earlier successful
-  fetch are reliable and fully walkable (verified non-shallow) — use those rather than
-  blocking on a live fetch; just record that a live fetch could not be completed.
 - No LaTeX toolchain on this node.

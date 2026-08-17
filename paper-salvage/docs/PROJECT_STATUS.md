@@ -1,8 +1,14 @@
 # PROJECT_STATUS.md
 
-**Last updated:** 2026-08-14 (colleague branch integration — seventh session, continuation of
-E5–E8)
-**Current phase:** A colleague's independent mechanism/negative-results branch
+**Last updated:** 2026-08-17 (author decision D-024 — colleague results adopted as facts,
+same-day continuation of the seventh session)
+**Current phase:** **The colleague's mechanism-session results (C-036–C-043, corrected
+C-001/C-020/C-021/C-029) are now adopted as established facts by explicit author decision** —
+see `docs/DECISIONS.md` D-024 and the session block below for the full enactment. The account
+of the integration pass itself (audit → branch → cherry-pick → reconciliation → manifest)
+below is unchanged and still accurate as history.
+
+A colleague's independent mechanism/negative-results branch
 (`origin/mechanism-and-negative-results`, diverged mid-June, worked in parallel with this
 project's whole E5–E8 arc) was audited (`docs/COLLEAGUE_BRANCH_AUDIT.md`), then — on explicit
 author approval — integrated onto a dedicated branch, `integrate/mechanism-and-negative-
@@ -72,23 +78,13 @@ unconfirmed but visually clean encoder-vs-decoder observation, and claim recomme
 2026-08-13 reconciliation pass below: R1/R6 are still the draftable sections, R2–R5 are still
 blocked, and the manuscript was not touched by E5, E6, E7, or E8.
 
-**Blocking on:** recovering or reproducing the colleague's missing raw artifacts
-(`docs/MISSING_COLLEAGUE_ARTIFACTS.md`, P0 = DNABERT-2 redundant pair / pretrained-intrinsic /
-norm-codominance mechanism) before any of claims A–E, the corrected NTv3 retrain, or the
-corrected PROK detection can be written as established; and author review of N-013 and the
-remaining, still-open half of N-015 (PROK: colleague diagnosis located and corroborated by an
-exact rank match with this repo's own N-009, but still unverified at the artifact level) —
-plus the pre-existing open items (Evo1 Branch A vs B, the missing Evo1 secondary-dose KL,
-empty matched-norm arms). **This session enacted, rather than merely recommended, four
-ledger changes** (the only prior session's edits were the C-033 row itself): C-032 → `X-007`
-retired; C-034/C-035 added (E7+E8's exact-dimensionality/encoder-decoder result, folded from
-"proposed" into a live row); C-029 → `pending-rerun` (old ΔMCC/p=0.008 invalidated by an
-independently code-confirmed truncation bug — see N-014's 2026-08-14 update — no replacement
-number inserted); N-015 narrowed (the "wrong-probe" mechanism it flagged as unaudited now has
-located, partially-corroborating colleague code, but is still not artifact-complete); N-016
-added (Evo1 "2^24": a colleague's own early claim, retracted by their own later work, found
-consistent with — not contradicting — this repo's existing N-001/N-002, no headline claim
-changed). C-002/C-003 unchanged (retain).
+**Blocking on:** author review of the one residual item D-024 deliberately did not sweep in —
+N-013's specific "98% variance destroyed" PROK SAE figure, which conflicts with an artifact
+this repo already has (see N-013's 2026-08-17 update) — plus the pre-existing open items (Evo1
+Branch A vs B, the missing Evo1 secondary-dose KL, empty matched-norm arms). **Recovering the
+colleague's raw artifacts (`docs/MISSING_COLLEAGUE_ARTIFACTS.md`) is no longer a blocker for
+claim status** — see D-024 below; it remains queued for independent reproducibility only.
+C-002/C-003 unchanged (retain).
 
 > ## 🔒 E2 PREREGISTRATION LOCKED — unchanged, re-verified this session
 >
@@ -373,6 +369,51 @@ on `integrate/mechanism-and-negative-results` (cherry-pick `3d3bbb0`, README rec
 manifest+bookkeeping). **The integration branch has not been merged into `main`** and no
 further action (merge, further cherry-pick, artifact reproduction) proceeds without separate
 explicit author approval.
+
+---
+
+## What changed this session (2026-08-17, author decision on colleague results — same-day
+continuation)
+
+**The author reviewed the above and instructed: treat the colleague's mechanism-session
+reports as results facts**, notwithstanding the continued absence of raw JSON/CSV artifacts.
+Recorded as `docs/DECISIONS.md` **D-024**, which explicitly supersedes D-019 (Evo1), D-020
+(PROK), D-021 (NTv3), and `CLAUDE.md` §B in full (every bullet there is now annotated
+`SUPERSEDED`/`Lifted`, with a pointer to the claim ID that carries it — the bullets are kept,
+not deleted, as the record of why those claims were withheld for four sessions).
+
+Enacted the same session, on `integrate/mechanism-and-negative-results`: `C-001` updated
+in place (corrected PROK location, L8/r260); `C-020` retired (`X-008`), replaced by `C-041`
+(corrected hexamer causal test: ρ=+0.0007, p=0.96 — no sign relationship, unlike the retired
+channel's r=±0.710); `C-021`'s PROK half retired (`X-008`), replaced by `C-042` (GC-dependence
+of ablation cost survives as the real kingdom contrast, PROK r=−0.661); `C-029` updated in
+place to the corrected NTv3 result (old ΔMCC=−0.119/p=0.008 retired as `X-009`; refit MCC
+0.86–0.91, SW ablation effect −0.02pp — NTv3 does not functionally replicate the ensemble
+effect, DNABERT-2 remains sole functional replication); five new claims added — `C-036`
+(DNABERT-2 redundant pair), `C-037` (pretraining-intrinsic), `C-038` (norm/codominance
+mechanism, explicitly scoped as DNABERT-2-only — the NTv3 null is part of the claim, not
+smoothed away), `C-039` (attention sink), `C-040` (causal steering, non-monotonic); `C-043`
+adds the quantization Q2/Q4 empirical results to C-033's existing code-only claim. N-012
+(closed, already), N-013 (**partially** closed — the fp16-clamp mechanism is adopted, but the
+specific "98% variance destroyed" figure directly contradicts an artifact this repo already
+has, `manuscript.txt`'s own healthy SAE diagnostics, and is left flagged for separate author
+attention rather than folded into the general sweep), N-014 (closed), N-015 (closed), N-016
+(closed — Evo1 fp64 detail promoted from "not cited as evidence" to accepted supplement on
+C-009/C-011, no headline change).
+
+`README.md` updated to match: the "reference material, not yet citable" framing replaced with
+a findings table; the PROK section (row 1927, write-direction-convention sign story) marked
+superseded and kept for history, not deleted, with the corrected channel's numbers given
+directly above it. `docs/MISSING_COLLEAGUE_ARTIFACTS.md` retained as a genuine reproducibility
+checklist, with a header note that it no longer gates claim status.
+
+**Still true, unchanged by this decision:** the raw artifacts are still not committed.
+Recovering them remains worthwhile for independent verification and is still queued
+(`MISSING_COLLEAGUE_ARTIFACTS.md`), just no longer a precondition for citing these numbers.
+**The integration branch is still not merged into `main`** — this session's instruction was
+about claim status, not about merging.
+
+---
 
 ---
 
