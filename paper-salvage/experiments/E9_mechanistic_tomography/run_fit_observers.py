@@ -61,17 +61,29 @@ def metrics(y_true, y_pred, a_mat):
             "residual_vs_predicted_magnitude_corr": resid_vs_mag}
 
 
-def bootstrap_mae_diff(a_held, per_batch_held_eps, y_pred_f2, y_pred_f3, n_batches):
-    """Resample held-out batches with replacement; recompute each held-out mask's
-    aggregate loss under the resample, recompute MAE_F2 - MAE_F3."""
+def bootstrap_mae_diff(baseline_per_batch, per_batch_held_eps, y_pred_f2, y_pred_f3, n_batches):
+    """Resample held-out batches (and the baseline, with the SAME draw, so the
+    resample stays paired) with replacement; recompute each held-out mask's dloss
+    under the resample; recompute MAE_F2 - MAE_F3.
+
+    y_pred_f2/f3 are on the dloss scale (fit against dloss targets), so the resampled
+    raw aggregate loss must have the correspondingly-resampled baseline subtracted
+    before comparison -- omitting this silently compares dloss (~0.01-0.5) against raw
+    loss (~4.7) and produces a meaningless, near-constant result that looks like a
+    tight CI for the wrong reason. Caught by comparing against the unresampled point
+    estimate before trusting this function.
+    """
     diffs = []
     for _ in range(N_BOOT):
         idx = RNG.integers(0, n_batches, size=n_batches)
+        base_s = sum(baseline_per_batch[i][0] for i in idx)
+        base_n = sum(baseline_per_batch[i][1] for i in idx)
+        base_boot = base_s / max(base_n, 1)
         y_boot = []
         for pb in per_batch_held_eps:
             s = sum(pb[i][0] for i in idx)
             n = sum(pb[i][1] for i in idx)
-            y_boot.append(s / max(n, 1))
+            y_boot.append(s / max(n, 1) - base_boot)
         y_boot = np.array(y_boot)
         mae2 = np.mean(np.abs(y_boot - y_pred_f2))
         mae3 = np.mean(np.abs(y_boot - y_pred_f3))
@@ -85,7 +97,7 @@ def bootstrap_mae_diff(a_held, per_batch_held_eps, y_pred_f2, y_pred_f3, n_batch
     }
 
 
-def fit_epsilon(pools, baseline, eps):
+def fit_epsilon(pools, baseline, baseline_per_batch, eps):
     key = f"dloss_eps{eps}"
     pbkey = f"per_batch_eps{eps}"
 
@@ -141,7 +153,7 @@ def fit_epsilon(pools, baseline, eps):
     m3 = metrics(y_held, yhat3_held, a_held)
 
     per_batch_held = [r[pbkey] for r in pools["held_out"]]
-    boot = bootstrap_mae_diff(a_held, per_batch_held, yhat2_held, yhat3_held, n_batches)
+    boot = bootstrap_mae_diff(baseline_per_batch, per_batch_held, yhat2_held, yhat3_held, n_batches)
     rel_improve = (m2["mae"] - m3["mae"]) / m2["mae"] if m2["mae"] > 0 else float("nan")
 
     beta_main3 = coef3[:N]
@@ -208,6 +220,7 @@ def main():
     resp = json.loads((HERE / "dnabert2_mask_responses.json").read_text())
     pools = resp["responses"]["pools"]
     baseline = resp["baseline_mlm_loss"]
+    baseline_per_batch = resp["baseline_per_batch"]
 
     h6 = h6_norm_covariation(resp)
     print("H6 (layer-9 norm drop vs. functional damage, held-out):")
@@ -218,7 +231,7 @@ def main():
     out = {"baseline_mlm_loss": baseline, "H6_norm_covariation": h6, "by_epsilon": {}}
     for eps in resp["epsilons"]:
         print(f"\n{'='*60}\nepsilon = {eps}\n{'='*60}")
-        r = fit_epsilon(pools, baseline, eps)
+        r = fit_epsilon(pools, baseline, baseline_per_batch, eps)
         out["by_epsilon"][str(eps)] = r
         for fam in ("F0", "F1", "F2", "F3"):
             m = r[fam]["metrics"]

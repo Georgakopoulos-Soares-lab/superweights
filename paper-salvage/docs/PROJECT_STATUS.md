@@ -645,4 +645,24 @@ YYYY-MM-DD  |  scaffold created; outline frozen  |  next: run PHASE_0 inventory
             |  next: author review of C-032 retirement + C-034 proposal; separately, whether
             |  to scope the causal-feasibility gap as new infrastructure work, or resume
             |  R1/R6 writing / N-013/014/015.
+2026-08-22  |  E9 mechanistic tomography opened and completed per explicit instruction
+            |  (D-025). Phase 0: hg38 FASTA missing on this filesystem (downloaded from
+            |  UCSC), DNABERT-2 revision-pin gap fixed, layer-9 norm-hook convention
+            |  standardized. Baseline regression PASSED: DNABERT-2 pretrained-epistasis
+            |  reproduced to 4 decimals (+2.011803 vs C-037's +2.0118); GENERator row 2371
+            |  GC span 390x random control. GENERator basis is thin (2 real candidates, not
+            |  6-12) -- scoped to 1D dose-response only, no F0-F3 ladder (D-025). DNABERT-2
+            |  (n_D=10) got the full ladder: F0/F1/F2 all fail held-out adequacy at both
+            |  epsilon=0.5/1.0; F3 (lifted, ridge) improves held-out MAE over F2 by 54.7%/
+            |  24.4%, bootstrap CI excludes zero at both scales -- MECHANICAL DECISION:
+            |  PAIR_TERMS_REQUIRED at both scales. Known critical pair L9r264+r294 ranks #1
+            |  of 45 pairs by |Gamma| at both scales (H5 confirmed). Layer-9 norm-drop
+            |  covaries with damage r=0.71-0.72 across held-out masks (H6, correlation only).
+            |  A real bootstrap bug (raw-loss vs dloss scale mismatch) was caught before
+            |  trusting the CI and fixed (D-026) -- point estimates were unaffected. New
+            |  claims C-044 (DNABERT-2 pair requirement, fitted+held-out+bootstrap-confirmed)
+            |  and C-045 (GENERator scope-limited dose-response) added. NTv3 not run (Phase 9
+            |  optional; prior C-029/C-038 already cover the negative-control role).
+            |  next: render the 3 Phase-13 figures from existing JSON (no new measurement
+            |  needed) -- see RESULTS.md item 22.
 ```

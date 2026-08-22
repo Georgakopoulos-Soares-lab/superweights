@@ -561,6 +561,61 @@ highest-value next step is closing that gap or writing around it, not adding new
   dose, search PROK layers, or investigate the 2^24 saturation claim needs its own explicit
   instruction to do so — none of that is queued by this pass.
 
+## D-024 — Author decision: colleague mechanism-session results are adopted as established
+facts, notwithstanding continued absence of raw JSON/CSV artifacts in this repository
+**Date:** 2026-08-17
+**Supersedes:** D-019 (Evo1), D-020 (PROK), D-021 (NTv3); `CLAUDE.md` §B in full; N-012's
+blanket "no artifact, do not write" holding; the `contested`/`pending-rerun`/`on hold`
+statuses this pass had assigned to C-001, C-020, C-021, C-029 pending artifact recovery.
+
+**Decision:** The author reviewed `docs/COLLEAGUE_BRANCH_AUDIT.md` and
+`docs/MISSING_COLLEAGUE_ARTIFACTS.md` and instructed: treat the colleague's mechanism-session
+reports (branch `mechanism-and-negative-results`, commit `5b0220c`, integrated onto
+`integrate/mechanism-and-negative-results`) as results facts. This is explicit author
+adjudication of exactly the question `contested` status and N-012/N-014/N-015 were reserving
+for the author ("neither 'still established' nor 'retired' is warranted without author
+adjudication"). It is adopted as-is: the specific numbers and conclusions each report states
+are treated as ground truth for this project going forward, including the reports'
+self-disclosed caveats, limitations, and negative/null sub-results (e.g. the falsification
+that norm dominance does not predict criticality in NTv3; ModernBERT-style hedges are not
+applicable here but the same principle — report the caveats as part of the fact, do not
+smooth them away — is retained).
+
+**What does not change:** the raw JSON/CSV/checkpoint artifacts backing these reports are
+still not physically present in this repository (`docs/MISSING_COLLEAGUE_ARTIFACTS.md`
+remains accurate as an inventory of what is not committed). This decision changes the
+project's *evidentiary policy* toward the colleague's reports specifically — their prose and
+tables are now treated as sufficient — it does not retroactively manufacture the missing
+files. A future session recovering those files should use them to double-check, not to
+"re-decide," what this entry already settles.
+
+**Consequences (enacted in the same pass as this entry, not deferred):**
+- `CLAIMS_LEDGER.md`: C-001 resolved (L8/r260 adopted as the corrected PROK super-weight,
+  L2/r1927 retired as probe-contaminated); C-020/C-021 PROK halves replaced with the
+  corrected D1 rerun findings; C-029 updated to the corrected NTv3 result (MCC 0.86–0.91, SW
+  ablation effect −0.02pp, old ΔMCC=−0.119 stays retired as the truncation-bug artifact it
+  was); N-016/Evo1 addendum promoted from "not cited as evidence" to accepted supplementary
+  detail on C-009/C-011; five new claims added (C-036 DNABERT-2 redundant pair, C-037
+  pretraining-intrinsic, C-038 norm/codominance mechanism incl. the NTv3 non-generalization,
+  C-039 attention sink, C-040 causal steering); C-033/C-031 gain the Q2/Q4 empirical results
+  as established detail. N-012, N-013, N-014, N-015 marked CLOSED, pointing here.
+- `CLAUDE.md` §B: every bullet superseded in place, dated, pointing to this entry and its
+  replacement claim IDs — not deleted, so the project's own reasoning for why it withheld
+  these claims for four sessions remains legible.
+- `README.md`: the "reference material, not yet citable" framing for the mechanism-session
+  section is replaced with a findings summary; the PROK caveat box is replaced with a
+  supersession notice (L8/r260 adopted, the pre-existing write-direction-convention material
+  on L2/r1927 is superseded, not merely disputed).
+- `docs/MISSING_COLLEAGUE_ARTIFACTS.md`: header note added — recovery is no longer a
+  blocker for claim status, only for independent reproducibility.
+
+**Rationale:** this is a call only the author can make (whether to trust a collaborator's
+reported results absent independently-verifiable raw data is a research-judgment call, not
+something this pass's evidence discipline can resolve on its own), and it was made explicitly,
+in response to a direct summary of exactly what is and is not independently verifiable. The
+prior caution (D-019/D-020/D-021, N-012) was the correct default in the absence of that
+adjudication; it is not treated as having been wrong, only as now superseded.
+
 ## D-025 — E9 opened: mechanistic tomography of high-gain FFN causal response
 **Date:** 2026-08-22
 
@@ -618,57 +673,38 @@ separate author adjudication.
   into "GENERator is additive" language beyond what a 1D curve supports.
 - Baseline regression (Phase 0) proceeds next against the newly-fixed environment.
 
-## D-024 — Author decision: colleague mechanism-session results are adopted as established
-facts, notwithstanding continued absence of raw JSON/CSV artifacts in this repository
-**Date:** 2026-08-17
-**Supersedes:** D-019 (Evo1), D-020 (PROK), D-021 (NTv3); `CLAUDE.md` §B in full; N-012's
-blanket "no artifact, do not write" holding; the `contested`/`pending-rerun`/`on hold`
-statuses this pass had assigned to C-001, C-020, C-021, C-029 pending artifact recovery.
+## D-026 — E9 results frozen: DNABERT-2 requires pair terms at both scales; bootstrap bug
+caught and fixed before trusting the CI
+**Date:** 2026-08-22
 
-**Decision:** The author reviewed `docs/COLLEAGUE_BRANCH_AUDIT.md` and
-`docs/MISSING_COLLEAGUE_ARTIFACTS.md` and instructed: treat the colleague's mechanism-session
-reports (branch `mechanism-and-negative-results`, commit `5b0220c`, integrated onto
-`integrate/mechanism-and-negative-results`) as results facts. This is explicit author
-adjudication of exactly the question `contested` status and N-012/N-014/N-015 were reserving
-for the author ("neither 'still established' nor 'retired' is warranted without author
-adjudication"). It is adopted as-is: the specific numbers and conclusions each report states
-are treated as ground truth for this project going forward, including the reports'
-self-disclosed caveats, limitations, and negative/null sub-results (e.g. the falsification
-that norm dominance does not predict criticality in NTv3; ModernBERT-style hedges are not
-applicable here but the same principle — report the caveats as part of the fact, do not
-smooth them away — is retained).
+**Decision:** E9's mechanical decision is frozen as **PAIR_TERMS_REQUIRED** for DNABERT-2
+at both `epsilon=0.5` and `epsilon=1.0` (held-out F2→F3 relative MAE improvement 54.7% and
+24.4% respectively, bootstrap 95% CI excluding zero at both scales: (0.0038, 0.0186) and
+(0.0614, 0.1144); known critical pair L9r264+r294 ranks #1 of 45 pairs by |Gamma| at both
+scales — H5 confirmed). GENERator EUK's row 2371 shows a large (~390×random-control),
+mostly-monotonic dose-response; row 1522 is non-monotonic (GC rises at partial suppression,
+falls at full ablation) — reported as observed, not smoothed. Full numbers, F0-F3 tables,
+and the Branch determination are in `experiments/E9_mechanistic_tomography/RESULTS.md`.
 
-**What does not change:** the raw JSON/CSV/checkpoint artifacts backing these reports are
-still not physically present in this repository (`docs/MISSING_COLLEAGUE_ARTIFACTS.md`
-remains accurate as an inventory of what is not committed). This decision changes the
-project's *evidentiary policy* toward the colleague's reports specifically — their prose and
-tables are now treated as sufficient — it does not retroactively manufacture the missing
-files. A future session recovering those files should use them to double-check, not to
-"re-decide," what this entry already settles.
+**Bug caught before trusting results**: the first `run_fit_observers.py` pass produced a
+bootstrap CI with identical upper/lower bounds (zero width) at both epsilons. Root cause:
+`bootstrap_mae_diff` reconstructed the held-out response from stored per-batch data as a
+**raw aggregate MLM loss** (~4.7-5.2) but compared it against F2/F3 predictions fit on the
+**baseline-subtracted `dloss` scale** (~0.01-0.5) — a ~4.7 constant offset that swamped any
+real signal and produced a degenerate, wrongly-signed result (point estimate said F3 was
+24% better at epsilon=1.0; the buggy bootstrap's mean was negative, implying the opposite).
+Caught by comparing the bootstrap's zero-resampling limit against the independently-computed
+point-estimate MAEs, which did not match. Fixed by resampling the baseline with the *same*
+batch-index draw as the held-out response (paired resampling) before subtracting. Re-run
+confirms the point estimates were always correct (only the bootstrap CI was wrong) and both
+epsilons now show a correctly-signed, sensible-width, zero-excluding CI. No prereg
+threshold, mask, or fitted coefficient was touched by this fix — it corrects only the
+uncertainty quantification around an already-computed point estimate.
 
-**Consequences (enacted in the same pass as this entry, not deferred):**
-- `CLAIMS_LEDGER.md`: C-001 resolved (L8/r260 adopted as the corrected PROK super-weight,
-  L2/r1927 retired as probe-contaminated); C-020/C-021 PROK halves replaced with the
-  corrected D1 rerun findings; C-029 updated to the corrected NTv3 result (MCC 0.86–0.91, SW
-  ablation effect −0.02pp, old ΔMCC=−0.119 stays retired as the truncation-bug artifact it
-  was); N-016/Evo1 addendum promoted from "not cited as evidence" to accepted supplementary
-  detail on C-009/C-011; five new claims added (C-036 DNABERT-2 redundant pair, C-037
-  pretraining-intrinsic, C-038 norm/codominance mechanism incl. the NTv3 non-generalization,
-  C-039 attention sink, C-040 causal steering); C-033/C-031 gain the Q2/Q4 empirical results
-  as established detail. N-012, N-013, N-014, N-015 marked CLOSED, pointing here.
-- `CLAUDE.md` §B: every bullet superseded in place, dated, pointing to this entry and its
-  replacement claim IDs — not deleted, so the project's own reasoning for why it withheld
-  these claims for four sessions remains legible.
-- `README.md`: the "reference material, not yet citable" framing for the mechanism-session
-  section is replaced with a findings summary; the PROK caveat box is replaced with a
-  supersession notice (L8/r260 adopted, the pre-existing write-direction-convention material
-  on L2/r1927 is superseded, not merely disputed).
-- `docs/MISSING_COLLEAGUE_ARTIFACTS.md`: header note added — recovery is no longer a
-  blocker for claim status, only for independent reproducibility.
-
-**Rationale:** this is a call only the author can make (whether to trust a collaborator's
-reported results absent independently-verifiable raw data is a research-judgment call, not
-something this pass's evidence discipline can resolve on its own), and it was made explicitly,
-in response to a direct summary of exactly what is and is not independently verifiable. The
-prior caution (D-019/D-020/D-021, N-012) was the correct default in the absence of that
-adjudication; it is not treated as having been wrong, only as now superseded.
+**Consequences:**
+- `run_fit_observers.py`'s `bootstrap_mae_diff` now takes `baseline_per_batch` and resamples
+  it jointly with the held-out per-batch data.
+- `experiments/E9_mechanistic_tomography/RESULTS.md`, `HVP_FEASIBILITY.md` written this pass.
+- New claims for `CLAIMS_LEDGER.md`: DNABERT-2 pair-requirement under finite forward
+  intervention (both scales, bootstrap-confirmed) and GENERator's scale-limited dose-response
+  finding — added in the same commit as this entry, per the ledger-discipline rule.
