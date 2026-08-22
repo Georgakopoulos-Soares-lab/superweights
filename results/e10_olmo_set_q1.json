@@ -1,0 +1,47 @@
+{
+  "model": "OLMo-7B",
+  "repo": "allenai/OLMo-7B-0724-hf",
+  "row": 269,
+  "rows": [
+    {
+      "layer": 1,
+      "row": 269,
+      "published_i": 7467,
+      "q1": 0.964564665808712,
+      "pr_spec": 1.07470169944751,
+      "stable_rank": 1.0367371265477345,
+      "frob_norm": 0.9110752807676615,
+      "n_singular_values": 4096
+    },
+    {
+      "layer": 2,
+      "row": 269,
+      "published_i": 8275,
+      "q1": 0.961101296148468,
+      "pr_spec": 1.08194027185883,
+      "stable_rank": 1.0404730531603852,
+      "frob_norm": 0.5978672214213003,
+      "n_singular_values": 4096
+    },
+    {
+      "layer": 7,
+      "row": 269,
+      "published_i": 453,
+      "q1": 0.9521240123717365,
+      "pr_spec": 1.1005953700187525,
+      "stable_rank": 1.0502833528050666,
+      "frob_norm": 1.168111659811004,
+      "n_singular_values": 4096
+    },
+    {
+      "layer": 24,
+      "row": 269,
+      "published_i": 2300,
+      "q1": 0.99896434078756,
+      "pr_spec": 1.0020742264416993,
+      "stable_rank": 1.0010367329144336,
+      "frob_norm": 1.6369385617197756,
+      "n_singular_values": 4096
+    }
+  ]
+}
