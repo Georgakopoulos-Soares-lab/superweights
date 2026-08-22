@@ -1,0 +1,107 @@
+{
+  "seed": 42,
+  "torch": "2.10.0+cu128",
+  "transformers": "4.57.6",
+  "dnabert2": {
+    "model": "dnabert2",
+    "model_id": "zhihan1996/DNABERT-2-117M",
+    "revision": "7bce263b15377fc15361f52cfab88f8b586abda0",
+    "triton_attention_patched": true,
+    "fasta": "/work/11034/atzanakak/glm_super_weight/genomic-super-weights/data/reference/hg38/hg38.fa",
+    "bed": "/work/11034/atzanakak/glm_super_weight/genomic-super-weights/data/regions/hg38/random_262kb.bed",
+    "n_windows": 256,
+    "n_batches": 16,
+    "n_masked_tokens": 4453,
+    "baseline_mlm_loss": 4.695280839372639,
+    "epsilon_1p0": {
+      "d_A": 0.021818806395326185,
+      "d_B": 0.006401925415717713,
+      "d_AB": 2.040024023711374,
+      "epistasis": 2.01180329190033
+    },
+    "epsilon_0p5": {
+      "d_A": 0.0034164337262714284,
+      "d_B": -0.0009974057342985176,
+      "d_AB": 0.055204001593103236,
+      "epistasis": 0.052784973601130325
+    },
+    "qualitative_check": {
+      "expected": "epistasis > 0 at epsilon=1.0 (superadditive, matches C-036/C-037)",
+      "observed_epistasis_eps1p0": 2.01180329190033,
+      "passes": true
+    }
+  },
+  "generator": {
+    "model": "generator",
+    "model_id": "GenerTeam/GENERator-v2-eukaryote-3b-base",
+    "layer": 4,
+    "fasta": "/work/11034/atzanakak/glm_super_weight/genomic-super-weights/data/reference/hg38/hg38.fa",
+    "bed": "/work/11034/atzanakak/glm_super_weight/genomic-super-weights/data/regions/hg38/random_262kb.bed",
+    "n_prompts": 24,
+    "random_rows": [
+      2621,
+      456,
+      102,
+      3039,
+      1126
+    ],
+    "results": {
+      "primary_2371": {
+        "1.0": {
+          "n": 24,
+          "gc_mean": 0.39605034722222227,
+          "gc_sd": 0.07012705687380738
+        },
+        "0.5": {
+          "n": 24,
+          "gc_mean": 0.38628472222222215,
+          "gc_sd": 0.04747200520783731
+        },
+        "0.0": {
+          "n": 24,
+          "gc_mean": 0.29437934027777785,
+          "gc_sd": 0.04210167323282323
+        }
+      },
+      "secondary_1522": {
+        "1.0": {
+          "n": 24,
+          "gc_mean": 0.39605034722222227,
+          "gc_sd": 0.07012705687380738
+        },
+        "0.5": {
+          "n": 24,
+          "gc_mean": 0.4130859375,
+          "gc_sd": 0.0742903395747178
+        },
+        "0.0": {
+          "n": 24,
+          "gc_mean": 0.3465711805555555,
+          "gc_sd": 0.05622586542319975
+        }
+      },
+      "random_control": {
+        "1.0": {
+          "n": 120,
+          "gc_mean": 0.39605034722222227
+        },
+        "0.5": {
+          "n": 120,
+          "gc_mean": 0.39624565972222225
+        },
+        "0.0": {
+          "n": 120,
+          "gc_mean": 0.3959852430555556
+        }
+      }
+    },
+    "gc_span_primary": 0.10167100694444442,
+    "gc_span_random": 0.00026041666666665186,
+    "qualitative_check": {
+      "expected": "GC span at row 2371 substantially exceeds random-row span (matches C-040)",
+      "span_primary": 0.10167100694444442,
+      "span_random": 0.00026041666666665186,
+      "passes": true
+    }
+  }
+}

@@ -160,14 +160,26 @@ def build_fixed_batches(tok, seqs, device, max_len, batch_size, mask_prob, seed=
 
 
 @torch.no_grad()
-def mlm_loss(model, batches) -> float:
-    tot, n = 0.0, 0
+def mlm_loss_per_batch(model, batches) -> list[tuple[float, int]]:
+    """(sum_loss_over_tokens, n_masked) per batch -- lets a caller recompute the
+    weighted-mean loss over any resampled subset of batches without rerunning the model
+    (used for the batch-level bootstrap declared in the E9 prereg)."""
+    out = []
     for b in batches:
-        out = model(input_ids=b["input_ids"], attention_mask=b["attention_mask"],
-                    labels=b["labels"])
-        tot += float(out.loss) * b["n_masked"]
-        n += b["n_masked"]
+        o = model(input_ids=b["input_ids"], attention_mask=b["attention_mask"],
+                  labels=b["labels"])
+        out.append((float(o.loss) * b["n_masked"], b["n_masked"]))
+    return out
+
+
+def aggregate_per_batch(per_batch: list[tuple[float, int]]) -> float:
+    tot = sum(s for s, _ in per_batch)
+    n = sum(k for _, k in per_batch)
     return tot / max(n, 1)
+
+
+def mlm_loss(model, batches) -> float:
+    return aggregate_per_batch(mlm_loss_per_batch(model, batches))
 
 
 def dnabert2_response(model, pattern, coords, a, epsilon, batches) -> float:
@@ -179,6 +191,49 @@ def dnabert2_response(model, pattern, coords, a, epsilon, batches) -> float:
     ac, aa = zip(*active)
     alphas = alphas_for_mask(aa, epsilon)
     return with_mask(model, pattern, list(ac), alphas, lambda: mlm_loss(model, batches))
+
+
+class ChannelNormHook:
+    """Forward hook on DNABERT-2's layer-9 encoder output, capturing mean |h| for a fixed
+    set of channels (H6's residual-norm secondary endpoint; explicit-layer-9 convention,
+    see PROVENANCE_AND_BASELINES.md). Accumulates across whatever forward passes run while
+    armed, then `read()` returns the running mean and resets."""
+
+    def __init__(self, model, channels: Sequence[int], layer: int = 9):
+        m = _resolve_module(model, "bert.encoder.layer.{i}", layer)
+        self.channels = list(channels)
+        self._sum = None
+        self._n = 0
+        self._handle = m.register_forward_hook(self._hook)
+
+    def _hook(self, module, inp, out):
+        h = out[0] if isinstance(out, tuple) else out
+        vals = h[..., self.channels].detach().abs().mean(dim=(0, 1))
+        if self._sum is None:
+            self._sum = vals.clone()
+        else:
+            self._sum += vals
+        self._n += 1
+
+    def read(self) -> list[float]:
+        if self._n == 0:
+            return [float("nan")] * len(self.channels)
+        vals = (self._sum / self._n).tolist()
+        self._sum, self._n = None, 0
+        return vals
+
+    def remove(self):
+        self._handle.remove()
+
+
+def dnabert2_response_per_batch(model, pattern, coords, a, epsilon, batches):
+    active = [(c, ai) for c, ai in zip(coords, a) if ai]
+    if not active:
+        return mlm_loss_per_batch(model, batches)
+    ac, aa = zip(*active)
+    alphas = alphas_for_mask(aa, epsilon)
+    return with_mask(model, pattern, list(ac), alphas,
+                     lambda: mlm_loss_per_batch(model, batches))
 
 
 # ── GENERator: dose-response generation ───────────────────────────────────────
