@@ -561,6 +561,63 @@ highest-value next step is closing that gap or writing around it, not adding new
   dose, search PROK layers, or investigate the 2^24 saturation claim needs its own explicit
   instruction to do so — none of that is queued by this pass.
 
+## D-025 — E9 opened: mechanistic tomography of high-gain FFN causal response
+**Date:** 2026-08-22
+
+**Decision:** Open E9 per an explicit, separate, detailed instruction (`next_prompt.md`,
+2026-08-22) — this satisfies D-023's condition that any new experiment needs its own
+explicit go-ahead, and `paper-salvage/CLAUDE.md`'s "do not launch GPU jobs... without an
+explicit, separate instruction" constraint. E9 supersedes the never-run E3/C-025 steering
+prereg (`docs/prereg/PREREG_steering.md`) as the operative GENERator causal-response design;
+C-025 stays `pending` in its own right, not retroactively resolved. Does not reopen E5-E8,
+does not add model families, does not touch structural `U_k` work.
+
+**Provenance/environment findings this pass (recorded in full in
+`experiments/E9_mechanistic_tomography/PROVENANCE_AND_BASELINES.md`):**
+- **GENERator EUK basis is thin.** Only two candidate high-gain rows exist anywhere in this
+  repository (layer 4, row 2371 rank 1; row 1522 rank 2 — both writing to the same output
+  column 2536). The target 6-12 component basis Phase 1 asks for cannot be built from
+  genuinely pre-existing detected candidates. Padding to 6-12 with structurally-arbitrary
+  same-layer rows was considered and **rejected** — it would mix a real detected high-gain
+  pair with rows that were never flagged as high-gain, undermining exactly the "declared
+  high-gain basis" the experiment is supposed to probe, and risks the forbidden
+  "invent another structural metric" / "search for a prettier super-weight" moves. **Per
+  Phase 1's own written contingency, the GENERator arm is scoped down to a one-dimensional
+  primary dose-response analysis on row 2371, with row 1522 as a real (not synthetic)
+  secondary consistency check — not a multi-component observer-complexity comparison.**
+  DNABERT-2 tomography proceeds at full scope (`n_D=10`, the pre-existing canonical
+  ensemble).
+- **DNABERT-2 revision pinning gap.** `run_pretrained_epistasis.py` and
+  `run_gue_multiseed._load_model` do not pass the pinned HF revision
+  (`7bce263b15377fc15361f52cfab88f8b586abda0`) that `models/dnabert2_wrapper.py` uses —
+  fixed for E9 by passing `--code_revision` explicitly in every E9 invocation.
+- **hg38 FASTA missing on this filesystem.** Every mechanism script defaults to
+  `/data/nvidia/data/hg38/hg38.fa` (the colleague's original machine); this path, and any
+  equivalent, is absent here. Downloaded the standard UCSC hg38 reference
+  (`hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz`) to
+  `data/reference/hg38/hg38.fa` (not committed — too large, gitignored like `results/`).
+  GUE dataset (`/data/nvidia/data/gue/GUE`) is likewise absent and **not** fixed, since E9's
+  primary DNABERT-2 endpoint (pretrained MLM loss) does not require it — the splice/GUE
+  endpoint is out of scope for E9.
+- **DNABERT-2 layer-9 norm hook inconsistency.** `run_compensation_circuit.py` hooks the
+  *last* encoder layer generically; `run_codominance.py` /
+  `run_direction_vs_magnitude.py` / `run_norm_matched_control.py` hook layer 9 explicitly.
+  E9 standardizes on the explicit layer-9 hook for its own residual-norm secondary endpoint.
+
+**Rationale:** every one of these is a documentation/scope call the E9 instruction itself
+anticipated and pre-authorized (Phase 0's "record exact... previous intervention semantics,"
+Phase 1's explicit GENERator scope-limitation clause) or a plain reproducibility-gap fix
+(revision pin, missing input data) rather than a new scientific judgment call requiring
+separate author adjudication.
+
+**Consequences:**
+- `experiments/E9_mechanistic_tomography/PROVENANCE_AND_BASELINES.md` and
+  `INTERVENTION_BASIS.md` created this pass.
+- GENERator EUK will not receive an F0-F3 observer-complexity ladder or a pairwise-lifted
+  design in E9 — only a dose-response curve. This must not be silently generalized later
+  into "GENERator is additive" language beyond what a 1D curve supports.
+- Baseline regression (Phase 0) proceeds next against the newly-fixed environment.
+
 ## D-024 — Author decision: colleague mechanism-session results are adopted as established
 facts, notwithstanding continued absence of raw JSON/CSV artifacts in this repository
 **Date:** 2026-08-17

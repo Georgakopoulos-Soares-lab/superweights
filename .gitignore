@@ -28,6 +28,7 @@ results/gue_checkpoints*/
 data/hg38.fa
 data/hg38.fa.fai
 data/hg38/
+data/reference/
 data/sae_acts/
 token_cache/
 
