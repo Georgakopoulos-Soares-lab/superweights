@@ -92,9 +92,14 @@ def analyze(model):
             "bootstrap": boot_ci_delta(base_pb, c["per_batch"]),
         })
 
-    # The structurally top-ranked row is rank 1 (NOT the largest-effect row -- that would
-    # be post-hoc selection). C1 uses the largest |effect| per the prereg's formula.
-    top_row = next(r for r in rows if r["structural_rank"] == 1)
+    # Per the locked prereg, "the top row" in the D4 rule is THE SAME ROW C1 is computed
+    # from -- the largest-|effect| row -- not the structurally-ranked #1 row. (Verified
+    # against PREREG_E10_nlp_architecture_causal_v2.md lines 171-185: "C1 ... the single
+    # largest row already accounts for..." / "AND the top row's control-normalized
+    # effect" -- same referent throughout.) This is a pre-decision bugfix in the analysis
+    # code to match the already-locked text, not a change to the rule itself: no decision
+    # had been reported before this was caught, on OLMo's real data, mid-run.
+    top_row = rows[int(order[0])]
     n_clearing = sum(1 for r in rows if r["clears_control_threshold"])
 
     if c1 > C1_THRESHOLD and top_row["control_normalized"] > CONTROL_NORM_THRESHOLD:
