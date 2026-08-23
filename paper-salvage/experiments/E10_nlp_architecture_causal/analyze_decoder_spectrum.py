@@ -26,7 +26,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[3] if (HERE.parents[3] / "results").exists() else HERE.parents[2].parent
+ROOT = HERE.parents[2]  # .../genomic-super-weights (repo root)
 RES = ROOT / "results"
 
 MODELS = ["llama", "mistral", "olmo", "phi3", "qwen25"]

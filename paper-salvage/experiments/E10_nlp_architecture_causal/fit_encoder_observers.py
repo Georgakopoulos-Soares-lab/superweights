@@ -32,7 +32,7 @@ import numpy as np
 
 HERE = Path(__file__).resolve().parent
 E9 = HERE.parent / "E9_mechanistic_tomography"
-ROOT = HERE.parents[3] if (HERE.parents[3] / "results").exists() else HERE.parents[2].parent
+ROOT = HERE.parents[2]  # .../genomic-super-weights (repo root)
 RES = ROOT / "results"
 sys.path.insert(0, str(E9))
 

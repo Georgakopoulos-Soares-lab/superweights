@@ -28,7 +28,7 @@ import torch
 import torch.nn.functional as F
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[3] if (HERE.parents[3] / "results").exists() else HERE.parents[2].parent
+ROOT = HERE.parents[2]  # .../genomic-super-weights (repo root)
 sys.path.insert(0, str(HERE))
 
 import e10_lib as L  # noqa: E402
