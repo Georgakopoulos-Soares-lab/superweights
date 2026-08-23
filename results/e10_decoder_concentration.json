@@ -453,6 +453,82 @@
         "mean_logit_kl": 0.04711076617240906
       },
       "decision": "MULTI_COMPONENT_CANDIDATE"
+    },
+    "qwen25": {
+      "model": "qwen25",
+      "repo": "Qwen/Qwen2.5-7B",
+      "K": 1,
+      "baseline_nll": 2.4483779411539874,
+      "baseline_perplexity": 11.569563865661621,
+      "control_layer": 26,
+      "control_rows": [
+        62,
+        1257,
+        2926,
+        3419,
+        3553
+      ],
+      "control_median_abs_delta": 3.8149958720978816e-05,
+      "controls": [
+        {
+          "row": 62,
+          "delta_nll": 5.1441528559070804e-05,
+          "relative_pct_change": 0.002101045255081207
+        },
+        {
+          "row": 1257,
+          "delta_nll": -2.7686789077829843e-05,
+          "relative_pct_change": -0.0011308217008678123
+        },
+        {
+          "row": 2926,
+          "delta_nll": -3.8149958720978816e-05,
+          "relative_pct_change": -0.0015581727836919532
+        },
+        {
+          "row": 3419,
+          "delta_nll": 5.623834240431336e-05,
+          "relative_pct_change": 0.0022969632857338476
+        },
+        {
+          "row": 3553,
+          "delta_nll": -1.2947575220856322e-06,
+          "relative_pct_change": -5.28822572823613e-05
+        }
+      ],
+      "target_rows": [
+        {
+          "structural_rank": 1,
+          "layer": 26,
+          "row": 458,
+          "delta_nll": 0.01807043385365681,
+          "abs_delta_nll": 0.01807043385365681,
+          "relative_pct_change": 0.7380573705520203,
+          "control_normalized": 461.5696783346447,
+          "control_normalized_abs": 461.5696783346447,
+          "clears_control_threshold": true,
+          "mean_logit_kl": 0.025325291715562345,
+          "mean_next_token_entropy": 2.278510506153107,
+          "bootstrap": {
+            "ci_2.5": 0.01658216060630947,
+            "ci_97.5": 0.01950118713976119,
+            "excludes_zero": true
+          }
+        }
+      ],
+      "C1": 1.0,
+      "C2": 1.0,
+      "n_rows_clearing_control_threshold": 1,
+      "rank1_control_normalized": 461.5696783346447,
+      "alpha_half_rank1": {
+        "layer": 26,
+        "row": 458,
+        "alpha": 0.5,
+        "delta_nll": 0.014688885533879592,
+        "monotonic_vs_full": true,
+        "mean_logit_kl": 0.02006866840645671
+      },
+      "decision": "SINGLE_COMPONENT_DOMINANT"
     }
   }
 }
