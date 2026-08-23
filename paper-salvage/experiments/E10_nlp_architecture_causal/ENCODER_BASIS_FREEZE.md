@@ -1,89 +1,106 @@
-# E10 Phase 2 — encoder basis freeze
+# E10 Phase 2 — encoder basis freeze (v2, corrected)
 
-Per `e10_prompt.md` Phase 2: for MosaicBERT and ModernBERT, `MODEL_AND_BASIS_AUDIT.md` §6-§7
-already established that **only a single canonical high-gain row exists pre-E10 for each** —
-the 5 "control rows" recorded in E8 are an explicitly-random background sample, not additional
-high-gain candidates. This is **Case B** for both encoders.
+> **v1 of this file selected rows by `q1` and was wrong.** `q1` measures internal spectral
+> concentration (rank-1-ness) and is scale-invariant — it carries no magnitude information and
+> is not a high-gain score. See `PROTOCOL_CORRECTION_01.md` for the full audit. This v2 uses
+> the correct criterion. **No causal measurement was run under v1.**
 
-Per Case B's procedure, the exact structural score already used in E7/E8
-(`spectral_lib.row_spectral_metrics`, unmodified — `q1 = sigma_1^2 / sum_j sigma_j^2`) was
-computed for **every** gated-FFN output row in each encoder, across all layers
-(`rank_encoder_rows.py`, this directory; weight-only, no forward pass, no new metric). Rows
-were ranked by `q1` descending and a fixed top-`K=10` set selected **without looking at any
-intervention response** — no causal measurement has been run.
+Per `e10_prompt.md` Phase 2: `MODEL_AND_BASIS_AUDIT.md` §6-§7 established that **only a single
+canonical high-gain row exists pre-E10 for each encoder** — E8's 5 "control rows" are an
+explicitly-random background sample, not additional candidates. Both encoders are **Case B**.
+
+## Selection criterion (corrected)
+
+**Exact ‖U_k‖_F relative to the row's own layer median** — the convention
+`paper-salvage/src/uk_frobenius.py::layer_report` implements (`max_over_median`), using the
+*exact* operator norm from `spectral_lib.py` (`sqrt(sum_j sigma_j^2)`, cross terms retained),
+**not** `uk_frobenius.py`'s diagonal approximation and **not** `q1`.
+
+Computed for **every** gated-FFN output row in each encoder, across all layers, weight-only,
+no forward pass, no new metric (`rank_encoder_rows.py` produced the per-row values;
+`audit_selection_criterion.py` re-ranked them by the corrected criterion). Rows were then
+ranked and a fixed top-`K=10` selected **without reference to any intervention response** —
+none has been measured.
+
+`q1` appears below **as an annotation column only**, never as a selector.
 
 ---
 
 ## MosaicBERT — `n_E = 10`
 
-9,216 rows scored (12 layers x 768 rows). Canonical E8 row **L9/r287 (q1=0.4766) is naturally
-inside the top-10, at rank 6** — the required check (`e10_prompt.md` Phase 2 step 5) passes;
-no STOP/audit triggered.
+9,216 rows scored (12 layers x 768). Canonical E8 detector row **L9/r287 is inside the basis at
+rank 9** — the required check (`e10_prompt.md` Phase 2 step 5) passes; no STOP/audit triggered.
+Within its own layer it is the **#0 row at 5.05x the layer median**, consistent with E8's
+activation detector having found it there.
 
-| Rank | Layer | Row | `q1` | `PR_spec` | Note |
-|---:|---:|---:|---:|---:|---|
-| 0 | 10 | 666 | 0.8886 | 1.2656 | new (not previously known) |
-| 1 | 10 | 79  | 0.8121 | 1.5151 | new |
-| 2 | 10 | 333 | 0.7333 | 1.8576 | new |
-| 3 | 0  | 287 | 0.6611 | 2.2682 | new |
-| 4 | 0  | 416 | 0.5794 | 2.9399 | new |
-| 5 | 1  | 79  | 0.5008 | 3.8244 | new |
-| 6 | **9** | **287** | **0.4766** | **4.1159** | **E8 canonical row** |
-| 7 | 5  | 79  | 0.4682 | 4.3305 | new |
-| 8 | 9  | 666 | 0.4651 | 4.5459 | new |
-| 9 | 0  | 444 | 0.4298 | 5.3251 | new |
+| Rank | Layer | Row | ‖U_k‖_F / layer median | exact ‖U_k‖_F | `q1` (annotation) |
+|---:|---:|---:|---:|---:|---:|
+| 1 | 0 | 287 | 12.29x | 39.198 | 0.6611 |
+| 2 | 0 | 444 | 6.61x | 21.086 | 0.4298 |
+| 3 | 1 | 287 | 6.45x | 23.109 | 0.0763 |
+| 4 | 11 | 287 | 5.91x | 28.900 | 0.2642 |
+| 5 | 0 | 302 | 5.84x | 18.623 | 0.3369 |
+| 6 | 5 | 287 | 5.76x | 23.147 | 0.1275 |
+| 7 | 3 | 287 | 5.67x | 22.427 | 0.1466 |
+| 8 | 10 | 666 | 5.27x | 22.375 | 0.8886 |
+| 9 | **9** | **287** | **5.05x** | 19.998 | 0.4766 | **E8 canonical** |
+| 10 | 10 | 79 | 4.81x | 20.424 | 0.8121 |
 
-Source artifact: `results/e10_encoder_row_ranking_mosaicbert.json` (full 9,216-row ranking
-retained, not just the top-10, for reproducibility/audit).
+Source artifacts: `results/e10_encoder_row_ranking_mosaicbert.json` (full 9,216-row per-row
+values), `results/e10_selection_audit_mosaicbert.json` (corrected ranking).
 
-Selection basis: **top-K exact-`U_k` construction** (Case B) — not a pre-existing set.
-
-**Note (declared, not smoothed over):** every row in this top-10 except the canonical one is
-newly identified by this ranking, not previously known to any E7/E8 artifact. Row 79 and row
-287 each recur at multiple layers (79 at layers 1, 5, 10; 287 at layers 0 and 9) — a structural
-echo worth noting for the retrospective interaction inspection later (Phase 5's "repeated
-structural families" check), but not acted on here; the basis is frozen exactly as ranked.
+**Note:** output row 287 dominates this basis, recurring at layers 0, 1, 3, 5, 9, and 11 — a
+strong cross-layer structural echo, flagged for the Phase 5 retrospective interaction
+inspection ("repeated structural families"), not acted on here.
 
 ## ModernBERT — `n_E = 10`
 
-16,896 rows scored (22 layers x 768 rows). Canonical E8 row **L15/r251 (q1=0.8970) is
-naturally inside the top-10, at rank 1** (second-highest of all 16,896 rows scored) — the
-required check passes cleanly; no STOP/audit triggered.
+16,896 rows scored (22 layers x 768). Canonical E8 detector row **L15/r251 is rank 1** — the
+single largest-magnitude `U_k` operator in the entire model (836.05 vs. 321.67 for the next
+largest anywhere), at 23.55x its layer median. E8's forward-pass activation detector and this
+weight-space magnitude criterion independently agree on the same row.
 
-| Rank | Layer | Row | `q1` | Note |
-|---:|---:|---:|---:|---|
-| 0 | 11 | 254 | 0.9127 | new (not previously known) |
-| 1 | **15** | **251** | **0.8970** | **E8 canonical row** |
-| 2 | 14 | 583 | 0.7526 | new |
-| 3 | 11 | 251 | 0.7273 | new |
-| 4 | 15 | 142 | 0.7037 | new |
-| 5 | 9  | 251 | 0.6928 | new |
-| 6 | 0  | 31  | 0.6897 | new |
-| 7 | 15 | 67  | 0.6548 | new |
-| 8 | 0  | 67  | 0.6548 | new |
-| 9 | 11 | 67  | 0.6422 | new |
+| Rank | Layer | Row | ‖U_k‖_F / layer median | exact ‖U_k‖_F | `q1` (annotation) |
+|---:|---:|---:|---:|---:|---:|
+| 1 | **15** | **251** | **23.55x** | 836.05 | 0.8970 | **E8 canonical** |
+| 2 | 0 | 251 | 8.52x | 278.32 | 0.6342 |
+| 3 | 11 | 251 | 8.03x | 321.67 | 0.7273 |
+| 4 | 0 | 67 | 7.52x | 245.71 | 0.6548 |
+| 5 | 9 | 251 | 7.52x | 304.09 | 0.6928 |
+| 6 | 4 | 251 | 5.96x | 226.15 | 0.3420 |
+| 7 | 1 | 251 | 5.08x | 184.83 | 0.2626 |
+| 8 | 5 | 251 | 4.86x | 187.41 | 0.0725 |
+| 9 | 10 | 251 | 4.80x | 192.40 | 0.0515 |
+| 10 | 1 | 67 | 4.58x | 166.74 | 0.2478 |
 
-Source artifact: `results/e10_encoder_row_ranking_modernbert.json` (full 16,896-row ranking
-retained).
+Source artifacts: `results/e10_encoder_row_ranking_modernbert.json`,
+`results/e10_selection_audit_modernbert.json`.
 
-Selection basis: **top-K exact-`U_k` construction** (Case B) — not a pre-existing set.
-
-**Note (declared, not smoothed over):** row 251 recurs at layers 9, 11, and 15 (all three in
-the top-10), and row 67 recurs at layers 0, 11, and 15 (also all three in the top-10) — a
-stronger structural echo than MosaicBERT's. Flagged for the retrospective interaction
-inspection (Phase 5), not acted on here.
+**Note:** output row 251 recurs at layers 0, 1, 4, 5, 9, 10, 11, 15 (8 of the 10 basis rows)
+and row 67 at layers 0 and 1 — an even stronger echo than MosaicBERT's. Flagged for Phase 5,
+not acted on.
 
 ---
+
+## Robustness of the ranking form
+
+Ranking by **global** exact ‖U_k‖_F (no layer normalization) yields the **identical 10-row set
+for MosaicBERT** (10/10, reordered) and **9/10 for ModernBERT** (global would swap L1/r67 for
+L6/r251). The layer-relative form is primary because it matches `layer_report`'s own
+convention; the choice does not materially change either basis.
+
+## Disclosed caveat — no weight-space eligibility threshold exists
+
+The project's only numeric high-gain eligibility threshold is E7/E8's **activation-detector**
+ratio (≥ 5.0x), an activation-space quantity. No weight-space ‖U_k‖_F threshold has ever been
+defined here, and importing 5.0x to a weight-space ratio would invent a new structural
+criterion, which E10's hard rules forbid. `K = 10` is retained for both encoders. Recorded but
+**not acted on**: under such an import MosaicBERT would have 9 eligible rows and ModernBERT 7.
 
 ## What this freeze does NOT do
 
 - Does not run any causal intervention or response measurement.
 - Does not pad either basis with ordinary (non-ranked) rows.
-- Does not impose layer diversity — MosaicBERT's top-10 spans only 5 distinct layers (0, 1, 5,
-  9, 10) and ModernBERT's spans only 6 (0, 9, 11, 14, 15) purely because that is what the
-  exact ranking produced; no diversity constraint exists in the prior structural pipeline, so
-  none is imposed here.
-- Does not reorder or drop any row after this file is written.
-
-Once this file (with both models complete) is committed, the basis for both encoders is
-locked — no reselection, no reordering, per `e10_prompt.md` Phase 2's closing instruction.
+- Does not impose layer diversity — the layer spread is whatever the exact ranking produced.
+- Does not use `q1`, `PR_spec`, or `stable_rank` for any selection decision.
+- Does not reorder or drop any row after this file is committed and the v2 prereg is locked.
