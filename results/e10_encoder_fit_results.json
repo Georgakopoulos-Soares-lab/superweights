@@ -682,6 +682,683 @@
           }
         }
       }
+    },
+    "modernbert": {
+      "model": "modernbert",
+      "basis": [
+        [
+          15,
+          251
+        ],
+        [
+          0,
+          251
+        ],
+        [
+          11,
+          251
+        ],
+        [
+          0,
+          67
+        ],
+        [
+          9,
+          251
+        ],
+        [
+          4,
+          251
+        ],
+        [
+          1,
+          251
+        ],
+        [
+          5,
+          251
+        ],
+        [
+          10,
+          251
+        ],
+        [
+          1,
+          67
+        ]
+      ],
+      "canonical_row_basis_index": 0,
+      "baseline_mlm_loss": 1.524057781115854,
+      "by_epsilon": {
+        "0.5": {
+          "epsilon": 0.5,
+          "singleton_effects_x_i": [
+            0.1665233211233823,
+            0.02661354929162929,
+            0.15142072700097708,
+            0.035667525017218704,
+            -0.005263138795008837,
+            0.10064988832850141,
+            0.008235591573632073,
+            0.0012122001237346858,
+            0.000708126691840727,
+            0.0069659414442915235
+          ],
+          "F0": {
+            "metrics": {
+              "mae": 0.30687883448441894,
+              "rmse": 0.6707935577912865,
+              "r2": -0.09674997813778252,
+              "normalized_mae": 0.1251221810877891,
+              "signed_residual_mean": 0.3003521490756943,
+              "residual_vs_density_corr": 0.5628015142311605,
+              "residual_vs_predicted_magnitude_corr": 0.20593787137131206
+            }
+          },
+          "F1": {
+            "gain_g": 2.4138304250616556,
+            "metrics": {
+              "mae": 0.37862291948115157,
+              "rmse": 0.5922218291013517,
+              "r2": 0.14513272763999074,
+              "normalized_mae": 0.15437404008295447,
+              "signed_residual_mean": -0.04559008833164927,
+              "residual_vs_density_corr": 0.3373837751760211,
+              "residual_vs_predicted_magnitude_corr": -0.10913962070479552
+            }
+          },
+          "F2": {
+            "lambda": 10.0,
+            "beta": [
+              0.08126083136567257,
+              0.39706868229500475,
+              0.19940206037044012,
+              0.37609774409985763,
+              0.004268889424205659,
+              0.21962024857423826,
+              0.13664896331487666,
+              -0.14389931619962323,
+              -0.017827440986572032,
+              0.08943927204516952
+            ],
+            "metrics": {
+              "mae": 0.3413045369640181,
+              "rmse": 0.4396306884902978,
+              "r2": 0.5289078473342504,
+              "normalized_mae": 0.13915840156211268,
+              "signed_residual_mean": -0.09200210609578452,
+              "residual_vs_density_corr": 0.4352126738699614,
+              "residual_vs_predicted_magnitude_corr": 0.3848146528045969
+            }
+          },
+          "F3": {
+            "lambda": 1.0,
+            "beta_main": [
+              0.10183375351231098,
+              -0.008941552263980683,
+              0.14763543857861738,
+              -0.16563411652023555,
+              -0.06861133195702113,
+              0.13374922689999555,
+              -0.05147089021692572,
+              0.1675514485320541,
+              -0.008374310197792943,
+              -0.1237048708248142
+            ],
+            "gamma": [
+              -0.03417368247656079,
+              0.1333278508719647,
+              0.15940493627885996,
+              0.02627882577293067,
+              0.06868268080130578,
+              -0.08301489019477226,
+              -0.014384889909432836,
+              0.04092849879221635,
+              -0.021922463186031485,
+              0.005995527858647558,
+              0.7178200176179295,
+              -0.09181806273367255,
+              0.09297001486766024,
+              0.21981624597774183,
+              -0.1460532380304409,
+              0.07833350095145789,
+              0.3061898646517431,
+              -0.0010381159293375685,
+              -0.0946105106529536,
+              0.0881839934203007,
+              0.026108243583141486,
+              0.00518197841049151,
+              0.023731176953736173,
+              0.14692876359114468,
+              0.05759389165631429,
+              0.005425644969842638,
+              0.2603079102706142,
+              -0.09716637669167524,
+              0.09249678910511468,
+              0.32848286696825807,
+              0.0260616883270024,
+              0.053895152224422746,
+              -0.013976057331465532,
+              -0.09532551804101039,
+              0.07030883869797766,
+              0.04241929239083041,
+              0.07778693168338582,
+              -0.045729084410272354,
+              -0.01680532747450405,
+              -0.10995382687150164,
+              0.022915901151894513,
+              0.11676169364137151,
+              -0.020124922404432418,
+              -0.1559601371547616,
+              -0.10194436486014744
+            ],
+            "metrics": {
+              "mae": 0.14065721201910206,
+              "rmse": 0.18543724774576273,
+              "r2": 0.9161846015237427,
+              "normalized_mae": 0.05734946557368784,
+              "signed_residual_mean": 0.03565646888397747,
+              "residual_vs_density_corr": -0.09021265035622572,
+              "residual_vs_predicted_magnitude_corr": 0.0592782804475581
+            }
+          },
+          "F2_vs_F3_relative_MAE_improvement": 0.5878835562214316,
+          "F2_vs_F3_bootstrap": {
+            "mean_MAE_F2_minus_F3": 0.20061261861206864,
+            "ci_2.5": 0.19328938183208688,
+            "ci_97.5": 0.2069577592352585,
+            "excludes_zero": true
+          },
+          "mechanical_decision": "PAIR_TERMS_REQUIRED",
+          "retrospective_pair_structure": {
+            "top_pairs_by_abs_gamma": [
+              {
+                "pair_basis_idx": [
+                  1,
+                  3
+                ],
+                "rows": [
+                  "L0/r251",
+                  "L0/r67"
+                ],
+                "gamma": 0.7178200176179295,
+                "same_layer": true,
+                "same_output_row": false,
+                "involves_canonical": false,
+                "mean_structural_rank": 3.0
+              },
+              {
+                "pair_basis_idx": [
+                  3,
+                  9
+                ],
+                "rows": [
+                  "L0/r67",
+                  "L1/r67"
+                ],
+                "gamma": 0.32848286696825807,
+                "same_layer": false,
+                "same_output_row": true,
+                "involves_canonical": false,
+                "mean_structural_rank": 7.0
+              },
+              {
+                "pair_basis_idx": [
+                  1,
+                  9
+                ],
+                "rows": [
+                  "L0/r251",
+                  "L1/r67"
+                ],
+                "gamma": 0.3061898646517431,
+                "same_layer": false,
+                "same_output_row": false,
+                "involves_canonical": false,
+                "mean_structural_rank": 6.0
+              },
+              {
+                "pair_basis_idx": [
+                  3,
+                  6
+                ],
+                "rows": [
+                  "L0/r67",
+                  "L1/r251"
+                ],
+                "gamma": 0.2603079102706142,
+                "same_layer": false,
+                "same_output_row": false,
+                "involves_canonical": false,
+                "mean_structural_rank": 5.5
+              },
+              {
+                "pair_basis_idx": [
+                  1,
+                  6
+                ],
+                "rows": [
+                  "L0/r251",
+                  "L1/r251"
+                ],
+                "gamma": 0.21981624597774183,
+                "same_layer": false,
+                "same_output_row": true,
+                "involves_canonical": false,
+                "mean_structural_rank": 4.5
+              },
+              {
+                "pair_basis_idx": [
+                  0,
+                  3
+                ],
+                "rows": [
+                  "L15/r251",
+                  "L0/r67"
+                ],
+                "gamma": 0.15940493627885996,
+                "same_layer": false,
+                "same_output_row": false,
+                "involves_canonical": true,
+                "mean_structural_rank": 2.5
+              },
+              {
+                "pair_basis_idx": [
+                  7,
+                  9
+                ],
+                "rows": [
+                  "L5/r251",
+                  "L1/r67"
+                ],
+                "gamma": -0.1559601371547616,
+                "same_layer": false,
+                "same_output_row": false,
+                "involves_canonical": false,
+                "mean_structural_rank": 9.0
+              },
+              {
+                "pair_basis_idx": [
+                  2,
+                  9
+                ],
+                "rows": [
+                  "L11/r251",
+                  "L1/r67"
+                ],
+                "gamma": 0.14692876359114468,
+                "same_layer": false,
+                "same_output_row": false,
+                "involves_canonical": false,
+                "mean_structural_rank": 6.5
+              },
+              {
+                "pair_basis_idx": [
+                  1,
+                  7
+                ],
+                "rows": [
+                  "L0/r251",
+                  "L5/r251"
+                ],
+                "gamma": -0.1460532380304409,
+                "same_layer": false,
+                "same_output_row": true,
+                "involves_canonical": false,
+                "mean_structural_rank": 5.0
+              },
+              {
+                "pair_basis_idx": [
+                  0,
+                  2
+                ],
+                "rows": [
+                  "L15/r251",
+                  "L11/r251"
+                ],
+                "gamma": 0.1333278508719647,
+                "same_layer": false,
+                "same_output_row": true,
+                "involves_canonical": true,
+                "mean_structural_rank": 2.0
+              }
+            ],
+            "frac_same_output_row_top": 0.4,
+            "frac_same_output_row_all_pairs": 0.6444444444444445,
+            "frac_same_layer_top": 0.1,
+            "frac_same_layer_all_pairs": 0.044444444444444446,
+            "mean_structural_rank_top": 5.1,
+            "mean_structural_rank_all_pairs": 5.5,
+            "canonical_row_pair_ranks_by_abs_gamma": [
+              6,
+              10,
+              21,
+              25,
+              30,
+              31,
+              32,
+              37,
+              40
+            ],
+            "best_canonical_pair_rank": 6,
+            "n_pairs": 45
+          }
+        },
+        "1.0": {
+          "epsilon": 1.0,
+          "singleton_effects_x_i": [
+            5.44155690766554,
+            0.11446548219462782,
+            0.4479537549353698,
+            0.39972977474492244,
+            -0.004042535778927325,
+            1.0815289722718318,
+            0.02370581692881868,
+            0.004168985856612073,
+            0.0026069551171674643,
+            0.023637160981147654
+          ],
+          "F0": {
+            "metrics": {
+              "mae": 4.413343369773814,
+              "rmse": 6.322277142830645,
+              "r2": -0.10806075367380852,
+              "normalized_mae": 0.2505684306735634,
+              "signed_residual_mean": 4.374793356108946,
+              "residual_vs_density_corr": 0.6870028288913199,
+              "residual_vs_predicted_magnitude_corr": 0.2802585752689172
+            }
+          },
+          "F1": {
+            "gain_g": 1.8884904475162907,
+            "metrics": {
+              "mae": 3.2234848574809996,
+              "rmse": 4.671687452809631,
+              "r2": 0.39498788236288707,
+              "normalized_mae": 0.18301398154760037,
+              "signed_residual_mean": 1.0511492325329352,
+              "residual_vs_density_corr": 0.40315240137187247,
+              "residual_vs_predicted_magnitude_corr": -0.27117575464484783
+            }
+          },
+          "F2": {
+            "lambda": 3.0,
+            "beta": [
+              5.968872610029588,
+              2.3051069354845106,
+              0.44846757210144317,
+              5.196953643426742,
+              0.043170896220734216,
+              1.88962669749971,
+              -0.015272686500918911,
+              -0.5728205239105514,
+              0.11385835997140811,
+              1.7923172140929833
+            ],
+            "metrics": {
+              "mae": 2.221161065092807,
+              "rmse": 2.595524381447107,
+              "r2": 0.8132473645210119,
+              "normalized_mae": 0.12610685272423044,
+              "signed_residual_mean": -0.21073157774923698,
+              "residual_vs_density_corr": 0.5737405703974109,
+              "residual_vs_predicted_magnitude_corr": 0.46949375358190387
+            }
+          },
+          "F3": {
+            "lambda": 1.0,
+            "beta_main": [
+              5.191836694613193,
+              0.9684378610681368,
+              0.2662114868056391,
+              2.9619091020739567,
+              -0.3124311845421258,
+              1.6095884150023054,
+              0.2020607331860237,
+              0.4825827267808281,
+              0.024940569227355658,
+              -0.476302654751438
+            ],
+            "gamma": [
+              -1.517063113480615,
+              0.3763576711950343,
+              1.6230678841512682,
+              -0.5860274530157586,
+              1.0862150480107833,
+              -0.36502804870018407,
+              1.1268685535638614,
+              0.8404343382288951,
+              0.5360764218629491,
+              -0.07871953494293993,
+              2.970730188682022,
+              0.3021752011462113,
+              0.2414405065313053,
+              0.4437299591453555,
+              -0.8581306757350837,
+              0.3816218691205582,
+              1.4711105482384255,
+              -0.3937799640239671,
+              0.37824126532743846,
+              0.6676719812698457,
+              0.2608530657981883,
+              -0.25870018109884074,
+              0.16405918052890653,
+              0.10195548217608684,
+              -0.4064194685393796,
+              -1.0506171231757853,
+              0.2953261409976915,
+              -1.1946993682246563,
+              0.9365650343368597,
+              3.1811363461558964,
+              0.42144756116678944,
+              -0.26088020012792773,
+              0.380560777495766,
+              0.19140597194084222,
+              0.019088365474883608,
+              -0.42748925563213824,
+              0.7686739989249861,
+              -0.7426645931402512,
+              -0.06281518198135023,
+              -0.05176825905741897,
+              0.16893813597507845,
+              0.6253473397535882,
+              -0.9826478420346092,
+              0.4242684873775755,
+              -0.23990940162275198
+            ],
+            "metrics": {
+              "mae": 1.1897612414190997,
+              "rmse": 1.554858109534428,
+              "r2": 0.932980985110131,
+              "normalized_mae": 0.06754892655313448,
+              "signed_residual_mean": 0.40714654348954615,
+              "residual_vs_density_corr": 0.2920577571838401,
+              "residual_vs_predicted_magnitude_corr": 0.3801655704944557
+            }
+          },
+          "F2_vs_F3_relative_MAE_improvement": 0.46435165818585616,
+          "F2_vs_F3_bootstrap": {
+            "mean_MAE_F2_minus_F3": 1.024454275444189,
+            "ci_2.5": 0.9949958763664766,
+            "ci_97.5": 1.0509462610158102,
+            "excludes_zero": true
+          },
+          "mechanical_decision": "PAIR_TERMS_REQUIRED",
+          "retrospective_pair_structure": {
+            "top_pairs_by_abs_gamma": [
+              {
+                "pair_basis_idx": [
+                  3,
+                  9
+                ],
+                "rows": [
+                  "L0/r67",
+                  "L1/r67"
+                ],
+                "gamma": 3.1811363461558964,
+                "same_layer": false,
+                "same_output_row": true,
+                "involves_canonical": false,
+                "mean_structural_rank": 7.0
+              },
+              {
+                "pair_basis_idx": [
+                  1,
+                  3
+                ],
+                "rows": [
+                  "L0/r251",
+                  "L0/r67"
+                ],
+                "gamma": 2.970730188682022,
+                "same_layer": true,
+                "same_output_row": false,
+                "involves_canonical": false,
+                "mean_structural_rank": 3.0
+              },
+              {
+                "pair_basis_idx": [
+                  0,
+                  3
+                ],
+                "rows": [
+                  "L15/r251",
+                  "L0/r67"
+                ],
+                "gamma": 1.6230678841512682,
+                "same_layer": false,
+                "same_output_row": false,
+                "involves_canonical": true,
+                "mean_structural_rank": 2.5
+              },
+              {
+                "pair_basis_idx": [
+                  0,
+                  1
+                ],
+                "rows": [
+                  "L15/r251",
+                  "L0/r251"
+                ],
+                "gamma": -1.517063113480615,
+                "same_layer": false,
+                "same_output_row": true,
+                "involves_canonical": true,
+                "mean_structural_rank": 1.5
+              },
+              {
+                "pair_basis_idx": [
+                  1,
+                  9
+                ],
+                "rows": [
+                  "L0/r251",
+                  "L1/r67"
+                ],
+                "gamma": 1.4711105482384255,
+                "same_layer": false,
+                "same_output_row": false,
+                "involves_canonical": false,
+                "mean_structural_rank": 6.0
+              },
+              {
+                "pair_basis_idx": [
+                  3,
+                  7
+                ],
+                "rows": [
+                  "L0/r67",
+                  "L5/r251"
+                ],
+                "gamma": -1.1946993682246563,
+                "same_layer": false,
+                "same_output_row": false,
+                "involves_canonical": false,
+                "mean_structural_rank": 6.0
+              },
+              {
+                "pair_basis_idx": [
+                  0,
+                  7
+                ],
+                "rows": [
+                  "L15/r251",
+                  "L5/r251"
+                ],
+                "gamma": 1.1268685535638614,
+                "same_layer": false,
+                "same_output_row": true,
+                "involves_canonical": true,
+                "mean_structural_rank": 4.5
+              },
+              {
+                "pair_basis_idx": [
+                  0,
+                  5
+                ],
+                "rows": [
+                  "L15/r251",
+                  "L4/r251"
+                ],
+                "gamma": 1.0862150480107833,
+                "same_layer": false,
+                "same_output_row": true,
+                "involves_canonical": true,
+                "mean_structural_rank": 3.5
+              },
+              {
+                "pair_basis_idx": [
+                  3,
+                  5
+                ],
+                "rows": [
+                  "L0/r67",
+                  "L4/r251"
+                ],
+                "gamma": -1.0506171231757853,
+                "same_layer": false,
+                "same_output_row": false,
+                "involves_canonical": false,
+                "mean_structural_rank": 5.0
+              },
+              {
+                "pair_basis_idx": [
+                  7,
+                  8
+                ],
+                "rows": [
+                  "L5/r251",
+                  "L10/r251"
+                ],
+                "gamma": -0.9826478420346092,
+                "same_layer": false,
+                "same_output_row": true,
+                "involves_canonical": false,
+                "mean_structural_rank": 8.5
+              }
+            ],
+            "frac_same_output_row_top": 0.5,
+            "frac_same_output_row_all_pairs": 0.6444444444444445,
+            "frac_same_layer_top": 0.1,
+            "frac_same_layer_all_pairs": 0.044444444444444446,
+            "mean_structural_rank_top": 4.75,
+            "mean_structural_rank_all_pairs": 5.5,
+            "canonical_row_pair_ranks_by_abs_gamma": [
+              3,
+              4,
+              7,
+              8,
+              13,
+              18,
+              19,
+              29,
+              30
+            ],
+            "best_canonical_pair_rank": 3,
+            "n_pairs": 45
+          }
+        }
+      }
     }
   }
 }
