@@ -52,7 +52,9 @@ from run_gue_multiseed import _load_model, _set_seed  # noqa: E402
 import sklearn.metrics  # noqa: E402
 
 SEED = 42
-GUE_ROOT = Path("/data/nvidia/data/gue/GUE")
+# Original hardcoded path (/data/nvidia/data/gue/GUE) is absent on this filesystem;
+# repointed to the GUE data actually present here. No science changed.
+GUE_ROOT = Path("/work/11034/atzanakak/GUE/GUE")
 
 
 def evaluate(model, ds, device, batch=64):
