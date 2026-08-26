@@ -1,0 +1,423 @@
+Super-Weights in Genomic Language Models Are Specific to Attention-Based
+Architectures
+Alexandros Tzanakakis1
+, Aris Karatzikos1,2, Ilias Georgakopoulos-Soares1,*
+1Division of Pharmacology and Toxicology, College of Pharmacy, The University of Texas at Austin, Dell
+Paediatric Research Institute, Austin, TX, USA.
+2Department of Computer Science, College of Natural Sciences, The University of Texas at Austin, Austin,
+TX, USA.
+*Corresponding author: ilias@austin.utexas.edu
+Abstract
+Super-weights—individual parameters whose removal catastrophically degrades a language model—
+were recently characterised in natural-language transformers, but whether they arise in genomic
+language models, and how their occurrence depends on architecture, has not been examined. Genomic foundation models span an unusually diverse set of architectures (transformer decoders and
+encoders, state-space models, and convolutional hybrids), making them a natural testbed for this
+question. Applying a uniform detect-then-ablate protocol to eight publicly available models, we
+find that catastrophic super-weights are restricted to attention-based transformers: causal decoders
+(GENERator) develop a single dominant super-row whose ablation raises perplexity by four orders
+of magnitude, and masked encoders (DNABERT-2, NTv3) develop a distributed super-row ensemble whose ablation is invisible to masked-LM perplexity but collapses downstream task performance.
+A StripedHyena hybrid (Evo1) generates the same structural candidate— the cold-weight Frobenius bound that predicts the transformer super-rows fires identically, and the candidate reaches
+comparable activation magnitude—yet ablating it changes perplexity by ≈ 0. Residual-stream
+attribution shows why: the convolutional mixer redistributes the concentrated channel across coordinates rather than carrying it forward, so no single coordinate becomes load-bearing. Super-weight
+emergence therefore separates into a structural component (a gated-FFN amplifier, present in all
+gated architectures and predictable from weights alone) and a systemic component (whether the
+mixing operator preserves the candidate). Functionally, ablating the encoder super-row ensemble
+reliably collapses splice-site recognition (−25.5% accuracy in DNABERT-2 across 3 seeds; replicated in NTv3, ∆MCC = −0.119, p = 0.008, 5 seeds) while affecting histone-mark prediction only
+weakly and inconsistently—a contrast that predicts which fine-tuned applications are fragile under
+model compression. Within the two GENERator decoders, the super-weight encodes nucleotide
+composition rather than annotated regulatory grammar.
+Introduction
+Genomic language models learn statistical structure directly from DNA sequence and now achieve
+strong performance on regulatory, functional, and variant-effect prediction tasks.1–3 Unlike the
+natural-language setting, where the transformer is essentially universal, genomic foundation models
+are built on a strikingly diverse set of architectures: autoregressive transformer decoders such as
+GENERator4 and NTv3,5 bidirectional transformer encoders such as DNABERT-2,6
+long-context
+state-space and convolutional hybrids such as Evo1 and Evo2,7 attention–Hyena hybrids such as
+HybridNA,8 and other designs.9 This architectural diversity is an opportunity: it lets us ask not only
+whether a given internal phenomenon occurs, but whether its occurrence depends on architecture
+class.
+We study one such phenomenon. In natural-language models, a tiny number of parameters—“super1
+weights”—are disproportionately important: pruning a single such scalar can raise perplexity by
+orders of magnitude and reduce a model to producing degenerate text.10 Mechanistically, superweights have been traced to a gated feed-forward block acting as a directional quadratic amplifier
+that produces a rare, very large “super-activation” which then propagates through the residual
+stream.11 Whether this phenomenon exists in genomic models, whether it depends on architecture,
+and what (if anything) the responsible parameter encodes biologically, has not been established.
+Existing interpretability work on genomic models has focused on sparse-autoencoder feature dictionaries for specific models,12 not on super-weights or on cross-architecture comparison.
+Here we apply a uniform detect-then-ablate protocol to eight genomic language models and establish
+three results. First, and most centrally, catastrophic super-weights are specific to attention-based
+transformers. Causal decoders concentrate a load-bearing dependency into a single residual-stream
+channel; masked encoders develop a distributed ensemble that is hidden by masked-LM perplexity
+but exposed by downstream task ablation; the StripedHyena hybrid generates the same structural
+candidate but does not render it load-bearing. We trace the last dissociation to the mixing operator:
+a weight-only predictor (the Frobenius bound on the gated-FFN amplifier, following ref. 11) fires
+equally on the hybrid, but residual-stream attribution shows the convolutional mixer disperses the
+candidate channel rather than preserving it. Super-weight emergence thus has a structural component (predictable from weights) and a systemic component (determined by the mixer). Second, in
+the transformer models where the super-weight is load-bearing, its ablation reliably collapses motifdependent downstream tasks (splice-site recognition) while affecting diffuse-context tasks (histone
+marks) only weakly and inconsistently—a practically useful distinction for anyone compressing or
+pruning these models. Third, within the two GENERator decoders the super-weight encodes nucleotide composition rather than annotated regulatory grammar; in both models its ablation cost
+scales with the magnitude of the write it makes, and the two models differ not in this underlying mechanism but in how context-sensitive the feature is. We report this as a scoped two-model
+observation.
+Results
+Catastrophic super-weights are specific to attention-based transformers
+We applied an identical detect-then-ablate protocol to eight models. In the detection stage, a single
+forward pass on a fixed probe records the maximum input and output magnitude of every MLP
+down-projection (or its architectural analogue); the layer with the largest spike is the candidate
+super-weight layer and its output channel is the candidate super-row, following the data-free identification of ref. 10. In the ablation stage, the candidate row is zeroed and the model re-evaluated
+on held-out sequences by perplexity (all models) and, for the fine-tunable encoders, by downstream
+task accuracy. The detection criterion is identical for every model; only the functional readout
+differs by model type (Figure 1).
+All eight models pass the detection stage with a clear candidate above the layer median, but they
+differ sharply in whether that candidate is load-bearing. In GENERator eukaryote 3B the sweep
+converged on a single super-row at layer 4 (row 2,371; out_max = 375,361). Although this row
+holds ∼8,448 parameters (∼0.0003% of the model), zeroing it raised perplexity from 3.40 to 785.5
+(+23,026%); ten size-matched random rows produced ∆PPL < 0.01%. GENERator prokaryote
+3B behaved identically at layer 2 (row 1,927; out_max = 506,014): perplexity rose from 2,324 to
+606,073 (+25,975%) with random-row controls within 0.03% of baseline.
+The masked encoders showed a different but still attention-based phenotype. In DNABERT-2 the
+sweep returned ten candidate super-rows concentrated on a small set of indices (notably row 603
+2
+recurring at layers 3, 5, 6, 7) across five layers. Zeroing all ten raised masked-LM perplexity by
+only 1.5%—which, on perplexity alone, would have grouped the encoder with the negatives. As
+shown below, the same ablation collapses a fine-tuned splice classifier by −25.5%, so the encoder
+dependency is real but invisible to the upstream metric. NTv3, a second encoder, showed the same
+pattern under downstream evaluation (below).
+The state-space and hybrid models were uniformly negative under ablation despite passing detection. We analysed Evo1 in detail as the StripedHyena member that loads in a standard environment.
+Evo1 is emphatically not a detection-stage negative: its activation sweep finds a hotspot at layer 11
+with rows reaching out_max ≈ 106
+, larger than DNABERT-2’s peak. Yet ablating the top row
+changes perplexity by 0.0% (3.1127 → 3.1131; random controls ≈ 0). HybridNA and MegaDNA,
+tested by ablation, were likewise within the random envelope (−1.3% and +0.3%). Among the
+models we did evaluate under ablation, the phenotype tracks architecture class cleanly: attentionbased decoders concentrate a load-bearing super-row, attention-based encoders develop a loadbearing distributed ensemble revealed downstream, and the convolution-mixed hybrid produces a
+detection-stage candidate that carries no load.
+3
+Figure 1: Catastrophic super-weights are specific to attention-based transformer architectures. (A) Peak activation magnitude (out_max) of each model’s candidate super-row versus
+its normalised layer position; all eight models pass the detection stage above the layer median.
+Filled markers: positive ablation effect (large ∆PPL for decoders, downstream collapse for encoders). Open markers: detection-stage hotspot but null ablation effect. (B) Perplexity change
+(∆PPL%) on ablating the candidate super-row (bars) versus equal-norm random rows (dots); grey
+band, random-control envelope. The encoder bars are small because the encoder dependency is
+downstream, not upstream (Figure 3). (C–D) Super-weight location in the GENERator EUK (C)
+and PROK (D) stacks.
+A weight-only amplifier predicts the candidate super-row, but does not determine
+whether it is load-bearing
+To understand why the same protocol gives opposite answers across architectures, we examined
+the structural origin of the candidate row. Following the directional-quadratic-amplifier account
+of massive activations,11 the contribution of a gated FFN to each output coordinate k admits a
+4
+rank-1 outer-product bound whose Frobenius norm is
+∥Uk∥F =
+vuutX
+dffn
+i=1
+Wdown[k, i]
+2 · ∥Wgate[i, :]∥
+2 · ∥Wup[i, :]∥
+2,
+where Wgate, Wup, Wdown are the three projection matrices of the block. This quantity is computed
+from cold weights with no forward pass. We stress that the amplifier mechanism itself is established
+in natural-language models;11 our contribution here is to use the corresponding weight-only ranking
+as a diagnostic across genomic architectures, and in particular to test whether it distinguishes the
+load-bearing from the non-load-bearing cases.
+It does not—and that is the informative result. In the three transformer models the predictor ranks
+the empirically detected super-row at or near the top of its layer: GENERator EUK row 2371 ranks
+1/3,072 (12× the layer median), GENERator PROK row 1927 ranks 1/3,072 (18×), DNABERT-2
+places 9 of its 10 super-rows in the top three of their layer (median rank 1.4 in dmodel = 768), and
+NTv3 ranks its single super-row 1/1,536. The lone DNABERT-2 outlier (layer 7 row 603, rank
+706/768) is explained by residual reuse: the row is generated by the MLPs at layers 3, 5, 6 (where
+the predictor ranks it first) and merely carried in the residual stream at layer 7, where the residual
+input (−10.96) exceeds that layer’s own MLP contribution (−5.80); the predictor, which sees only
+what the local MLP generates de novo, correctly identifies layer 7 as a propagator rather than a
+source.
+Crucially, the same predictor fires on Evo1. Its ParallelGatedConvBlock has the identical
+gate/up/down structure, and ∥Uk∥F concentrates on the same rows the activation sweep finds
+(ranks 48–168/4,096, top 1.2–4.1%; max/median ratio 2.2–8.4, comparable to DNABERT-2). The
+structural candidate is present and the activation is large, yet ablation is null. Residual-stream
+attribution resolves the apparent contradiction. At the source layer the gated MLP writes a value
+of magnitude ∼165 into the candidate coordinate, and this write enters the residual stream essentially unchanged (block-delta/MLP-out ratio 0.82–1.06). The mixer does not absorb the candidate
+at source. But across the subsequent StripedHyena convolutional blocks the magnitude at that
+coordinate attenuates—only ∼44% survives into the next block at the same coordinate—while the
+global hidden-state norm is preserved, indicating the convolutional mixer redistributes the concentrated signal across coordinates rather than carrying it forward along its own channel. By later
+blocks the per-token argmax has left the row entirely. Nothing along that coordinate reaches the
+output with concentrated load.
+We therefore read super-weight emergence as having two separable components. The structural component—a gated-FFN amplifier that manufactures a concentrated candidate row—is
+present in every gated architecture we tested and is predictable from weights alone. The systemic
+component—whether the surrounding mixing operator preserves that candidate along its own residual coordinate—is what determines whether the candidate becomes a load-bearing super-weight.
+Full-token self-attention, which operates on the entire hidden vector per token, preserves the channel; the StripedHyena long-convolution mixer disperses it. This decomposition is supported here
+by a single positive→negative architecture transition (gated-FFN transformer → StripedHyena hybrid) and we treat it as a hypothesis to be tested on further non-attention mixers (Mamba, EMA,
+parallel-Hyena variants).
+5
+Figure 2: The gated-FFN amplifier predicts the candidate super-row across architectures, but the mixing operator determines load-bearing status. (Panels A–D, GENERator
+EUK/PROK activation lifecycle and step-up-layer ∥Uk∥F bars, are pending GENERator environment access and are omitted from this render.) (E) ∥Uk∥F percentile of the empirically detected
+super-rows: DNABERT-2 (filled squares; 9/10 at the 99th+ percentile, one residual-propagator outlier at the 8th), NTv3 (filled diamond; 1/1,536), and Evo1 (open triangles; 95.9–98.8th percentile).
+Filled markers, super-row load-bearing under ablation; open markers, predictor fires but ablation null. The predictor concentrates equally on the load-bearing and the non-load-bearing cases.
+(F) Residual-stream attribution at the super-row coordinate. Top: DNABERT-2 row 603, layers 2–11, |mlp_out| vs |residual_in|; layers 3/5/6 MLP-dominant (source), 7/8 residual-dominant
+(propagator), argmax leaves at layer 9. Bottom: Evo1 row 3776 across all 32 StripedHyena blocks
+(fp32). The MLP write enters the residual unchanged at source; the coordinate-aligned magnitude
+then attenuates across convolutional blocks while the global norm is preserved, and the per-token
+argmax leaves the row, consistent with the null ablation effect.
+Encoder super-weights are required for motif-dependent tasks and only weakly in6
+volved in diffuse-context tasks
+The encoder dependency is invisible to masked-LM perplexity but matters for the tasks practitioners
+actually fine-tune these models on. We fine-tuned DNABERT-2 on three Genomic Understanding
+Evaluation benchmarks—promoter recognition, splice-site detection, and the H3K4me3 histone
+mark—and ablated the ten-row super-weight ensemble at evaluation time against matched randomrow controls (Figure 3).
+Splice-site recognition was the robust, reproducible effect: ablation reduced accuracy by −25.5±0.7
+percentage points across three seeds (p = 0.0004, one-sample t-test vs. zero), with random-row
+controls below 0.05 pp. The same ablation on a second encoder, NTv3 (five fine-tuning seeds),
+reduced Matthews correlation by ∆MCC = −0.119 ± 0.054 (t = −4.86, p = 0.008; all five seeds
+negative). In two of the five NTv3 seeds the ablated model collapsed to majority-class prediction,
+which raises raw accuracy toward the class-prior baseline while eliminating discriminative ability;
+we therefore report MCC, which is invariant to class prior, as the primary metric for this task
+(Table 1). The cross- encoder replication establishes that the splice dependency is a property of
+the super-weight ensemble, not of one model.
+The histone result is the honest counterpoint and we report it precisely. Across five seeds, ablation
+reduced H3K4me3 accuracy by −5.05±5.71 percentage points (t = −1.77, p = 0.15, not significant),
+and the per-seed values are bimodal: three seeds are essentially unaffected (−0.03 to −1.0 pp) while
+two partially collapse (−10.7 and −13.3 pp); random-row controls remained flat (±0.03 pp), so when
+the effect appears it is super-weight-specific. The correct reading is therefore not that the histone
+task is independent of the super-weight, but that its dependence is weak and unreliable across
+fine-tuning trajectories, in sharp contrast to the tight, consistent splice effect. The splice/histone
+contrast is thus a contrast in reliability and magnitude (a ∼5-fold difference in mean effect, with
+non-overlapping behaviour: splice consistently large, histone usually small) rather than a clean
+present/absent dissociation.
+seed base MCC SW-abl MCC ∆MCC ∆Acc behaviour
+0 0.180 0.143 −0.038 −0.057 mild damage
+1 0.213 0.107 −0.106 −0.247 strong damage
+2 0.215 0.105 −0.111 −0.124 strong damage
+4 0.177 0.005 −0.172 +0.050 majority-class collapse
+5 0.184 0.018 −0.166 +0.003 majority-class collapse
+mean 0.194 0.075 −0.119 — 5/5 negative ∆MCC
+s.d. 0.019 0.061 0.054 — t = −4.86, p = 0.008
+Table 1: NTv3 splice-site super-weight ablation across five seeds. In seeds 4 and 5 the ablated model
+collapses to the majority class, raising accuracy while MCC falls to near zero; MCC is therefore
+the reported metric.
+The dissociation has a natural reading and a clear practical consequence. Splice donor and acceptor
+sites are defined by short consensus sequences with characteristic flanking composition—the kind
+of local k-mer signal the super-weight encodes (next section)—whereas the H3K4me3 mark reflects
+diffuse chromatin context not reducible to a local motif. We present this as a post-hoc interpretation
+rather than an independent test. The practical consequence stands on the measurements alone:
+motif-dependent downstream tasks route reliably and heavily through the super-weight ensemble
+and should be re-validated after any compression or pruning that perturbs it, whereas diffuse7
+context tasks are at lower and less predictable risk.
+To confirm the encoder dependency is an ensemble rather than a single bottleneck, we ablated
+each of the ten DNABERT-2 super-rows individually on the fine-tuned splice checkpoint. No single
+row removed more than −1.45% accuracy (row L3 r603); the activation-detected top row (L5 r603)
+removed only −0.15%. Only removing all ten together produced the full collapse. This distinguishes
+the encoder ensemble sharply from the GENERator decoder, where a single row drives a +23,000%
+perplexity change.
+Figure 3: Functional consequences of super-weight ablation in fine-tuned encoders.
+(A) DNABERT-2 task performance after super-weight-ensemble ablation vs. random-row control.
+Splice (n = 3 seeds) collapses by −25.5 ± 0.7 pp; H3K4me3 (n = 5 seeds) shows a weak, highvariance, bimodal effect (−5.05 ± 5.71 pp, n.s.); per-seed histone values are shown to make the
+variance explicit. (B) NTv3 splice ablation across 5 seeds (base vs. ablated MCC); seeds 4–5 show
+majority-class collapse (Table 1). (C) Per-row ablation on the DNABERT-2 splice checkpoint: no
+single row exceeds −1.45%; the full effect requires the whole ensemble.
+In the GENERator decoders, the super-weight encodes nucleotide composition, not
+regulatory grammar
+We next asked what the load-bearing decoder super-weight computes, using the two GENERator
+models, where a single concentrated row permits clean perturbation. We emphasise at the outset that this is a controlled two-model comparison (identical Llama-style architecture, 30 layers,
+dmodel = 3,072, 6-mer tokenisation; the only intended difference is the training corpus, eukaryotic
+8
+vs. prokaryotic). It is not a kingdom-level claim, and one confound should be kept in view: the
+two super-weights sit at different layers (EUK layer 4, PROK layer 2).
+The super-weight is causally necessary and context-uniform. Zeroing the super-row(s) during inference on 90 held-out sequences raised loss by +2.92 ± 1.33 log-PPL in EUK and +9.47 log-PPL in
+PROK, with no dependence on genomic context class (promoter, enhancer/ terminator, intergenic)
+in either model; random rows produced shifts < 0.0001 log-PPL. Uniform degradation across context classes argues against specialisation for any single regulatory element. The larger PROK cost,
+together with its earlier layer position (L2 vs L4), is consistent with the prokaryotic super-weight
+being more deeply integrated into the residual stream than the eukaryotic one; we note this as
+a difference in integration depth, with the layer offset itself a candidate contributor we cannot
+separate from the corpus difference.
+The one robust difference between the two models is context-sensitivity. Across four shuffle controls
+(mono-, di-, tri-nucleotide, and 6-mer block), the EUK super-weight showed no significant activation
+change (all p > 0.31, n = 90; the strict trinucleotide-preserving shuffle gave p = 0.841), consistent
+with encoding individual-token (hexamer) identity and nothing above it. The PROK super-weight
+was significantly perturbed by all four shuffles (p < 0.01), indicating sensitivity to sequence context
+above the single token. This difference does not depend on any sign or magnitude convention and
+is, together with the difference in integration depth noted below, the substantive way in which
+the two super-weights diverge: the EUK feature is a single-token composition detector, while the
+PROK feature additionally responds to higher-order context.
+Ablation cost scales with write magnitude in both models. For each of the 4,096 hexamers we measured the KL divergence between the clean and super-weight-ablated next-token distributions and
+correlated it with the magnitude of the super-weight write. In both models the relationship is
+positive: r(|act|, KL) = +0.437 (t = 5.06, p = 4.5 × 10−7
+) in EUK and r(|act|, KL) = +0.710
+(t = 118) in PROK. The interpretation is identical in both cases: the hexamers that drive a largermagnitude write at the super-weight coordinate are those whose predictions are most disrupted
+when that coordinate is zeroed, while hexamers that barely engage the super-weight (poly-A, with
+near-zero write) suffer near-zero KL on ablation. The PROK super-weight writes exclusively in the
+negative direction (signed activation ranges from −723,256 to −44), so correlating signed activation
+against KL yields a negative coefficient (r = −0.710) that reflects only this write-direction convention rather than a distinct computational role; the magnitude correlation is the mechanistically
+meaningful quantity. There is thus no qualitative difference in how the two super-weights relate
+activation to function: both are write-once features whose ablation cost scales with the size of their
+write.
+No annotated regulatory motif is enriched. Among the top-500 most ablation-sensitive hexamers
+(by KL), only homopolymer runs were enriched in EUK (OR = 1.85, q = 0.022); splice, TATA,
+Kozak, GC-box, and CpG classes were depleted or null. In PROK no motif class survived correction,
+including Shine–Dalgarno and the −10/−35 boxes. Across both models, super-weight dependence
+tracks sequence-composition and complexity, not recognisable regulatory grammar. A composition
+regression was consistent with this (R2 = 0.158 EUK, 0.347 PROK; complexity and k-mer entropy
+the leading terms), and neither super-weight distinguished in-domain from out-of-domain genomes
+(fold-change ≈ 1.00, p > 0.5), confirming both encode low-level composition present across genomes
+rather than kingdom-specific signal.
+Sparse-autoencoder check (prokaryote only). As a single orthogonal check on the prokaryotic side,
+we trained a top-K sparse autoencoder (k = 64, dictionary 12,288) on PROK residual-stream
+9
+activations at the super-weight layer. The dictionary features most positively correlated with
+super-weight magnitude (r ≈ +0.71) fire on GC-rich hexamers (CGAGGT, ACCGAG, GACCAG,
+GGTCGG); the most anti-correlated (r ≈ −0.73 to −0.76) fire on AT-rich and low-complexity
+sequences (poly-A, poly-T, poly-G), recovering the same GC/AT compositional axis identified by
+the causal hexamer test. The matched eukaryotic SAE failed to train (the majority of dictionary
+features were dead) and is not reported; the eukaryotic axis therefore rests on the hexamer, shuffle,
+and motif analyses above, which do not depend on the SAE.
+10
+Figure 4: Super-weight encoding in the two GENERator decoders. (A) Mean super-weight
+activation by hexamer composition class (AT-rich, GC-rich, CpG-rich, homopolymer, balanced),
+EUK and PROK, log axis. (B) EUK causal-hexamer scatter: super-weight write magnitude |act|
+vs. clean-to-ablated KL divergence over all 4,096 hexamers; Pearson r = +0.437. (C) PROK causalhexamer scatter, same axes (write magnitude on x); Pearson r = +0.710. Both models show the
+same positive relationship between write magnitude and ablation cost; the PROK super-weight
+writes in the negative direction, so on signed activation the same data give r = −0.710, a writedirection convention rather than a distinct mechanism. (D) Mean activation shift under four shuffle
+controls with per-shuffle p-values; EUK shifts n.s. (n = 90), PROK shifts significant (p < 0.01)—
+the one robust EUK/PROK difference, in context-sensitivity. (E) Motif-class enrichment (log2
+odds ratio) among the top-500 most ablation-sensitive hexamers, EUK and PROK; only the EUK
+homopolymer class reaches q < 0.05.
+Compression
+Because super-weights are linked to model compression in the natural-language literature,10 we
+tested whether the super-weight-exemption heuristic of ref. 10 transfers to genomic decoders. At a
+properly powered ∼100,000-token evaluation, INT4 quantization of every eligible non-super-weight
+11
+row cost +0.0879 PPL (EUK) and +0.4664 PPL (PROK); additionally including the super-weight
+rows in the quantization pool changed perplexity by only −0.0008 and +0.0004 PPL respectively, i.e.
+below the noise floor. The super-weight-exemption heuristic therefore confers no measurable benefit
+in these genomic decoders—a non-replication of the natural-language result. We also found that the
+parameter rows most fragile under pruning lie distant from the super-weight rather than adjacent
+to it, and that INT4 at moderate fractions is near-lossless regardless of which rows are selected. We
+report the full pruning and quantization sweeps, including the negative downstream INT4 results,
+in Supplementary Note S1; they do not support a practical super-weight-aware compression recipe
+in these models at the precision levels tested.
+Discussion
+The central result of this work is that catastrophic super-weights in genomic language models
+are architecture-specific: they arise in attention-based transformers and not in a StripedHyena
+hybrid evaluated under the identical protocol. The dissociation is not a detection artefact—the
+convolutional hybrid generates the same structural candidate, the weight-only amplifier predictor
+fires on it, and its activation is large—but a property of how information propagates after the gated
+FFN. Full-token self-attention preserves a concentrated residual channel; the long-convolution mixer
+disperses it. This separates super-weight emergence into a structural component that any gated
+architecture can produce and that is predictable from weights alone, and a systemic component
+fixed by the mixing operator. For practitioners choosing or designing genomic architectures, this
+implies that single-parameter fragility—and the compression and robustness considerations that
+follow from it—is a transformer-specific concern, not a universal property of large genomic models.
+A second, practically oriented result concerns the encoders. The super-weight ensemble in
+DNABERT-2 and NTv3 is reliably required for motif-dependent splice-site recognition (−25.5%
+accuracy; replicated across models and seeds) but only weakly and inconsistently involved in
+diffuse-context histone-mark prediction. We are deliberate about not overstating this as a clean
+present/absent dissociation: the five-seed histone data are bimodal, and in two trajectories the ensemble did meaningful work. The defensible and useful statement is one of reliability—motif-driven
+tasks consistently route through the super-weight ensemble and are therefore reliably at risk under
+compression, while diffuse-context tasks carry a lower, less predictable risk. This gives a concrete
+pre-deployment heuristic: after compressing or pruning one of these encoders, motif-dependent
+downstream classifiers must be re-validated, because their dependence on a tiny set of parameters
+is both real and metric-hidden at the pre-training level.
+Third, within the two GENERator decoders the load-bearing super-weight encodes nucleotide composition rather than annotated regulatory grammar. The two models share the same underlying
+mechanism—a write-once composition feature whose ablation cost scales with the magnitude of its
+write—and differ only in two respects that do not depend on any sign convention: the prokaryotic
+super-weight is sensitive to sequence context above the single token (where the eukaryotic one is
+not), and it is more deeply integrated into the residual stream (larger ablation cost, earlier layer).
+We are explicit that an earlier signed-activation analysis suggested a qualitative driver-versus-gate
+asymmetry between the two models; on the mechanistically appropriate magnitude analysis this
+asymmetry disappears, and we report the unified mechanism here. We have scoped this whole comparison as a two-model observation rather than a kingdom-level law: the comparison is controlled
+(identical architecture, differing corpus) but n = 1 per condition, the super-weights sit at different
+layers, and the sparse-autoencoder corroboration exists only on the prokaryotic side. It is a genuine
+and reproducible feature of these two models worth testing on additional decoders, but not one we
+generalise.
+12
+Limitations. First, the structural-vs-systemic decomposition rests on a single positive→negative
+architecture transition (gated-FFN transformer to StripedHyena hybrid via Evo1); replication on
+Evo2, MegaDNA, HybridNA, and Mamba-class models is needed to establish that it is the mixer
+class, and not some Evo1-specific property, that governs load-bearing status. Second, the weightonly amplifier predictor is a re-use of the natural-language quadratic-amplifier account;11 its role
+here is diagnostic, and its inability to distinguish load-bearing from non-load-bearing candidates
+is the point, not a shortcoming. Third, the composition comparison between the two GENERator
+decoders is a controlled two-model comparison with the caveats above, not a kingdom generalisation; the two super-weights share a common magnitude-scaled mechanism and differ only in
+context-sensitivity and integration depth, and the eukaryotic SAE failed to train, so the SAE evidence is prokaryote-only. Fourth, the histone dependency is weak and high-variance at five seeds;
+the splice/histone contrast is one of reliability and magnitude, not a clean dissociation. Fifth,
+architecture and tokenizer are not fully disentangled—GENERator uses 6-mer tokenisation and is
+positive, Evo1 uses byte-level tokenisation and is negative—so a byte-level transformer decoder for
+genomics would be a valuable control. Sixth, the compression analyses are a documented negative
+result (no transfer of the super-weight-exemption heuristic; no super-weight-aware recipe at the
+precisions tested) rather than a positive method.
+In sum, super-weights in genomic language models are a real, architecture-specific, attention-linked
+phenomenon whose downstream consequences are practically relevant for model compression, and
+whose biological substrate—where it is load-bearing—is low-level sequence composition rather than
+regulatory grammar.
+Methods
+Models. GENERator eukaryote 3B (GenerTeam/GENERator-v2-eukaryote-3b-base) and
+GENERator prokaryote 3B (GenerTeam/GENERator-v2-prokaryote-3b-base) are Llama-style
+causal decoders (30 layers, dmodel = 3,072, dffn = 8,448, 6-mer BPE). The two models share an identical configuration and differ only in training corpus. DNABERT-2 117M
+(zhihan1996/DNABERT-2-117M) is a BERT-style encoder (12 layers, dmodel = 768). NTv3 50M,
+Evo1 7B, Evo2 7B (loading-blocked), MegaDNA, HybridNA, and Caduceus-PS were loaded from
+the HuggingFace Hub in full precision where compatible. The prokaryote model used throughout
+the composition analyses is the 3B model; a separate 1B prokaryote model exists in the repository
+and is not used in any comparison reported here.
+Detect-then-ablate protocol. Forward hooks recorded max |input| and max |output| per layer at
+the down-projection or its analogue (mlp.down_proj for GENERator; intermediate.dense for
+DNABERT-2; l3 of ParallelGatedConvBlock for Evo1) over a 48-bp probe. The layer with the
+largest spike is the candidate layer; its output channel is the candidate super-row. We zeroed
+the row and re-ran the sweep iteratively until the spike fell below 10% of its initial value or ten
+iterations elapsed. Detection criteria are identical across models; the functional readout is held-out
+perplexity for all models, plus fine-tuned GUE accuracy/MCC for the encoders.
+Gated-FFN amplifier predictor. ∥Uk∥F is computed from cold weights as defined in Results; it applies to SwiGLU (GENERator), BertGatedLinearUnitMLP (DNABERT-2; gate/up packed on adjacent row blocks, down projection wo), the NTv3 gated FFN, and Evo1’s ParallelGatedConvBlock
+(l1/l2/l3 as gate/up/down). No forward pass is used.
+Residual-stream attribution. At the super-weight token position we recorded the pre-block residual
+and the MLP contribution at the super-row at each layer via pre- and post-hooks; a layer is a
+source if |∆MLP| > |H| at the row and a propagator otherwise. The Evo1 trace was run in fp32
+13
+across all 32 StripedHyena blocks.
+Causal ablation and shuffle controls. A forward hook zeros the super-row(s) at the down-projection
+output on every pass; we report mean per-token cross-entropy on 30 non-overlapping 3,072-bp
+windows from E. coli K-12 (PROK) or hg38 (EUK). Shuffle controls comprise mononucleotide,
+dinucleotide-preserving (Altschul–Erickson), trinucleotide-preserving, and 6-mer block shuffles.
+Hexamer causal test. Each 6-mer is embedded in an 11-token poly-A context; we compute
+DKL(pclean∥pablated) at the target position (4,096 hexamers, two forward passes each) and correlate
+it with super-weight activation.
+Motif enrichment and regression. Top-500 hexamers by KL tested against the remaining 3,596 by
+two-sided Fisher exact test with Benjamini–Hochberg correction. Composition regression of ∆loss
+on GC fraction, CpG density, k-mer entropy, repeat fraction, and complexity.
+GUE fine-tuning and ablation. DNABERT-2 fine-tuned on prom_core_notata,
+splice/reconstructed, and EMP/H3K4me3; splice with 3 seeds, H3K4me3 with 5 seeds.
+NTv3 fine-tuned on splice/reconstructed with 5 seeds (0,1,2,4,5; seed 3 non-converging).
+Super-row ablation applied at evaluation via forward hooks; random-row controls matched on
+count and per-layer distribution (10 sets). MCC is the primary metric for NTv3 splice because
+seeds 4 and 5 collapse to majority class under ablation; this choice was made after observing the
+seed behaviour and is reported as such. The H3K4me3 five-seed set combines seeds re-evaluated
+from earlier checkpoints (0–2) and freshly trained seeds (3–4) under a pinned environment; the
+attention computation is mathematically equivalent across the two paths.
+Sparse autoencoder (prokaryote). Top-K SAE (k = 64, dictionary 12,288, input dim 3,072) trained
+on PROK residual-stream activations at the super-weight layer over ∼50M E. coli tokens. Training
+health: reconstruction MSE 4.78 versus a random-baseline MSE of 7,238, with 97.4% of dictionary
+features active. Feature–super-weight correlation is Pearson r between per-hexamer feature activation and super-weight magnitude over all 4,096 hexamers. The matched eukaryotic SAE did not
+reach acceptable training health (majority of features dead across attempts) and is not reported.
+Compression. Per-row round-to-nearest INT4/INT2 with symmetric scale s = max |r|/(2b−1 − 1);
+whole-model INT4 quantises all seven projection types across 30 layers (∼806,400 rows) on a 500-
+sequence, 1,200-nt hg38 probe (∼100,000 tokens, seed 42). Full sweeps and selection criteria are
+described in Supplementary Note S1.
+References
+[1] Avsec, Ž. et al. Effective gene expression prediction from sequence by integrating long-range
+interactions. Nat. Methods 18, 1196–1203 (2021).
+[2] Dalla-Torre, H. et al. Nucleotide Transformer: building and evaluating robust foundation
+models for human genomics. Nat. Methods 22, 287–297 (2025).
+[3] Linder, J. et al. Predicting RNA-seq coverage from DNA sequence as a unifying model of gene
+regulation. Nat. Genet. 57, 949–961 (2025).
+[4] Wu, W. et al. GENERator: A Long-Context Generative Genomic Foundation Model. Preprint
+(2025).
+[5] Boshar, S. et al. A foundational model for joint sequence-function multi-species modeling at
+scale. bioRxiv 2025.12.22.695963 (2025).
+14
+[6] Zhou, Z. et al. DNABERT-2: Efficient Foundation Model and Benchmark for Multi-Species
+Genome. Preprint (2023).
+[7] Brixi, G. et al. Genome modelling and design across all domains of life with Evo 2. Nature
+652, 1349–1361 (2026).
+[8] Ma, M. et al. HybriDNA: A Hybrid Transformer-Mamba2 Long-Range DNA Language Model.
+Preprint (2025).
+[9] Shao, B. & Yan, J. A long-context language model for deciphering and generating bacteriophage
+genomes. Nat. Commun. 15, 9392 (2024).
+[10] Yu, M. et al. The Super Weight in Large Language Models. Preprint arXiv:2411.07191 (2024).
+[11] Sun, P. et al. The Spike, the Sparse and the Sink: Anatomy of Massive Activations and
+Attention Sinks. Preprint arXiv:2603.05498 (2026).
+[12] Decode-gLM: Tools to Interpret, Audit, and Steer Genomic Language Models. bioRxiv
+2025.10.31.685860 (2025).
+15
