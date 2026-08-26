@@ -1,0 +1,184 @@
+{
+  "dnabert2": {
+    "source_file": null,
+    "method": "NEW: full small-model load (repo=zhihan1996/DNABERT-2-117M, adapter=dnabert2) + uk_frobenius.layer_report. Wall-clock 152.8s.",
+    "n_rows_in_layer": 768,
+    "candidate_frob_norm": 51.941166852435,
+    "layer_median_frob_norm": 10.350278730754415,
+    "candidate_frob_norm_ratio_to_layer_median": 5.018335080977002,
+    "model_key": "dnabert2",
+    "csv_model": "DNABERT-2",
+    "layer": 5,
+    "row": 603
+  },
+  "llama-7b": {
+    "source_file": null,
+    "method": "NEW: partial-safetensors-shard fetch (repo=huggyllama/llama-7b, revision=4782ad278652c7c71b72204d462d6d01eaaf7549) + uk_frobenius.layer_report (Gram-identity exact ||U_k||_F, all rows in layer, float64). Wall-clock 17.1s.",
+    "n_rows_in_layer": 4096,
+    "candidate_frob_norm": 123.6356847200251,
+    "layer_median_frob_norm": 4.205097956825915,
+    "candidate_frob_norm_ratio_to_layer_median": 29.40138041715147,
+    "model_key": "llama-7b",
+    "csv_model": "Llama-7B",
+    "layer": 2,
+    "row": 3968
+  },
+  "mistral-7b": {
+    "source_file": null,
+    "method": "NEW: partial-safetensors-shard fetch (repo=mistralai/Mistral-7B-v0.1, revision=27d67f1b5f57dc0953326b2601d68371d40ea8da) + uk_frobenius.layer_report (Gram-identity exact ||U_k||_F, all rows in layer, float64). Wall-clock 12.0s.",
+    "n_rows_in_layer": 4096,
+    "candidate_frob_norm": 0.37510928518138187,
+    "layer_median_frob_norm": 0.01397999823680717,
+    "candidate_frob_norm_ratio_to_layer_median": 26.83185497075223,
+    "model_key": "mistral-7b",
+    "csv_model": "Mistral-7B",
+    "layer": 1,
+    "row": 2070
+  },
+  "olmo-7b": {
+    "source_file": "results/e10_exact_uknorm_olmo.json",
+    "method": "Gram-identity exact ||U_k||_F, all rows in layer, float64 (exact_uk_norm_all_rows.py, validated against SVD to rel_err<1e-6)",
+    "n_rows_in_layer": 4096,
+    "candidate_frob_norm": 0.9110752807671009,
+    "layer_median_frob_norm": 0.023241070761400518,
+    "candidate_frob_norm_ratio_to_layer_median": 39.201088887877,
+    "model_key": "olmo-7b",
+    "csv_model": "OLMo-7B-0724-hf",
+    "layer": 1,
+    "row": 269
+  },
+  "phi3-mini": {
+    "source_file": "results/e10_exact_uknorm_phi3.json",
+    "method": "Gram-identity exact ||U_k||_F, all rows in each of layers 2 and 4 separately (Phi-3's 6 published candidate rows split across 2 layers; layer_median_frob_norm/candidate_frob_norm_ratio_to_layer_median are reported per-row below, not collapsed to one scalar, since the 6 rows do not share a layer).",
+    "n_rows_in_layer": null,
+    "candidate_frob_norm": null,
+    "layer_median_frob_norm": null,
+    "candidate_frob_norm_ratio_to_layer_median": null,
+    "per_row": {
+      "L2/r525": {
+        "source_file": "results/e10_exact_uknorm_phi3.json",
+        "method": "Gram-identity exact ||U_k||_F, all rows in layer, float64 (exact_uk_norm_all_rows.py, validated against SVD to rel_err<1e-6)",
+        "n_rows_in_layer": 3072,
+        "candidate_frob_norm": 120.77459257170976,
+        "layer_median_frob_norm": 15.579189188998432,
+        "candidate_frob_norm_ratio_to_layer_median": 7.752302838519815
+      },
+      "L2/r1693": {
+        "source_file": "results/e10_exact_uknorm_phi3.json",
+        "method": "Gram-identity exact ||U_k||_F, all rows in layer, float64 (exact_uk_norm_all_rows.py, validated against SVD to rel_err<1e-6)",
+        "n_rows_in_layer": 3072,
+        "candidate_frob_norm": 105.85558346861816,
+        "layer_median_frob_norm": 15.579189188998432,
+        "candidate_frob_norm_ratio_to_layer_median": 6.7946786051850685
+      },
+      "L2/r1113": {
+        "source_file": "results/e10_exact_uknorm_phi3.json",
+        "method": "Gram-identity exact ||U_k||_F, all rows in layer, float64 (exact_uk_norm_all_rows.py, validated against SVD to rel_err<1e-6)",
+        "n_rows_in_layer": 3072,
+        "candidate_frob_norm": 97.51920420319067,
+        "layer_median_frob_norm": 15.579189188998432,
+        "candidate_frob_norm_ratio_to_layer_median": 6.259581485283963
+      },
+      "L4/r525": {
+        "source_file": "results/e10_exact_uknorm_phi3.json",
+        "method": "Gram-identity exact ||U_k||_F, all rows in layer, float64 (exact_uk_norm_all_rows.py, validated against SVD to rel_err<1e-6)",
+        "n_rows_in_layer": 3072,
+        "candidate_frob_norm": 72.11570570027023,
+        "layer_median_frob_norm": 16.43891946918779,
+        "candidate_frob_norm_ratio_to_layer_median": 4.3868884348171395
+      },
+      "L4/r1113": {
+        "source_file": "results/e10_exact_uknorm_phi3.json",
+        "method": "Gram-identity exact ||U_k||_F, all rows in layer, float64 (exact_uk_norm_all_rows.py, validated against SVD to rel_err<1e-6)",
+        "n_rows_in_layer": 3072,
+        "candidate_frob_norm": 61.701549199592684,
+        "layer_median_frob_norm": 16.43891946918779,
+        "candidate_frob_norm_ratio_to_layer_median": 3.7533822898301
+      },
+      "L4/r1693": {
+        "source_file": "results/e10_exact_uknorm_phi3.json",
+        "method": "Gram-identity exact ||U_k||_F, all rows in layer, float64 (exact_uk_norm_all_rows.py, validated against SVD to rel_err<1e-6)",
+        "n_rows_in_layer": 3072,
+        "candidate_frob_norm": 46.49362134413812,
+        "layer_median_frob_norm": 16.43891946918779,
+        "candidate_frob_norm_ratio_to_layer_median": 2.8282650469383475
+      }
+    },
+    "model_key": "phi3-mini",
+    "csv_model": "Phi-3-mini-4k-instruct",
+    "layer": null,
+    "row": null
+  },
+  "qwen25-7b": {
+    "source_file": null,
+    "method": "NEW: partial-safetensors-shard fetch (repo=Qwen/Qwen2.5-7B, revision=d149729398750b98c0af14eb82c78cfe92750796) + uk_frobenius.layer_report (Gram-identity exact ||U_k||_F, all rows in layer, float64). Wall-clock 11.8s.",
+    "n_rows_in_layer": 3584,
+    "candidate_frob_norm": 24.389141449281354,
+    "layer_median_frob_norm": 2.6271665824882557,
+    "candidate_frob_norm_ratio_to_layer_median": 9.28343928087795,
+    "model_key": "qwen25-7b",
+    "csv_model": "Qwen2.5-7B",
+    "layer": 26,
+    "row": 458
+  },
+  "mosaicbert": {
+    "source_file": "results/e10_encoder_row_ranking_mosaicbert.json",
+    "method": "exact ||U_k||_F via SVD (spectral_lib.row_spectral_metrics), every row of the layer already scored by E10 rank_encoder_rows.py",
+    "n_rows_in_layer": 768,
+    "candidate_frob_norm": 19.997746047192482,
+    "layer_median_frob_norm": 3.960733647229508,
+    "candidate_frob_norm_ratio_to_layer_median": 5.049000470198418,
+    "model_key": "mosaicbert",
+    "csv_model": "MosaicBERT",
+    "layer": 9,
+    "row": 287
+  },
+  "modernbert-base": {
+    "source_file": "results/e10_encoder_row_ranking_modernbert.json",
+    "method": "exact ||U_k||_F via SVD (spectral_lib.row_spectral_metrics), every row of the layer already scored by E10 rank_encoder_rows.py",
+    "n_rows_in_layer": 768,
+    "candidate_frob_norm": 836.046538392924,
+    "layer_median_frob_norm": 35.502951692459455,
+    "candidate_frob_norm_ratio_to_layer_median": 23.548648733071218,
+    "model_key": "modernbert-base",
+    "csv_model": "ModernBERT-base",
+    "layer": 15,
+    "row": 251
+  },
+  "generator-euk-3b": {
+    "source_file": null,
+    "method": "NEW: partial-safetensors-shard fetch (repo=GenerTeam/GENERator-v2-eukaryote-3b-base, revision=7dc01bccce5b65e15141170538afdc2ff09d8dde) + uk_frobenius.layer_report (Gram-identity exact ||U_k||_F, all rows in layer, float64). Wall-clock 9.0s.",
+    "n_rows_in_layer": 3072,
+    "candidate_frob_norm": 215.8602016833815,
+    "layer_median_frob_norm": 17.62986778564838,
+    "candidate_frob_norm_ratio_to_layer_median": 12.244005701455277,
+    "model_key": "generator-euk-3b",
+    "csv_model": "GENERator-EUK-3B",
+    "layer": 4,
+    "row": 2371
+  },
+  "genomeocean-4b": {
+    "source_file": null,
+    "method": "NEW: partial-safetensors-shard fetch (repo=DOEJGI/GenomeOcean-4B, revision=2bed2fc3ed47c5f6955ba3e64563512c9b338dfb) + uk_frobenius.layer_report (Gram-identity exact ||U_k||_F, all rows in layer, float64). Wall-clock 9.8s.",
+    "n_rows_in_layer": 3072,
+    "candidate_frob_norm": 2.109210515557053,
+    "layer_median_frob_norm": 0.10813996640762157,
+    "candidate_frob_norm_ratio_to_layer_median": 19.50444951690311,
+    "model_key": "genomeocean-4b",
+    "csv_model": "GenomeOcean-4B",
+    "layer": 1,
+    "row": 2604
+  },
+  "ntv3": {
+    "source_file": null,
+    "method": "NEW: full small-model load (repo=InstaDeepAI/NTv3_650M_pre, adapter=ntv3) + uk_frobenius.layer_report. Wall-clock 6.3s.",
+    "n_rows_in_layer": 1536,
+    "candidate_frob_norm": 393.0935186940795,
+    "layer_median_frob_norm": 108.79981978838849,
+    "candidate_frob_norm_ratio_to_layer_median": 3.612997884175097,
+    "model_key": "ntv3",
+    "csv_model": "NTv3",
+    "layer": 11,
+    "row": 1472
+  }
+}

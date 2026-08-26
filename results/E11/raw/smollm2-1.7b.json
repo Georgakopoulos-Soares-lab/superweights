@@ -1,0 +1,70 @@
+{
+  "key": "smollm2-1.7b",
+  "model": "HuggingFaceTB/SmolLM2-1.7B",
+  "repo": "HuggingFaceTB/SmolLM2-1.7B",
+  "requested_revision": "effd688a12921b4cc83e3312b6feb579f70f9c71",
+  "resolved_revision": "effd688a12921b4cc83e3312b6feb579f70f9c71",
+  "family": "SmolLM2",
+  "domain": "text",
+  "architecture": "decoder",
+  "panel_index": 5,
+  "dtype": "float32",
+  "total_params": 1711376384,
+  "embed_params": 100663296,
+  "non_embed_params": 1610713088,
+  "d_model": 2048,
+  "d_ffn": 8192,
+  "n_layers": 24,
+  "gated": true,
+  "gate_evidence": "gate_proj/up_proj/down_proj (separate SwiGLU-style projections)",
+  "ratio_threshold": 5.0,
+  "n_input_tokens": 512,
+  "candidate": {
+    "layer": 7,
+    "row": 227,
+    "out_max": 24431.84375,
+    "detection_ratio": 4647.756022355401,
+    "relative_depth": 0.2916666666666667,
+    "q1": 0.9663919138439745,
+    "pr_spec": 1.0707002949326883,
+    "stable_rank": 1.0347768702061508,
+    "frob_norm": 3922.6019896226653,
+    "n_singular_values": 2048
+  },
+  "null_outcome": false,
+  "null_reason": null,
+  "control_rows": [
+    {
+      "row": 150,
+      "q1": 0.013305137530174614,
+      "pr_spec": 595.9474211833416,
+      "frob_norm": 253.6653488624343
+    },
+    {
+      "row": 464,
+      "q1": 0.013202826336233563,
+      "pr_spec": 590.2733665453738,
+      "frob_norm": 253.1665097121866
+    },
+    {
+      "row": 518,
+      "q1": 0.01320682267162399,
+      "pr_spec": 596.5623108786807,
+      "frob_norm": 248.26898309551697
+    },
+    {
+      "row": 1383,
+      "q1": 0.013290469084506793,
+      "pr_spec": 590.3048148674034,
+      "frob_norm": 250.9799435180605
+    },
+    {
+      "row": 1453,
+      "q1": 0.01263127266370162,
+      "pr_spec": 605.7935876499786,
+      "frob_norm": 252.49372027442428
+    }
+  ],
+  "layer_median_frob_norm": 252.49372027442428,
+  "candidate_frob_norm_ratio_to_layer_median": 15.535443754242134
+}

@@ -1,0 +1,47 @@
+/work/11034/atzanakak/work/11034/atzanakak/miniconda3/envs/grlm/lib/python3.10/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+`torch_dtype` is deprecated! Use `dtype` instead!
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0] Graph break from `Tensor.item()`, consider setting:
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0]     torch._dynamo.config.capture_scalar_outputs = True
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0] or:
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0]     env TORCHDYNAMO_CAPTURE_SCALAR_OUTPUTS=1
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0] to include these operations in the captured graph.
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0] 
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0] Graph break: from user code at:
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0]   File "/work/11034/atzanakak/work/11034/atzanakak/miniconda3/envs/grlm/lib/python3.10/site-packages/transformers/models/modernbert/modeling_modernbert.py", line 530, in compiled_mlp
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0]     return self.mlp(self.mlp_norm(hidden_states))
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0]   File "/work/11034/atzanakak/work/11034/atzanakak/miniconda3/envs/grlm/lib/python3.10/site-packages/transformers/models/modernbert/modeling_modernbert.py", line 242, in forward
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0]     return self.Wo(self.drop(self.act(input) * gate))
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0]   File "/work/11034/atzanakak/work/11034/atzanakak/miniconda3/envs/grlm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0]     return self._call_impl(*args, **kwargs)
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0]   File "/work/11034/atzanakak/work/11034/atzanakak/miniconda3/envs/grlm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1879, in _call_impl
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0]     return inner()
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0]   File "/work/11034/atzanakak/work/11034/atzanakak/miniconda3/envs/grlm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1843, in inner
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0]     hook_result = hook(self, args, result)
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0]   File "/work/11034/atzanakak/glm_super_weight/genomic-super-weights/paper-salvage/experiments/E11_scale_ladder/run_model.py", line 151, in fn
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0]     self.out_max[layer_idx] = float(channel_max.max())
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0] 
+W0823 19:55:24.197000 3058870 site-packages/torch/_dynamo/variables/tensor.py:1079] [1/0] 
+/work/11034/atzanakak/work/11034/atzanakak/miniconda3/envs/grlm/lib/python3.10/site-packages/torch/_inductor/compile_fx.py:321: UserWarning: TensorFloat32 tensor cores for float32 matrix multiplication available but not enabled. Consider setting `torch.set_float32_matmul_precision('high')` for better performance.
+  warnings.warn(
+W0823 19:55:27.875000 3058870 site-packages/torch/_dynamo/convert_frame.py:1676] [4/8] torch._dynamo hit config.recompile_limit (8)
+W0823 19:55:27.875000 3058870 site-packages/torch/_dynamo/convert_frame.py:1676] [4/8]    function: 'torch_dynamo_resume_in_fn_at_151' (/work/11034/atzanakak/glm_super_weight/genomic-super-weights/paper-salvage/experiments/E11_scale_ladder/run_model.py:151)
+W0823 19:55:27.875000 3058870 site-packages/torch/_dynamo/convert_frame.py:1676] [4/8]    last reason: 4/7: len(self.out_max) == 7                                   # self.out_max[layer_idx] = float(channel_max.max())  # glm_super_weight/genomic-super-weights/paper-salvage/experiments/E11_scale_ladder/run_model.py:151 in torch_dynamo_resume_in_fn_at_151
+W0823 19:55:27.875000 3058870 site-packages/torch/_dynamo/convert_frame.py:1676] [4/8] To log all recompilation reasons, use TORCH_LOGS="recompiles".
+W0823 19:55:27.875000 3058870 site-packages/torch/_dynamo/convert_frame.py:1676] [4/8] To diagnose recompilation issues, see https://pytorch.org/docs/main/compile/programming_model.recompilation.html
+Verifying E11 prereg lock before any forward pass ...
+OK       PREREG_E11_scale_ladder.md  locked 2026-08-23T16:03:20+00:00
+loading answerdotai/ModernBERT-large@45bb4654a4d5aaff24dd11d4781fa46d39bf8c13 ...
+  loaded in 27.9s on cuda, dtype=float32
+  gated-FFN verification (layer 0): packed Wi (chunked input/gate) -> elementwise product -> Wo (ModernBERT-style GeGLU)
+  input token count: 508
+  candidate layer=19 row=379 out_max=2.286e+04 ratio=687.06 ACCEPTED
+  total_params=395881664 embed_params=51628224 non_embed=344253440
+  candidate q1=0.970134 pr_spec=1.0621 frob_norm=708.132
+  control rows (seeded, layer 19): [40, 558, 709, 816, 873]
+    control row 40: q1=0.643198 pr_spec=2.4116 frob_norm=36.5844
+    control row 558: q1=0.254770 pr_spec=14.3754 frob_norm=26.6456
+    control row 709: q1=0.796973 pr_spec=1.5736 frob_norm=47.4805
+    control row 816: q1=0.224846 pr_spec=18.2403 frob_norm=25.0279
+    control row 873: q1=0.212113 pr_spec=20.4670 frob_norm=25.2447
+wrote /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/E11/raw/modernbert-large.json

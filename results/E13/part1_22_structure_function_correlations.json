@@ -1,0 +1,33 @@
+{
+  "cohort": "Part 1",
+  "n_models": 22,
+  "excluded": [
+    "Phi-3-mini-4k-instruct"
+  ],
+  "analyses": [
+    {
+      "x": "q1",
+      "n_models": 22,
+      "spearman_rho": 0.07396950875211745,
+      "asymptotic_p": 0.7435587990333694,
+      "bootstrap_ci95": [
+        -0.39137110223394356,
+        0.5126210742445426
+      ],
+      "n_boot": 5000,
+      "seed": 43
+    },
+    {
+      "x": "frob_ratio_to_layer_median",
+      "n_models": 22,
+      "spearman_rho": 0.4409937888198759,
+      "asymptotic_p": 0.03993999904430384,
+      "bootstrap_ci95": [
+        0.0621745860630587,
+        0.7173826180122267
+      ],
+      "n_boot": 5000,
+      "seed": 44
+    }
+  ]
+}

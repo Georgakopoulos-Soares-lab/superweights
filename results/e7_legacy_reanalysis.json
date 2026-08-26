@@ -1,0 +1,74 @@
+{
+  "Llama-7B": {
+    "group": "nlp",
+    "layer": 2,
+    "row": 3968,
+    "q1": 0.9888168037615727,
+    "pr_spec": 1.022653174688543,
+    "stable_rank": 1.0113096745482937,
+    "frob_norm": 137.61641832032996,
+    "n_singular_values": 4096,
+    "published_f_cross": 0.1928631494935161,
+    "published_diagonal_pr": 1.2442913096024062
+  },
+  "Mistral-7B": {
+    "group": "nlp",
+    "layer": 1,
+    "row": 2070,
+    "q1": 0.9922047361077938,
+    "pr_spec": 1.0157714240616442,
+    "stable_rank": 1.0078565074409798,
+    "frob_norm": 0.38834723364706875,
+    "n_singular_values": 4096,
+    "published_f_cross": 0.06701384889903268,
+    "published_diagonal_pr": 1.0235319953623476
+  },
+  "OLMo-7B": {
+    "group": "nlp",
+    "layer": 1,
+    "row": 269,
+    "q1": 0.964564665808712,
+    "pr_spec": 1.07470169944751,
+    "stable_rank": 1.0367371265477345,
+    "frob_norm": 0.9110752807676615,
+    "n_singular_values": 4096,
+    "published_f_cross": 0.09261719663848049,
+    "published_diagonal_pr": 1.0944
+  },
+  "GENERator EUK": {
+    "group": "genomic",
+    "layer": 4,
+    "row": 2371,
+    "q1": 0.9688691252375834,
+    "pr_spec": 1.0652593586761891,
+    "stable_rank": 1.0321311454266673,
+    "frob_norm": 522.1322102348346,
+    "n_singular_values": 3072,
+    "published_f_cross": 0.8290834232540367,
+    "published_diagonal_pr": 4.559937375295324
+  },
+  "DNABERT-2": {
+    "group": "genomic",
+    "layer": 5,
+    "row": 603,
+    "q1": 0.7933113982887636,
+    "pr_spec": 1.503287698117315,
+    "stable_rank": 1.260539054597073,
+    "frob_norm": 74.00855774610585,
+    "n_singular_values": 768,
+    "published_f_cross": 0.5074395677014457,
+    "published_diagonal_pr": 3.642180751507628
+  },
+  "NTv3": {
+    "group": "genomic",
+    "layer": 11,
+    "row": 1472,
+    "q1": 0.38889396751753286,
+    "pr_spec": 6.4803244910178845,
+    "stable_rank": 2.571394990730773,
+    "frob_norm": 441.5173190114778,
+    "n_singular_values": 1536,
+    "published_f_cross": 0.2073229606178682,
+    "published_diagonal_pr": 22.71939144675925
+  }
+}

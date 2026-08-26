@@ -1,0 +1,47 @@
+model,epsilon,n_candidates,interaction_identifiable,F2_heldout_mae,F2_heldout_normalized_mae,F2_adequate,F3_heldout_mae,F3_heldout_normalized_mae,F3_adequate,F2_to_F3_relative_mae_improvement,bootstrap_ci95_low,bootstrap_ci95_high,bootstrap_excludes_zero,pair_terms_materially_improved,decision,provenance
+Llama-7B,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+Llama-7B,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+Mistral-7B,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+Mistral-7B,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+OLMo-7B-0724-hf,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+OLMo-7B-0724-hf,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+Phi-3-mini-4k-instruct,0.5,6,True,0.023522501413470943,0.20993986346283394,False,0.014955756493689448,0.13348110479740213,False,0.36419361908829406,0.24409012098154734,0.4636863288542982,True,True,PAIR_TERMS_REQUIRED,results/e10b_phi3_fit_results.json + locked raw responses
+Phi-3-mini-4k-instruct,1.0,6,True,1.9864210470386552,0.1981820224406121,False,2.0360954932075934,0.20313796177686394,False,-0.02500700757424646,-0.02516194576711119,-0.022650291159486566,True,False,MIXED_OR_UNRESOLVED,results/e10b_phi3_fit_results.json + locked raw responses
+Qwen2.5-7B,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+Qwen2.5-7B,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+MosaicBERT,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+MosaicBERT,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+ModernBERT-base,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+ModernBERT-base,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+NTv3,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+NTv3,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+DNABERT-2,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+DNABERT-2,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+GENERator-EUK-3B,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+GENERator-EUK-3B,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+GenomeOcean-4B,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+GenomeOcean-4B,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+Qwen/Qwen2.5-0.5B,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+Qwen/Qwen2.5-0.5B,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+Qwen/Qwen2.5-1.5B,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+Qwen/Qwen2.5-1.5B,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+Qwen/Qwen2.5-3B,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+Qwen/Qwen2.5-3B,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+HuggingFaceTB/SmolLM2-135M,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+HuggingFaceTB/SmolLM2-135M,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+HuggingFaceTB/SmolLM2-360M,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+HuggingFaceTB/SmolLM2-360M,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+HuggingFaceTB/SmolLM2-1.7B,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+HuggingFaceTB/SmolLM2-1.7B,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+GenerTeam/GENERator-v2-prokaryote-1.2b-base,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+GenerTeam/GENERator-v2-prokaryote-1.2b-base,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+GenerTeam/GENERator-v2-prokaryote-3b-base,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+GenerTeam/GENERator-v2-prokaryote-3b-base,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+EuroBERT/EuroBERT-210m,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+EuroBERT/EuroBERT-210m,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+EuroBERT/EuroBERT-610m,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+EuroBERT/EuroBERT-610m,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+EuroBERT/EuroBERT-2.1B,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+EuroBERT/EuroBERT-2.1B,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+answerdotai/ModernBERT-large,0.5,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json
+answerdotai/ModernBERT-large,1.0,1,False,,,,,,,,,,,,NOT_IDENTIFIABLE_ONE_COMPONENT_BASIS,E13 candidate_manifest.json

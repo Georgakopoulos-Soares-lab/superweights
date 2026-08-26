@@ -1,0 +1,32 @@
+/scratch/11034/atzanakak/e12_env/venv/lib/python3.9/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+[2026-08-24 07:56:01] === E12 run start (SMOKE=False) ===
+[2026-08-24 07:56:01] loading GENERator EUK 3B ...
+A new version of the following files was downloaded from https://huggingface.co/GenerTeam/GENERator-v2-eukaryote-3b-base:
+- tokenizer.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+`torch_dtype` is deprecated! Use `dtype` instead!
+A new version of the following files was downloaded from https://huggingface.co/GenerTeam/GENERator-v2-eukaryote-3b-base:
+- modeling_generator.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:  33%|███▎      | 1/3 [00:27<00:55, 27.61s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:54<00:27, 27.27s/it]Loading checkpoint shards: 100%|██████████| 3/3 [01:05<00:00, 19.84s/it]Loading checkpoint shards: 100%|██████████| 3/3 [01:05<00:00, 21.88s/it]
+A new version of the following files was downloaded from https://huggingface.co/GenerTeam/GENERator-v2-eukaryote-3b-base:
+- tokenizer.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+Tokenizer automatically loaded and configured for bp-level scoring
+[2026-08-24 07:57:50] model loaded in 109.1s
+[2026-08-24 07:57:50] down_proj shape = (3072, 8448) (nrows=3072, intermediate_size=8448)
+[2026-08-24 07:57:50] control rows (C-045-reproducing): [2621, 456, 102, 3039, 1126]
+[2026-08-24 07:57:50] reusing cached corpora: {'base_seed': 42, 'repartition_tries': 0, 'n_regions_total': 50000, 'partition_seed_used': 42, 'n_prompt': 96, 'n_damage': 100}
+[2026-08-24 07:57:50] === B3 step 1-3: damage measurement + matching ===
+[2026-08-24 07:57:50] damage target D(2371, alpha=0) = 8.754320
+[2026-08-24 07:57:50] === B1/B2/B3-step4: generation work plan ===
+[2026-08-24 07:57:50] gen plan: 90 conditions total, 93 already checkpointed
+[2026-08-24 07:57:50] === building outputs ===
+[2026-08-24 07:57:51] wrote /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/E12/dose_response_extended.csv
+[2026-08-24 07:57:51] wrote /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/E12/damage_matching.csv
+[2026-08-24 07:57:51] wrote /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/E12/kmer_attribution.csv (fraction attributable to longest homopolymer = 0.039282148311121534)
+[2026-08-24 07:57:55] wrote /work/11034/atzanakak/glm_super_weight/genomic-super-weights/figures/E12/gc_vs_damage.pdf
+[2026-08-24 07:57:58] wrote /work/11034/atzanakak/glm_super_weight/genomic-super-weights/figures/E12/generation_quality.pdf
+[2026-08-24 07:57:59] wrote /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/E12/E12_summary.md
+[2026-08-24 07:57:59] === E12 run COMPLETE ===

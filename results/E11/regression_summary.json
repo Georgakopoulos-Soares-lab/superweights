@@ -1,0 +1,518 @@
+{
+  "n_models": 23,
+  "decision_rule": {
+    "branch": 3,
+    "coefficient_is_decoder": 0.11616542345479647,
+    "se_is_decoder": 0.08597760387486766,
+    "coef_over_se": 1.3511125946690064,
+    "coefficient_log_params": 0.014334061983736487,
+    "se_log_params": 0.06366711248335802,
+    "r_squared": 0.15810353417314116,
+    "r_squared_adj": 0.07391388759045525,
+    "n_obs": 23,
+    "partial_corr_is_decoder_given_logparams": 0.2892073921386707,
+    "raw_architecture_gap_median_q1": 0.031003315540253262,
+    "conditioned_gap_estimate": 0.11616542345479647,
+    "gap_shrink_pct": -274.6870985587741,
+    "max_within_family_predicted_q1_change": 0.09434760035681998,
+    "half_raw_gap_threshold": 0.015501657770126631
+  },
+  "family_slopes": {
+    "Qwen2.5": {
+      "n": 4,
+      "slope_per_decade": -0.07482782706147552,
+      "intercept": 1.631710518335438,
+      "x_range_log10": [
+        8.553759407386528,
+        9.814621897477384
+      ],
+      "predicted_q1_range": -0.09434760035681998,
+      "members": [
+        "Qwen2.5-7B",
+        "Qwen/Qwen2.5-0.5B",
+        "Qwen/Qwen2.5-1.5B",
+        "Qwen/Qwen2.5-3B"
+      ]
+    },
+    "ModernBERT": {
+      "n": 2,
+      "slope_per_decade": 0.14877034178472134,
+      "intercept": -0.2999005517249157,
+      "x_range_log10": [
+        8.045215792637737,
+        8.53687828869818
+      ],
+      "predicted_q1_range": 0.07314479758164122,
+      "members": [
+        "ModernBERT-base",
+        "answerdotai/ModernBERT-large"
+      ]
+    },
+    "SmolLM2": {
+      "n": 3,
+      "slope_per_decade": 0.03185973241654482,
+      "intercept": 0.6817508806616823,
+      "x_range_log10": [
+        8.026138649488466,
+        9.207018187597711
+      ],
+      "predicted_q1_range": 0.037622506100333596,
+      "members": [
+        "HuggingFaceTB/SmolLM2-135M",
+        "HuggingFaceTB/SmolLM2-360M",
+        "HuggingFaceTB/SmolLM2-1.7B"
+      ]
+    },
+    "GENERator-PROK": {
+      "n": 2,
+      "slope_per_decade": 0.2126927079505691,
+      "intercept": -1.079902848071045,
+      "x_range_log10": [
+        9.058863718437774,
+        9.473180352426661
+      ],
+      "predicted_q1_range": 0.08812212683206129,
+      "members": [
+        "GenerTeam/GENERator-v2-prokaryote-1.2b-base",
+        "GenerTeam/GENERator-v2-prokaryote-3b-base"
+      ]
+    },
+    "EuroBERT": {
+      "n": 3,
+      "slope_per_decade": 0.0115919226105183,
+      "intercept": 0.8933708237914912,
+      "x_range_log10": [
+        8.054097293724267,
+        9.258179545148584
+      ],
+      "predicted_q1_range": 0.013957628275209326,
+      "members": [
+        "EuroBERT/EuroBERT-210m",
+        "EuroBERT/EuroBERT-610m",
+        "EuroBERT/EuroBERT-2.1B"
+      ]
+    }
+  },
+  "uknorm_rankings": {
+    "absolute": [
+      [
+        "HuggingFaceTB/SmolLM2-360M",
+        5692.495943194842
+      ],
+      [
+        "HuggingFaceTB/SmolLM2-1.7B",
+        3922.6019896226653
+      ],
+      [
+        "HuggingFaceTB/SmolLM2-135M",
+        2002.997197003894
+      ],
+      [
+        "ModernBERT-base",
+        836.046538392924
+      ],
+      [
+        "answerdotai/ModernBERT-large",
+        708.1322939648359
+      ],
+      [
+        "GENERator-EUK-3B",
+        522.1322102348346
+      ],
+      [
+        "NTv3",
+        441.5173190114778
+      ],
+      [
+        "Llama-7B",
+        137.61641832032996
+      ],
+      [
+        "Qwen/Qwen2.5-1.5B",
+        86.68857568622904
+      ],
+      [
+        "DNABERT-2",
+        74.00855774610585
+      ],
+      [
+        "GenerTeam/GENERator-v2-prokaryote-3b-base",
+        52.16156499457906
+      ],
+      [
+        "Qwen/Qwen2.5-3B",
+        37.905147328895474
+      ],
+      [
+        "Qwen2.5-7B",
+        29.68742128221388
+      ],
+      [
+        "MosaicBERT",
+        19.997746047192482
+      ],
+      [
+        "Qwen/Qwen2.5-0.5B",
+        18.726591709019885
+      ],
+      [
+        "EuroBERT/EuroBERT-610m",
+        8.106532412548177
+      ],
+      [
+        "GenerTeam/GENERator-v2-prokaryote-1.2b-base",
+        6.219604570429286
+      ],
+      [
+        "GenomeOcean-4B",
+        2.8832156466529963
+      ],
+      [
+        "EuroBERT/EuroBERT-2.1B",
+        2.750915946112038
+      ],
+      [
+        "EuroBERT/EuroBERT-210m",
+        2.0419119424635404
+      ],
+      [
+        "OLMo-7B-0724-hf",
+        0.9110752807676615
+      ],
+      [
+        "Mistral-7B",
+        0.38834723364706875
+      ]
+    ],
+    "ratio_to_layer_median": [
+      [
+        "EuroBERT/EuroBERT-610m",
+        57.21725262189751
+      ],
+      [
+        "Qwen/Qwen2.5-0.5B",
+        30.623268771468037
+      ],
+      [
+        "answerdotai/ModernBERT-large",
+        26.575958286152655
+      ],
+      [
+        "HuggingFaceTB/SmolLM2-360M",
+        22.37669908683808
+      ],
+      [
+        "Qwen/Qwen2.5-1.5B",
+        22.28607583079485
+      ],
+      [
+        "EuroBERT/EuroBERT-2.1B",
+        20.893724690144545
+      ],
+      [
+        "HuggingFaceTB/SmolLM2-1.7B",
+        15.535443754242134
+      ],
+      [
+        "EuroBERT/EuroBERT-210m",
+        14.949934194686236
+      ],
+      [
+        "HuggingFaceTB/SmolLM2-135M",
+        12.47718017297001
+      ],
+      [
+        "Qwen/Qwen2.5-3B",
+        8.318105315988955
+      ],
+      [
+        "GenerTeam/GENERator-v2-prokaryote-3b-base",
+        7.656615220640426
+      ],
+      [
+        "GenerTeam/GENERator-v2-prokaryote-1.2b-base",
+        3.222349081478031
+      ]
+    ],
+    "rank_disagreements_top": [
+      {
+        "model": "EuroBERT/EuroBERT-610m",
+        "abs_rank": 15,
+        "ratio_rank": 0,
+        "delta": 15
+      },
+      {
+        "model": "EuroBERT/EuroBERT-2.1B",
+        "abs_rank": 18,
+        "ratio_rank": 5,
+        "delta": 13
+      },
+      {
+        "model": "Qwen/Qwen2.5-0.5B",
+        "abs_rank": 14,
+        "ratio_rank": 1,
+        "delta": 13
+      },
+      {
+        "model": "EuroBERT/EuroBERT-210m",
+        "abs_rank": 19,
+        "ratio_rank": 7,
+        "delta": 12
+      },
+      {
+        "model": "HuggingFaceTB/SmolLM2-135M",
+        "abs_rank": 2,
+        "ratio_rank": 8,
+        "delta": -6
+      },
+      {
+        "model": "GenerTeam/GENERator-v2-prokaryote-1.2b-base",
+        "abs_rank": 16,
+        "ratio_rank": 11,
+        "delta": 5
+      },
+      {
+        "model": "HuggingFaceTB/SmolLM2-1.7B",
+        "abs_rank": 1,
+        "ratio_rank": 6,
+        "delta": -5
+      },
+      {
+        "model": "Qwen/Qwen2.5-1.5B",
+        "abs_rank": 8,
+        "ratio_rank": 4,
+        "delta": 4
+      },
+      {
+        "model": "HuggingFaceTB/SmolLM2-360M",
+        "abs_rank": 0,
+        "ratio_rank": 3,
+        "delta": -3
+      },
+      {
+        "model": "Qwen/Qwen2.5-3B",
+        "abs_rank": 11,
+        "ratio_rank": 9,
+        "delta": 2
+      }
+    ]
+  },
+  "depth_control": {
+    "correlation_q1_vs_relative_depth": -0.38334192116049765,
+    "rows": [
+      {
+        "model": "Llama-7B",
+        "relative_depth": 0.0625,
+        "q1": 0.9888168037615727
+      },
+      {
+        "model": "Mistral-7B",
+        "relative_depth": 0.03125,
+        "q1": 0.9922047361077938
+      },
+      {
+        "model": "OLMo-7B-0724-hf",
+        "relative_depth": 0.03125,
+        "q1": 0.964564665808712
+      },
+      {
+        "model": "Qwen2.5-7B",
+        "relative_depth": 0.9285714285714286,
+        "q1": 0.9529104185966117
+      },
+      {
+        "model": "MosaicBERT",
+        "relative_depth": 0.75,
+        "q1": 0.4765682244123624
+      },
+      {
+        "model": "ModernBERT-base",
+        "relative_depth": 0.6818181818181818,
+        "q1": 0.8969889514776379
+      },
+      {
+        "model": "NTv3",
+        "relative_depth": 0.9166666666666666,
+        "q1": 0.38889396751753286
+      },
+      {
+        "model": "DNABERT-2",
+        "relative_depth": 0.4166666666666667,
+        "q1": 0.7933113982887636
+      },
+      {
+        "model": "GENERator-EUK-3B",
+        "relative_depth": 0.13333333333333333,
+        "q1": 0.9688691252375834
+      },
+      {
+        "model": "GenomeOcean-4B",
+        "relative_depth": 0.041666666666666664,
+        "q1": 0.8989077166811766
+      },
+      {
+        "model": "Qwen/Qwen2.5-0.5B",
+        "relative_depth": 0.875,
+        "q1": 0.9981566830594912
+      },
+      {
+        "model": "Qwen/Qwen2.5-1.5B",
+        "relative_depth": 0.9285714285714286,
+        "q1": 0.9950986414892103
+      },
+      {
+        "model": "Qwen/Qwen2.5-3B",
+        "relative_depth": 0.8333333333333334,
+        "q1": 0.8173600221565082
+      },
+      {
+        "model": "HuggingFaceTB/SmolLM2-135M",
+        "relative_depth": 0.36666666666666664,
+        "q1": 0.9243918826993042
+      },
+      {
+        "model": "HuggingFaceTB/SmolLM2-360M",
+        "relative_depth": 0.09375,
+        "q1": 0.9742504779226046
+      },
+      {
+        "model": "HuggingFaceTB/SmolLM2-1.7B",
+        "relative_depth": 0.2916666666666667,
+        "q1": 0.9663919138439745
+      },
+      {
+        "model": "GenerTeam/GENERator-v2-prokaryote-1.2b-base",
+        "relative_depth": 0.15384615384615385,
+        "q1": 0.8468514071586476
+      },
+      {
+        "model": "GenerTeam/GENERator-v2-prokaryote-3b-base",
+        "relative_depth": 0.26666666666666666,
+        "q1": 0.934973533990709
+      },
+      {
+        "model": "EuroBERT/EuroBERT-210m",
+        "relative_depth": 0.25,
+        "q1": 0.9838491163147434
+      },
+      {
+        "model": "EuroBERT/EuroBERT-610m",
+        "relative_depth": 0.5,
+        "q1": 0.9996238293034937
+      },
+      {
+        "model": "EuroBERT/EuroBERT-2.1B",
+        "relative_depth": 0.4375,
+        "q1": 0.9977414719034632
+      },
+      {
+        "model": "answerdotai/ModernBERT-large",
+        "relative_depth": 0.6785714285714286,
+        "q1": 0.9701337490592797
+      }
+    ]
+  },
+  "candidate_vs_control_gap_by_scale": {
+    "rows": [
+      {
+        "model": "HuggingFaceTB/SmolLM2-135M",
+        "non_embed_params": 106203456.0,
+        "candidate_q1": 0.9243918826993042,
+        "mean_control_q1": 0.03672584906891746,
+        "gap": 0.8876660336303868
+      },
+      {
+        "model": "EuroBERT/EuroBERT-210m",
+        "non_embed_params": 113265408.0,
+        "candidate_q1": 0.9838491163147434,
+        "mean_control_q1": 0.13411919378734444,
+        "gap": 0.8497299225273989
+      },
+      {
+        "model": "HuggingFaceTB/SmolLM2-360M",
+        "non_embed_params": 314635200.0,
+        "candidate_q1": 0.9742504779226046,
+        "mean_control_q1": 0.016608662278221515,
+        "gap": 0.957641815644383
+      },
+      {
+        "model": "answerdotai/ModernBERT-large",
+        "non_embed_params": 344253440.0,
+        "candidate_q1": 0.9701337490592797,
+        "mean_control_q1": 0.42637999303077284,
+        "gap": 0.5437537560285068
+      },
+      {
+        "model": "Qwen/Qwen2.5-0.5B",
+        "non_embed_params": 357898112.0,
+        "candidate_q1": 0.9981566830594912,
+        "mean_control_q1": 0.029658948785165513,
+        "gap": 0.9684977342743257
+      },
+      {
+        "model": "EuroBERT/EuroBERT-610m",
+        "non_embed_params": 460123776.0,
+        "candidate_q1": 0.9996238293034937,
+        "mean_control_q1": 0.03247230908961171,
+        "gap": 0.967151520213882
+      },
+      {
+        "model": "GenerTeam/GENERator-v2-prokaryote-1.2b-base",
+        "non_embed_params": 1145153536.0,
+        "candidate_q1": 0.8468514071586476,
+        "mean_control_q1": 0.012781862905893235,
+        "gap": 0.8340695442527544
+      },
+      {
+        "model": "Qwen/Qwen2.5-1.5B",
+        "non_embed_params": 1310340608.0,
+        "candidate_q1": 0.9950986414892103,
+        "mean_control_q1": 0.018148370259608727,
+        "gap": 0.9769502712296017
+      },
+      {
+        "model": "HuggingFaceTB/SmolLM2-1.7B",
+        "non_embed_params": 1610713088.0,
+        "candidate_q1": 0.9663919138439745,
+        "mean_control_q1": 0.013127305657248118,
+        "gap": 0.9532646081867264
+      },
+      {
+        "model": "EuroBERT/EuroBERT-2.1B",
+        "non_embed_params": 1812089088.0,
+        "candidate_q1": 0.9977414719034632,
+        "mean_control_q1": 0.048530334723132125,
+        "gap": 0.949211137180331
+      },
+      {
+        "model": "Qwen/Qwen2.5-3B",
+        "non_embed_params": 2774773760.0,
+        "candidate_q1": 0.8173600221565082,
+        "mean_control_q1": 0.027163481976274002,
+        "gap": 0.7901965401802341
+      },
+      {
+        "model": "GenerTeam/GENERator-v2-prokaryote-3b-base",
+        "non_embed_params": 2972900352.0,
+        "candidate_q1": 0.934973533990709,
+        "mean_control_q1": 0.00902278490477252,
+        "gap": 0.9259507490859366
+      }
+    ],
+    "stability": {
+      "n": 12,
+      "mean": 0.8836736360362057,
+      "std": 0.11803004628985567,
+      "min": 0.5437537560285068,
+      "max": 0.9769502712296017
+    }
+  },
+  "encoder_range_contingency": {
+    "max_encoder_non_embed_params": 1812089088.0,
+    "encoders_above_1b": [
+      "EuroBERT/EuroBERT-2.1B"
+    ],
+    "triggered_could_not_sample_above_1b": false
+  },
+  "ols_statsmodels_summary_text": "                            OLS Regression Results                            \n==============================================================================\nDep. Variable:                      y   R-squared:                       0.158\nModel:                            OLS   Adj. R-squared:                  0.074\nMethod:                 Least Squares   F-statistic:                     1.878\nDate:                Sun, 23 Aug 2026   Prob (F-statistic):              0.179\nTime:                        19:56:18   Log-Likelihood:                 12.249\nNo. Observations:                  23   AIC:                            -18.50\nDf Residuals:                      20   BIC:                            -15.09\nDf Model:                           2                                         \nCovariance Type:            nonrobust                                         \n==============================================================================\n                 coef    std err          t      P>|t|      [0.025      0.975]\n------------------------------------------------------------------------------\nconst          0.6925      0.540      1.283      0.214      -0.433       1.818\nx1             0.0143      0.064      0.225      0.824      -0.118       0.147\nx2             0.1162      0.086      1.351      0.192      -0.063       0.296\n==============================================================================\nOmnibus:                       14.225   Durbin-Watson:                   1.862\nProb(Omnibus):                  0.001   Jarque-Bera (JB):               13.625\nSkew:                          -1.470   Prob(JB):                      0.00110\nKurtosis:                       5.360   Cond. No.                         156.\n==============================================================================\n\nNotes:\n[1] Standard Errors assume that the covariance matrix of the errors is correctly specified."
+}

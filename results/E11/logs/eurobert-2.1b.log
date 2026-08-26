@@ -1,0 +1,19 @@
+/work/11034/atzanakak/work/11034/atzanakak/miniconda3/envs/grlm/lib/python3.10/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+`torch_dtype` is deprecated! Use `dtype` instead!
+Verifying E11 prereg lock before any forward pass ...
+OK       PREREG_E11_scale_ladder.md  locked 2026-08-23T16:03:20+00:00
+loading EuroBERT/EuroBERT-2.1B@81245a4d71f43452badf5e04458e4ddb831ff109 ...
+  loaded in 95.3s on cuda, dtype=float32
+  gated-FFN verification (layer 0): gate_proj/up_proj/down_proj (separate SwiGLU-style projections)
+  input token count: 508
+  candidate layer=14 row=2198 out_max=371.5 ratio=573.00 ACCEPTED
+  total_params=2403092736 embed_params=591003648 non_embed=1812089088
+  candidate q1=0.997741 pr_spec=1.0045 frob_norm=2.75092
+  control rows (seeded, layer 14): [427, 554, 758, 1103, 1935]
+    control row 427: q1=0.064823 pr_spec=167.8079 frob_norm=0.13196
+    control row 554: q1=0.047171 pr_spec=235.0768 frob_norm=0.131128
+    control row 758: q1=0.040609 pr_spec=275.8473 frob_norm=0.133528
+    control row 1103: q1=0.051666 pr_spec=221.4622 frob_norm=0.131662
+    control row 1935: q1=0.038383 pr_spec=297.5047 frob_norm=0.131378
+wrote /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/E11/raw/eurobert-2.1b.json

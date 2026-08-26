@@ -1,0 +1,23 @@
+/work/11034/atzanakak/work/11034/atzanakak/miniconda3/envs/grlm/lib/python3.10/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+`torch_dtype` is deprecated! Use `dtype` instead!
+A new version of the following files was downloaded from https://huggingface.co/GenerTeam/GENERator-v2-prokaryote-1.2b-base:
+- tokenizer.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+Verifying E11 prereg lock before any forward pass ...
+OK       PREREG_E11_scale_ladder.md  locked 2026-08-23T16:03:20+00:00
+loading GenerTeam/GENERator-v2-prokaryote-1.2b-base@8b2f768b0d293953518ff91d34600f9322ef1f94 ...
+Tokenizer automatically loaded and configured for bp-level scoring
+  loaded in 138.5s on cuda, dtype=float32
+  gated-FFN verification (layer 0): gate_proj/up_proj/down_proj (separate SwiGLU-style projections)
+  input token count: 85
+  candidate layer=4 row=798 out_max=7997 ratio=239.51 ACCEPTED
+  total_params=1162061824 embed_params=16908288 non_embed=1145153536
+  candidate q1=0.846851 pr_spec=1.3942 frob_norm=6.2196
+  control rows (seeded, layer 4): [64, 868, 1125, 1301, 1839]
+    control row 64: q1=0.013025 pr_spec=499.8651 frob_norm=1.93015
+    control row 868: q1=0.012471 pr_spec=498.5188 frob_norm=1.92975
+    control row 1125: q1=0.012312 pr_spec=510.4801 frob_norm=1.92093
+    control row 1301: q1=0.013623 pr_spec=492.7329 frob_norm=1.96584
+    control row 1839: q1=0.012478 pr_spec=501.9589 frob_norm=1.99319
+wrote /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/E11/raw/generator-prok-1.2b.json
