@@ -708,3 +708,88 @@ uncertainty quantification around an already-computed point estimate.
 - New claims for `CLAIMS_LEDGER.md`: DNABERT-2 pair-requirement under finite forward
   intervention (both scales, bootstrap-confirmed) and GENERator's scale-limited dose-response
   finding — added in the same commit as this entry, per the ledger-discipline rule.
+
+## D-027 — E10/E10b reconciled: architecture-level headline shifts from q1-structural split
+(C-034) to causal-response complexity; C-040/C-045 flagged as an unreconciled pair pending E12
+**Date:** 2026-08-23
+**Supersedes:** none directly; narrows C-034's role established by D-016/D-017.
+
+**Decision:** E10 (`experiments/E10_nlp_architecture_causal/ARCHITECTURE_SYNTHESIS.md`, commit
+`626cddd`, locked prereg `PREREG_E10_nlp_architecture_causal_v2.md`) and E10b
+(`experiments/E10b_phi3_tomography/E10B_SYNTHESIS.md`, locked prereg
+`PREREG_E10b_phi3_tomography.md`) both completed 2026-08-22/23 under explicit prior
+authorization, but neither was folded into this ledger, `PAPER_OUTLINE.md`, or the
+`PROJECT_STATUS.md` session log before now. That gap is closed by this entry and the two new
+claims below (C-046, C-047). `PAPER_OUTLINE.md` itself is **not** rewritten in this pass — it
+still reads as of 2026-08-13 and needs its own update to home these results in an R-section;
+that is flagged as a `next` item, not done here.
+
+Net finding: across the 7-model E10 panel, 4/5 decoders (Llama, Mistral, OLMo, Qwen2.5)
+mechanically resolve SINGLE_COMPONENT_DOMINANT while 2/2 encoders (MosaicBERT, ModernBERT)
+resolve PAIR_TERMS_REQUIRED at both intervention scales — but Phi-3 (decoder) is an explicit
+counterexample (MULTI_COMPONENT_CANDIDATE, C1=0.333), and E10b's follow-up tomography on Phi-3
+finds the causal decision itself splits by intervention strength (PAIR_TERMS_REQUIRED at
+ε=0.5, MIXED_OR_UNRESOLVED at ε=1.0, driven by a specific three-row layer-2 redundancy break).
+OLMo additionally shows structural-rank/causal-rank dissociation within its own row set (the
+causally dominant row is not the structurally largest one). This causal-response-complexity
+result — not q1 magnitude — is now the paper's most developed architecture-level finding.
+
+This narrows, but does not retire, C-034 (q1 tracks encoder/decoder organization more than
+domain). C-034 was already hedged at birth (2026-08-14: "not a clean universal domain split")
+and D-017 already established that structural signatures generally are confirmatory/
+calibration, not novel headline material. What changes here is explicit: with E10/E10b's
+causal-complexity result now the stronger, more developed architecture-level claim, C-034 is
+confirmed as secondary/calibration only, and any pending scale-confound check on it (E11) is a
+check on calibration material, not on the manuscript's headline.
+
+Separately, this entry flags an unreconciled tension between **C-040** (colleague-adopted,
+5-point grid, GC saturates then *reverses* at 5×, span ratio 38.59×) and **C-045** (E9's own
+locked measurement, 3-point grid restricted to α∈[0,1], ~390× span, "mostly monotonic" in that
+range). Both are marked `established` without being checked against each other — C-045 was
+never run at amplification (α>1), so it cannot confirm or refute C-040's reversal. This is
+left open pending E12 (see N-017), not resolved here.
+
+**Rationale:** Per `CLAUDE.md`'s working discipline ("update `PROJECT_STATUS.md` at the end of
+any session that changes state," "every decision that changes scope gets an entry in
+`DECISIONS.md`"), a completed, artifact-backed experiment sitting unlogged for a session is
+exactly the kind of untracked-state failure mode this project has already been burned by twice
+(v15, the 2026-08-13 reconciliation). Surfaced now, before E11/E12 preregs are drafted on top
+of a ledger that doesn't reflect current evidence.
+
+**Consequences:**
+- `CLAIMS_LEDGER.md`: new rows C-046 (E10 architecture-level causal-complexity synthesis) and
+  C-047 (E10b Phi-3 epsilon-split result), added in this same commit; C-034's row annotated to
+  point to C-046 as the current primary architecture finding; new ledger note N-017 on the
+  C-040/C-045 tension.
+- `PROJECT_STATUS.md`: session log entry added for this reconciliation pass.
+- `PAPER_OUTLINE.md` is explicitly **not** updated this pass — still stale as of 2026-08-13,
+  R-section homes for C-046/C-047 undecided. Flagged as a `next` item.
+- E11's protocol (drafted next) is framed as testing C-034 specifically, with a decision rule
+  that allows cutting C-034 outright, not just softening it — consistent with its
+  calibration-only status confirmed here.
+- E12's protocol (drafted next) treats resolving the C-040/C-045 tension (via a row-2371
+  amplification arm) as a secondary, separately-reported question from the primary
+  damage-matched-control comparison.
+
+## D-028 — E10 decoder-arm protocol correction relocated to `docs/history/`; pointer added
+because it was the only surviving record of the change
+
+**Date:** 2026-08-26 (relocated; original correction dated 2026-08-22 by file mtime, prior to
+any E10 decoder causal measurement).
+
+**Decision:** A root-level, untracked file (`e10_prompt_correction.md`) contained the actual
+instruction that changed E10's decoder arm from a single-row alpha-sweep design to the
+structural-top-K-freeze / singleton-causal-concentration design (Steps D1–D5: freeze
+structurally ranked top-K rows + 5 random controls before measurement; measure each row's
+singleton causal effect; compute concentration statistics C1/C2; apply a preregistered
+Case A/B/C decision rule — top-1-dominant stops at the singleton spectrum, comparable-effect
+rows justify tomography, a weak/null top structural row is reported as dissociation, not
+rescued post hoc). Round-2 audit (`audit_2_prompt.md`) found this correction's substance is
+**not** duplicated in `experiments/E10_nlp_architecture_causal/PROTOCOL_CORRECTION_01.md` (0
+matches for "decoder arm" / "Revised decoder") — it was an orphaned, uncommitted decision
+record. Moved to `docs/history/e10_prompt_correction.md` and committed so it survives a fresh
+clone; this entry is the pointer so a future reader finds it from the ledger rather than by
+accident.
+
+**Consequences:** none to current claims — this documents pre-existing E10 design history,
+it does not change any result. No `CLAIMS_LEDGER.md` rows affected.
