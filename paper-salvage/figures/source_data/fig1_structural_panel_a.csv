@@ -1,0 +1,4 @@
+model,rank,published_top1_share
+Llama-7B,1,0.8902517404585564
+Mistral-7B,1,0.9884264554307004
+OLMo-7B,1,0.9558374285814745

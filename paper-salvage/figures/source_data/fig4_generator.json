@@ -1,0 +1,109 @@
+{
+ "structural": {
+  "group": "genomic",
+  "layer": 4,
+  "row": 2371,
+  "q1": 0.9688691252375834,
+  "pr_spec": 1.0652593586761891,
+  "stable_rank": 1.0321311454266673,
+  "frob_norm": 522.1322102348346,
+  "n_singular_values": 3072,
+  "published_f_cross": 0.8290834232540367,
+  "published_diagonal_pr": 4.559937375295324
+ },
+ "attention_sink": {
+  "task": "T2.1_attention_sink_implicit_bias",
+  "model": "generator",
+  "layer": 4,
+  "channel": 2371,
+  "provenance": {
+   "seed": 42,
+   "torch": "2.10.0+cu128",
+   "transformers": "4.57.6",
+   "n_windows": 40,
+   "max_len": 128
+  },
+  "attention": {
+   "sink_share_pos0": 0.37915498356024424,
+   "share_other_positions": 0.00721912801808988,
+   "uniform_expectation": 0.01149425287356322,
+   "sink_over_uniform": 32.986483569741246,
+   "sink_over_other": 52.520883770193265,
+   "frac_heads_argmax_pos0": 0.7875,
+   "n_layer_head_obs": 38400
+  }
+ },
+ "gc_dose_response": {
+  "model": "generator",
+  "model_id": "GenerTeam/GENERator-v2-eukaryote-3b-base",
+  "layer": 4,
+  "fasta": "/work/11034/atzanakak/glm_super_weight/genomic-super-weights/data/reference/hg38/hg38.fa",
+  "bed": "/work/11034/atzanakak/glm_super_weight/genomic-super-weights/data/regions/hg38/random_262kb.bed",
+  "n_prompts": 24,
+  "random_rows": [
+   2621,
+   456,
+   102,
+   3039,
+   1126
+  ],
+  "results": {
+   "primary_2371": {
+    "1.0": {
+     "n": 24,
+     "gc_mean": 0.39605034722222227,
+     "gc_sd": 0.07012705687380738
+    },
+    "0.5": {
+     "n": 24,
+     "gc_mean": 0.38628472222222215,
+     "gc_sd": 0.04747200520783731
+    },
+    "0.0": {
+     "n": 24,
+     "gc_mean": 0.29437934027777785,
+     "gc_sd": 0.04210167323282323
+    }
+   },
+   "secondary_1522": {
+    "1.0": {
+     "n": 24,
+     "gc_mean": 0.39605034722222227,
+     "gc_sd": 0.07012705687380738
+    },
+    "0.5": {
+     "n": 24,
+     "gc_mean": 0.4130859375,
+     "gc_sd": 0.0742903395747178
+    },
+    "0.0": {
+     "n": 24,
+     "gc_mean": 0.3465711805555555,
+     "gc_sd": 0.05622586542319975
+    }
+   },
+   "random_control": {
+    "1.0": {
+     "n": 120,
+     "gc_mean": 0.39605034722222227
+    },
+    "0.5": {
+     "n": 120,
+     "gc_mean": 0.39624565972222225
+    },
+    "0.0": {
+     "n": 120,
+     "gc_mean": 0.3959852430555556
+    }
+   }
+  },
+  "gc_span_primary": 0.10167100694444442,
+  "gc_span_random": 0.00026041666666665186,
+  "qualitative_check": {
+   "expected": "GC span at row 2371 substantially exceeds random-row span (matches C-040)",
+   "span_primary": 0.10167100694444442,
+   "span_random": 0.00026041666666665186,
+   "passes": true
+  }
+ }
+}
