@@ -19,13 +19,6 @@
       "sink_over_other": 52.520883770193265,
       "frac_heads_argmax_pos0": 0.7875,
       "n_layer_head_obs": 38400
-    },
-    "implicit_bias": {
-      "pos0_real_mean": 375361.34375,
-      "pos0_shuffled_mean": 375361.34375,
-      "pos0_ratio_shuf_over_real": 1.0,
-      "max_real_mean": 375361.34375,
-      "max_shuffled_mean": 375361.34375
     }
   }
 }
