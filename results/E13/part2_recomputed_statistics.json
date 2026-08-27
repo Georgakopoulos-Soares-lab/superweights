@@ -247,5 +247,17 @@
       "n": 4,
       "median": 0.006841969091206145
     }
+  },
+  "panel_d_topnorm_control": {
+    "eps0p5": {
+      "n_negative": 2,
+      "median_gap": 0.002711234584685164,
+      "median_topnorm_control_relative_loss_change": 0.0003516727067298797
+    },
+    "eps1p0": {
+      "n_negative": 3,
+      "median_gap": 0.006721669413679474,
+      "median_topnorm_control_relative_loss_change": 0.0011045408751615541
+    }
   }
 }
