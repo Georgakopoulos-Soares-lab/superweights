@@ -46,9 +46,13 @@ model in the cohort; worth a sentence in the text if not already there.
 
 ## Section 2 — Three regenerated figures (final, fixed, visually verified)
 
-All in `audit/round2/figures/`, source CSVs also copied to
-`paper-salvage/figures/source_data/`. Original `paper-salvage/figures/main/*` files were
-**not** touched — these are new standalone files to swap in.
+**Update after this report was first written:** the new panels were folded into the
+unified `paper-salvage/figures/main/fig1_structural.png`, `fig2_causal.png`,
+`fig4_generator.png` themselves (not left as standalone sub-panel files) — those are now
+the complete, publication-ready figures, each committed with source data in
+`paper-salvage/figures/source_data/`. The standalone sub-panel versions described below
+still exist in `audit/round2/figures/` for the audit trail, but **use the `main/` files for
+the manuscript.**
 
 **`fig1c_full22_two_panel.{png,pdf}`** — Fig. 1C, full 22-model cohort, two panels sharing
 one y-axis and one spanning "C" label (fixed from an earlier C1/C2 split; sub-panels now
@@ -198,12 +202,17 @@ audit/round2/tables/S2_structural_metrics.{csv,md}
 audit/round2/tables/S3_causal_census_full.{csv,md}
 audit/round2/tables/S4_structure_function_correlations.{csv,md}
 audit/round2/tables/S5_generator_conditions.{csv,md}
-audit/round2/figures/fig1c_full22_two_panel.{png,pdf}
-audit/round2/figures/fig2_topnorm_panel.{png,pdf}
-audit/round2/figures/fig4c_replacement.{png,pdf}
+paper-salvage/figures/main/fig1_structural.{png,pdf}         -- USE THIS: unified Fig 1 (A/B/C-new/D)
+paper-salvage/figures/main/fig2_causal.{png,pdf}              -- USE THIS: unified Fig 2 (A/B/C/D-new)
+paper-salvage/figures/main/fig4_generator.{png,pdf}           -- USE THIS: unified Fig 4 (A/B/C-new)
+paper-salvage/figures/fig1_structural.py, fig2_causal.py, fig4_generator.py  -- scripts that produced them
 paper-salvage/figures/source_data/fig1_panel_c_full22_source.csv
 paper-salvage/figures/source_data/fig2_panel_d_source.csv
 paper-salvage/figures/source_data/fig4_panel_c_source.csv
+audit/round2/figures/fig1c_full22_two_panel.{png,pdf}         -- standalone new-panel-only versions (audit trail)
+audit/round2/figures/fig2_topnorm_panel.{png,pdf}              -- standalone new-panel-only versions (audit trail)
+audit/round2/figures/fig4c_replacement.{png,pdf}               -- standalone new-panel-only versions (audit trail)
+audit/round2/tables/S1-S5_*.tsv                                -- tab-separated versions for spreadsheet paste
 PART2_EVIDENCE_PACKET.md                              -- now committed (was untracked)
 results/E13/raw_4b/*.json (22 files)                  -- now force-added (was gitignored)
 results/mechanism/attention_sink_implicit_bias.json   -- stale block stripped
