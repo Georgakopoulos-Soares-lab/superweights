@@ -65,6 +65,17 @@ ModernBERT-large, DNABERT-2, GEN-EUK-3B, GenomeOcean-4B).
 **`fig2_topnorm_panel.{png,pdf}`** — new Fig. 2 panel D, symlog y-axis, candidate-minus-
 top-norm-control causal gap at both epsilons, all 22 models. 2/22 negative at ε=0.5, 3/22
 at ε=1.0 (union of 4: MosaicBERT, NTv3, Qwen2.5-0.5B, Qwen2.5-7B), each labeled.
+**Correction after this report was first written:** this panel was initially folded into
+the wrong figure (`fig2_causal.py`, an older decoder-spectrum/OLMo-dissociation/tomography
+figure that is supplementary/case-study material, not the manuscript's Figure 2 — see
+`PART2_EVIDENCE_PACKET.md`'s own note to that effect). It has since been moved into the
+real Figure 2, `build_part2_evidence_packet.py`'s `fig2_part2_functional_criticality.png`
+(the 22-model functional-criticality census, panels A/B = candidate vs. random controls at
+ε=0.5/1.0, C = q1-vs-effect correlation), as panel D there — verified against the target
+caption: 20/22 exceed the median top-norm control at ε=0.5, 19/22 at ε=1.0, and the
+top-norm controls' own median effect (+0.035% at ε=0.5, +0.110% at ε=1.0) is annotated on
+the panel. **Use `paper-salvage/figures/main/fig2_part2_functional_criticality.png` for
+the manuscript's Figure 2 — not `fig2_causal.png`.**
 
 **`fig4c_replacement.{png,pdf}`** — Fig. 4C replacement, two panels. Left: GC vs.
 random-direction scale *c*, x-axis now starts cleanly at 0 (fixed — previously padded into
@@ -202,10 +213,16 @@ audit/round2/tables/S2_structural_metrics.{csv,md}
 audit/round2/tables/S3_causal_census_full.{csv,md}
 audit/round2/tables/S4_structure_function_correlations.{csv,md}
 audit/round2/tables/S5_generator_conditions.{csv,md}
-paper-salvage/figures/main/fig1_structural.{png,pdf}         -- USE THIS: unified Fig 1 (A/B/C-new/D)
-paper-salvage/figures/main/fig2_causal.{png,pdf}              -- USE THIS: unified Fig 2 (A/B/C/D-new)
-paper-salvage/figures/main/fig4_generator.{png,pdf}           -- USE THIS: unified Fig 4 (A/B/C-new)
-paper-salvage/figures/fig1_structural.py, fig2_causal.py, fig4_generator.py  -- scripts that produced them
+paper-salvage/figures/main/fig1_structural.{png,pdf}                    -- USE THIS: unified Fig 1 (A/B/C-new/D)
+paper-salvage/figures/main/fig2_part2_functional_criticality.{png,pdf}  -- USE THIS: the real Fig 2 (A/B/C/D-new,
+                                                                             22-model functional-criticality census)
+paper-salvage/figures/main/fig4_generator.{png,pdf}                     -- USE THIS: unified Fig 4 (A/B/C-new)
+paper-salvage/figures/main/fig2_causal.{png,pdf}                        -- NOT Fig 2 -- older decoder-spectrum/OLMo-
+                                                                             dissociation/tomography-adequacy figure,
+                                                                             supplementary/case-study material only
+                                                                             (see PART2_EVIDENCE_PACKET.md's own note)
+paper-salvage/figures/fig1_structural.py, fig4_generator.py             -- scripts for Fig 1 / Fig 4
+paper-salvage/experiments/E13_full_cohort_causal_census/build_part2_evidence_packet.py  -- script for the real Fig 2
 paper-salvage/figures/source_data/fig1_panel_c_full22_source.csv
 paper-salvage/figures/source_data/fig2_panel_d_source.csv
 paper-salvage/figures/source_data/fig4_panel_c_source.csv
