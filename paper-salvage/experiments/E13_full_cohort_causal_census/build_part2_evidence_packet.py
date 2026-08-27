@@ -15,10 +15,28 @@ from scipy.stats import spearmanr
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 E13 = ROOT / "results" / "E13"
+AUDIT2 = ROOT / "audit" / "round2"
 FIGDIR = ROOT / "paper-salvage" / "figures" / "main"
 OUT_MD = ROOT / "PART2_EVIDENCE_PACKET.md"
 EXCLUDED = "Phi-3-mini-4k-instruct"
 N_BOOT = 5000
+
+# round-2 panel D: display-name / sign-flip model set for the top-norm-control comparison
+# (audit/round2/final_check.md Section 2; audit/round2/scripts/fig2_panel_topnorm.py)
+DISPLAY_D = {
+    "Qwen/Qwen2.5-0.5B": "Qwen2.5-0.5B", "Qwen/Qwen2.5-1.5B": "Qwen2.5-1.5B",
+    "Qwen/Qwen2.5-3B": "Qwen2.5-3B", "HuggingFaceTB/SmolLM2-135M": "SmolLM2-135M",
+    "HuggingFaceTB/SmolLM2-360M": "SmolLM2-360M", "HuggingFaceTB/SmolLM2-1.7B": "SmolLM2-1.7B",
+    "GenerTeam/GENERator-v2-prokaryote-1.2b-base": "GEN-PROK-1.2B",
+    "GenerTeam/GENERator-v2-prokaryote-3b-base": "GEN-PROK-3B",
+    "EuroBERT/EuroBERT-210m": "EuroBERT-210M", "EuroBERT/EuroBERT-610m": "EuroBERT-610M",
+    "EuroBERT/EuroBERT-2.1B": "EuroBERT-2.1B", "answerdotai/ModernBERT-large": "ModernBERT-large",
+    "ModernBERT-base": "ModernBERT-base", "DNABERT-2": "DNABERT-2",
+    "GENERator-EUK-3B": "GEN-EUK-3B", "Llama-7B": "Llama-7B", "Mistral-7B": "Mistral-7B",
+    "OLMo-7B-0724-hf": "OLMo-7B", "MosaicBERT": "MosaicBERT", "GenomeOcean-4B": "GenomeOcean-4B",
+    "Qwen2.5-7B": "Qwen2.5-7B", "NTv3": "NTv3",
+}
+SIGN_FLIP_MODELS_D = {"MosaicBERT", "Qwen2.5-7B", "Qwen/Qwen2.5-0.5B", "NTv3"}
 
 
 def read_csv(path: Path) -> list[dict]:
@@ -156,6 +174,22 @@ def cohort_stats(rows: list[dict]) -> dict:
     groups=defaultdict(list)
     for r in rows: groups[f"{r['domain']}/{r['architecture']}"].append(float(r["candidate_relative_loss_change_eps1p0"]))
     out["descriptive_subgroup_medians"]={k:{"n":len(v),"median":statistics.median(v)} for k,v in groups.items()}
+
+    # round-2 panel D: candidate vs. top-norm-control causal gap (audit/round2/structural_vs_causal_gap.csv)
+    topnorm = read_csv(AUDIT2 / "structural_vs_causal_gap.csv")
+    assert len(topnorm) == 44, f"expected 44 rows (22 models x 2 eps), got {len(topnorm)}"
+    by_model_eps_d = {(r["model"], r["epsilon"]): r for r in topnorm}
+    assert {r["model"] for r in topnorm} == {r["model"] for r in rows}
+    d_stats = {}
+    for tag, eps in (("eps0p5", "0.5"), ("eps1p0", "1.0")):
+        gaps = [float(by_model_eps_d[(r["model"], eps)]["causal_topk_gap"]) for r in rows]
+        med_ctrl = [float(by_model_eps_d[(r["model"], eps)]["median_topk_control_relative_loss_change"]) for r in rows]
+        d_stats[tag] = {
+            "n_negative": sum(g < 0 for g in gaps),
+            "median_gap": statistics.median(gaps),
+            "median_topnorm_control_relative_loss_change": statistics.median(med_ctrl),
+        }
+    out["panel_d_topnorm_control"] = d_stats
     return out
 
 
@@ -163,7 +197,7 @@ def make_figure(rows: list[dict], long_rows: list[dict], stats: dict) -> None:
     FIGDIR.mkdir(parents=True, exist_ok=True)
     order=[r["model"] for r in sorted(rows,key=lambda z:float(z["candidate_relative_loss_change_eps1p0"]))]
     labels={r["model"]:r["display_model"] for r in rows}; x=np.arange(len(order))
-    fig=plt.figure(figsize=(15,12),constrained_layout=True); gs=fig.add_gridspec(3,1,height_ratios=[1,1,1.05])
+    fig=plt.figure(figsize=(15,16),constrained_layout=True); gs=fig.add_gridspec(4,1,height_ratios=[1,1,1.05,1.15])
     for ax,eps,tag,title in [(fig.add_subplot(gs[0]),.5,"eps0p5","A  Partial suppression (ε=0.5; row scale α=0.5)"),
                              (fig.add_subplot(gs[1]),1.,"eps1p0","B  Full ablation (ε=1.0; row scale α=0)")]:
         for i,m in enumerate(order):
@@ -197,6 +231,58 @@ def make_figure(rows: list[dict], long_rows: list[dict], stats: dict) -> None:
             Line2D([0],[0],marker='o',color='w',label='Genomic',markerfacecolor=colors['genomic'],markersize=7)]
     ax.legend(handles=legend,ncol=4,loc="lower right",fontsize=8); ax.grid(alpha=.18,which="both")
     ax.margins(y=.10)
+
+    # --- Panel D (round-2): candidate vs. top-norm-control causal gap, both epsilons ---
+    topnorm = read_csv(AUDIT2 / "structural_vs_causal_gap.csv")
+    by_model_eps_d = {(r["model"], r["epsilon"]): r for r in topnorm}
+    ax_d = fig.add_subplot(gs[3])
+    eps_style = {"0.5": dict(fill=True, s=52, offset=-0.14), "1.0": dict(fill=False, s=68, offset=0.14)}
+    dom_marker = {"decoder": "o", "encoder": "s"}
+    neg_offsets_d = [-13, -35, -57]
+    for i, m in enumerate(order):
+        r = next(z for z in rows if z["model"] == m)
+        arch, dom = r["architecture"], r["domain"]
+        neg_eps_count = 0
+        for eps in ("0.5", "1.0"):
+            dr = by_model_eps_d[(m, eps)]
+            gap = float(dr["causal_topk_gap"])
+            st = eps_style[eps]
+            kw = dict(marker=dom_marker[arch], s=st["s"], zorder=4)
+            if st["fill"]:
+                kw.update(color=colors[dom], edgecolor="black", linewidths=0.9)
+            else:
+                kw.update(facecolors="none", edgecolors=colors[dom], linewidths=1.2)
+            ax_d.scatter(i + st["offset"], gap, **kw)
+            if m in SIGN_FLIP_MODELS_D and gap < 0:
+                dy = neg_offsets_d[neg_eps_count % len(neg_offsets_d)]
+                ax_d.annotate(f"{DISPLAY_D[m]}, " + r"$\epsilon$=" + eps, (i + st["offset"], gap),
+                              xytext=(0, dy), textcoords="offset points", ha="center", va="top",
+                              fontsize=5.6, color="0.15",
+                              arrowprops=dict(arrowstyle="-", lw=0.4, color="0.5"))
+                neg_eps_count += 1
+    ax_d.axhline(0, color="black", lw=0.8, zorder=2)
+    ax_d.set_yscale("symlog", linthresh=1e-4)
+    ax_d.set_ylim(-4, 15)
+    ax_d.set_ylabel("Candidate $-$ median top-norm control\n(relative loss change, symlog)")
+    ax_d.set_xticks(x); ax_d.set_xticklabels([labels[m] for m in order], rotation=55, ha="right", fontsize=7)
+    ax_d.set_xlim(-0.7, len(order) - 0.3)
+    ax_d.grid(axis="y", which="both", alpha=0.18)
+    d0, d1 = stats["panel_d_topnorm_control"]["eps0p5"], stats["panel_d_topnorm_control"]["eps1p0"]
+    n_pos_05 = len(order) - d0["n_negative"]; n_pos_10 = len(order) - d1["n_negative"]
+    ax_d.text(.01, .97,
+              f"candidate > median top-norm control: {n_pos_05}/22 (ε=0.5), {n_pos_10}/22 (ε=1.0)\n"
+              f"top-norm controls themselves near-inert: median effect "
+              f"{pct(d0['median_topnorm_control_relative_loss_change'], 3)} (ε=0.5), "
+              f"{pct(d1['median_topnorm_control_relative_loss_change'], 3)} (ε=1.0)",
+              transform=ax_d.transAxes, va="top", fontsize=8,
+              bbox=dict(facecolor="white", alpha=.88, edgecolor="#cccccc"))
+    d_legend = [Line2D([0],[0],marker='o',color='w',label=r'$\epsilon$=0.5 (filled)',markerfacecolor='#666',markeredgecolor='black',markersize=7),
+                Line2D([0],[0],marker='o',color='w',label=r'$\epsilon$=1.0 (open)',markerfacecolor='none',markeredgecolor='#666',markersize=7),
+                Line2D([0],[0],marker='o',color='w',label='Decoder',markerfacecolor='#666',markersize=7),
+                Line2D([0],[0],marker='s',color='w',label='Encoder',markerfacecolor='#666',markersize=7)]
+    ax_d.legend(handles=d_legend, ncol=4, loc="upper right", fontsize=7.5)
+    ax_d.set_title("D  Candidate vs. top-norm same-layer controls, both intervention strengths",loc="left",fontweight="bold")
+
     fig.suptitle("Figure 2 draft — functional criticality of frozen structural candidates across 22 models",fontsize=15)
     fig.savefig(FIGDIR/"fig2_part2_functional_criticality.png",dpi=240)
     fig.savefig(FIGDIR/"fig2_part2_functional_criticality.pdf")
@@ -225,7 +311,7 @@ def write_packet(rows: list[dict], manifest: dict, stats: dict) -> None:
               "| Genomic decoders (n=4) | hg38 `random_262kb.bed`; seed-42 disjoint partition; 100 damage windows of 512 bp, <1% N. GENERator trims the left `len%6` bases, prepends BOS, then tokenizes with specials disabled. GenomeOcean does no 6-bp trim or forced BOS and tokenizes with specials disabled. | Teacher-forced shifted causal-LM mean token NLL (`labels=input_ids`; internal label shift), weighted over tokens. | 100 individual-window bootstrap units. The separately constructed 96-window prompt pool is not used in this endpoint. |",
               "| Genomic encoders (n=2) | hg38 FASTA + `random_262kb.bed`; regions shuffled and starts sampled with `random.Random(42)`; 256 windows of 600 bp, <1% N; tokenizer padding/truncation to 256 tokens; batch 16. Fixed .15 masks with seed 42; special/PAD excluded. | Masked-nucleotide summed loss divided by masked-token count. | 16 fixed MLM batches. DNABERT-2 uses the pinned pretrained MLM/eager compatibility loader; NTv3 uses its pinned remote code revision. |","",
               "Raw `endpoint` metadata and actual unit counts are preserved model-by-model in `part2_22_model_results.csv` and `results/E13/raw/*.json`.","",
-              "Checkpoint provenance note: NTv3's weight revision remains recorded as unpinned (`E5/E6 original`); only its required remote-code loader is pinned to commit `0ecff295910cbdf3a909d91d686510986c29c8f2`. That is a provenance limitation, not an exact weight revision. For models requested without a revision, the resolved Hub commit recorded by the completed run is reported in the table above.","",
+              "Checkpoint provenance note: NTv3's weight revision remains recorded as unpinned (`E5/E6 original`); only its required remote-code loader is pinned to commit `0ecff3637f0d3ba5b686d1095083218157c2ca34` (matches `NTV3_CODE_REVISION` in `genomic_encoder_lib.py`). That is a provenance limitation, not an exact weight revision. For models requested without a revision, the resolved Hub commit recorded by the completed run is reported in the table above.","",
               "## 3. Effect definitions","",
               "For evaluation unit j, raw records store `(S_j,N_j)`: summed loss and contributing-token count. `L0=ΣS0j/ΣN0j`; `Lε=ΣSεj/ΣNεj`; absolute change `ΔL=Lε-L0`; signed relative change `R=(Lε-L0)/L0`; percent change is `100R`. Candidate effect is R for the frozen candidate. Each control effect is its independently measured R. Same-layer median control is the median of five signed control R values. Candidate-minus-control is `G=Rcandidate-median(Rcontrol,1..5)`.","",
               "The 18/22 and 20/22 counts use `G>0`. Cohort +0.60%/+0.88% summaries are medians of G across 22 models. The q1 correlation and Figure 2C y-axis use signed full-ablation candidate R—not G and not an absolute value. Figure 2A/B show signed candidate and individual-control R.","",
