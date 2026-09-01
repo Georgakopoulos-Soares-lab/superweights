@@ -195,9 +195,24 @@ def cohort_stats(rows: list[dict]) -> dict:
 
 def make_figure(rows: list[dict], long_rows: list[dict], stats: dict) -> None:
     FIGDIR.mkdir(parents=True, exist_ok=True)
+    # round-3: larger default type across the whole figure (labels, ticks, legends) --
+    # explicit fontsize= calls below are bumped individually where they need to differ
+    # from these defaults (e.g. panel D's small negative-gap annotations).
+    plt.rcParams.update({
+        "font.size": 12,
+        "axes.titlesize": 15,
+        "axes.labelsize": 13,
+        "xtick.labelsize": 10,
+        "ytick.labelsize": 11,
+        "legend.fontsize": 10,
+    })
     order=[r["model"] for r in sorted(rows,key=lambda z:float(z["candidate_relative_loss_change_eps1p0"]))]
     labels={r["model"]:r["display_model"] for r in rows}; x=np.arange(len(order))
-    fig=plt.figure(figsize=(15,16),constrained_layout=True); gs=fig.add_gridspec(4,1,height_ratios=[1,1,1.05,1.15])
+    fig=plt.figure(figsize=(17,16),constrained_layout=True); gs=fig.add_gridspec(4,1,height_ratios=[1,1,1.05,1.15])
+    # extra vertical padding between rows -- with the larger round-3 label fonts, the
+    # default constrained-layout padding let adjacent rotated y-axis labels touch/overlap
+    # at row boundaries (panel C's and panel D's ylabels in particular).
+    fig.set_constrained_layout_pads(hspace=0.045, h_pad=0.06)
     for ax,eps,tag,title in [(fig.add_subplot(gs[0]),.5,"eps0p5","A  Partial suppression (ε=0.5; row scale α=0.5)"),
                              (fig.add_subplot(gs[1]),1.,"eps1p0","B  Full ablation (ε=1.0; row scale α=0)")]:
         for i,m in enumerate(order):
@@ -208,10 +223,10 @@ def make_figure(rows: list[dict], long_rows: list[dict], stats: dict) -> None:
             ax.scatter(i,cand,s=48,marker="D",c="#CC3311",edgecolor="white",linewidth=.5,zorder=4)
         s=stats[tag]; lo,hi=s["candidate_minus_control_ci95"]
         ax.text(.01,.96,f"{s['candidate_gt_median_control']}/22 candidate > median control\nmedian gap {pct(s['median_candidate_minus_control'])} (95% CI {pct(lo)} to {pct(hi)})",
-                transform=ax.transAxes,va="top",fontsize=9,bbox=dict(facecolor="white",alpha=.88,edgecolor="#cccccc"))
+                transform=ax.transAxes,va="top",fontsize=11,bbox=dict(facecolor="white",alpha=.88,edgecolor="#cccccc"))
         ax.axhline(0,color="black",lw=.8); ax.set_yscale("symlog",linthresh=.1,linscale=.8)
-        ax.set_ylabel("Signed relative loss change (%)"); ax.set_title(title,loc="left",fontweight="bold")
-        ax.set_xticks(x); ax.set_xticklabels([labels[m] for m in order],rotation=55,ha="right",fontsize=7)
+        ax.set_ylabel("Relative loss change (%)"); ax.set_title(title,loc="left",fontweight="bold")
+        ax.set_xticks(x); ax.set_xticklabels([labels[m] for m in order],rotation=55,ha="right",fontsize=9)
         ax.margins(y=.10)
         ax.grid(axis="y",which="both",alpha=.18)
     ax=fig.add_subplot(gs[2]); colors={"text":"#4477AA","genomic":"#228833"}; markers={"decoder":"o","encoder":"s"}
@@ -220,16 +235,16 @@ def make_figure(rows: list[dict], long_rows: list[dict], stats: dict) -> None:
                    c=colors[r["domain"]],marker=markers[r["architecture"]],edgecolor="white",linewidth=.6)
     cq=stats["correlations"]["q1"]; lo,hi=cq["bootstrap_ci95"]
     ax.text(.02,.96,f"Spearman ρ={cq['spearman_rho']:.3f}\n95% CI [{lo:.3f}, {hi:.3f}]\np={cq['asymptotic_p']:.3f}; n=22",
-            transform=ax.transAxes,va="top",fontsize=10,bbox=dict(facecolor="white",alpha=.9,edgecolor="#cccccc"))
+            transform=ax.transAxes,va="top",fontsize=12,bbox=dict(facecolor="white",alpha=.9,edgecolor="#cccccc"))
     ax.axhline(0,color="black",lw=.8); ax.set_yscale("symlog",linthresh=.1,linscale=.8)
-    ax.set_xlabel("Candidate spectral concentration q₁"); ax.set_ylabel("Full-ablation signed relative loss change (%)")
+    ax.set_xlabel("Candidate spectral concentration q₁"); ax.set_ylabel("Full-ablation loss change (%)")
     ax.set_title("C  Spectral concentration does not predict causal-effect magnitude",loc="left",fontweight="bold")
     from matplotlib.lines import Line2D
     legend=[Line2D([0],[0],marker='o',color='w',label='Decoder',markerfacecolor='#666',markersize=7),
             Line2D([0],[0],marker='s',color='w',label='Encoder',markerfacecolor='#666',markersize=7),
             Line2D([0],[0],marker='o',color='w',label='Text',markerfacecolor=colors['text'],markersize=7),
             Line2D([0],[0],marker='o',color='w',label='Genomic',markerfacecolor=colors['genomic'],markersize=7)]
-    ax.legend(handles=legend,ncol=4,loc="lower right",fontsize=8); ax.grid(alpha=.18,which="both")
+    ax.legend(handles=legend,ncol=4,loc="lower right",fontsize=10); ax.grid(alpha=.18,which="both")
     ax.margins(y=.10)
 
     # --- Panel D (round-2): candidate vs. top-norm-control causal gap, both epsilons ---
@@ -257,14 +272,14 @@ def make_figure(rows: list[dict], long_rows: list[dict], stats: dict) -> None:
                 dy = neg_offsets_d[neg_eps_count % len(neg_offsets_d)]
                 ax_d.annotate(f"{DISPLAY_D[m]}, " + r"$\epsilon$=" + eps, (i + st["offset"], gap),
                               xytext=(0, dy), textcoords="offset points", ha="center", va="top",
-                              fontsize=5.6, color="0.15",
+                              fontsize=7, color="0.15",
                               arrowprops=dict(arrowstyle="-", lw=0.4, color="0.5"))
                 neg_eps_count += 1
     ax_d.axhline(0, color="black", lw=0.8, zorder=2)
     ax_d.set_yscale("symlog", linthresh=1e-4)
     ax_d.set_ylim(-4, 15)
-    ax_d.set_ylabel("Candidate $-$ median top-norm control\n(relative loss change, symlog)")
-    ax_d.set_xticks(x); ax_d.set_xticklabels([labels[m] for m in order], rotation=55, ha="right", fontsize=7)
+    ax_d.set_ylabel("Candidate $-$ control (%)")
+    ax_d.set_xticks(x); ax_d.set_xticklabels([labels[m] for m in order], rotation=55, ha="right", fontsize=9)
     ax_d.set_xlim(-0.7, len(order) - 0.3)
     ax_d.grid(axis="y", which="both", alpha=0.18)
     d0, d1 = stats["panel_d_topnorm_control"]["eps0p5"], stats["panel_d_topnorm_control"]["eps1p0"]
@@ -274,16 +289,17 @@ def make_figure(rows: list[dict], long_rows: list[dict], stats: dict) -> None:
               f"top-norm controls themselves near-inert: median effect "
               f"{pct(d0['median_topnorm_control_relative_loss_change'], 3)} (ε=0.5), "
               f"{pct(d1['median_topnorm_control_relative_loss_change'], 3)} (ε=1.0)",
-              transform=ax_d.transAxes, va="top", fontsize=8,
+              transform=ax_d.transAxes, va="top", fontsize=10,
               bbox=dict(facecolor="white", alpha=.88, edgecolor="#cccccc"))
     d_legend = [Line2D([0],[0],marker='o',color='w',label=r'$\epsilon$=0.5 (filled)',markerfacecolor='#666',markeredgecolor='black',markersize=7),
                 Line2D([0],[0],marker='o',color='w',label=r'$\epsilon$=1.0 (open)',markerfacecolor='none',markeredgecolor='#666',markersize=7),
                 Line2D([0],[0],marker='o',color='w',label='Decoder',markerfacecolor='#666',markersize=7),
                 Line2D([0],[0],marker='s',color='w',label='Encoder',markerfacecolor='#666',markersize=7)]
-    ax_d.legend(handles=d_legend, ncol=4, loc="upper right", fontsize=7.5)
+    ax_d.legend(handles=d_legend, ncol=4, loc="upper right", fontsize=9.5)
     ax_d.set_title("D  Candidate vs. top-norm same-layer controls, both intervention strengths",loc="left",fontweight="bold")
 
-    fig.suptitle("Figure 2 draft — functional criticality of frozen structural candidates across 22 models",fontsize=15)
+    # round-3: suptitle removed -- the figure's headline lives in the manuscript caption,
+    # not embedded in the image (matches the same change made to Fig. 1).
     fig.savefig(FIGDIR/"fig2_part2_functional_criticality.png",dpi=240)
     fig.savefig(FIGDIR/"fig2_part2_functional_criticality.pdf")
     plt.close(fig)

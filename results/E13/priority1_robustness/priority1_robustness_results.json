@@ -1,0 +1,173 @@
+{
+  "primary_16": [
+    "EuroBERT/EuroBERT-2.1B",
+    "EuroBERT/EuroBERT-210m",
+    "EuroBERT/EuroBERT-610m",
+    "GenerTeam/GENERator-v2-prokaryote-1.2b-base",
+    "GenerTeam/GENERator-v2-prokaryote-3b-base",
+    "GenomeOcean-4B",
+    "HuggingFaceTB/SmolLM2-1.7B",
+    "HuggingFaceTB/SmolLM2-135M",
+    "HuggingFaceTB/SmolLM2-360M",
+    "ModernBERT-base",
+    "MosaicBERT",
+    "Qwen/Qwen2.5-0.5B",
+    "Qwen/Qwen2.5-1.5B",
+    "Qwen/Qwen2.5-3B",
+    "Qwen2.5-7B",
+    "answerdotai/ModernBERT-large"
+  ],
+  "excluded_not_ratio_selected": [
+    "DNABERT-2",
+    "GENERator-EUK-3B",
+    "Llama-7B",
+    "Mistral-7B",
+    "NTv3",
+    "OLMo-7B-0724-hf"
+  ],
+  "excluded_other": [
+    "Phi-3-mini-4k-instruct"
+  ],
+  "main_activation_ratio_vs_signed_effect_eps1p0": {
+    "n_models": 16,
+    "spearman_rho": 0.6852941176470588,
+    "asymptotic_p": 0.003391561745216595,
+    "bootstrap_ci95": [
+      0.26504808471554375,
+      0.9240179147094039
+    ],
+    "n_boot": 5000,
+    "n_boot_finite": 5000,
+    "seed": 1001
+  },
+  "main_activation_ratio_vs_signed_effect_eps0p5": {
+    "n_models": 16,
+    "spearman_rho": 0.4088235294117647,
+    "asymptotic_p": 0.11588783814878352,
+    "bootstrap_ci95": [
+      -0.17609119185976416,
+      0.813553175175381
+    ],
+    "n_boot": 5000,
+    "n_boot_finite": 5000,
+    "seed": 1002
+  },
+  "leave_one_model_out": {
+    "full_16_rho": 0.6852941176470588,
+    "per_model_rho_with_that_model_removed": {
+      "EuroBERT/EuroBERT-2.1B": 0.7571428571428571,
+      "EuroBERT/EuroBERT-210m": 0.6428571428571428,
+      "EuroBERT/EuroBERT-610m": 0.7,
+      "GenerTeam/GENERator-v2-prokaryote-1.2b-base": 0.6678571428571428,
+      "GenerTeam/GENERator-v2-prokaryote-3b-base": 0.6535714285714285,
+      "GenomeOcean-4B": 0.6857142857142856,
+      "HuggingFaceTB/SmolLM2-1.7B": 0.6178571428571428,
+      "HuggingFaceTB/SmolLM2-135M": 0.6678571428571428,
+      "HuggingFaceTB/SmolLM2-360M": 0.6678571428571428,
+      "ModernBERT-base": 0.782142857142857,
+      "MosaicBERT": 0.6535714285714285,
+      "Qwen/Qwen2.5-0.5B": 0.6749999999999999,
+      "Qwen/Qwen2.5-1.5B": 0.6714285714285713,
+      "Qwen/Qwen2.5-3B": 0.7392857142857142,
+      "Qwen2.5-7B": 0.6714285714285713,
+      "answerdotai/ModernBERT-large": 0.682142857142857
+    },
+    "min_rho": 0.6178571428571428,
+    "max_rho": 0.782142857142857,
+    "most_influential_model": "ModernBERT-base",
+    "most_influential_delta_rho": 0.0968487394957982
+  },
+  "leave_one_family_out": {
+    "EuroBERT": {
+      "n_removed": 3,
+      "n_remaining": 13,
+      "rho": 0.7417582417582418,
+      "asymptotic_p": 0.003701313735752625
+    },
+    "GENERator-prok": {
+      "n_removed": 2,
+      "n_remaining": 14,
+      "rho": 0.6175824175824175,
+      "asymptotic_p": 0.018604674280708423
+    },
+    "GenomeOcean-singleton": {
+      "n_removed": 1,
+      "n_remaining": 15,
+      "rho": 0.6857142857142856,
+      "asymptotic_p": 0.004772245222691258
+    },
+    "ModernBERT": {
+      "n_removed": 2,
+      "n_remaining": 14,
+      "rho": 0.7758241758241758,
+      "asymptotic_p": 0.0011084786677787379
+    },
+    "MosaicBERT-singleton": {
+      "n_removed": 1,
+      "n_remaining": 15,
+      "rho": 0.6535714285714285,
+      "asymptotic_p": 0.008230371463638973
+    },
+    "Qwen2.5": {
+      "n_removed": 4,
+      "n_remaining": 12,
+      "rho": 0.6573426573426573,
+      "asymptotic_p": 0.020185498509854096
+    },
+    "SmolLM2": {
+      "n_removed": 3,
+      "n_remaining": 13,
+      "rho": 0.5439560439560439,
+      "asymptotic_p": 0.05464653454086549
+    }
+  },
+  "activation_ratio_vs_candidate_minus_random_control_eps1p0": {
+    "n_models": 16,
+    "spearman_rho": 0.6852941176470588,
+    "asymptotic_p": 0.003391561745216595,
+    "bootstrap_ci95": [
+      0.286775631500743,
+      0.9223880597014928
+    ],
+    "n_boot": 5000,
+    "n_boot_finite": 5000,
+    "seed": 1003
+  },
+  "activation_ratio_vs_candidate_minus_topnorm_control_eps1p0": {
+    "n_models": 16,
+    "spearman_rho": 0.29411764705882354,
+    "asymptotic_p": 0.268846554622893,
+    "bootstrap_ci95": [
+      -0.2541258573056717,
+      0.7058015894457201
+    ],
+    "n_boot": 5000,
+    "n_boot_finite": 5000,
+    "seed": 1004
+  },
+  "activation_ratio_vs_signed_full_ablation_effect_eps1p0": {
+    "n_models": 16,
+    "spearman_rho": 0.6852941176470588,
+    "asymptotic_p": 0.003391561745216595,
+    "bootstrap_ci95": [
+      0.26504808471554375,
+      0.9240179147094039
+    ],
+    "n_boot": 5000,
+    "n_boot_finite": 5000,
+    "seed": 1001
+  },
+  "SENSITIVITY_ONLY_activation_ratio_vs_absolute_effect_magnitude_eps1p0": {
+    "n_models": 16,
+    "spearman_rho": 0.6852941176470588,
+    "asymptotic_p": 0.003391561745216595,
+    "bootstrap_ci95": [
+      0.27326175892489835,
+      0.9278249597006006
+    ],
+    "n_boot": 5000,
+    "n_boot_finite": 5000,
+    "seed": 1005
+  },
+  "twentytwo_model_sensitivity_note": "The 6 non-ratio-selected models (Llama-7B, Mistral-7B, OLMo-7B-0724-hf, NTv3, DNABERT-2, GENERator-EUK-3B) have no activation-ratio detector value at all -- their candidates came from results/e7_legacy_reanalysis.json (published/structural provenance), which never recorded an activation ratio. A 22-model activation-ratio correlation therefore cannot be constructed. The existing 22-model sensitivity check on the adjacent structural quantity (frob_ratio_to_layer_median) is already computed in part1_22_structure_function_correlations.json: rho=0.441, asymptotic p=0.040, bootstrap 95% CI [0.062, 0.717], n=22 (Phi-3 excluded)."
+}

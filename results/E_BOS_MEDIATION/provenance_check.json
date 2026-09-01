@@ -1,0 +1,10 @@
+{
+  "intact_measured": 6.38538052380085,
+  "intact_historical": 6.385381,
+  "intact_ok": true,
+  "ablated_measured": 8.754319605827332,
+  "ablated_historical": 8.75432,
+  "ablated_ok": true,
+  "rtol": 0.001,
+  "resolved_commit_hash": "7dc01bccce5b65e15141170538afdc2ff09d8dde"
+}

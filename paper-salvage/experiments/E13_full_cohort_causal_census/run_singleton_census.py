@@ -111,15 +111,21 @@ def load_generic(spec: dict, architecture: str):
         ROPE_INIT_FUNCTIONS.setdefault("default", legacy_default_rope)
     repo, rev = spec["repo"], spec["revision"]
     rev = None if rev.startswith("unpinned") else rev
+    # Absent-path fix, no science changed (same discipline as E9's hg38/revision-pin
+    # fixes): this session's filesystem does not have the shared /work HF cache
+    # env_cached.sh assumes, so local_files_only defaults True (unchanged behavior
+    # wherever that cache DOES exist) but can be opted out of via env var when it
+    # doesn't, allowing a fresh download instead of a hard failure.
+    _local_only = os.environ.get("E13_LOCAL_FILES_ONLY", "1") != "0"
     # Phi-3 is deliberately loaded through the native Transformers implementation,
     # exactly as in the bit-reproducing Stage-0 path.  Its pinned legacy remote code
     # expects rope_scaling["type"], which Transformers 5 normalizes to "rope_type".
-    kw = dict(local_files_only=True,
+    kw = dict(local_files_only=_local_only,
               trust_remote_code=spec["model"] != "Phi-3-mini-4k-instruct")
     if rev:
         kw["revision"] = rev
     if spec["model"] == "MosaicBERT":
-        tok = BertTokenizer.from_pretrained("bert-base-uncased", local_files_only=True)
+        tok = BertTokenizer.from_pretrained("bert-base-uncased", local_files_only=_local_only)
     else:
         tok = AutoTokenizer.from_pretrained(repo, **kw)
     loader = AutoModelForCausalLM if architecture == "decoder" else AutoModelForMaskedLM

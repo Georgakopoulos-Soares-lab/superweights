@@ -665,4 +665,25 @@ YYYY-MM-DD  |  scaffold created; outline frozen  |  next: run PHASE_0 inventory
             |  optional; prior C-029/C-038 already cover the negative-control role).
             |  next: render the 3 Phase-13 figures from existing JSON (no new measurement
             |  needed) -- see RESULTS.md item 22.
+2026-08-23  |  Reconciliation pass (D-027), done ahead of drafting E11/E12: found that E10
+            |  (architecture causal-complexity, 7-model panel, completed 2026-08-22) and E10b
+            |  (Phi-3 tomography, completed 2026-08-22/23) had never been logged here, in
+            |  DECISIONS.md, or in CLAIMS_LEDGER.md -- a session's worth of artifact-backed
+            |  results sitting untracked. Closed the gap: new claims C-046 (E10 synthesis --
+            |  4/5 decoders SINGLE_COMPONENT_DOMINANT, 2/2 encoders PAIR_TERMS_REQUIRED,
+            |  Phi-3 a decoder-side counterexample, OLMo shows structural/causal rank
+            |  dissociation) and C-047 (E10b -- Phi-3's own decision splits by intervention
+            |  strength: PAIR_TERMS_REQUIRED at eps=0.5, MIXED_OR_UNRESOLVED at eps=1.0,
+            |  driven by a specific layer-2 three-row redundancy break). C-034 (q1 tracks
+            |  architecture more than domain) annotated, not retired: causal-response
+            |  complexity is now the stronger, more developed architecture-level finding,
+            |  and C-034 is confirmed secondary/calibration material only. Also flagged
+            |  (N-017): C-040 and C-045 give different span ratios and shapes for GENERator
+            |  row 2371's own dose-response and have never been checked against each other --
+            |  left open pending E12.
+            |  next: PAPER_OUTLINE.md still reads as of 2026-08-13 and does not yet have a
+            |  section home for C-046/C-047 -- needs its own update pass, not done here.
+            |  E11 (scale-ladder check on C-034) and E12 (GENERator degradation-matched
+            |  control, including an amplification arm on row 2371 to test the C-040/C-045
+            |  tension) are queued next per explicit author instruction.
 ```
