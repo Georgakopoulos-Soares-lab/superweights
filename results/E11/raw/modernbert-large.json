@@ -1,0 +1,70 @@
+{
+  "key": "modernbert-large",
+  "model": "answerdotai/ModernBERT-large",
+  "repo": "answerdotai/ModernBERT-large",
+  "requested_revision": "45bb4654a4d5aaff24dd11d4781fa46d39bf8c13",
+  "resolved_revision": "45bb4654a4d5aaff24dd11d4781fa46d39bf8c13",
+  "family": "ModernBERT",
+  "domain": "text",
+  "architecture": "encoder",
+  "panel_index": 11,
+  "dtype": "float32",
+  "total_params": 395881664,
+  "embed_params": 51628224,
+  "non_embed_params": 344253440,
+  "d_model": 1024,
+  "d_ffn": 2624,
+  "n_layers": 28,
+  "gated": true,
+  "gate_evidence": "packed Wi (chunked input/gate) -> elementwise product -> Wo (ModernBERT-style GeGLU)",
+  "ratio_threshold": 5.0,
+  "n_input_tokens": 508,
+  "candidate": {
+    "layer": 19,
+    "row": 379,
+    "out_max": 22857.23828125,
+    "detection_ratio": 687.0649430706966,
+    "relative_depth": 0.6785714285714286,
+    "q1": 0.9701337490592797,
+    "pr_spec": 1.0621492362619986,
+    "stable_rank": 1.0307857045172184,
+    "frob_norm": 708.1322939648359,
+    "n_singular_values": 1024
+  },
+  "null_outcome": false,
+  "null_reason": null,
+  "control_rows": [
+    {
+      "row": 40,
+      "q1": 0.6431978021476956,
+      "pr_spec": 2.4116138770877953,
+      "frob_norm": 36.58442982228172
+    },
+    {
+      "row": 558,
+      "q1": 0.25477038316901224,
+      "pr_spec": 14.37537135590773,
+      "frob_norm": 26.645597736876592
+    },
+    {
+      "row": 709,
+      "q1": 0.7969730729418231,
+      "pr_spec": 1.5736201588659608,
+      "frob_norm": 47.48054622734535
+    },
+    {
+      "row": 816,
+      "q1": 0.2248459598856094,
+      "pr_spec": 18.240334232930337,
+      "frob_norm": 25.02791513270435
+    },
+    {
+      "row": 873,
+      "q1": 0.21211274700972377,
+      "pr_spec": 20.46699108205947,
+      "frob_norm": 25.24469999559645
+    }
+  ],
+  "layer_median_frob_norm": 26.645597736876592,
+  "candidate_frob_norm_ratio_to_layer_median": 26.575958286152655
+}

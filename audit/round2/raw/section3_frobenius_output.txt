@@ -1,0 +1,21 @@
+
+=== epsilon=0.5, n=22 ===
+  Frobenius-ratio vs R:  rho=0.348391 p=0.112070  bootstrap CI(seed44)=[-0.138798,0.740629]
+  q1 vs R:               rho=0.114625 p=0.611500  bootstrap CI(seed43)=[-0.409480,0.617945]
+  LOO rho (Frobenius): min=0.284416 (NTv3) max=0.550649 (EuroBERT/EuroBERT-610m)
+  text-decoders-only (n=10): Frobenius rho=-0.066667 p=0.854813; q1 rho=-0.163636 p=0.651477
+  q1>=0.95 split: n_high=13 median_R=0.6288%  n_low=9 median_R=0.3107%
+
+=== epsilon=1.0, n=22 ===
+  Frobenius-ratio vs R:  rho=0.440994 p=0.039940  bootstrap CI(seed44)=[0.062175,0.717383]
+  q1 vs R:               rho=0.073970 p=0.743559  bootstrap CI(seed43)=[-0.391371,0.512621]
+  LOO rho (Frobenius): min=0.364935 (NTv3) max=0.537662 (Qwen/Qwen2.5-0.5B)
+  text-decoders-only (n=10): Frobenius rho=-0.042424 p=0.907364; q1 rho=-0.333333 p=0.346594
+  q1>=0.95 split: n_high=13 median_R=37.0994%  n_low=9 median_R=0.7641%
+
+q1 distribution across the 22-model CAUSAL panel:
+  >0.95: 13/22
+  >0.97: 9/22
+  <0.8:  3/22
+
+layer_relative_frobenius (frob_ratio_to_layer_median) coverage: 22/22

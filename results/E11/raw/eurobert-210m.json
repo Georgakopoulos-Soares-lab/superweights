@@ -1,0 +1,70 @@
+{
+  "key": "eurobert-210m",
+  "model": "EuroBERT/EuroBERT-210m",
+  "repo": "EuroBERT/EuroBERT-210m",
+  "requested_revision": "39b51e15dd1f1a06f58b5cbf6a8a188cec60bd0e",
+  "resolved_revision": "39b51e15dd1f1a06f58b5cbf6a8a188cec60bd0e",
+  "family": "EuroBERT",
+  "domain": "text",
+  "architecture": "encoder",
+  "panel_index": 8,
+  "dtype": "float32",
+  "total_params": 310266624,
+  "embed_params": 197001216,
+  "non_embed_params": 113265408,
+  "d_model": 768,
+  "d_ffn": 3072,
+  "n_layers": 12,
+  "gated": true,
+  "gate_evidence": "gate_proj/up_proj/down_proj (separate SwiGLU-style projections)",
+  "ratio_threshold": 5.0,
+  "n_input_tokens": 508,
+  "candidate": {
+    "layer": 3,
+    "row": 300,
+    "out_max": 128.44810485839844,
+    "detection_ratio": 101.50225104036197,
+    "relative_depth": 0.25,
+    "q1": 0.9838491163147434,
+    "pr_spec": 1.0329040152598965,
+    "stable_rank": 1.0164160168642056,
+    "frob_norm": 2.0419119424635404,
+    "n_singular_values": 768
+  },
+  "null_outcome": false,
+  "null_reason": null,
+  "control_rows": [
+    {
+      "row": 72,
+      "q1": 0.15243100116033595,
+      "pr_spec": 35.18001035444176,
+      "frob_norm": 0.13712055353624836
+    },
+    {
+      "row": 216,
+      "q1": 0.21858404524793604,
+      "pr_spec": 19.051224186237047,
+      "frob_norm": 0.13418716667662492
+    },
+    {
+      "row": 514,
+      "q1": 0.10896112405169942,
+      "pr_spec": 58.45340965252997,
+      "frob_norm": 0.13359245231760958
+    },
+    {
+      "row": 543,
+      "q1": 0.08847561324081633,
+      "pr_spec": 78.5698893332249,
+      "frob_norm": 0.13658333982428578
+    },
+    {
+      "row": 757,
+      "q1": 0.10214418523593437,
+      "pr_spec": 63.97887999340167,
+      "frob_norm": 0.1386345000250687
+    }
+  ],
+  "layer_median_frob_norm": 0.13658333982428578,
+  "candidate_frob_norm_ratio_to_layer_median": 14.949934194686236
+}

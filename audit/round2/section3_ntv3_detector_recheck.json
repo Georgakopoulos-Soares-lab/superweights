@@ -1,0 +1,55 @@
+{
+  "model": "ntv3",
+  "frozen_candidate": [
+    11,
+    1472
+  ],
+  "results_by_preprocessing": {
+    "wrapper_convention_manual_bos_no_specials": {
+      "top_ratio_coord": [
+        6,
+        1472
+      ],
+      "top_ratio_value": 30.631597294371414,
+      "top_activation_coord": [
+        11,
+        1472
+      ],
+      "top_activation_value": 772.1895141601562,
+      "frozen_activation": 772.1895141601562,
+      "frozen_ratio": 23.17265284918813,
+      "frozen_activation_rank": 1,
+      "frozen_ratio_rank": 3,
+      "frozen_passes_ratio5": true
+    },
+    "tokenizer_default_add_special_tokens_true": {
+      "top_ratio_coord": [
+        6,
+        1472
+      ],
+      "top_ratio_value": 30.631597294371414,
+      "top_activation_coord": [
+        11,
+        1472
+      ],
+      "top_activation_value": 772.1895141601562,
+      "frozen_activation": 772.1895141601562,
+      "frozen_ratio": 23.17265284918813,
+      "frozen_activation_rank": 1,
+      "frozen_ratio_rank": 3,
+      "frozen_passes_ratio5": true
+    }
+  },
+  "structural_metrics": {
+    "L11r1472": {
+      "q1": 0.3888939675174816,
+      "pr_spec": 6.480324491019531,
+      "frob_norm": 441.51731901128426
+    },
+    "L6r1472": {
+      "q1": 0.3954010582385375,
+      "pr_spec": 6.257827414827761,
+      "frob_norm": 406.2714128946428
+    }
+  }
+}

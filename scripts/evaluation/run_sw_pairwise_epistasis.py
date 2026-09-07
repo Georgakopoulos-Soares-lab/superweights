@@ -31,6 +31,7 @@ import argparse
 import csv as _csv
 import itertools
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -52,7 +53,17 @@ from run_gue_multiseed import _load_model, _set_seed  # noqa: E402
 import sklearn.metrics  # noqa: E402
 
 SEED = 42
-GUE_ROOT = Path("/data/nvidia/data/gue/GUE")
+# GUE location differs per machine (this box: /data/nvidia/...; TACC: /work/11034/...),
+# and the two branches had hardcoded one each. Resolve by probing the known roots in order
+# and letting $GUE_ROOT override, so the script is portable instead of correct-on-one-host.
+# No science changed.
+_GUE_CANDIDATES = (
+    os.environ.get("GUE_ROOT"),
+    "/data/nvidia/data/gue/GUE",
+    "/work/11034/atzanakak/GUE/GUE",
+)
+GUE_ROOT = next((Path(c) for c in _GUE_CANDIDATES if c and Path(c).is_dir()),
+                Path(_GUE_CANDIDATES[1]))
 
 
 def evaluate(model, ds, device, batch=64):

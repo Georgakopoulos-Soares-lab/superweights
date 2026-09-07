@@ -1,0 +1,15 @@
+c,nll,gc_fraction,gc_ci_low,gc_ci_high,n_prompts,n_seeds,obtained_via,frac_of_full_ablation_damage
+0.0,8.754319605827332,0.3064959490740741,0.30102516456886574,0.31212112991898144,288,3,STORED,1.0
+0.0125,8.753588829040527,0.3068485966435185,0.30138708043981477,0.3125725640190972,288,3,STORED,0.9996915172735554
+0.025,8.752900342941285,,,,0,0,NOT FOUND (NLL only -- no generation run at this c),0.9994008867105044
+0.05,8.751532158851624,,,,0,0,NOT FOUND (NLL only -- no generation run at this c),0.9988233353078362
+0.1,8.748447380065919,,,,0,0,NOT FOUND (NLL only -- no generation run at this c),0.9975211579706854
+0.25,8.74292501449585,,,,0,0,NOT FOUND (NLL only -- no generation run at this c),0.9951900023863276
+0.5,8.733293561935424,,,,0,0,NOT FOUND (NLL only -- no generation run at this c),0.9911242783525183
+0.75,8.722664160728455,,,,0,0,NOT FOUND (NLL only -- no generation run at this c),0.9866372903638374
+1.0,8.711739401817322,,,,0,0,NOT FOUND (NLL only -- no generation run at this c),0.9820256230592536
+1.5,8.684712767601013,,,,0,0,NOT FOUND (NLL only -- no generation run at this c),0.9706168728632842
+2.0,8.663316617012024,,,,0,0,NOT FOUND (NLL only -- no generation run at this c),0.9615849181155554
+3.0,8.608202695846558,,,,0,0,NOT FOUND (NLL only -- no generation run at this c),0.9383196844995354
+5.0,8.49545283794403,,,,0,0,NOT FOUND (NLL only -- no generation run at this c),0.8907245991054119
+8.0,8.375072193145751,,,,0,0,NOT FOUND (NLL only -- no generation run at this c),0.8399083304594064

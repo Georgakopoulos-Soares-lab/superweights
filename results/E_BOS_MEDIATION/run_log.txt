@@ -1,0 +1,157 @@
+[2026-08-31T23:07:10Z] === Priority 3: GENERator-EUK L4/r2371 BOS causal mediation ===
+[2026-08-31T23:07:10Z] Loading model (revision pinned to 7dc01bccce5b65e15141170538afdc2ff09d8dde)...
+[2026-08-31T23:12:17Z] Loaded. resolved_commit_hash=7dc01bccce5b65e15141170538afdc2ff09d8dde load_seconds=306.8
+[2026-08-31T23:12:22Z] Corpora built: {'base_seed': 42, 'repartition_tries': 0, 'n_regions_total': 50000, 'partition_seed_used': 42, 'n_prompt': 96, 'n_damage': 100}
+[2026-08-31T23:12:22Z] --- Provenance check: reproduce historical E12 intact + full-ablation damage ---
+[2026-08-31T23:12:35Z]   measured intact damage  = 6.385381  (historical 6.385381)
+[2026-08-31T23:12:35Z]   measured ablated damage = 8.754320  (historical 8.754320)
+[2026-08-31T23:12:35Z] Provenance check PASSED -- checkpoint state reproduces historical E12 damage values within tolerance. Proceeding to smoke tests.
+[2026-08-31T23:12:39Z] Smoke test results:
+{
+  "1_noop_hook_eq_intact": {
+    "noop": 6.272225618362427,
+    "intact": 6.272225618362427,
+    "pass": true
+  },
+  "2_hook_ablation_eq_weight_ablation": {
+    "hook": 8.39488410949707,
+    "weight": 8.39488410949707,
+    "pass": true
+  },
+  "3_restore_everywhere_eq_intact": {
+    "restore_all": 6.272225618362427,
+    "intact": 6.272225618362427,
+    "pass": true
+  },
+  "4_bos_only_changes_only_position0": {
+    "differs_at_pos0": false,
+    "differs_elsewhere_count": 0,
+    "seq_len": 86,
+    "pass": false
+  },
+  "5_matched_nonbos_changes_only_target": {
+    "target_pos": 43,
+    "differs_at_target": false,
+    "total_positions_differing": 0,
+    "pass": false
+  },
+  "6_prefill_vs_decode_handling": {
+    "n_prefill_calls": 1,
+    "n_decode_calls": 4,
+    "zeroed_positions_at_prefill": [
+      0
+    ],
+    "zeroed_positions_at_decode_calls": [
+      [],
+      [],
+      [],
+      []
+    ],
+    "pass": true
+  }
+}
+[2026-08-31T23:12:39Z] SMOKE TESTS FAILED. STOPPING Priority 3 before the full run.
+[2026-08-31T23:47:38Z] === Priority 3: GENERator-EUK L4/r2371 BOS causal mediation ===
+[2026-08-31T23:47:38Z] Loading model (revision pinned to 7dc01bccce5b65e15141170538afdc2ff09d8dde)...
+[2026-08-31T23:51:58Z] Loaded. resolved_commit_hash=7dc01bccce5b65e15141170538afdc2ff09d8dde load_seconds=260.5
+[2026-08-31T23:52:00Z] Corpora built: {'base_seed': 42, 'repartition_tries': 0, 'n_regions_total': 50000, 'partition_seed_used': 42, 'n_prompt': 96, 'n_damage': 100}
+[2026-08-31T23:52:00Z] --- Provenance check: reproduce historical E12 intact + full-ablation damage ---
+[2026-08-31T23:52:15Z]   measured intact damage  = 6.385381  (historical 6.385381)
+[2026-08-31T23:52:15Z]   measured ablated damage = 8.754320  (historical 8.754320)
+[2026-08-31T23:52:15Z] Provenance check PASSED -- checkpoint state reproduces historical E12 damage values within tolerance. Proceeding to smoke tests.
+[2026-08-31T23:52:20Z] Smoke test results:
+{
+  "1_noop_hook_eq_intact": {
+    "noop": 6.272225618362427,
+    "intact": 6.272225618362427,
+    "pass": true
+  },
+  "2_hook_ablation_eq_weight_ablation": {
+    "hook": 8.39488410949707,
+    "weight": 8.39488410949707,
+    "pass": true
+  },
+  "3_restore_everywhere_eq_intact": {
+    "restore_all": 6.272225618362427,
+    "intact": 6.272225618362427,
+    "pass": true
+  },
+  "4_bos_only_changes_only_position0": {
+    "differs_at_pos0": true,
+    "differs_elsewhere_count": 0,
+    "seq_len": 86,
+    "pass": true
+  },
+  "5_matched_nonbos_changes_only_target": {
+    "target_pos": 43,
+    "differs_at_target": true,
+    "total_positions_differing": 1,
+    "pass": true
+  },
+  "6_prefill_vs_decode_handling": {
+    "n_prefill_calls": 1,
+    "n_decode_calls": 4,
+    "zeroed_positions_at_prefill": [
+      0
+    ],
+    "zeroed_positions_at_decode_calls": [
+      [],
+      [],
+      [],
+      []
+    ],
+    "pass": true
+  }
+}
+[2026-08-31T23:52:20Z] ALL SMOKE TESTS PASSED. Proceeding immediately to the full experiment (no further permission stop, per instruction).
+[2026-08-31T23:52:25Z]   damage[A_intact] pooled_mean=6.385381 elapsed=5.4s
+[2026-08-31T23:52:31Z]   damage[B_full_ablation_weight] pooled_mean=8.754320 elapsed=5.3s
+[2026-08-31T23:52:36Z]   damage[C_ablate_bos_only] pooled_mean=8.721829 elapsed=5.3s
+[2026-08-31T23:52:41Z]   damage[D_ablate_all_except_bos] pooled_mean=6.386261 elapsed=5.4s
+[2026-08-31T23:52:53Z]   damage[E_restore_at_bos] pooled_mean=6.386261 elapsed=11.8s
+[2026-08-31T23:52:58Z]   damage[F_restore_at_matched_nonbos] pooled_mean=8.753691 elapsed=5.4s
+[2026-08-31T23:53:00Z] Rescue fractions: {
+  "C_ablate_bos_only": {
+    "point": 0.013715300430758576,
+    "ci95": [
+      -0.0007948271737849642,
+      0.027271401260943694
+    ],
+    "n": 100,
+    "n_boot_finite": 5000
+  },
+  "D_ablate_all_except_bos": {
+    "point": 0.9996283936018892,
+    "ci95": [
+      0.9978940859277813,
+      1.0015287769749814
+    ],
+    "n": 100,
+    "n_boot_finite": 5000
+  },
+  "E_restore_at_bos": {
+    "point": 0.9996283936018892,
+    "ci95": [
+      0.9979174184317209,
+      1.0015875481825733
+    ],
+    "n": 100,
+    "n_boot_finite": 5000
+  },
+  "F_restore_at_matched_nonbos": {
+    "point": 0.0002654455062946842,
+    "ci95": [
+      -0.0010589089198941922,
+      0.0015721755569575824
+    ],
+    "n": 100,
+    "n_boot_finite": 5000
+  }
+}
+[2026-08-31T23:53:59Z]   GC[A_intact] mean=0.4191 elapsed=59.1s
+[2026-08-31T23:54:53Z]   GC[B_full_ablation_weight] mean=0.3090 elapsed=54.1s
+[2026-08-31T23:55:51Z]   GC[C_ablate_bos_only] mean=0.2920 elapsed=57.8s
+[2026-08-31T23:56:58Z]   GC[D_ablate_all_except_bos] mean=0.4118 elapsed=66.9s
+[2026-08-31T23:58:03Z]   GC[E_restore_at_bos] mean=0.4118 elapsed=65.0s
+[2026-08-31T23:59:09Z]   GC[F_restore_at_matched_nonbos] mean=0.3026 elapsed=66.1s
+[2026-08-31T23:59:10Z] WROTE /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/E_BOS_MEDIATION/bos_mediation_results.json total_elapsed=692.5s

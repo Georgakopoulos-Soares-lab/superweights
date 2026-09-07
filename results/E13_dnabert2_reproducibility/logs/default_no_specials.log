@@ -1,0 +1,36 @@
+/work/11034/atzanakak/ls6/nonbdna/cache/hf/modules/transformers_modules/zhihan1996/DNABERT_hyphen_2_hyphen_117M/7bce263b15377fc15361f52cfab88f8b586abda0/bert_layers.py:127: UserWarning: Unable to import Triton; defaulting MosaicBERT attention implementation to pytorch (this will reduce throughput when using this model).
+  warnings.warn(
+Loading weights:   0%|          | 0/142 [00:00<?, ?it/s]Loading weights: 100%|██████████| 142/142 [00:00<00:00, 10304.70it/s]
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+{
+  "output": "/work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/E13_dnabert2_reproducibility/default_no_specials.json",
+  "target": {
+    "layer": 5,
+    "row": 603,
+    "activation_max": 0.5731383562088013,
+    "activation_median": 0.5734861493110657,
+    "detector_ratio": 0.9993935457679628,
+    "ratio_rank": 4628,
+    "activation_rank": 2749,
+    "passes": false
+  },
+  "k": 12,
+  "global_max_ratio": {
+    "layer": 2,
+    "row": 641,
+    "activation_max": 10.218978881835938,
+    "activation_median": 0.32715722918510437,
+    "detector_ratio": 31.235681104433358,
+    "ratio_rank": 1,
+    "activation_rank": 2
+  },
+  "global_max_activation": {
+    "layer": 1,
+    "row": 603,
+    "activation_max": 10.42054557800293,
+    "activation_median": 0.4382533133029938,
+    "detector_ratio": 23.777448479433424,
+    "ratio_rank": 2,
+    "activation_rank": 1
+  }
+}

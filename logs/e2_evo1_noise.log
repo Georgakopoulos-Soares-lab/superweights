@@ -1,0 +1,31 @@
+[evo1] sw_layer=11 sw_row=3776 sw_pos=324 dtype=torch.float32
+[evo1] eps_AC=3.3271e+03  std_AC=3.3271e+05  median|h|=2.8336e+05
+
+    L    noise ||dh||   signal ||dh||       SNR
+   12      0.0000e+00      2.2487e+01       inf
+   13      0.0000e+00      3.9909e+02       inf
+   14      0.0000e+00      3.9910e+02       inf
+   15      0.0000e+00      3.9910e+02       inf
+   16      0.0000e+00      3.9910e+02       inf
+   17      0.0000e+00      3.9911e+02       inf
+   18      0.0000e+00      3.9916e+02       inf
+   19      0.0000e+00      3.9916e+02       inf
+   20      0.0000e+00      3.9916e+02       inf
+   21      0.0000e+00      3.9917e+02       inf
+   22      0.0000e+00      3.9917e+02       inf
+   23      0.0000e+00      3.9917e+02       inf
+   24      0.0000e+00      3.9917e+02       inf
+   25      0.0000e+00      3.9917e+02       inf
+   26      0.0000e+00      3.9917e+02       inf
+   27      0.0000e+00      3.9917e+02       inf
+   28      0.0000e+00      3.9917e+02       inf
+   29      0.0000e+00      3.9917e+02       inf
+   30      0.0000e+00      3.9917e+02       inf
+   31      0.0000e+00      3.9917e+02       inf
+
+  KL noise floor (mean of 3) = 0.0000e+00
+  KL signal (SW injection)              = 7.8678e-08
+  KL SNR                                = inf
+
+  VERDICT: DETERMINISTIC — noise floor is exactly zero; T/C/KL are measurements.
+  saved -> /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/impulse_determinism_evo1.json

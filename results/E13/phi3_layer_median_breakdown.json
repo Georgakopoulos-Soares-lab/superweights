@@ -1,0 +1,62 @@
+{
+  "source_file": "results/e10_exact_uknorm_phi3.json",
+  "method": "Gram-identity exact ||U_k||_F, all rows in each of layers 2 and 4 separately (Phi-3's 6 published candidate rows split across 2 layers; layer_median_frob_norm/candidate_frob_norm_ratio_to_layer_median are reported per-row below, not collapsed to one scalar, since the 6 rows do not share a layer).",
+  "n_rows_in_layer": null,
+  "candidate_frob_norm": null,
+  "layer_median_frob_norm": null,
+  "candidate_frob_norm_ratio_to_layer_median": null,
+  "per_row": {
+    "L2/r525": {
+      "source_file": "results/e10_exact_uknorm_phi3.json",
+      "method": "Gram-identity exact ||U_k||_F, all rows in layer, float64 (exact_uk_norm_all_rows.py, validated against SVD to rel_err<1e-6)",
+      "n_rows_in_layer": 3072,
+      "candidate_frob_norm": 120.77459257170976,
+      "layer_median_frob_norm": 15.579189188998432,
+      "candidate_frob_norm_ratio_to_layer_median": 7.752302838519815
+    },
+    "L2/r1693": {
+      "source_file": "results/e10_exact_uknorm_phi3.json",
+      "method": "Gram-identity exact ||U_k||_F, all rows in layer, float64 (exact_uk_norm_all_rows.py, validated against SVD to rel_err<1e-6)",
+      "n_rows_in_layer": 3072,
+      "candidate_frob_norm": 105.85558346861816,
+      "layer_median_frob_norm": 15.579189188998432,
+      "candidate_frob_norm_ratio_to_layer_median": 6.7946786051850685
+    },
+    "L2/r1113": {
+      "source_file": "results/e10_exact_uknorm_phi3.json",
+      "method": "Gram-identity exact ||U_k||_F, all rows in layer, float64 (exact_uk_norm_all_rows.py, validated against SVD to rel_err<1e-6)",
+      "n_rows_in_layer": 3072,
+      "candidate_frob_norm": 97.51920420319067,
+      "layer_median_frob_norm": 15.579189188998432,
+      "candidate_frob_norm_ratio_to_layer_median": 6.259581485283963
+    },
+    "L4/r525": {
+      "source_file": "results/e10_exact_uknorm_phi3.json",
+      "method": "Gram-identity exact ||U_k||_F, all rows in layer, float64 (exact_uk_norm_all_rows.py, validated against SVD to rel_err<1e-6)",
+      "n_rows_in_layer": 3072,
+      "candidate_frob_norm": 72.11570570027023,
+      "layer_median_frob_norm": 16.43891946918779,
+      "candidate_frob_norm_ratio_to_layer_median": 4.3868884348171395
+    },
+    "L4/r1113": {
+      "source_file": "results/e10_exact_uknorm_phi3.json",
+      "method": "Gram-identity exact ||U_k||_F, all rows in layer, float64 (exact_uk_norm_all_rows.py, validated against SVD to rel_err<1e-6)",
+      "n_rows_in_layer": 3072,
+      "candidate_frob_norm": 61.701549199592684,
+      "layer_median_frob_norm": 16.43891946918779,
+      "candidate_frob_norm_ratio_to_layer_median": 3.7533822898301
+    },
+    "L4/r1693": {
+      "source_file": "results/e10_exact_uknorm_phi3.json",
+      "method": "Gram-identity exact ||U_k||_F, all rows in layer, float64 (exact_uk_norm_all_rows.py, validated against SVD to rel_err<1e-6)",
+      "n_rows_in_layer": 3072,
+      "candidate_frob_norm": 46.49362134413812,
+      "layer_median_frob_norm": 16.43891946918779,
+      "candidate_frob_norm_ratio_to_layer_median": 2.8282650469383475
+    }
+  },
+  "model_key": "phi3-mini",
+  "csv_model": "Phi-3-mini-4k-instruct",
+  "layer": null,
+  "row": null
+}

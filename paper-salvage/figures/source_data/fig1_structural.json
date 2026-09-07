@@ -1,0 +1,162 @@
+{
+ "panel_a": [
+  {
+   "name": "Llama-7B",
+   "row_rank": 1,
+   "percentile": 100.0,
+   "top1_share": 0.8902517404585564,
+   "top1_matches": true
+  },
+  {
+   "name": "Mistral-7B",
+   "row_rank": 1,
+   "percentile": 100.0,
+   "top1_share": 0.9884264554307004,
+   "top1_matches": true
+  },
+  {
+   "name": "OLMo-7B",
+   "row_rank": 1,
+   "percentile": 100.0,
+   "top1_share": 0.9558374285814745,
+   "top1_matches": true
+  }
+ ],
+ "panel_bc": [
+  {
+   "name": "Mistral-7B",
+   "q1": 0.9922047361077938,
+   "pr_spec": 1.0157714240616442,
+   "frob_norm": 0.38834723364706875,
+   "domain": "text",
+   "arch": "decoder"
+  },
+  {
+   "name": "Llama-7B",
+   "q1": 0.9888168037615727,
+   "pr_spec": 1.022653174688543,
+   "frob_norm": 137.61641832032996,
+   "domain": "text",
+   "arch": "decoder"
+  },
+  {
+   "name": "GENERator EUK",
+   "q1": 0.9688691252375834,
+   "pr_spec": 1.0652593586761891,
+   "frob_norm": 522.1322102348346,
+   "domain": "genomic",
+   "arch": "decoder"
+  },
+  {
+   "name": "OLMo-7B",
+   "q1": 0.964564665808712,
+   "pr_spec": 1.07470169944751,
+   "frob_norm": 0.9110752807676615,
+   "domain": "text",
+   "arch": "decoder"
+  },
+  {
+   "name": "DNABERT-2",
+   "q1": 0.7933113982887636,
+   "pr_spec": 1.503287698117315,
+   "frob_norm": 74.00855774610585,
+   "domain": "genomic",
+   "arch": "encoder"
+  },
+  {
+   "name": "NTv3",
+   "q1": 0.38889396751753286,
+   "pr_spec": 6.4803244910178845,
+   "frob_norm": 441.5173190114778,
+   "domain": "genomic",
+   "arch": "encoder"
+  },
+  {
+   "name": "Qwen2.5-7B",
+   "q1": 0.9529104185966117,
+   "pr_spec": 1.0995461100252455,
+   "frob_norm": 29.68742128221388,
+   "domain": "text",
+   "arch": "decoder"
+  },
+  {
+   "name": "GenomeOcean-4B",
+   "q1": 0.8989077166811766,
+   "pr_spec": 1.2243008136348879,
+   "frob_norm": 2.8832156466529963,
+   "domain": "genomic",
+   "arch": "decoder"
+  },
+  {
+   "name": "Phi-3-mini",
+   "q1": 0.9028371971796194,
+   "pr_spec": 1.224901693263825,
+   "frob_norm": null,
+   "domain": "text",
+   "arch": "decoder"
+  },
+  {
+   "name": "MosaicBERT",
+   "q1": 0.4765682244123624,
+   "pr_spec": 4.115864702588391,
+   "frob_norm": 19.997746047192482,
+   "domain": "text",
+   "arch": "encoder"
+  },
+  {
+   "name": "ModernBERT",
+   "q1": 0.8969889514776379,
+   "pr_spec": 1.2336584717613133,
+   "frob_norm": 836.046538392924,
+   "domain": "text",
+   "arch": "encoder"
+  },
+  {
+   "name": "Evo2-7B",
+   "q1": null,
+   "pr_spec": null,
+   "frob_norm": null,
+   "null_reason": "global-max ratio 2.22 < 5.0",
+   "domain": "genomic",
+   "arch": "decoder"
+  }
+ ],
+ "panel_d": {
+  "MosaicBERT": {
+   "candidate_q1": 0.4765682244123624,
+   "candidate_pr": 4.115864702588391,
+   "control_q1": [
+    0.04723757391388671,
+    0.03506076872548178,
+    0.039334810049812395,
+    0.03482503118715802,
+    0.04448234804850336
+   ],
+   "control_pr": [
+    139.7422689808367,
+    169.14472748687643,
+    154.83999878989638,
+    163.7387324779263,
+    146.49719688152516
+   ]
+  },
+  "ModernBERT": {
+   "candidate_q1": 0.8969889514776379,
+   "candidate_pr": 1.2336584717613133,
+   "control_q1": [
+    0.048516392221312155,
+    0.03156945498202237,
+    0.042576881684735966,
+    0.024126060381117004,
+    0.03279190492726177
+   ],
+   "control_pr": [
+    90.3795267616769,
+    116.34310638464736,
+    91.24590662973189,
+    120.92348684489654,
+    101.06806209962969
+   ]
+  }
+ }
+}

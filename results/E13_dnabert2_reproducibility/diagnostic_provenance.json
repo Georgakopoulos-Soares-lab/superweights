@@ -1,0 +1,38 @@
+{
+  "diagnostic": "DNABERT-2 historical-discovery versus E13 execution path",
+  "git_head": "fafd44db052373a2bcd2729e4fedc8a07557f701",
+  "historical_code_commit_recovered": "e7906060884bb3ab20bb56576330f9b477f17644",
+  "historical_artifact_first_tracked_after_restructure": "6e789a3cfb69f6d57b9aa917bb534b72fdd00de1",
+  "historical_revision_provenance_gap": "Original wrapper requested revision=main and artifact did not store resolved revision or environment.",
+  "checkpoint_tested": "7bce263b15377fc15361f52cfab88f8b586abda0",
+  "historical_activation_matches_artifact_exactly": true,
+  "current_endpoint_matches_census_exactly": true,
+  "historical_vs_explicit_eager_specials_all_rows_exact": true,
+  "current_vs_default_no_specials_all_rows_exact": true,
+  "actb_interior_token_ids_exactly_equal": true,
+  "historical_added_token_ids": [
+    1,
+    2
+  ],
+  "structural_metrics_exact_across_cells": true,
+  "raw_outputs": {
+    "historical_default_specials": {
+      "path": "results/E13_dnabert2_reproducibility/historical_default_specials.json",
+      "sha256": "2d384e754454656050d81d531a9340d3f6b526f820feed829a57fb20f5fec388"
+    },
+    "current_eager_no_specials": {
+      "path": "results/E13_dnabert2_reproducibility/current_eager_no_specials.json",
+      "sha256": "4264cf5cb9a1aaecbbc0050060f03f542590324f1d5c476c2c968bf96c33669a"
+    },
+    "eager_specials": {
+      "path": "results/E13_dnabert2_reproducibility/eager_specials.json",
+      "sha256": "d438d154bfdce0f78bc22a2f0d866109042a44b6c223173c24c3f35da6844ed1"
+    },
+    "default_no_specials": {
+      "path": "results/E13_dnabert2_reproducibility/default_no_specials.json",
+      "sha256": "e7ad65715d0774e45d758bffa1b3f1f35ee278020ea5c8a908cb6fa38493d68f"
+    }
+  },
+  "causal_interventions_run": false,
+  "tomography_run": false
+}

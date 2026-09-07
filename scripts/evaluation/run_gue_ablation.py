@@ -43,10 +43,10 @@ import sys
 from pathlib import Path
 
 import numpy as np
-import sklearn.metrics
+# sklearn replaced by numpy implementations below (_accuracy, _mcc, _f1_macro)
 import torch
 import torch.nn as nn
-import transformers
+# transformers imported lazily inside run_task() to allow evo2-container usage
 import yaml
 
 
@@ -198,6 +198,57 @@ class _HybriDNAClassifier(nn.Module):
         return self._Output(logits=logits, loss=loss)
 
 
+# ── GENERator classification wrapper ─────────────────────────────────────────
+
+class _GeneratorClassifier(nn.Module):
+    """
+    Wraps a GENERator (LlamaForCausalLM) backbone with a mean-pool + linear head.
+    Identical pattern to _HybriDNAClassifier; handles device/dtype mismatch lazily.
+    """
+
+    class _Output:
+        def __init__(self, logits, loss=None):
+            self.logits = logits
+            self.loss   = loss
+
+    def __init__(self, backbone, hidden_size: int, num_labels: int):
+        super().__init__()
+        self.backbone   = backbone
+        self.classifier = nn.Linear(hidden_size, num_labels)
+        self.num_labels = num_labels
+
+    def forward(self, input_ids=None, attention_mask=None, labels=None, **kwargs):
+        out = self.backbone(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            output_hidden_states=True,
+        )
+        if hasattr(out, "hidden_states") and out.hidden_states is not None:
+            hidden = out.hidden_states[-1]
+        elif hasattr(out, "last_hidden_state"):
+            hidden = out.last_hidden_state
+        else:
+            raise RuntimeError("Cannot find hidden states in GENERator output")
+
+        if attention_mask is not None:
+            mask   = attention_mask.unsqueeze(-1).float()
+            pooled = (hidden * mask).sum(1) / mask.sum(1).clamp(min=1)
+        else:
+            pooled = hidden.mean(1)
+
+        if (self.classifier.weight.device != pooled.device
+                or self.classifier.weight.dtype != pooled.dtype):
+            self.classifier = self.classifier.to(
+                device=pooled.device, dtype=pooled.dtype
+            )
+
+        logits = self.classifier(pooled)
+        loss   = None
+        if labels is not None:
+            loss = nn.functional.cross_entropy(logits, labels)
+        return self._Output(logits=logits, loss=loss)
+
+
 # ── NTv3 classification wrapper ───────────────────────────────────────────────
 
 class _NTv3Classifier(nn.Module):
@@ -278,6 +329,45 @@ class _NTv3Classifier(nn.Module):
         return self._Output(logits=logits, loss=loss)
 
 
+# ── Metric helpers (numpy-only, no sklearn dependency) ───────────────────────
+
+def _accuracy(labels, preds):
+    return float(np.mean(labels == preds))
+
+def _mcc(labels, preds):
+    classes = np.unique(np.concatenate([labels, preds]))
+    if len(classes) == 2:
+        tp = int(np.sum((preds == classes[1]) & (labels == classes[1])))
+        tn = int(np.sum((preds == classes[0]) & (labels == classes[0])))
+        fp = int(np.sum((preds == classes[1]) & (labels == classes[0])))
+        fn = int(np.sum((preds == classes[0]) & (labels == classes[1])))
+        denom = ((tp+fp)*(tp+fn)*(tn+fp)*(tn+fn)) ** 0.5
+        return float((tp*tn - fp*fn) / denom) if denom > 0 else 0.0
+    # multiclass via confusion matrix
+    n = len(classes)
+    idx = {c: i for i, c in enumerate(classes)}
+    C = np.zeros((n, n), dtype=np.float64)
+    for lt, lp in zip(labels, preds):
+        C[idx[lt], idx[lp]] += 1
+    s = C.sum()
+    t_k = C.sum(axis=1)
+    p_k = C.sum(axis=0)
+    cov_ytyp = np.trace(C) * s - np.dot(t_k, p_k)
+    cov_ytyt = s**2 - np.dot(t_k, t_k)
+    cov_ypyp = s**2 - np.dot(p_k, p_k)
+    denom = (cov_ytyt * cov_ypyp) ** 0.5
+    return float(cov_ytyp / denom) if denom > 0 else 0.0
+
+def _f1_macro(labels, preds):
+    f1s = []
+    for c in np.unique(labels):
+        tp = float(np.sum((preds == c) & (labels == c)))
+        fp = float(np.sum((preds == c) & (labels != c)))
+        fn = float(np.sum((preds != c) & (labels == c)))
+        denom = 2*tp + fp + fn
+        f1s.append(2*tp / denom if denom > 0 else 0.0)
+    return float(np.mean(f1s)) if f1s else 0.0
+
 # ── Evaluation ────────────────────────────────────────────────────────────────
 
 @torch.no_grad()
@@ -297,11 +387,9 @@ def evaluate(model, dataset, batch_size: int = 64, device: str = "cuda") -> dict
     preds  = np.array(all_preds)
     labels = np.array(all_labels)
     return {
-        "accuracy": float(sklearn.metrics.accuracy_score(labels, preds)),
-        "mcc":      float(sklearn.metrics.matthews_corrcoef(labels, preds)),
-        "f1":       float(sklearn.metrics.f1_score(
-            labels, preds, average="macro", zero_division=0
-        )),
+        "accuracy": _accuracy(labels, preds),
+        "mcc":      _mcc(labels, preds),
+        "f1":       _f1_macro(labels, preds),
     }
 
 
@@ -371,7 +459,7 @@ def fine_tune(
 def _resolve_module(model, pattern: str, layer_idx: int):
     path = pattern.replace("{i}", str(layer_idx))
     # Unwrap classifier wrappers so the pattern navigates the actual backbone.
-    obj = model.backbone if isinstance(model, (_NTv3Classifier, _HybriDNAClassifier)) else model
+    obj = model.backbone if isinstance(model, (_NTv3Classifier, _HybriDNAClassifier, _GeneratorClassifier)) else model
     for attr in path.split("."):
         obj = getattr(obj, attr)
     return obj
@@ -604,7 +692,8 @@ def layer_sweep(
 def main():
     parser = argparse.ArgumentParser(description="GUE task ablation for genomic masked LMs")
     parser.add_argument("--model",    required=True,
-                        choices=["dnabert2", "ntv3", "hybridna"],
+                        choices=["dnabert2", "ntv3", "hybridna",
+                                 "generator", "generator_prokaryote", "generator_prokaryote_1b"],
                         help="Model key — must match a configs/<model>.yaml")
     parser.add_argument("--task",     required=True,
                         help="GUE task path relative to gue_root, e.g. prom/prom_core_notata")
@@ -666,6 +755,7 @@ def main():
         print("[warn] No dev.csv found — using test.csv for validation monitoring.")
 
     # ── Tokenizer ────────────────────────────────────────────────────────────
+    import transformers  # noqa: PLC0415 — lazy import for evo2-container compat
     print("Loading tokenizer ...")
     tok_kwargs = {"trust_remote_code": True} if config.get("hf_trust_remote_code") else {}
     # Pin revisions so HF doesn't re-download and overwrite reviewed code files.
@@ -679,10 +769,21 @@ def main():
         tok_kwargs["code_revision"] = "0ecff3637f0d3ba5b686d1095083218157c2ca34"
     if hf_token:
         tok_kwargs["token"] = hf_token
-    is_hybridna = "Mishamq" in model_id or args.model == "hybridna"
+    is_generator = args.model in ("generator", "generator_prokaryote", "generator_prokaryote_1b")
+    is_hybridna  = "Mishamq" in model_id or args.model == "hybridna"
+
+    # For Generator 6-mer tokenizer: sequences must be multiples of 6 bp.
+    # Round max_length down to the nearest multiple of 6 so truncation is clean.
+    if is_generator:
+        max_length = (max_length // 6) * 6 or 6
+
     if is_hybridna:
         tokenizer = transformers.AutoTokenizer.from_pretrained(
             model_id, model_max_length=max_length, padding_side="left", **tok_kwargs
+        )
+    elif is_generator:
+        tokenizer = transformers.AutoTokenizer.from_pretrained(
+            model_id, model_max_length=max_length, padding_side="right", **tok_kwargs
         )
     else:
         tokenizer = transformers.AutoTokenizer.from_pretrained(
@@ -691,7 +792,7 @@ def main():
     if "InstaDeepAI" in model_id:
         if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
-    if is_hybridna and tokenizer.pad_token is None:
+    if (is_hybridna or is_generator) and tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
     # ── Datasets ─────────────────────────────────────────────────────────────
@@ -710,7 +811,7 @@ def main():
     print(f"Loading base model from {model_id} ...")
     # NTv3 only registers AutoModelForMaskedLM (not AutoModelForSequenceClassification).
     # Load the backbone and attach a linear classification head manually.
-    # HybriDNA is a causal LM — load via AutoModelForCausalLM + mean-pool head.
+    # HybriDNA/GENERator are causal LMs — load via AutoModelForCausalLM + mean-pool head.
     if is_hybridna:
         _repo_root = Path(__file__).resolve().parents[1]
         _stubs = str(_repo_root / "stubs")
@@ -725,6 +826,15 @@ def main():
         )
         hidden_size = backbone.config.hidden_size
         model = _HybriDNAClassifier(backbone, hidden_size, num_labels)
+    elif is_generator:
+        backbone = transformers.AutoModelForCausalLM.from_pretrained(
+            model_id,
+            torch_dtype=torch.float32,
+            device_map="auto",
+            **tok_kwargs,
+        )
+        hidden_size = backbone.config.hidden_size
+        model = _GeneratorClassifier(backbone, hidden_size, num_labels)
     elif "InstaDeepAI" in model_id and "NTv3" in model_id:
         backbone = transformers.AutoModelForMaskedLM.from_pretrained(
             model_id, **tok_kwargs
@@ -744,7 +854,7 @@ def main():
             torch.load(ckpt_state_path, map_location="cpu"), strict=False
         )
 
-    if not is_hybridna:  # device_map="auto" already placed hybridna across devices
+    if not is_hybridna and not is_generator:  # device_map="auto" already placed these across devices
         model = model.to(args.device)
 
     # ── Fine-tuning ───────────────────────────────────────────────────────────

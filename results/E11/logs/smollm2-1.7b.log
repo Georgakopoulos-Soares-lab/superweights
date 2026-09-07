@@ -1,0 +1,19 @@
+/work/11034/atzanakak/work/11034/atzanakak/miniconda3/envs/grlm/lib/python3.10/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+`torch_dtype` is deprecated! Use `dtype` instead!
+Verifying E11 prereg lock before any forward pass ...
+OK       PREREG_E11_scale_ladder.md  locked 2026-08-23T16:03:20+00:00
+loading HuggingFaceTB/SmolLM2-1.7B@effd688a12921b4cc83e3312b6feb579f70f9c71 ...
+  loaded in 26.2s on cuda, dtype=float32
+  gated-FFN verification (layer 0): gate_proj/up_proj/down_proj (separate SwiGLU-style projections)
+  input token count: 512
+  candidate layer=7 row=227 out_max=2.443e+04 ratio=4647.76 ACCEPTED
+  total_params=1711376384 embed_params=100663296 non_embed=1610713088
+  candidate q1=0.966392 pr_spec=1.0707 frob_norm=3922.6
+  control rows (seeded, layer 7): [150, 464, 518, 1383, 1453]
+    control row 150: q1=0.013305 pr_spec=595.9474 frob_norm=253.665
+    control row 464: q1=0.013203 pr_spec=590.2734 frob_norm=253.167
+    control row 518: q1=0.013207 pr_spec=596.5623 frob_norm=248.269
+    control row 1383: q1=0.013290 pr_spec=590.3048 frob_norm=250.98
+    control row 1453: q1=0.012631 pr_spec=605.7936 frob_norm=252.494
+wrote /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/E11/raw/smollm2-1.7b.json

@@ -1,0 +1,263 @@
+{
+  "n_models": 22,
+  "n_boot": 5000,
+  "cohort_ci_method": "percentile model bootstrap of median",
+  "eps0p5": {
+    "candidate_gt_median_control": 18,
+    "median_candidate": 0.005995434388262366,
+    "median_control": 2.481977146057917e-07,
+    "median_candidate_minus_control": 0.005991984685582149,
+    "candidate_minus_control_ci95": [
+      0.0022579253062826946,
+      0.030607801601205395
+    ],
+    "seed": 47,
+    "sorted_candidate_effects": [
+      {
+        "model": "EuroBERT/EuroBERT-610m",
+        "effect": -0.008384070706225917
+      },
+      {
+        "model": "NTv3",
+        "effect": -0.004981039705982557
+      },
+      {
+        "model": "MosaicBERT",
+        "effect": -0.0017349806458838244
+      },
+      {
+        "model": "EuroBERT/EuroBERT-2.1B",
+        "effect": -3.873112244302346e-05
+      },
+      {
+        "model": "EuroBERT/EuroBERT-210m",
+        "effect": 0.0009938638870853646
+      },
+      {
+        "model": "GenerTeam/GENERator-v2-prokaryote-3b-base",
+        "effect": 0.00140949838720012
+      },
+      {
+        "model": "GenerTeam/GENERator-v2-prokaryote-1.2b-base",
+        "effect": 0.0018237718323049219
+      },
+      {
+        "model": "DNABERT-2",
+        "effect": 0.003106690560738079
+      },
+      {
+        "model": "GenomeOcean-4B",
+        "effect": 0.0042586670025043395
+      },
+      {
+        "model": "Qwen/Qwen2.5-0.5B",
+        "effect": 0.005163987341006483
+      },
+      {
+        "model": "Qwen/Qwen2.5-1.5B",
+        "effect": 0.005991425378877851
+      },
+      {
+        "model": "Qwen2.5-7B",
+        "effect": 0.005999443397646881
+      },
+      {
+        "model": "OLMo-7B-0724-hf",
+        "effect": 0.006288051768048048
+      },
+      {
+        "model": "Qwen/Qwen2.5-3B",
+        "effect": 0.02036779513602715
+      },
+      {
+        "model": "HuggingFaceTB/SmolLM2-360M",
+        "effect": 0.022680901177107363
+      },
+      {
+        "model": "HuggingFaceTB/SmolLM2-135M",
+        "effect": 0.03780837142953165
+      },
+      {
+        "model": "Llama-7B",
+        "effect": 0.03855088724231734
+      },
+      {
+        "model": "HuggingFaceTB/SmolLM2-1.7B",
+        "effect": 0.03905575617362741
+      },
+      {
+        "model": "GENERator-EUK-3B",
+        "effect": 0.04290482058827287
+      },
+      {
+        "model": "answerdotai/ModernBERT-large",
+        "effect": 0.08090224393281813
+      },
+      {
+        "model": "ModernBERT-base",
+        "effect": 0.10926316989708436
+      },
+      {
+        "model": "Mistral-7B",
+        "effect": 3.013789457796915
+      }
+    ]
+  },
+  "eps1p0": {
+    "candidate_gt_median_control": 20,
+    "median_candidate": 0.008757642732839799,
+    "median_control": 6.911431014069649e-06,
+    "median_candidate_minus_control": 0.008759222191376523,
+    "candidate_minus_control_ci95": [
+      0.006059768734388123,
+      1.1177654513530053
+    ],
+    "seed": 52,
+    "sorted_candidate_effects": [
+      {
+        "model": "NTv3",
+        "effect": -0.007949366731059835
+      },
+      {
+        "model": "EuroBERT/EuroBERT-2.1B",
+        "effect": -0.00011898446726430181
+      },
+      {
+        "model": "EuroBERT/EuroBERT-210m",
+        "effect": 0.0015891712537865418
+      },
+      {
+        "model": "GenerTeam/GENERator-v2-prokaryote-3b-base",
+        "effect": 0.002501651718659897
+      },
+      {
+        "model": "MosaicBERT",
+        "effect": 0.003742157414503058
+      },
+      {
+        "model": "Qwen/Qwen2.5-0.5B",
+        "effect": 0.005556031100779856
+      },
+      {
+        "model": "GenerTeam/GENERator-v2-prokaryote-1.2b-base",
+        "effect": 0.006042811947788043
+      },
+      {
+        "model": "Qwen/Qwen2.5-1.5B",
+        "effect": 0.006480525715832325
+      },
+      {
+        "model": "Qwen2.5-7B",
+        "effect": 0.0073805601611145735
+      },
+      {
+        "model": "GenomeOcean-4B",
+        "effect": 0.007641126234624247
+      },
+      {
+        "model": "DNABERT-2",
+        "effect": 0.008295371435906092
+      },
+      {
+        "model": "EuroBERT/EuroBERT-610m",
+        "effect": 0.009219914029773508
+      },
+      {
+        "model": "Qwen/Qwen2.5-3B",
+        "effect": 0.03175519925651747
+      },
+      {
+        "model": "GENERator-EUK-3B",
+        "effect": 0.3709941910582313
+      },
+      {
+        "model": "HuggingFaceTB/SmolLM2-360M",
+        "effect": 0.5915447008237732
+      },
+      {
+        "model": "OLMo-7B-0724-hf",
+        "effect": 1.1177580569022323
+      },
+      {
+        "model": "answerdotai/ModernBERT-large",
+        "effect": 2.2066469967108513
+      },
+      {
+        "model": "Mistral-7B",
+        "effect": 2.871492377308394
+      },
+      {
+        "model": "Llama-7B",
+        "effect": 3.007945593585156
+      },
+      {
+        "model": "HuggingFaceTB/SmolLM2-135M",
+        "effect": 3.1341752821146263
+      },
+      {
+        "model": "ModernBERT-base",
+        "effect": 3.570440314807799
+      },
+      {
+        "model": "HuggingFaceTB/SmolLM2-1.7B",
+        "effect": 6.988738472947954
+      }
+    ]
+  },
+  "correlations": {
+    "q1": {
+      "x": "q1",
+      "n_models": 22,
+      "spearman_rho": 0.07396950875211745,
+      "asymptotic_p": 0.7435587990333694,
+      "bootstrap_ci95": [
+        -0.39137110223394356,
+        0.5126210742445426
+      ],
+      "n_boot": 5000,
+      "seed": 43
+    },
+    "frob_ratio_to_layer_median": {
+      "x": "frob_ratio_to_layer_median",
+      "n_models": 22,
+      "spearman_rho": 0.4409937888198759,
+      "asymptotic_p": 0.03993999904430384,
+      "bootstrap_ci95": [
+        0.0621745860630587,
+        0.7173826180122267
+      ],
+      "n_boot": 5000,
+      "seed": 44
+    }
+  },
+  "descriptive_subgroup_medians": {
+    "text/decoder": {
+      "n": 10,
+      "median": 0.8546513788630028
+    },
+    "text/encoder": {
+      "n": 6,
+      "median": 0.006481035722138283
+    },
+    "genomic/encoder": {
+      "n": 2,
+      "median": 0.00017300235242312823
+    },
+    "genomic/decoder": {
+      "n": 4,
+      "median": 0.006841969091206145
+    }
+  },
+  "panel_d_topnorm_control": {
+    "eps0p5": {
+      "n_negative": 2,
+      "median_gap": 0.002711234584685164,
+      "median_topnorm_control_relative_loss_change": 0.0003516727067298797
+    },
+    "eps1p0": {
+      "n_negative": 3,
+      "median_gap": 0.006721669413679474,
+      "median_topnorm_control_relative_loss_change": 0.0011045408751615541
+    }
+  }
+}

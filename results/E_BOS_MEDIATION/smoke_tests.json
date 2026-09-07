@@ -1,0 +1,43 @@
+{
+  "1_noop_hook_eq_intact": {
+    "noop": 6.272225618362427,
+    "intact": 6.272225618362427,
+    "pass": true
+  },
+  "2_hook_ablation_eq_weight_ablation": {
+    "hook": 8.39488410949707,
+    "weight": 8.39488410949707,
+    "pass": true
+  },
+  "3_restore_everywhere_eq_intact": {
+    "restore_all": 6.272225618362427,
+    "intact": 6.272225618362427,
+    "pass": true
+  },
+  "4_bos_only_changes_only_position0": {
+    "differs_at_pos0": true,
+    "differs_elsewhere_count": 0,
+    "seq_len": 86,
+    "pass": true
+  },
+  "5_matched_nonbos_changes_only_target": {
+    "target_pos": 43,
+    "differs_at_target": true,
+    "total_positions_differing": 1,
+    "pass": true
+  },
+  "6_prefill_vs_decode_handling": {
+    "n_prefill_calls": 1,
+    "n_decode_calls": 4,
+    "zeroed_positions_at_prefill": [
+      0
+    ],
+    "zeroed_positions_at_decode_calls": [
+      [],
+      [],
+      [],
+      []
+    ],
+    "pass": true
+  }
+}

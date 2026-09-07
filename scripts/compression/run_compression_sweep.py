@@ -48,17 +48,15 @@ from pathlib import Path
 import numpy as np
 import torch
 import yaml
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 
 # ── Shared helpers from run_gue_ablation ─────────────────────────────────────
 # Import the pieces we need rather than re-implementing them.
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "evaluation"))
 from run_gue_ablation import (
     GUEDataset,
     _NTv3Classifier,
     _HybriDNAClassifier,
+    _GeneratorClassifier,
     _resolve_module,
     _save_row,
     _zero_row,
@@ -68,7 +66,7 @@ from run_gue_ablation import (
     _MAX_LEN,
     collate_fn,
 )
-import transformers
+# transformers imported lazily inside non-EVO2 code paths for evo2-container compat
 
 
 # ── Ranking helpers ───────────────────────────────────────────────────────────
@@ -168,6 +166,34 @@ def run_sweep(model, sw_list, test_ds, pattern, num_layers, num_rows,
         "curves":     {},
     }
 
+    # ── SW-only condition ─────────────────────────────────────────────────────
+    # Remove ONLY the detected superweight rows — should cause a disproportionate
+    # accuracy drop relative to the small number of rows removed.
+    if sw_list:
+        print(f"\n  Criterion: sw_only  (n={len(sw_list)} SW rows zeroed)")
+        sw_saves = [(sw["layer"], sw["row"],
+                     _save_row(model, pattern, sw["layer"], sw["row"]))
+                    for sw in sw_list]
+        for sw in sw_list:
+            _zero_row(model, pattern, sw["layer"], sw["row"])
+        sw_only_m = evaluate(model, test_ds, device=device)
+        for layer, row, saved in sw_saves:
+            _restore_row(model, pattern, layer, row, saved)
+        sw_frac = len(sw_list) / n_total * 100 if n_total > 0 else 0.0
+        delta_acc = (sw_only_m["accuracy"] - baseline["accuracy"]) / baseline["accuracy"] * 100
+        delta_mcc = (sw_only_m["mcc"] - baseline["mcc"]) / max(abs(baseline["mcc"]), 1e-9) * 100
+        print(f"    acc={sw_only_m['accuracy']:.4f} ({delta_acc:+.2f}%)  "
+              f"mcc={sw_only_m['mcc']:.4f} ({delta_mcc:+.2f}%)  "
+              f"frac={sw_frac:.3f}%")
+        results["sw_only"] = {
+            "accuracy": sw_only_m["accuracy"], "mcc": sw_only_m["mcc"],
+            "delta_acc_pct": delta_acc, "delta_mcc_pct": delta_mcc,
+            "n_sw": len(sw_list), "frac_pct": sw_frac,
+        }
+    else:
+        print("\n  [skip] sw_only — no superweight rows defined.")
+        results["sw_only"] = None
+
     criteria = {
         "l1_low":    ranked_l1_low,
         "l1_high":   ranked_l1_high,
@@ -229,6 +255,10 @@ def run_sweep(model, sw_list, test_ds, pattern, num_layers, num_rows,
 # ── Plotting ──────────────────────────────────────────────────────────────────
 
 def plot_sweep(results, baseline, sw_list, out_png, task, model_name):
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
     curves  = results["curves"]
     fracs   = results["fracs"]
     bl_acc  = baseline["accuracy"]
@@ -250,9 +280,6 @@ def plot_sweep(results, baseline, sw_list, out_png, task, model_name):
     ]:
         ax.axhline(bl_val, color="black", lw=1.2, ls="-", label="Baseline", zorder=1)
 
-        # SW-only point at frac=0 (special marker)
-        sw_label = f"SW rows only (n={len(sw_list)})"
-
         for crit, style in STYLE.items():
             c = curves[crit]
             if crit == "random":
@@ -270,6 +297,21 @@ def plot_sweep(results, baseline, sw_list, out_png, task, model_name):
                 ys = [p[metric]  for p in c]
                 ax.plot(xs, ys, **{k: v for k, v in style.items() if k != "label"},
                         label=style["label"], zorder=3)
+
+        # SW-only marker: a special star showing the drop from removing ONLY the SW rows
+        sw_only = results.get("sw_only")
+        if sw_only is not None:
+            sw_frac = sw_only.get("frac_pct", sw_only.get("n_sw", 0) / max(results["n_total"], 1) * 100)
+            sw_val  = sw_only[metric]
+            ax.scatter([sw_frac], [sw_val], marker="*", s=300, color="crimson",
+                       zorder=5, label=f"SW-only (n={sw_only['n_sw']})", edgecolors="darkred", linewidths=0.8)
+            ax.annotate(
+                f"SW-only\n{sw_val:.3f}",
+                xy=(sw_frac, sw_val),
+                xytext=(sw_frac * 1.8, sw_val - (bl_val - sw_val) * 0.25),
+                fontsize=8, color="crimson",
+                arrowprops=dict(arrowstyle="->", color="crimson", lw=1.0),
+            )
 
         ax.set_xlabel("Rows pruned (% of non-SW pool)", fontsize=11)
         ax.set_ylabel(ylabel, fontsize=11)
@@ -294,13 +336,142 @@ def plot_sweep(results, baseline, sw_list, out_png, task, model_name):
 
 # ── CLI ───────────────────────────────────────────────────────────────────────
 
+_CAUSAL_MODELS = {"generator", "generator_prokaryote", "generator_prokaryote_1b", "hybridna"}
+_EVO2_MODELS   = {"evo2"}
+
+def _truncate_to_multiple(texts, factor: int):
+    """Left-truncate each string so its length is divisible by `factor`."""
+    out = []
+    for t in texts:
+        r = len(t) % factor
+        out.append(t[r:] if r else t)
+    return out
+
+
+def _load_model_for_sweep(args, config, test_ds, ckpt_dir):
+    """Load model (+ tokenizer) appropriate for the sweep, return (model, tokenizer)."""
+    import os
+    hf_token  = args.hf_token or os.environ.get("HF_TOKEN")
+    tok_kwargs = {"trust_remote_code": True} if config.get("hf_trust_remote_code") else {}
+    if hf_token:
+        tok_kwargs["token"] = hf_token
+    if "zhihan1996" in config["model_id"]:
+        tok_kwargs["revision"] = "7bce263b15377fc15361f52cfab88f8b586abda0"
+
+    model_id = config["model_id"]
+    is_causal = args.model in _CAUSAL_MODELS
+    is_evo2   = args.model in _EVO2_MODELS
+
+    print(f"Loading tokenizer ...")
+    if is_evo2:
+        # EVO2 uses a custom package loader — try importing evo2 package
+        try:
+            from evo2 import Evo2
+        except ImportError:
+            raise ImportError(
+                "The 'evo2' package is not installed in this environment. "
+                "Activate the evo2 environment (e.g. source evo2_env/bin/activate) "
+                "before running this script with --model evo2."
+            )
+        print("Loading EVO2 model ...")
+        evo2_obj = Evo2(model_id)
+        backbone = evo2_obj.model
+        # Resolve EVO2 tokenizer
+        tokenizer = None
+        for attr in ("tokenizer", "tok", "token_encoder"):
+            if hasattr(evo2_obj, attr):
+                tokenizer = getattr(evo2_obj, attr)
+                break
+        if tokenizer is None:
+            # Fallback: use char-level ord() encoding via a lambda
+            class _OrdTokenizer:
+                pad_token_id = 0
+                def __call__(self, texts, return_tensors=None, padding=None,
+                             max_length=None, truncation=None, return_attention_mask=None, **kw):
+                    import torch as _torch
+                    if isinstance(texts[0], str):
+                        seqs = [t[:max_length] if max_length else t for t in texts]
+                    else:
+                        seqs = [t[:max_length] if max_length else t for t in texts]
+                    ids = [[ord(c) for c in s] for s in seqs]
+                    L = max(len(x) for x in ids)
+                    padded = [x + [0] * (L - len(x)) for x in ids]
+                    masks  = [[1] * len(x) + [0] * (L - len(x)) for x in ids]
+                    return {
+                        "input_ids":      _torch.tensor(padded, dtype=_torch.long),
+                        "attention_mask": _torch.tensor(masks, dtype=_torch.long),
+                    }
+            tokenizer = _OrdTokenizer()
+        hidden_size = getattr(backbone.config if hasattr(backbone, "config") else backbone,
+                              "hidden_size", config.get("hidden_dim", 4096))
+        ckpt_state = Path(ckpt_dir) / "model_state.pt"
+        model = _HybriDNAClassifier(backbone, hidden_size, test_ds.num_labels)
+        if ckpt_state.exists():
+            print(f"Loading fine-tuned weights from {ckpt_state} ...")
+            model.load_state_dict(torch.load(ckpt_state, map_location="cpu"), strict=False)
+        else:
+            print("[warn] No checkpoint found — evaluating base model weights.")
+        return model, tokenizer
+
+    elif is_causal:
+        import transformers  # noqa: PLC0415
+        tokenizer = transformers.AutoTokenizer.from_pretrained(
+            model_id, model_max_length=args.max_length or 512,
+            padding_side="right", **tok_kwargs
+        )
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
+        print(f"Loading causal LM backbone from {model_id} ...")
+        backbone = transformers.AutoModelForCausalLM.from_pretrained(
+            model_id,
+            torch_dtype=torch.float32,
+            device_map="auto",
+            **tok_kwargs,
+        )
+        hidden_size = backbone.config.hidden_size
+        ckpt_state  = Path(ckpt_dir) / "model_state.pt"
+        model = _GeneratorClassifier(backbone, hidden_size, test_ds.num_labels)
+        if ckpt_state.exists():
+            print(f"Loading fine-tuned weights from {ckpt_state} ...")
+            model.load_state_dict(torch.load(ckpt_state, map_location="cpu"), strict=False)
+        else:
+            print("[warn] No checkpoint found — evaluating base model weights.")
+        return model, tokenizer
+
+    else:
+        # DNABERT-2, NTv3, HybriDNA (existing path)
+        import transformers  # noqa: PLC0415
+        tokenizer = transformers.AutoTokenizer.from_pretrained(
+            model_id, model_max_length=args.max_length or 512, **tok_kwargs
+        )
+        ckpt_state = Path(ckpt_dir) / "model_state.pt"
+        print(f"Loading model from {model_id} ...")
+        model = transformers.AutoModelForSequenceClassification.from_pretrained(
+            model_id, num_labels=test_ds.num_labels, **tok_kwargs
+        )
+        if ckpt_state.exists():
+            print(f"Loading fine-tuned weights from {ckpt_state} ...")
+            model.load_state_dict(torch.load(ckpt_state, map_location="cpu"), strict=False)
+        else:
+            print("[warn] No checkpoint found — evaluating base model weights.")
+        model = model.to(args.device)
+        return model, tokenizer
+
+
 def main():
+    _ALL_MODELS = ["dnabert2", "ntv3", "hybridna",
+                   "generator", "generator_prokaryote", "generator_prokaryote_1b",
+                   "evo2"]
     parser = argparse.ArgumentParser(description="Progressive row-pruning sweep")
-    parser.add_argument("--model",    required=True, choices=["dnabert2", "ntv3", "hybridna"])
+    parser.add_argument("--model",    required=True, choices=_ALL_MODELS)
     parser.add_argument("--task",     required=True)
     parser.add_argument("--gue_root", required=True)
     parser.add_argument("--ckpt_dir", default=None)
     parser.add_argument("--sw_index", default="results/super_weight_index.json")
+    parser.add_argument("--evo2_sw_source", default=None,
+                        help="For evo2: path to a JSON with candidate SW rows "
+                             "(e.g. results/hydra_test_evo2.json). "
+                             "Rounds are read as SW candidates in layer 29.")
     parser.add_argument("--out",      default=None,
                         help="Output JSON path (default: results/compression_sweep_<model>_<task_leaf>.json)")
     parser.add_argument("--plot",     default=None,
@@ -324,7 +495,10 @@ def main():
     num_layers = config["num_layers"]
     tkey       = _task_key(args.task)
     max_length = args.max_length or _MAX_LEN.get(tkey, 512)
-    hf_token   = args.hf_token or __import__("os").environ.get("HF_TOKEN")
+
+    # For Generator models with 6-mer tokenizer, round max_length down to multiple of 6
+    if args.model in _CAUSAL_MODELS and "generator" in args.model:
+        max_length = (max_length // 6) * 6 or 6
 
     print(f"\n{'='*64}")
     print(f"  Compression sweep: {args.model} / {args.task}")
@@ -332,40 +506,50 @@ def main():
     print(f"  Checkpoint: {ckpt_dir}")
     print(f"{'='*64}\n")
 
-    # ── Tokenizer ────────────────────────────────────────────────────────────
+    # ── Test dataset (preliminary — we need the tokenizer first) ─────────────
+    # For EVO2 and generator, we pre-load the tokenizer via _load_model_for_sweep.
+    # Build a temporary dataset with a placeholder tokenizer to get num_labels.
+    import os
+    hf_token   = args.hf_token or os.environ.get("HF_TOKEN")
     tok_kwargs = {"trust_remote_code": True} if config.get("hf_trust_remote_code") else {}
-    if "zhihan1996" in config["model_id"]:
-        tok_kwargs["revision"] = "7bce263b15377fc15361f52cfab88f8b586abda0"
     if hf_token:
         tok_kwargs["token"] = hf_token
+    if "zhihan1996" in config["model_id"]:
+        tok_kwargs["revision"] = "7bce263b15377fc15361f52cfab88f8b586abda0"
 
-    print("Loading tokenizer ...")
-    tokenizer = transformers.AutoTokenizer.from_pretrained(
-        config["model_id"], model_max_length=max_length, **tok_kwargs
-    )
-
-    # ── Test dataset ─────────────────────────────────────────────────────────
-    print("Loading test split ...")
-    test_ds = GUEDataset(
-        f"{args.gue_root}/{args.task}/test.csv", tokenizer, max_length
-    )
-    print(f"  test={len(test_ds)}")
-
-    # ── Model ────────────────────────────────────────────────────────────────
-    ckpt_state = Path(ckpt_dir) / "model_state.pt"
-    print(f"Loading model from {config['model_id']} ...")
-    model = transformers.AutoModelForSequenceClassification.from_pretrained(
-        config["model_id"], num_labels=test_ds.num_labels, **tok_kwargs
-    )
-    if ckpt_state.exists():
-        print(f"Loading fine-tuned weights from {ckpt_state} ...")
-        model.load_state_dict(
-            torch.load(ckpt_state, map_location="cpu"), strict=False
-        )
+    if args.model not in _EVO2_MODELS:
+        import transformers  # noqa: PLC0415 — lazy import for evo2-container compat
+        print("Loading tokenizer ...")
+        if args.model in _CAUSAL_MODELS:
+            tokenizer = transformers.AutoTokenizer.from_pretrained(
+                config["model_id"], model_max_length=max_length,
+                padding_side="right", **tok_kwargs
+            )
+            if tokenizer.pad_token is None:
+                tokenizer.pad_token = tokenizer.eos_token
+        else:
+            tokenizer = transformers.AutoTokenizer.from_pretrained(
+                config["model_id"], model_max_length=max_length, **tok_kwargs
+            )
+        print("Loading test split ...")
+        test_ds = GUEDataset(f"{args.gue_root}/{args.task}/test.csv", tokenizer, max_length)
     else:
-        print("[warn] No checkpoint found — evaluating base model weights.")
-    model = model.to(args.device)
+        # EVO2: defer tokenizer to _load_model_for_sweep; load dataset after model
+        tokenizer = None
+        test_ds   = None
+
+    # ── Model ─────────────────────────────────────────────────────────────────
+    model, tokenizer = _load_model_for_sweep(args, config, test_ds, ckpt_dir)
+
+    if test_ds is None:
+        # EVO2 tokenizer now available; build dataset
+        print("Loading test split (EVO2 tokenizer) ...")
+        test_ds = GUEDataset(f"{args.gue_root}/{args.task}/test.csv", tokenizer, max_length)
+
+    if args.model not in _EVO2_MODELS and args.model not in _CAUSAL_MODELS:
+        model = model.to(args.device)
     model.eval()
+    print(f"  test={len(test_ds)}")
 
     # ── Number of rows per layer ──────────────────────────────────────────────
     num_rows = _resolve_module(model, pattern, 0).weight.data.shape[0]
@@ -374,6 +558,17 @@ def main():
     sw_index = json.loads(Path(args.sw_index).read_text())
     entry    = sw_index.get(args.model, {})
     sw_list  = entry.get("results", []) if isinstance(entry, dict) else entry
+
+    # For EVO2: optionally override SW list from the hydra/detection JSON
+    if args.model in _EVO2_MODELS and args.evo2_sw_source:
+        src = json.loads(Path(args.evo2_sw_source).read_text())
+        # hydra_test_evo2.json has "rounds" list with layer/row/col dicts
+        rounds  = src.get("rounds", [])
+        sw_list = [{"layer": r["layer"], "row": r["row"]} for r in rounds]
+        print(f"EVO2: using {len(sw_list)} potential SW rows from {args.evo2_sw_source}")
+    elif args.model in _EVO2_MODELS and not sw_list:
+        print("[warn] No EVO2 SW rows in index. Pass --evo2_sw_source to specify potential SWs.")
+
     print(f"\nSuperrows ({len(sw_list)}):")
     for sw in sw_list:
         print(f"  layer={sw['layer']}  row={sw['row']}")

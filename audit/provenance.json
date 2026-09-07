@@ -1,0 +1,674 @@
+{
+  ".gitignore": {
+    "git_last_commit": "d11c2af423de90cc02ebc9f330bd181591c33801 2026-08-26 11:12:27 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-26T11:12:12",
+    "sha256": "8e899ac5e688976a1c4e7f0e2cdf9edf45651be8386cfb32de0b9092d7a987df",
+    "size_bytes": 963
+  },
+  "PART1_STRUCTURAL_MANUSCRIPT_PACKET.md": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-25T15:47:13",
+    "sha256": "71f239e2f29a3a19e1e79a844178839c1b0a255ae67dedae86ba771f3905234d",
+    "size_bytes": 11110
+  },
+  "PART2_EVIDENCE_PACKET.md": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-26T17:38:46",
+    "sha256": "d3fa848c29fd5dd74c26dfbda2a73275c4329cf1d5474430e1f0061b6add82bc",
+    "size_bytes": 18577
+  },
+  "audit/census_master.csv": {
+    "git_last_commit": "2080786d3152e77e628cf6ce55ff514a18e30a0b 2026-08-26 11:14:01 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-25T23:55:55",
+    "sha256": "356555bf42c9c7d8143e40833f919a0b25058f8d47289742d41370229ef9ea81",
+    "size_bytes": 17368
+  },
+  "audit/round2/fig1c_random_vs_topk_gaps.csv": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-26T17:35:29",
+    "sha256": "066e33341dcfb2859cefd9eb2ce5839fd8f3f4948211efbbdee1614922d30a2f",
+    "size_bytes": 1351
+  },
+  "audit/round2/fig1c_random_vs_topk_gaps_full22.csv": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-26T22:59:30",
+    "sha256": "7cb78f88acf2bfc1887052891d3b893cf363a6e3dc36335ce5afdbe4e06f52b9",
+    "size_bytes": 3687
+  },
+  "audit/round2/full22_topk_gap_confounds.csv": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-26T20:20:53",
+    "sha256": "75fb46f89b1215831f451165d75495871baf10157c676d3d716fddb78c8e7f63",
+    "size_bytes": 1989
+  },
+  "audit/round2/generator_random_direction_full.csv": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-26T12:16:32",
+    "sha256": "7e90e1920e70ac9981fdf3f6afea9a6629c0fb642c85befc868eefaf94ba0f2a",
+    "size_bytes": 2024
+  },
+  "audit/round2/norm_controls_vs_random_controls.csv": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-27T11:50:40",
+    "sha256": "16339c37a763894f13e44b643f754d1938f76e897f1cf582bbf41f876a72af00",
+    "size_bytes": 4147
+  },
+  "audit/round2/raw/gc_extension_records.jsonl": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-26T12:13:10",
+    "sha256": "a3b9a10b914bd81eac3f2510b18397cf2cab626f038f993623302eca5a32cc73",
+    "size_bytes": 1668381
+  },
+  "audit/round2/raw/section3_frobenius_output.txt": {
+    "git_last_commit": "3f0cdbc3c9491dac37708d5ed348a8735f6ee69b 2026-08-26 18:36:42 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-26T18:13:47",
+    "sha256": "53f47c93ec3241051f6c9ebdeac60dcb4199a092f9f1dd7a1095036dea23a7ab",
+    "size_bytes": 1072
+  },
+  "audit/round2/row_index_recurrence.csv": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-26T20:51:12",
+    "sha256": "916f2d023980b4f7cf4529a48bf6c6abd1b70f0b176c626627e26c1914f5d68f",
+    "size_bytes": 5442
+  },
+  "audit/round2/scripts/olmo_row269_structural.py": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-26T19:40:31",
+    "sha256": "c4a73dc0ff875344373e1a7cd9e689f6f50851060f612eefa692929f3381eec4",
+    "size_bytes": 2357
+  },
+  "audit/round2/section2_random_control_q1_batch2.csv": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-26T22:50:21",
+    "sha256": "0dcc81ba27d83f27d5ff45beffd664e27770bba869f00784c857436c2f5dfcc5",
+    "size_bytes": 3912
+  },
+  "audit/round2/section3_generator_euk_detector_recheck.json": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-26T12:46:46",
+    "sha256": "ce466f00bde7fce91c3fab1ab2d3b323741b8a832afa4247074a0dcd2b0924f7",
+    "size_bytes": 1173
+  },
+  "audit/round2/section3_ntv3_detector_recheck.json": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-26T16:34:59",
+    "sha256": "f8f42c56a975deaac1ba90bca3ea0bb5dba9499600f54a0db0a6c7aee808026a",
+    "size_bytes": 1323
+  },
+  "audit/round2/section3_text_decoder_calibration.json": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-26T20:28:00",
+    "sha256": "b79c460772ec31fffc322a28a9991b976cc964691d19a23e15db5657e4ee0d25",
+    "size_bytes": 2033
+  },
+  "audit/round2/structural_vs_causal_gap.csv": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-27T11:50:30",
+    "sha256": "87dda0788b52aeffb84b3f6f2f3957930978913fce882edd9209a535372f4e15",
+    "size_bytes": 6902
+  },
+  "audit/round2/structure_function_correlations.csv": {
+    "git_last_commit": "3f0cdbc3c9491dac37708d5ed348a8735f6ee69b 2026-08-26 18:36:42 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-26T18:36:00",
+    "sha256": "0ffc47687dcee8e2e301be81ef764bb4d366d5d41521dfd8420ee6894f061ec6",
+    "size_bytes": 2418
+  },
+  "audit/round2/topk_norm_controls.csv": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-26T20:19:34",
+    "sha256": "59fb2662007b4b893e0790b6b72493b91f260d0043cb626b6eb8c2e78943b3d2",
+    "size_bytes": 5181
+  },
+  "audit/round2/topk_norm_q1_summary.csv": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-26T20:19:42",
+    "sha256": "1c301b7d3c81640854ef91af0445f82bac677614de6ed04fa1838c14e0237f26",
+    "size_bytes": 12869
+  },
+  "paper-salvage/CLAUDE.md": {
+    "git_last_commit": "972ab742f5dbbecd1d9578eacad53cf4f5fbca9a 2026-08-17 06:02:35 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-17T05:58:19",
+    "sha256": "8a905d9a49bfe7b420b4334f0abeedc1773aa9c0a9909ce930712b01f13d6226",
+    "size_bytes": 8946
+  },
+  "paper-salvage/docs/DECISIONS.md": {
+    "git_last_commit": "85e60369ed7b59053b1a6d3ca5ff68f1da1cdb5c 2026-08-26 11:03:58 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-26T11:02:12",
+    "sha256": "823f8ef64101d7664cca3f4ceb7afedf4d6d9d7bffea99e6329adae8120c708a",
+    "size_bytes": 49431
+  },
+  "paper-salvage/docs/MANUSCRIPT_SOURCE_OF_TRUTH.md": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-23T09:19:37",
+    "sha256": "239608009c9b5a42f3bb124f4e30e31932b91f7e9ae8ca562b2da43e2c6ef75e",
+    "size_bytes": 99507
+  },
+  "paper-salvage/docs/history/e10_prompt_correction.md": {
+    "git_last_commit": "85e60369ed7b59053b1a6d3ca5ff68f1da1cdb5c 2026-08-26 11:03:58 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-22T18:14:23",
+    "sha256": "c809c274dda5d0600b2bfb032542c5375dfc17871a8dadf578affb73f2030d02",
+    "size_bytes": 6801
+  },
+  "paper-salvage/docs/history/manuscript_2026-06-25.txt": {
+    "git_last_commit": "ee5d5ae6233874c50012fbeb160813e02091a4d3 2026-08-26 11:04:05 -0500",
+    "git_status": "clean",
+    "mtime": "2026-06-25T04:13:45",
+    "sha256": "f8000e87dd7a9d0124ed65e293108b1f929f71e747b265f814a39b0ef1e14f71",
+    "size_bytes": 38631
+  },
+  "paper-salvage/docs/history/previous_main.tex": {
+    "git_last_commit": "72b83f71c61d65d1ac5c1a6e3d29b0cc57f412cb 2026-08-26 11:04:05 -0500",
+    "git_status": "clean",
+    "mtime": "2026-06-25T09:00:14",
+    "sha256": "71601ca7cacbb2699fba669444ded12c7ebd636b50e15b279b5ea6d841b718cc",
+    "size_bytes": 43152
+  },
+  "paper-salvage/docs/prereg/PREREG_mechanistic_tomography_E9.md": {
+    "git_last_commit": "fffb587cdd3feb96a050dc05bbb4ed5d384b463a 2026-08-22 15:55:45 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-22T15:55:18",
+    "sha256": "10de1694544c4fa11d0c288f5183ec85c0b94208c36ee5026c81e15a8017b68a",
+    "size_bytes": 8651
+  },
+  "paper-salvage/experiments/E10_nlp_architecture_causal/DECODER_INTERVENTION_FREEZE.md": {
+    "git_last_commit": "a14f758787af8dc23da00c7468402046d652112f 2026-08-22 20:07:35 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-22T20:06:01",
+    "sha256": "02a901ea87a8dcf2a08abdc0bb17b359052a94ce93c7ee60039581fab83f5e67",
+    "size_bytes": 9565
+  },
+  "paper-salvage/experiments/E10b_phi3_tomography/PHI3_BASIS_AUDIT.md": {
+    "git_last_commit": "1128feaa9661715619bc3b69809bf23e8fa7a695 2026-08-22 22:13:26 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-22T22:13:17",
+    "sha256": "9b720a0af56e5979c61c99376b88b6cacb877d7733a77c796ebe9ea58e8c1235",
+    "size_bytes": 4882
+  },
+  "paper-salvage/experiments/E11_scale_ladder/regression.py": {
+    "git_last_commit": "4810a1fd285e8a4b443e9aae3633e4e25c7bc6a8 2026-08-26 11:13:23 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-23T19:49:22",
+    "sha256": "70674c37741562787be13f02f06731f0e84154325ef8eb6213c18bc86bd9eb34",
+    "size_bytes": 9234
+  },
+  "paper-salvage/experiments/E11_scale_ladder/run_model.py": {
+    "git_last_commit": "4810a1fd285e8a4b443e9aae3633e4e25c7bc6a8 2026-08-26 11:13:23 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-23T19:39:51",
+    "sha256": "0f6aa18e14f827f691f614191a52b9a0886480ab2dba896d22af84935fd26538",
+    "size_bytes": 17209
+  },
+  "paper-salvage/experiments/E12_generator_degradation_control/e12_lib.py": {
+    "git_last_commit": "4810a1fd285e8a4b443e9aae3633e4e25c7bc6a8 2026-08-26 11:13:23 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-23T21:27:14",
+    "sha256": "c39fa5bffe51dca26c8174239ac1db2c01b5bfaf089b347798bc51eaa54fa35d",
+    "size_bytes": 22602
+  },
+  "paper-salvage/experiments/E12_generator_degradation_control/run_e12_full.py": {
+    "git_last_commit": "4810a1fd285e8a4b443e9aae3633e4e25c7bc6a8 2026-08-26 11:13:23 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-24T07:54:50",
+    "sha256": "551b8ac391405d82d49ac0eeb085a4bbf527ba04420dbd85810e95ffc4080245",
+    "size_bytes": 33389
+  },
+  "paper-salvage/experiments/E13_full_cohort_causal_census/build_4b_manifest.py": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-27T10:04:59",
+    "sha256": "94a61e96677672ec7d402573b6b5c79c69db1e8a57529fdeaa848666f7e7bc3c",
+    "size_bytes": 3140
+  },
+  "paper-salvage/experiments/E13_full_cohort_causal_census/build_candidate_manifest.py": {
+    "git_last_commit": "4810a1fd285e8a4b443e9aae3633e4e25c7bc6a8 2026-08-26 11:13:23 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-24T21:03:05",
+    "sha256": "7b92762b5281844dc2956b45a6da10be1597a891dc9af3a16f29ac3014ca8fcd",
+    "size_bytes": 5083
+  },
+  "paper-salvage/experiments/E13_full_cohort_causal_census/build_part2_evidence_packet.py": {
+    "git_last_commit": "4810a1fd285e8a4b443e9aae3633e4e25c7bc6a8 2026-08-26 11:13:23 -0500",
+    "git_status": "dirty",
+    "mtime": "2026-08-26T17:38:18",
+    "sha256": "7025e91a6302204a1d779f554e31c7a3bd819f90bb3bcb8847173d59dff6df61",
+    "size_bytes": 27057
+  },
+  "paper-salvage/experiments/E13_full_cohort_causal_census/dnabert2_compat.py": {
+    "git_last_commit": "4810a1fd285e8a4b443e9aae3633e4e25c7bc6a8 2026-08-26 11:13:23 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-24T23:10:11",
+    "sha256": "19deb32ade293d1ae65c28399b8c0ba2c197879f80cfefa7aefc7c966d4f0654",
+    "size_bytes": 7857
+  },
+  "paper-salvage/experiments/E13_full_cohort_causal_census/genomic_encoder_lib.py": {
+    "git_last_commit": "4810a1fd285e8a4b443e9aae3633e4e25c7bc6a8 2026-08-26 11:13:23 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-24T23:25:38",
+    "sha256": "832dad55e3ec39afe58a215ff7c312cda14bdf49b56b5a0c555c20a2b7669493",
+    "size_bytes": 3740
+  },
+  "paper-salvage/experiments/E13_full_cohort_causal_census/panel.py": {
+    "git_last_commit": "4810a1fd285e8a4b443e9aae3633e4e25c7bc6a8 2026-08-26 11:13:23 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-24T10:25:50",
+    "sha256": "102787835f44c3e52af5818a1e242b974b7bd5822f907ac5222576b8a09ee56f",
+    "size_bytes": 2766
+  },
+  "paper-salvage/experiments/E13_full_cohort_causal_census/run_dnabert2_repro_diagnostic.py": {
+    "git_last_commit": "4810a1fd285e8a4b443e9aae3633e4e25c7bc6a8 2026-08-26 11:13:23 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-25T22:23:55",
+    "sha256": "66b22cf6f3f0b32987dda01a6e3a24da984354004412d3523406a881a4dc8473",
+    "size_bytes": 8953
+  },
+  "paper-salvage/experiments/E13_full_cohort_causal_census/run_rowwise_detector.py": {
+    "git_last_commit": "4810a1fd285e8a4b443e9aae3633e4e25c7bc6a8 2026-08-26 11:13:23 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-25T16:20:25",
+    "sha256": "95fb7b4912151bb27cf39ed139abbbdecabd9ce4dd0684921ea496fe3b43c6a0",
+    "size_bytes": 6661
+  },
+  "paper-salvage/experiments/E13_full_cohort_causal_census/run_singleton_census.py": {
+    "git_last_commit": "4810a1fd285e8a4b443e9aae3633e4e25c7bc6a8 2026-08-26 11:13:23 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-25T00:38:09",
+    "sha256": "e2fb84f38459239793f9876670936b0fa622a1a8e81aa460b5b4dbef2afb8e82",
+    "size_bytes": 13086
+  },
+  "paper-salvage/experiments/E13_full_cohort_causal_census/run_singleton_census_4b.py": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-26T21:11:46",
+    "sha256": "b91af45e7705821e76e64c92a718eed58cc09f7f09b2eaba7b06e187ebd2aefb",
+    "size_bytes": 750
+  },
+  "paper-salvage/experiments/E5_dimensionality/dimensionality_lib.py": {
+    "git_last_commit": "7a047118168b004dc0e2d2fcead094038ff20ff4 2026-08-13 13:32:11 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-13T13:11:50",
+    "sha256": "276c8fc3a45458e95e31236bb0bdb2224663072b0bd8bf3cf8c8b6030c6d217e",
+    "size_bytes": 10725
+  },
+  "paper-salvage/experiments/E9_mechanistic_tomography/BASELINE_REGRESSION.md": {
+    "git_last_commit": "ad10a03b335eeb3ff95f395175693b53bfbb9857 2026-08-22 16:35:07 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-22T16:34:52",
+    "sha256": "06e21ff6f669c37d084fe01f50390de7e0a863fc38bad48f0d293499db5f0f9c",
+    "size_bytes": 4539
+  },
+  "paper-salvage/experiments/E9_mechanistic_tomography/BASIS_FREEZE.md": {
+    "git_last_commit": "2a76d99f1406adcf9838bc42add69235c6c7cdd3 2026-08-22 15:54:18 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-22T15:43:01",
+    "sha256": "2126c18f1719fd712e1d5ca47530c9830afd48cb24c6183e341d18e32a452322",
+    "size_bytes": 3451
+  },
+  "paper-salvage/experiments/E9_mechanistic_tomography/INTERVENTION_BASIS.md": {
+    "git_last_commit": "e0cf7bb69736c59c7a59ef1787d58ae1b98bdaa0 2026-08-22 15:42:22 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-22T15:39:14",
+    "sha256": "dbf462d8c86dbf7de2a80fc9ec4d70dfbc6db675ebde020d61bc484ab2e1c77f",
+    "size_bytes": 5644
+  },
+  "paper-salvage/experiments/E9_mechanistic_tomography/MASK_DESIGN.md": {
+    "git_last_commit": "2a76d99f1406adcf9838bc42add69235c6c7cdd3 2026-08-22 15:54:18 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-22T15:53:20",
+    "sha256": "89bf986d07eddf030d0d5a4129f6e23fccc6652f7577e241359ca6efb1dd410c",
+    "size_bytes": 3325
+  },
+  "paper-salvage/experiments/E9_mechanistic_tomography/baseline_regression_results.json": {
+    "git_last_commit": "ad10a03b335eeb3ff95f395175693b53bfbb9857 2026-08-22 16:35:07 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-22T16:28:45",
+    "sha256": "b2f464ada78b4d1762869524c43b7a5617d171d6234d8a24803caa20c26c8aec",
+    "size_bytes": 3049
+  },
+  "paper-salvage/experiments/E9_mechanistic_tomography/dnabert2_mask_responses.json": {
+    "git_last_commit": "e5e3dce2edb2ff2c78aac84735436dd0724f8200 2026-08-22 16:51:44 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-22T16:39:43",
+    "sha256": "8f214fc4b13c6bb2c8e1e892d4a20c7807fc8eb7bb4acc6374d627a0cf45050f",
+    "size_bytes": 394769
+  },
+  "paper-salvage/experiments/E9_mechanistic_tomography/fit_results_dnabert2.json": {
+    "git_last_commit": "e5e3dce2edb2ff2c78aac84735436dd0724f8200 2026-08-22 16:51:44 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-22T16:44:49",
+    "sha256": "25333c9ff04f601d555325264b6a48bc328e3e188f5a2504d2563938c3017001",
+    "size_bytes": 11509
+  },
+  "paper-salvage/experiments/E9_mechanistic_tomography/generate_masks.py": {
+    "git_last_commit": "2a76d99f1406adcf9838bc42add69235c6c7cdd3 2026-08-22 15:54:18 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-22T15:52:41",
+    "sha256": "759196937506a592eaa9b3543c6fbc988783ae0c11c126d35aca400b99a84e1e",
+    "size_bytes": 7851
+  },
+  "paper-salvage/experiments/E9_mechanistic_tomography/masks_dnabert2.json": {
+    "git_last_commit": "2a76d99f1406adcf9838bc42add69235c6c7cdd3 2026-08-22 15:54:18 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-22T15:52:49",
+    "sha256": "f09655c2cb5fe954ec665be04c2e22739e82055945685063c650b3ced7b809b2",
+    "size_bytes": 17188
+  },
+  "paper-salvage/experiments/E9_mechanistic_tomography/run_baseline_regression.py": {
+    "git_last_commit": "2a76d99f1406adcf9838bc42add69235c6c7cdd3 2026-08-22 15:54:18 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-22T15:46:10",
+    "sha256": "bc612318ac0ef58259afa0a38d65a574b889ee6b17ffdac5bb5f4179760b4eae",
+    "size_bytes": 8239
+  },
+  "paper-salvage/experiments/E9_mechanistic_tomography/run_dnabert2_measurements.py": {
+    "git_last_commit": "ad10a03b335eeb3ff95f395175693b53bfbb9857 2026-08-22 16:35:07 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-22T16:03:17",
+    "sha256": "ba74afdfad394f47e3fa5a2e1517bd963f8c24e738282b18bb9fabbddfa61062",
+    "size_bytes": 4428
+  },
+  "paper-salvage/experiments/E9_mechanistic_tomography/run_fit_observers.py": {
+    "git_last_commit": "e5e3dce2edb2ff2c78aac84735436dd0724f8200 2026-08-22 16:51:44 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-22T16:44:27",
+    "sha256": "e1bb17107f0ae77bd39043dd685df412ad2b52ccb509912ad1181fab1ecbf26c",
+    "size_bytes": 10637
+  },
+  "paper-salvage/experiments/E9_mechanistic_tomography/tomography_lib.py": {
+    "git_last_commit": "ad10a03b335eeb3ff95f395175693b53bfbb9857 2026-08-22 16:35:07 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-22T16:02:45",
+    "sha256": "ce0590bafcb9fdc6e9e81fa0a035306c266d79d9b42d32fcc553d886de9bf2f3",
+    "size_bytes": 11507
+  },
+  "paper-salvage/figures/fig1_structural.py": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-25T16:46:18",
+    "sha256": "da3021a98f9678863283235afca8043d2b25d64bdd9cc02cafe824324225d441",
+    "size_bytes": 7344
+  },
+  "results/E11/raw/qwen25-0.5b.json": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-23T19:44:23",
+    "sha256": "244955f9c9508abc6a943b44f3c504d1d974ad567642af6f81bd4f370685e9f6",
+    "size_bytes": 1847
+  },
+  "results/E11/regression_summary.json": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-23T19:56:18",
+    "sha256": "e3924e78bdeff22f5f0335ffdb6a210c5c3cfd0a2d61560b0a0a569025b0fede",
+    "size_bytes": 14905
+  },
+  "results/E11/scale_ladder.csv": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-23T19:55:51",
+    "sha256": "038d14a1ab95a7a948c9c50eae9e61585206b34aa973e471904fe1bb8b68cd9b",
+    "size_bytes": 8557
+  },
+  "results/E11/scale_ladder_controls.csv": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-23T19:55:51",
+    "sha256": "036b43b02acd8bb6f0d847baa411a4f65c04b554545bd6e1c8748e1cec53759c",
+    "size_bytes": 5538
+  },
+  "results/E12/E12_summary.md": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-24T07:57:59",
+    "sha256": "de4085fb3aa4288a21c4c7a2af8cd714985079f03e26f907bc611ef4dcf84424",
+    "size_bytes": 3296
+  },
+  "results/E12/damage_matching.csv": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-24T07:57:51",
+    "sha256": "520f5982c6b636c8638d06bca9c79392d17874715f81e926ac875896491e186d",
+    "size_bytes": 4145
+  },
+  "results/E12/dose_response_extended.csv": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-24T07:57:51",
+    "sha256": "33d0f4ada71fae31c1e160e704695570cd1f0edef4d1a0ccee2439e1c236ec82",
+    "size_bytes": 2008098
+  },
+  "results/E12/kmer_attribution.csv": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-24T07:57:51",
+    "sha256": "88a218ea3a68f548a23f1cefc72392b4ed9f08ef28669eb27733af9124c2538b",
+    "size_bytes": 1084
+  },
+  "results/E12/raw/corpora.json": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-23T21:36:47",
+    "sha256": "657880f1613ac729b6e0b7a01612587bf5bc10d4c57706f637cd8357e1405440",
+    "size_bytes": 72621
+  },
+  "results/E12/raw/damage_evals.jsonl": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-23T21:43:57",
+    "sha256": "26b9303f1372edcc5b951b354f8faa4b840542569c04c5224755c0118530ea29",
+    "size_bytes": 7977
+  },
+  "results/E12/raw/damage_matching.jsonl": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-24T07:29:45",
+    "sha256": "02094150cc350dd94c988b1f11792c1224c9184f3f2a723c7cda2a91148a1b9d",
+    "size_bytes": 5785
+  },
+  "results/E12/raw/gen_records.jsonl": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-24T07:49:50",
+    "sha256": "0586cad098c7b51ca575dce8954a2b0a89a3973742182a62c4ba56e9210827b4",
+    "size_bytes": 15184485
+  },
+  "results/E12/run_e12_full.log": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-24T03:12:07",
+    "sha256": "424370e2f4674069f98b3b7a80606d15e2922621f04a8117f7cabbc1bc96a13d",
+    "size_bytes": 20852
+  },
+  "results/E12/run_e12_rerun_directionfix.log": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-24T07:50:10",
+    "sha256": "f692b549b3c0b17dddef2a42a0b97538172eb778a82051376f876b28c6332aff",
+    "size_bytes": 3761
+  },
+  "results/E12/run_e12_rerun_signfix.log": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-24T07:57:59",
+    "sha256": "ba948f0a28396cc3d9047bec44ae60f8d0b3eac85a22c047539d81ebb41c8eda",
+    "size_bytes": 3320
+  },
+  "results/E13/candidate_manifest.json": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-24T21:03:17",
+    "sha256": "e0a4f41d787ea08f14d3335c289b8113c7ea1c54d458b4055aeef9b90f8bc6db",
+    "size_bytes": 18630
+  },
+  "results/E13/candidate_manifest_4b.json": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-27T10:05:05",
+    "sha256": "878a868d0aa0bd5ae3da42fb2b54e854bfb7fbc2b4a85699ebaae2cb6a0505f4",
+    "size_bytes": 18698
+  },
+  "results/E13/part2_22_model_results.csv": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-25T22:42:10",
+    "sha256": "b4667e27bfc968c818196a8f078b9ca8c3a2df620106341c546a6d2f3fb67c31",
+    "size_bytes": 46746
+  },
+  "results/E13/part2_recomputed_statistics.json": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-25T22:42:10",
+    "sha256": "1adf6f561feb33ff7c2eeec578cb6f82143bde5bab55a96f6c7d36473f2dca09",
+    "size_bytes": 6014
+  },
+  "results/E13/raw_4b/dnabert2.json": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-26T21:17:12",
+    "sha256": "1c449e82d5ae33915ce3e5ad1e6de2f6f8ca3f07cd99bd9052135ce2d557792b",
+    "size_bytes": 17088
+  },
+  "results/E13/raw_4b/generator-euk-3b.json": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-26T21:29:03",
+    "sha256": "542f1205ce1e13d4ad629296859a0805aaf83ee0277541709d2fbf09282d7e18",
+    "size_bytes": 84407
+  },
+  "results/E13/raw_4b/genomeocean-4b.json": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-27T01:25:54",
+    "sha256": "a398a5be9c06ba6f7945ab26c44175945189dc42b52d1357b1783b13d7e5c411",
+    "size_bytes": 85649
+  },
+  "results/E13/raw_4b/llama.json": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-26T23:41:06",
+    "sha256": "163c2e71b5f002f3e770b2ff5b2ab185c8027c2175044071f435fd95d9be8933",
+    "size_bytes": 23878
+  },
+  "results/E13/raw_4b/mistral.json": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-27T00:26:01",
+    "sha256": "d16d399577d777a6f4235c125eb944e2e180220742152bb6cede24dc601301bd",
+    "size_bytes": 23861
+  },
+  "results/E13/raw_4b/modernbert-base.json": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-26T22:04:35",
+    "sha256": "1b07d78d7f7b41299769e571b8e90909e96d82f4b4d8217bb29d7f58ad7a211a",
+    "size_bytes": 17105
+  },
+  "results/E13/raw_4b/olmo.json": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-27T01:04:33",
+    "sha256": "3dc0cedebd0070b80e2e68c24f9eb4ded7e93259eb3b8b6f9b84790eb3dad172",
+    "size_bytes": 23903
+  },
+  "results/E13_dnabert2_reproducibility/DNABERT2_EXECUTION_PATH_DIAGNOSTIC.md": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-25T22:32:13",
+    "sha256": "aaa6c65eb2f7da0b04cd4842a5e451f7b79308d923949ff5fb31605b229c471e",
+    "size_bytes": 4948
+  },
+  "results/E13_dnabert2_reproducibility/diagnostic_provenance.json": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-25T22:32:13",
+    "sha256": "3848304f63f54b2db1808ad03e3511367cdfd4dd70cbbc42f7c6729a3e588044",
+    "size_bytes": 1809
+  },
+  "results/E13_dnabert2_reproducibility/execution_path_comparison.csv": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-25T22:32:12",
+    "sha256": "2b0c4fcd3fc804d339e3c0f083ba7c449f6ace0a4345bb16d99fbb7b413bf127",
+    "size_bytes": 1402
+  },
+  "results/E13_dnabert2_reproducibility/historical_coordinate_impact.csv": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-25T22:32:12",
+    "sha256": "6366a42531c7f6dacb21fcc28c78debd357d9e86962121b28b121ca182a33fa4",
+    "size_bytes": 1455
+  },
+  "results/e7_legacy_reanalysis.json": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-14T09:42:51",
+    "sha256": "002e69603dfdc23e2379bbe52624dcdf59d96d03c3e3702dec204f1850edf984",
+    "size_bytes": 2028
+  },
+  "results/e7_phase1_detection_evo2.json": {
+    "git_last_commit": "7dad5b6bee1317aca7785d4e64ee2d39114a36bf 2026-08-26 12:36:40 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-14T09:39:27",
+    "sha256": "1958fc83e8657ac63e221fe1baa523ca6cdcde2cca293c84322e4381a6894040",
+    "size_bytes": 5391
+  },
+  "results/e8_detection_mosaicbert.json": {
+    "git_last_commit": null,
+    "git_status": "untracked",
+    "mtime": "2026-08-14T10:19:41",
+    "sha256": "7f321e4e4e4ad4a45179a3512724b2d8e9daee9de141eeac633404609d826265",
+    "size_bytes": 3154
+  },
+  "results/mechanism/CHECKPOINT_1_PRETRAINED_EPISTASIS.md": {
+    "git_last_commit": "3d3bbb0241a0239b58302d933a95c039e3869ec3 2026-08-14 12:00:33 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-14T12:00:33",
+    "sha256": "6b78bc28b175dbd5cf31a152d480aeaf72feaf0571424d10545261d5cefb2d95",
+    "size_bytes": 6110
+  },
+  "results/mechanism/attention_sink_implicit_bias.json": {
+    "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-22T23:59:58",
+    "sha256": "fe2c3957cccf87bc692ac85f8f7b58a5c1f841ed45ea4dfd579009f6bf039a68",
+    "size_bytes": 852
+  },
+  "scripts/mechanism/run_attention_sink.py": {
+    "git_last_commit": "66539c346bed9f8cc033ed86da9c065644317827 2026-08-26 11:13:07 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-26T11:03:24",
+    "sha256": "b6c8e27673d2598a88026508aecad66ed58019983c34789cf6ff2863043156e4",
+    "size_bytes": 8451
+  },
+  "scripts/mechanism/run_pretrained_epistasis.py": {
+    "git_last_commit": "3d3bbb0241a0239b58302d933a95c039e3869ec3 2026-08-14 12:00:33 -0500",
+    "git_status": "clean",
+    "mtime": "2026-08-14T12:00:33",
+    "sha256": "35b7820f2b925a55c889bd80e8af6e0fbe0584f5be74c241d418f0cfa468c876",
+    "size_bytes": 14393
+  }
+}

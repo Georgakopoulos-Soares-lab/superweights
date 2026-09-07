@@ -1,0 +1,148 @@
+{
+  "model": "phi3",
+  "repo": "microsoft/Phi-3-mini-4k-instruct",
+  "canonical": null,
+  "method": "exact ||U_k||_F via Gram identity (no SVD), float64, validated against spectral_lib.row_spectral_metrics",
+  "layers": {
+    "2": {
+      "layer": 2,
+      "d_model": 3072,
+      "d_ffn": 8192,
+      "layer_median_uk": 15.579189188998432,
+      "layer_max_uk": 120.77459257170976,
+      "layer_max_over_median": 7.752302838519815,
+      "targets": [
+        {
+          "row": 525,
+          "uk_norm": 120.77459257170976,
+          "uk_over_layer_median": 7.752302838519815,
+          "within_layer_rank": 0
+        },
+        {
+          "row": 1693,
+          "uk_norm": 105.85558346861816,
+          "uk_over_layer_median": 6.7946786051850685,
+          "within_layer_rank": 1
+        },
+        {
+          "row": 1113,
+          "uk_norm": 97.51920420319067,
+          "uk_over_layer_median": 6.259581485283963,
+          "within_layer_rank": 2
+        }
+      ],
+      "top10_rows_this_layer": [
+        {
+          "row": 525,
+          "uk_norm": 120.77459257170976
+        },
+        {
+          "row": 1693,
+          "uk_norm": 105.85558346861816
+        },
+        {
+          "row": 1113,
+          "uk_norm": 97.51920420319067
+        },
+        {
+          "row": 1134,
+          "uk_norm": 33.544156936519876
+        },
+        {
+          "row": 2046,
+          "uk_norm": 32.19769367659864
+        },
+        {
+          "row": 502,
+          "uk_norm": 31.24100266754617
+        },
+        {
+          "row": 1051,
+          "uk_norm": 30.703091203355203
+        },
+        {
+          "row": 568,
+          "uk_norm": 27.23019819272988
+        },
+        {
+          "row": 2887,
+          "uk_norm": 26.317862543134517
+        },
+        {
+          "row": 139,
+          "uk_norm": 26.09784921682994
+        }
+      ]
+    },
+    "4": {
+      "layer": 4,
+      "d_model": 3072,
+      "d_ffn": 8192,
+      "layer_median_uk": 16.43891946918779,
+      "layer_max_uk": 72.11570570027023,
+      "layer_max_over_median": 4.3868884348171395,
+      "targets": [
+        {
+          "row": 525,
+          "uk_norm": 72.11570570027023,
+          "uk_over_layer_median": 4.3868884348171395,
+          "within_layer_rank": 0
+        },
+        {
+          "row": 1113,
+          "uk_norm": 61.701549199592684,
+          "uk_over_layer_median": 3.7533822898301,
+          "within_layer_rank": 1
+        },
+        {
+          "row": 1693,
+          "uk_norm": 46.49362134413812,
+          "uk_over_layer_median": 2.8282650469383475,
+          "within_layer_rank": 2
+        }
+      ],
+      "top10_rows_this_layer": [
+        {
+          "row": 525,
+          "uk_norm": 72.11570570027023
+        },
+        {
+          "row": 1113,
+          "uk_norm": 61.701549199592684
+        },
+        {
+          "row": 1693,
+          "uk_norm": 46.49362134413812
+        },
+        {
+          "row": 2046,
+          "uk_norm": 30.437247166722656
+        },
+        {
+          "row": 502,
+          "uk_norm": 26.721801871208733
+        },
+        {
+          "row": 1134,
+          "uk_norm": 26.11858717335831
+        },
+        {
+          "row": 1051,
+          "uk_norm": 22.11530279783541
+        },
+        {
+          "row": 2557,
+          "uk_norm": 20.82241843007341
+        },
+        {
+          "row": 1899,
+          "uk_norm": 19.72954920118043
+        },
+        {
+          "row": 1873,
+          "uk_norm": 19.65553933410605
+        }
+      ]
+    }
+  }
+}

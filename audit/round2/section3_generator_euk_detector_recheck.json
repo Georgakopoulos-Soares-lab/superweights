@@ -1,0 +1,50 @@
+{
+  "model": "generator_euk",
+  "frozen_candidate": [
+    4,
+    2371
+  ],
+  "results_by_preprocessing": {
+    "wrapper_convention_manual_bos_no_specials": {
+      "top_ratio_coord": [
+        4,
+        2371
+      ],
+      "top_ratio_value": 7124.084927150937,
+      "top_activation_coord": [
+        4,
+        2371
+      ],
+      "top_activation_value": 375361.3125,
+      "frozen_activation": 375361.3125,
+      "frozen_ratio": 7124.084927150937,
+      "frozen_activation_rank": 1,
+      "frozen_ratio_rank": 1,
+      "frozen_passes_ratio5": true
+    },
+    "tokenizer_default_add_special_tokens_true": {
+      "top_ratio_coord": [
+        4,
+        2371
+      ],
+      "top_ratio_value": 7124.084927150937,
+      "top_activation_coord": [
+        4,
+        2371
+      ],
+      "top_activation_value": 375361.3125,
+      "frozen_activation": 375361.3125,
+      "frozen_ratio": 7124.084927150937,
+      "frozen_activation_rank": 1,
+      "frozen_ratio_rank": 1,
+      "frozen_passes_ratio5": true
+    }
+  },
+  "structural_metrics": {
+    "L4r2371": {
+      "q1": 0.9688691252376008,
+      "pr_spec": 1.0652593586761507,
+      "frob_norm": 522.1322102344819
+    }
+  }
+}

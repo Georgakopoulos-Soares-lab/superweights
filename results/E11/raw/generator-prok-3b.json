@@ -1,0 +1,70 @@
+{
+  "key": "generator-prok-3b",
+  "model": "GenerTeam/GENERator-v2-prokaryote-3b-base",
+  "repo": "GenerTeam/GENERator-v2-prokaryote-3b-base",
+  "requested_revision": "b18ac86df77359d894d7bc050cea78e2d0713021",
+  "resolved_revision": "b18ac86df77359d894d7bc050cea78e2d0713021",
+  "family": "GENERator-PROK",
+  "domain": "genomic",
+  "architecture": "decoder",
+  "panel_index": 7,
+  "dtype": "float32",
+  "total_params": 2998262784,
+  "embed_params": 25362432,
+  "non_embed_params": 2972900352,
+  "d_model": 3072,
+  "d_ffn": 8448,
+  "n_layers": 30,
+  "gated": true,
+  "gate_evidence": "gate_proj/up_proj/down_proj (separate SwiGLU-style projections)",
+  "ratio_threshold": 5.0,
+  "n_input_tokens": 85,
+  "candidate": {
+    "layer": 8,
+    "row": 260,
+    "out_max": 30167.068359375,
+    "detection_ratio": 257.2681402610017,
+    "relative_depth": 0.26666666666666666,
+    "q1": 0.934973533990709,
+    "pr_spec": 1.143862862462253,
+    "stable_rank": 1.0695489911160814,
+    "frob_norm": 52.16156499457906,
+    "n_singular_values": 3072
+  },
+  "null_outcome": false,
+  "null_reason": null,
+  "control_rows": [
+    {
+      "row": 4,
+      "q1": 0.008751366448971109,
+      "pr_spec": 708.1924437058885,
+      "frob_norm": 6.815884146880349
+    },
+    {
+      "row": 285,
+      "q1": 0.008107479328136786,
+      "pr_spec": 722.7290416359135,
+      "frob_norm": 6.826260449506391
+    },
+    {
+      "row": 1057,
+      "q1": 0.008265001776592472,
+      "pr_spec": 713.0222312658,
+      "frob_norm": 6.812614124053642
+    },
+    {
+      "row": 1853,
+      "q1": 0.0109473607400331,
+      "pr_spec": 683.9265410682262,
+      "frob_norm": 6.81118054439466
+    },
+    {
+      "row": 2307,
+      "q1": 0.00904271623012913,
+      "pr_spec": 708.5610505861009,
+      "frob_norm": 6.669752729229174
+    }
+  ],
+  "layer_median_frob_norm": 6.812614124053642,
+  "candidate_frob_norm_ratio_to_layer_median": 7.656615220640426
+}

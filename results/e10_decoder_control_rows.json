@@ -1,0 +1,79 @@
+{
+  "llama": {
+    "control_layer": 2,
+    "control_rows": [
+      892,
+      2034,
+      2379,
+      3729,
+      3751
+    ],
+    "d_model": 4096,
+    "excluded_rows": [
+      3968
+    ],
+    "panel_index": 0
+  },
+  "mistral": {
+    "control_layer": 1,
+    "control_rows": [
+      190,
+      305,
+      746,
+      1912,
+      2687
+    ],
+    "d_model": 4096,
+    "excluded_rows": [
+      2070
+    ],
+    "panel_index": 1
+  },
+  "olmo": {
+    "control_layer": 24,
+    "control_rows": [
+      292,
+      437,
+      2877,
+      2908,
+      3160
+    ],
+    "d_model": 4096,
+    "excluded_rows": [
+      269
+    ],
+    "panel_index": 2
+  },
+  "phi3": {
+    "control_layer": 2,
+    "control_rows": [
+      356,
+      2345,
+      2759,
+      2830,
+      2983
+    ],
+    "d_model": 3072,
+    "excluded_rows": [
+      525,
+      1693,
+      1113
+    ],
+    "panel_index": 3
+  },
+  "qwen25": {
+    "control_layer": 26,
+    "control_rows": [
+      62,
+      1257,
+      2926,
+      3419,
+      3553
+    ],
+    "d_model": 3584,
+    "excluded_rows": [
+      458
+    ],
+    "panel_index": 4
+  }
+}

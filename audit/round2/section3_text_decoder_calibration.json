@@ -1,0 +1,79 @@
+{
+  "Llama-7B": {
+    "n_tokens": 512,
+    "global_ratio_argmax": [
+      2,
+      3968
+    ],
+    "global_ratio_value": 3959.232732329693,
+    "global_activation_argmax": [
+      30,
+      3968
+    ],
+    "global_activation_value": 1474.1680908203125,
+    "frozen_activation": 1312.5889892578125,
+    "frozen_ratio": 3959.232732329693,
+    "frozen_activation_rank": 2,
+    "frozen_ratio_rank": 1,
+    "frozen_passes_ratio5": true,
+    "detector_independently_recovers_yu_et_al": true
+  },
+  "Mistral-7B": {
+    "n_tokens": 512,
+    "global_ratio_argmax": [
+      1,
+      2070
+    ],
+    "global_ratio_value": 1714.3348402465438,
+    "global_activation_argmax": [
+      1,
+      2070
+    ],
+    "global_activation_value": 283.62255859375,
+    "frozen_activation": 283.62255859375,
+    "frozen_ratio": 1714.3348402465438,
+    "frozen_activation_rank": 1,
+    "frozen_ratio_rank": 1,
+    "frozen_passes_ratio5": true,
+    "detector_independently_recovers_yu_et_al": true
+  },
+  "OLMo-7B-0724-hf": {
+    "n_tokens": 512,
+    "global_ratio_argmax": [
+      2,
+      269
+    ],
+    "global_ratio_value": 2423.207673894823,
+    "global_activation_argmax": [
+      30,
+      269
+    ],
+    "global_activation_value": 552.58544921875,
+    "frozen_activation": 421.76239013671875,
+    "frozen_ratio": 2253.480529332354,
+    "frozen_activation_rank": 2,
+    "frozen_ratio_rank": 2,
+    "frozen_passes_ratio5": true,
+    "detector_independently_recovers_yu_et_al": false,
+    "structural_comparison": {
+      "L1r269": {
+        "role": "published (Yu et al.)",
+        "q1": 0.9645646658087472,
+        "pr_spec": 1.0747016994474317,
+        "frob_norm": 0.9110752807671006
+      },
+      "L2r269": {
+        "role": "ratio-argmax",
+        "q1": 0.9611012961484928,
+        "pr_spec": 1.081940271858775,
+        "frob_norm": 0.5978672214206773
+      },
+      "L30r269": {
+        "role": "activation-argmax",
+        "q1": 0.9970373956802311,
+        "pr_spec": 1.0059443174627882,
+        "frob_norm": 2.6492583651927535
+      }
+    }
+  }
+}

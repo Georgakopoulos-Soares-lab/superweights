@@ -137,7 +137,7 @@ class LayerProbe:
     def _make_pre(self, i):
         def hook(module, args):
             # args[0] is the hidden state tensor: (1, T, d_model)
-            h = args[0].detach().float()
+            h = args[0].detach().float().cpu()
             self._inputs[i] = h
         return hook
 
@@ -145,9 +145,9 @@ class LayerProbe:
         def hook(module, args, output):
             # For Llama layers, output is a tuple; output[0] is (1, T, d_model)
             if isinstance(output, tuple):
-                h = output[0].detach().float()
+                h = output[0].detach().float().cpu()
             else:
-                h = output.detach().float()
+                h = output.detach().float().cpu()
             self._outputs[i] = h
         return hook
 
@@ -166,7 +166,7 @@ class LayerProbe:
         out = []
         for inp, outp in zip(self._inputs, self._outputs):
             if inp is not None and outp is not None:
-                out.append(outp - inp)
+                out.append(outp.cpu() - inp.cpu())
             else:
                 out.append(None)
         return out

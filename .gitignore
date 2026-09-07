@@ -28,6 +28,7 @@ results/gue_checkpoints*/
 data/hg38.fa
 data/hg38.fa.fai
 data/hg38/
+data/reference/
 data/sae_acts/
 token_cache/
 
@@ -43,3 +44,18 @@ Thumbs.db
 # Local secrets/config
 .env
 .env.*
+
+# Round-2 audit hygiene (2026-08-26): loose prompt/scratch files at repo root.
+# Copies preserved in paper-salvage/docs/history/prompts/. Explicit, not
+# globbed -- avoids ever catching a future docs/*prompt*.md.
+/check_prompt.md
+/audit_2_prompt.md
+/e10_prompt.md
+/e13_prompt.md
+/e_10b_prompt.md
+/e_11_e_12_prompt.md
+/part_prompt.md
+/part13b_prompt.md
+/prompt.md
+/source_of _truth.md
+/INVENTORY.md

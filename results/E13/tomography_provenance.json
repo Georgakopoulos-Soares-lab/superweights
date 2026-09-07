@@ -1,0 +1,35 @@
+{
+  "reuse_reason": "exact basis/revision/endpoint/epsilon identity",
+  "basis": [
+    [
+      2,
+      525
+    ],
+    [
+      2,
+      1693
+    ],
+    [
+      2,
+      1113
+    ],
+    [
+      4,
+      525
+    ],
+    [
+      4,
+      1113
+    ],
+    [
+      4,
+      1693
+    ]
+  ],
+  "fit_masks": 36,
+  "calibration_masks": 10,
+  "held_out_masks": 10,
+  "raw_source": "results/e10b_phi3_tomography_responses.json",
+  "fit_source": "results/e10b_phi3_fit_results.json",
+  "design_source": "paper-salvage/experiments/E10b_phi3_tomography/masks_phi3.json"
+}

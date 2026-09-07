@@ -16,10 +16,12 @@ Diagnostics
                   compared with the mass at other positions and with the uniform
                   expectation 1/L. A sink shows share >> 1/L.
   head_fraction   fraction of (layer, head) pairs whose argmax attention target is pos 0.
-  bias_test       is the SW channel content-INdependent? Compare its value across a real
-                  sequence vs a dinucleotide-shuffled version of the SAME sequence
-                  (seed 42). A pure implicit bias is unchanged by shuffling; a feature
-                  detector moves.
+
+A third diagnostic (content-independence via a real-vs-dinucleotide-shuffled comparison at
+position 0) was removed 2026-08-26: on a causal decoder, position 0's hidden state cannot
+depend on any later token regardless of shuffling, so the test was unanswerable by
+construction, not merely uninformative. See the comment at its former call site (below
+`main`'s attention-mass block) for the full reasoning.
 
 Kill condition (stated first)
 -----------------------------
@@ -47,29 +49,6 @@ sys.path.insert(0, str(ROOT / "scripts" / "mechanism"))
 from run_ensemble_encoding import read_windows  # noqa: E402
 
 SEED = 42
-
-
-def dinuc_shuffle(s, rng):
-    """Preserve dinucleotide composition (Altschul-Erikson style, simple walk)."""
-    s = s.upper()
-    if len(s) < 4:
-        return s
-    edges = {}
-    for i in range(len(s) - 1):
-        edges.setdefault(s[i], []).append(s[i + 1])
-    for k in edges:
-        rng.shuffle(edges[k])
-    out = [s[0]]
-    cur = s[0]
-    for _ in range(len(s) - 1):
-        if not edges.get(cur):
-            cur = rng.choice([c for c in edges if edges[c]] or [cur])
-            if not edges.get(cur):
-                break
-        nxt = edges[cur].pop()
-        out.append(nxt)
-        cur = nxt
-    return "".join(out)
 
 
 def main():
@@ -101,7 +80,10 @@ def main():
     dev = next(model.parameters()).device
 
     rng = random.Random(SEED)
-    wins = read_windows("/data/nvidia/data/hg38/hg38.fa",
+    # Original hardcoded path (/data/nvidia/data/hg38/hg38.fa) is absent on this
+    # filesystem -- repointed to the local copy downloaded for E9 (same file,
+    # same provenance as PROVENANCE_AND_BASELINES.md's hg38 fix). No science changed.
+    wins = read_windows(str(ROOT / "data/reference/hg38/hg38.fa"),
                         str(ROOT / "data/regions/hg38/random_262kb.bed"),
                         args.n_windows, args.win_bp, rng)
     print(f"[sink] {args.model} layer={args.layer} channel={args.channel} "
@@ -154,41 +136,23 @@ def main():
     else:
         print("  [!] attention weights unavailable for this model")
 
-    # ── implicit-bias (content-independence) test ────────────────────────────
-    mods = dict(model.named_modules())
-    key = cfg["down_proj_pattern"].format(i=args.layer).rsplit(".", 1)[0]
-    store = {}
-    hh = mods[key].register_forward_hook(
-        lambda _m, _i, o, _s=store: _s.__setitem__(
-            "h", (o[0] if isinstance(o, tuple) else o).detach().float()))
-    real0, shuf0, realmax, shufmax = [], [], [], []
-    srng = random.Random(SEED)
-    with torch.no_grad():
-        for _c, _s, seq in wins:
-            for tag, sq in (("real", seq), ("shuf", dinuc_shuffle(seq, srng))):
-                enc = tok(sq, return_tensors="pt", truncation=True, max_length=args.max_len)
-                ids = enc["input_ids"].to(dev)
-                model(input_ids=ids, attention_mask=torch.ones_like(ids))
-                h = store["h"]
-                ch = (h[:, args.channel] if h.dim() == 2 else h[0, :, args.channel]).abs()
-                (real0 if tag == "real" else shuf0).append(float(ch[0]))
-                (realmax if tag == "real" else shufmax).append(float(ch.max()))
-    hh.remove()
-
-    bias = {"pos0_real_mean": float(np.mean(real0)),
-            "pos0_shuffled_mean": float(np.mean(shuf0)),
-            "pos0_ratio_shuf_over_real": float(np.mean(shuf0) / max(np.mean(real0), 1e-9)),
-            "max_real_mean": float(np.mean(realmax)),
-            "max_shuffled_mean": float(np.mean(shufmax))}
-    print(f"\n  BOS-position value: real {bias['pos0_real_mean']:,.1f}  "
-          f"dinuc-shuffled {bias['pos0_shuffled_mean']:,.1f}  "
-          f"ratio {bias['pos0_ratio_shuf_over_real']:.4f}")
-    print("  (ratio ~1.0 => content-INdependent implicit bias; "
-          "far from 1.0 => content-dependent feature detector)")
-    print("  CAVEAT: in a CAUSAL decoder position 0 attends only to itself, so a ratio of "
-          "exactly 1.0 at pos0 is structurally guaranteed once the peak is known to be at "
-          "BOS. It corroborates BOS-anchoring; it is not independent evidence. The "
-          "informative comparison is the max-over-positions row below.")
+    # The implicit-bias (content-independence) test that used to run here — comparing the
+    # SW channel's value at position 0 on a real vs. dinucleotide-shuffled sequence — was
+    # removed 2026-08-26 (round-2 audit, `audit_2_prompt.md` Section 0d). It always
+    # returned ratio=1.0 by construction, not as a finding: (1) `dinuc_shuffle` preserves
+    # the first character (an Altschul-Erikson shuffle invariant, needed to keep the
+    # shuffle graph Eulerian), so position 0's token is identical in both conditions
+    # regardless of the rest of the sequence; and (2) GENERator is a CAUSAL decoder, so
+    # position 0's hidden state can only ever depend on position 0's own token — it is
+    # mathematically blind to every later token, so no shuffle of anything after position
+    # 0 could move it even if the shuffle didn't also preserve the first character. A
+    # content-independence test at position 0 is therefore unanswerable on a causal model
+    # by design, not merely uninformative in this run; it would be meaningful on a
+    # bidirectional encoder (e.g. DNABERT-2), where position 0/CLS does see the whole
+    # sequence. Do not resurrect this as a "max-over-positions" variant post hoc — that
+    # would be a protocol change made after seeing a null, which this project does not do.
+    # The `attention` block above (sink_share_pos0, sink_over_uniform,
+    # frac_heads_argmax_pos0) is unaffected and remains the manuscript's actual evidence.
 
     import transformers as _tf
     out = {"task": "T2.1_attention_sink_implicit_bias", "model": args.model,
@@ -196,7 +160,7 @@ def main():
            "provenance": {"seed": SEED, "torch": torch.__version__,
                           "transformers": _tf.__version__,
                           "n_windows": len(wins), "max_len": args.max_len},
-           "attention": att, "implicit_bias": bias}
+           "attention": att}
     op = ROOT / args.out
     op.parent.mkdir(parents=True, exist_ok=True)
     prev = json.loads(op.read_text()) if op.exists() else {}

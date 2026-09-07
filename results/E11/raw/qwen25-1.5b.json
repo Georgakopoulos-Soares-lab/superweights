@@ -1,0 +1,70 @@
+{
+  "key": "qwen25-1.5b",
+  "model": "Qwen/Qwen2.5-1.5B",
+  "repo": "Qwen/Qwen2.5-1.5B",
+  "requested_revision": "8faed761d45a263340a0528343f099c05c9a4323",
+  "resolved_revision": "8faed761d45a263340a0528343f099c05c9a4323",
+  "family": "Qwen2.5",
+  "domain": "text",
+  "architecture": "decoder",
+  "panel_index": 1,
+  "dtype": "float32",
+  "total_params": 1543714304,
+  "embed_params": 233373696,
+  "non_embed_params": 1310340608,
+  "d_model": 1536,
+  "d_ffn": 8960,
+  "n_layers": 28,
+  "gated": true,
+  "gate_evidence": "gate_proj/up_proj/down_proj (separate SwiGLU-style projections)",
+  "ratio_threshold": 5.0,
+  "n_input_tokens": 512,
+  "candidate": {
+    "layer": 26,
+    "row": 408,
+    "out_max": 6594.7392578125,
+    "detection_ratio": 608.3004507965339,
+    "relative_depth": 0.9285714285714286,
+    "q1": 0.9950986414892103,
+    "pr_spec": 1.0098722524248653,
+    "stable_rank": 1.0049255001528838,
+    "frob_norm": 86.68857568622904,
+    "n_singular_values": 1536
+  },
+  "null_outcome": false,
+  "null_reason": null,
+  "control_rows": [
+    {
+      "row": 71,
+      "q1": 0.028391040457566165,
+      "pr_spec": 371.91017571677986,
+      "frob_norm": 3.738535464074208
+    },
+    {
+      "row": 114,
+      "q1": 0.025918277213761737,
+      "pr_spec": 372.52715191155005,
+      "frob_norm": 3.8898088808637614
+    },
+    {
+      "row": 279,
+      "q1": 0.009553010436888899,
+      "pr_spec": 505.07773004373695,
+      "frob_norm": 4.004298275707696
+    },
+    {
+      "row": 717,
+      "q1": 0.014422886491389692,
+      "pr_spec": 470.48560230883874,
+      "frob_norm": 3.730166365392092
+    },
+    {
+      "row": 1008,
+      "q1": 0.012456636698437143,
+      "pr_spec": 454.52015892949026,
+      "frob_norm": 3.946581552176067
+    }
+  ],
+  "layer_median_frob_norm": 3.8898088808637614,
+  "candidate_frob_norm_ratio_to_layer_median": 22.28607583079485
+}

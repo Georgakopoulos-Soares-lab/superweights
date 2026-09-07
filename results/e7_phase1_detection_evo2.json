@@ -1,0 +1,236 @@
+{
+  "model": "Evo2-7B",
+  "group": "genomic",
+  "repo": "arcinstitute/evo2_7b",
+  "resolved_revision": null,
+  "ratio_threshold": 5.0,
+  "candidate": null,
+  "null_outcome": true,
+  "null_reason": "global-max ratio 2.22 < 5.0",
+  "per_layer": [
+    {
+      "layer": 0,
+      "out_max": 0.091796875,
+      "out_channel": 2298,
+      "median_channel_max": 0.01165771484375,
+      "ratio": 7.87434554973822
+    },
+    {
+      "layer": 1,
+      "out_max": 0.0703125,
+      "out_channel": 1940,
+      "median_channel_max": 0.006744384765625,
+      "ratio": 10.425339366515837
+    },
+    {
+      "layer": 2,
+      "out_max": 56.0,
+      "out_channel": 1881,
+      "median_channel_max": 0.0732421875,
+      "ratio": 764.5866666666667
+    },
+    {
+      "layer": 3,
+      "out_max": 0.30859375,
+      "out_channel": 2898,
+      "median_channel_max": 0.01123046875,
+      "ratio": 27.47826086956522
+    },
+    {
+      "layer": 4,
+      "out_max": 3.015625,
+      "out_channel": 2898,
+      "median_channel_max": 0.041259765625,
+      "ratio": 73.08875739644971
+    },
+    {
+      "layer": 5,
+      "out_max": 0.33203125,
+      "out_channel": 2747,
+      "median_channel_max": 0.026123046875,
+      "ratio": 12.710280373831775
+    },
+    {
+      "layer": 6,
+      "out_max": 0.7734375,
+      "out_channel": 2838,
+      "median_channel_max": 0.11962890625,
+      "ratio": 6.46530612244898
+    },
+    {
+      "layer": 7,
+      "out_max": 1.171875,
+      "out_channel": 1812,
+      "median_channel_max": 0.036376953125,
+      "ratio": 32.214765100671144
+    },
+    {
+      "layer": 8,
+      "out_max": 3.71875,
+      "out_channel": 1812,
+      "median_channel_max": 0.043212890625,
+      "ratio": 86.05649717514125
+    },
+    {
+      "layer": 9,
+      "out_max": 68.0,
+      "out_channel": 3756,
+      "median_channel_max": 0.07373046875,
+      "ratio": 922.2781456953643
+    },
+    {
+      "layer": 10,
+      "out_max": 1.40625,
+      "out_channel": 3756,
+      "median_channel_max": 0.05908203125,
+      "ratio": 23.801652892561982
+    },
+    {
+      "layer": 11,
+      "out_max": 0.8515625,
+      "out_channel": 1812,
+      "median_channel_max": 0.056884765625,
+      "ratio": 14.969957081545065
+    },
+    {
+      "layer": 12,
+      "out_max": 0.84375,
+      "out_channel": 3756,
+      "median_channel_max": 0.054931640625,
+      "ratio": 15.36
+    },
+    {
+      "layer": 13,
+      "out_max": 0.5234375,
+      "out_channel": 3756,
+      "median_channel_max": 0.058349609375,
+      "ratio": 8.97071129707113
+    },
+    {
+      "layer": 14,
+      "out_max": 0.25,
+      "out_channel": 1812,
+      "median_channel_max": 0.0576171875,
+      "ratio": 4.338983050847458
+    },
+    {
+      "layer": 15,
+      "out_max": 0.546875,
+      "out_channel": 3756,
+      "median_channel_max": 0.0595703125,
+      "ratio": 9.180327868852459
+    },
+    {
+      "layer": 16,
+      "out_max": 2.109375,
+      "out_channel": 1812,
+      "median_channel_max": 0.07373046875,
+      "ratio": 28.60927152317881
+    },
+    {
+      "layer": 17,
+      "out_max": 1.0234375,
+      "out_channel": 3756,
+      "median_channel_max": 0.08154296875,
+      "ratio": 12.550898203592814
+    },
+    {
+      "layer": 18,
+      "out_max": 0.62109375,
+      "out_channel": 3756,
+      "median_channel_max": 0.080078125,
+      "ratio": 7.7560975609756095
+    },
+    {
+      "layer": 19,
+      "out_max": 0.7734375,
+      "out_channel": 3756,
+      "median_channel_max": 0.08447265625,
+      "ratio": 9.15606936416185
+    },
+    {
+      "layer": 20,
+      "out_max": 15.1875,
+      "out_channel": 3756,
+      "median_channel_max": 0.130859375,
+      "ratio": 116.05970149253731
+    },
+    {
+      "layer": 21,
+      "out_max": 2.84375,
+      "out_channel": 3756,
+      "median_channel_max": 0.126953125,
+      "ratio": 22.4
+    },
+    {
+      "layer": 22,
+      "out_max": 6.875,
+      "out_channel": 3756,
+      "median_channel_max": 0.1396484375,
+      "ratio": 49.23076923076923
+    },
+    {
+      "layer": 23,
+      "out_max": 4.9375,
+      "out_channel": 853,
+      "median_channel_max": 0.66015625,
+      "ratio": 7.479289940828402
+    },
+    {
+      "layer": 24,
+      "out_max": 5.53125,
+      "out_channel": 3756,
+      "median_channel_max": 0.2041015625,
+      "ratio": 27.10047846889952
+    },
+    {
+      "layer": 25,
+      "out_max": 2.03125,
+      "out_channel": 1476,
+      "median_channel_max": 0.390625,
+      "ratio": 5.2
+    },
+    {
+      "layer": 26,
+      "out_max": 3.859375,
+      "out_channel": 1476,
+      "median_channel_max": 0.51171875,
+      "ratio": 7.541984732824427
+    },
+    {
+      "layer": 27,
+      "out_max": 6.4375,
+      "out_channel": 3756,
+      "median_channel_max": 0.859375,
+      "ratio": 7.490909090909091
+    },
+    {
+      "layer": 28,
+      "out_max": 1272.0,
+      "out_channel": 2848,
+      "median_channel_max": 227.0,
+      "ratio": 5.60352422907489
+    },
+    {
+      "layer": 29,
+      "out_max": 552960.0,
+      "out_channel": 1084,
+      "median_channel_max": 248832.0,
+      "ratio": 2.2222222222222223
+    },
+    {
+      "layer": 30,
+      "out_max": 2.4424906541753444e-15,
+      "out_channel": 1476,
+      "median_channel_max": 1.3530843112619095e-16,
+      "ratio": 18.05128205128205
+    },
+    {
+      "layer": 31,
+      "out_max": 5.395683899678261e-14,
+      "out_channel": 3756,
+      "median_channel_max": 6.973588373426765e-16,
+      "ratio": 77.3731343283582
+    }
+  ]
+}

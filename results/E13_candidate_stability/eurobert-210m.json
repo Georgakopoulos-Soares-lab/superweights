@@ -1,0 +1,291 @@
+{
+  "summary": {
+    "model": "EuroBERT/EuroBERT-210m",
+    "slug": "eurobert-210m",
+    "domain": "text",
+    "architecture": "encoder",
+    "layer": 3,
+    "row": 300,
+    "n_inputs": 24,
+    "load_seconds": 75.67201089859009,
+    "activation_ratio_median": 105.20179667467588,
+    "activation_ratio_iqr": [
+      104.07488869272963,
+      106.4127001734677
+    ],
+    "activation_ratio_min": 102.73926060578184,
+    "activation_ratio_max": 108.22240266385467,
+    "percentile_median": 100.0,
+    "frac_rank1": 1.0,
+    "frac_top1pct": 1.0,
+    "max_position_frac_median": 0.04403131115459882,
+    "max_position_at_0_fraction": 0.0
+  },
+  "per_input": [
+    {
+      "activation_max": 103.12670135498047,
+      "activation_median": 0.9727360606193542,
+      "activation_ratio": 106.01714640795603,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 11,
+      "seq_len": 512,
+      "max_position_frac": 0.021526418786692758
+    },
+    {
+      "activation_max": 123.92597198486328,
+      "activation_median": 1.1785297393798828,
+      "activation_ratio": 105.15302910393291,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 20,
+      "seq_len": 512,
+      "max_position_frac": 0.03913894324853229
+    },
+    {
+      "activation_max": 122.50994110107422,
+      "activation_median": 1.1383360624313354,
+      "activation_ratio": 107.62194499874595,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 4,
+      "seq_len": 512,
+      "max_position_frac": 0.007827788649706457
+    },
+    {
+      "activation_max": 125.89617156982422,
+      "activation_median": 1.187922716140747,
+      "activation_ratio": 105.98010279559956,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 161,
+      "seq_len": 512,
+      "max_position_frac": 0.3150684931506849
+    },
+    {
+      "activation_max": 125.12052917480469,
+      "activation_median": 1.1561425924301147,
+      "activation_ratio": 108.22240266385467,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 186,
+      "seq_len": 512,
+      "max_position_frac": 0.3639921722113503
+    },
+    {
+      "activation_max": 123.01337432861328,
+      "activation_median": 1.1973356008529663,
+      "activation_ratio": 102.73926060578184,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 13,
+      "seq_len": 512,
+      "max_position_frac": 0.025440313111545987
+    },
+    {
+      "activation_max": 122.37250518798828,
+      "activation_median": 1.144948959350586,
+      "activation_ratio": 106.8803147848598,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 5,
+      "seq_len": 512,
+      "max_position_frac": 0.009784735812133072
+    },
+    {
+      "activation_max": 116.10743713378906,
+      "activation_median": 1.0831931829452515,
+      "activation_ratio": 107.18996293725526,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 64,
+      "seq_len": 512,
+      "max_position_frac": 0.12524461839530332
+    },
+    {
+      "activation_max": 125.73681640625,
+      "activation_median": 1.176672101020813,
+      "activation_ratio": 106.85799068165888,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 20,
+      "seq_len": 512,
+      "max_position_frac": 0.03913894324853229
+    },
+    {
+      "activation_max": 122.7205581665039,
+      "activation_median": 1.1821155548095703,
+      "activation_ratio": 103.81435018531099,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 16,
+      "seq_len": 512,
+      "max_position_frac": 0.03131115459882583
+    },
+    {
+      "activation_max": 126.16561889648438,
+      "activation_median": 1.218915343284607,
+      "activation_ratio": 103.50646547487565,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 278,
+      "seq_len": 512,
+      "max_position_frac": 0.5440313111545988
+    },
+    {
+      "activation_max": 122.96216583251953,
+      "activation_median": 1.1791630983352661,
+      "activation_ratio": 104.27918411466287,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 318,
+      "seq_len": 512,
+      "max_position_frac": 0.6223091976516634
+    },
+    {
+      "activation_max": 124.89701080322266,
+      "activation_median": 1.1960968971252441,
+      "activation_ratio": 104.42047889548584,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 83,
+      "seq_len": 512,
+      "max_position_frac": 0.162426614481409
+    },
+    {
+      "activation_max": 123.37110900878906,
+      "activation_median": 1.2006285190582275,
+      "activation_ratio": 102.75543771487396,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 1,
+      "seq_len": 512,
+      "max_position_frac": 0.0019569471624266144
+    },
+    {
+      "activation_max": 126.66349029541016,
+      "activation_median": 1.2016034126281738,
+      "activation_ratio": 105.4120593901851,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 23,
+      "seq_len": 512,
+      "max_position_frac": 0.04500978473581213
+    },
+    {
+      "activation_max": 119.96260833740234,
+      "activation_median": 1.1498087644577026,
+      "activation_ratio": 104.3326612612678,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 96,
+      "seq_len": 512,
+      "max_position_frac": 0.18786692759295498
+    },
+    {
+      "activation_max": 106.10195922851562,
+      "activation_median": 1.0321019887924194,
+      "activation_ratio": 102.80181646840649,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 115,
+      "seq_len": 512,
+      "max_position_frac": 0.22504892367906065
+    },
+    {
+      "activation_max": 123.20025634765625,
+      "activation_median": 1.1845405101776123,
+      "activation_ratio": 104.00679021875187,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 261,
+      "seq_len": 512,
+      "max_position_frac": 0.5107632093933464
+    },
+    {
+      "activation_max": 124.39669799804688,
+      "activation_median": 1.1749480962753296,
+      "activation_ratio": 105.87420703296885,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 9,
+      "seq_len": 512,
+      "max_position_frac": 0.01761252446183953
+    },
+    {
+      "activation_max": 125.96920776367188,
+      "activation_median": 1.1823148727416992,
+      "activation_ratio": 106.54455142863826,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 22,
+      "seq_len": 512,
+      "max_position_frac": 0.043052837573385516
+    },
+    {
+      "activation_max": 123.2008056640625,
+      "activation_median": 1.17616605758667,
+      "activation_ratio": 104.74779889232096,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 184,
+      "seq_len": 512,
+      "max_position_frac": 0.36007827788649704
+    },
+    {
+      "activation_max": 125.74922943115234,
+      "activation_median": 1.1897692680358887,
+      "activation_ratio": 105.6921142691334,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 46,
+      "seq_len": 512,
+      "max_position_frac": 0.09001956947162426
+    },
+    {
+      "activation_max": 126.49234771728516,
+      "activation_median": 1.2018210887908936,
+      "activation_ratio": 105.25056424541883,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 3,
+      "seq_len": 512,
+      "max_position_frac": 0.005870841487279843
+    },
+    {
+      "activation_max": 122.73335266113281,
+      "activation_median": 1.1724284887313843,
+      "activation_ratio": 104.68301806102932,
+      "rank": 1,
+      "n_rows": 768,
+      "percentile": 100.0,
+      "max_position": 1,
+      "seq_len": 512,
+      "max_position_frac": 0.0019569471624266144
+    }
+  ],
+  "elapsed_seconds": 114.668048620224
+}

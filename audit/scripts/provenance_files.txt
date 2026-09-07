@@ -1,0 +1,140 @@
+# Section 1 -- DNABERT-2 tomography (E9)
+paper-salvage/experiments/E9_mechanistic_tomography/generate_masks.py
+paper-salvage/experiments/E9_mechanistic_tomography/tomography_lib.py
+paper-salvage/experiments/E9_mechanistic_tomography/run_fit_observers.py
+paper-salvage/experiments/E9_mechanistic_tomography/run_dnabert2_measurements.py
+paper-salvage/experiments/E9_mechanistic_tomography/run_baseline_regression.py
+paper-salvage/experiments/E9_mechanistic_tomography/masks_dnabert2.json
+paper-salvage/experiments/E9_mechanistic_tomography/dnabert2_mask_responses.json
+paper-salvage/experiments/E9_mechanistic_tomography/fit_results_dnabert2.json
+paper-salvage/experiments/E9_mechanistic_tomography/baseline_regression_results.json
+paper-salvage/experiments/E9_mechanistic_tomography/BASELINE_REGRESSION.md
+paper-salvage/experiments/E9_mechanistic_tomography/BASIS_FREEZE.md
+paper-salvage/experiments/E9_mechanistic_tomography/INTERVENTION_BASIS.md
+paper-salvage/experiments/E9_mechanistic_tomography/MASK_DESIGN.md
+results/mechanism/CHECKPOINT_1_PRETRAINED_EPISTASIS.md
+scripts/mechanism/run_pretrained_epistasis.py
+paper-salvage/docs/MANUSCRIPT_SOURCE_OF_TRUTH.md
+paper-salvage/docs/prereg/PREREG_mechanistic_tomography_E9.md
+paper-salvage/CLAUDE.md
+.gitignore
+
+# Section 2 -- 22-model causal census (E13) + Fig 1 structural (E11)
+results/E13/part2_22_model_results.csv
+results/E13/candidate_manifest.json
+results/E13/part2_recomputed_statistics.json
+paper-salvage/experiments/E13_full_cohort_causal_census/build_part2_evidence_packet.py
+paper-salvage/experiments/E13_full_cohort_causal_census/run_singleton_census.py
+paper-salvage/experiments/E13_full_cohort_causal_census/build_candidate_manifest.py
+PART2_EVIDENCE_PACKET.md
+PART1_STRUCTURAL_MANUSCRIPT_PACKET.md
+results/E11/scale_ladder.csv
+results/E11/scale_ladder_controls.csv
+results/E11/regression_summary.json
+paper-salvage/experiments/E11_scale_ladder/regression.py
+paper-salvage/figures/fig1_structural.py
+results/e7_phase1_detection_evo2.json
+
+# Section 4 -- norm-matched control feasibility
+paper-salvage/experiments/E5_dimensionality/dimensionality_lib.py
+paper-salvage/experiments/E11_scale_ladder/run_model.py
+
+# Section 5 -- GENERator damage-matching (E12)
+results/E12/E12_summary.md
+results/E12/damage_matching.csv
+results/E12/dose_response_extended.csv
+results/E12/kmer_attribution.csv
+results/E12/raw/damage_evals.jsonl
+results/E12/raw/corpora.json
+paper-salvage/experiments/E12_generator_degradation_control/e12_lib.py
+paper-salvage/experiments/E12_generator_degradation_control/run_e12_full.py
+results/mechanism/attention_sink_implicit_bias.json
+scripts/mechanism/run_attention_sink.py
+
+# Section 6 -- DNABERT-2 detector reconciliation
+results/E13_dnabert2_reproducibility/DNABERT2_EXECUTION_PATH_DIAGNOSTIC.md
+results/E13_dnabert2_reproducibility/execution_path_comparison.csv
+results/E13_dnabert2_reproducibility/historical_coordinate_impact.csv
+results/E13_dnabert2_reproducibility/diagnostic_provenance.json
+paper-salvage/experiments/E13_full_cohort_causal_census/run_dnabert2_repro_diagnostic.py
+paper-salvage/experiments/E13_full_cohort_causal_census/dnabert2_compat.py
+paper-salvage/experiments/E13_full_cohort_causal_census/run_rowwise_detector.py
+results/e7_legacy_reanalysis.json
+results/E11/raw/qwen25-0.5b.json
+results/e8_detection_mosaicbert.json
+
+# Round 2, Section 0 -- hygiene
+paper-salvage/docs/history/e10_prompt_correction.md
+paper-salvage/docs/history/previous_main.tex
+paper-salvage/docs/history/manuscript_2026-06-25.txt
+paper-salvage/docs/DECISIONS.md
+scripts/mechanism/run_attention_sink.py
+
+# Round 2, Section 1 -- GENERator c-grid re-analysis
+results/E12/run_e12_full.log
+results/E12/run_e12_rerun_directionfix.log
+results/E12/raw/gen_records.jsonl
+results/E12/raw/damage_matching.jsonl
+results/E12/run_e12_rerun_signfix.log
+paper-salvage/experiments/E12_generator_degradation_control/e12_lib.py
+
+# Round 2, Section 2 -- tomography split stability
+paper-salvage/experiments/E9_mechanistic_tomography/run_fit_observers.py
+
+# Round 2, Section 1 -- GC extension compute (new data this session)
+audit/round2/raw/gc_extension_records.jsonl
+audit/round2/generator_random_direction_full.csv
+
+# Round 2, Section 3 -- detector reconciliation for grandfathered models
+audit/round2/section3_generator_euk_detector_recheck.json
+audit/round2/section3_ntv3_detector_recheck.json
+paper-salvage/experiments/E13_full_cohort_causal_census/genomic_encoder_lib.py
+PART2_EVIDENCE_PACKET.md
+
+
+# Round 2, Section 4a -- top-K-by-norm controls, q1 comparison
+audit/round2/topk_norm_controls.csv
+audit/round2/topk_norm_q1_summary.csv
+
+# Round 2 continuation -- Fig1C comparison, batch2 outputs
+audit/round2/fig1c_random_vs_topk_gaps.csv
+audit/round2/section3_text_decoder_calibration.json
+
+# Round 2 continuation -- Section 5 persistence
+audit/round2/structure_function_correlations.csv
+audit/round2/raw/section3_frobenius_output.txt
+
+# Round 2 continuation -- row recurrence, full 22-model 4a
+audit/round2/row_index_recurrence.csv
+audit/round2/full22_topk_gap_confounds.csv
+paper-salvage/experiments/E10b_phi3_tomography/PHI3_BASIS_AUDIT.md
+audit/census_master.csv
+
+# Round 2 continuation -- OLMo structural follow-up
+audit/round2/scripts/olmo_row269_structural.py
+
+# Round 2 continuation -- row recurrence circularity correction (Yu et al. / Sun et al.)
+paper-salvage/experiments/E10_nlp_architecture_causal/DECODER_INTERVENTION_FREEZE.md
+paper-salvage/experiments/E9_mechanistic_tomography/BASIS_FREEZE.md
+paper-salvage/experiments/E10b_phi3_tomography/PHI3_BASIS_AUDIT.md
+
+# Task 2 -- full 22-model Fig1C comparison
+audit/round2/section2_random_control_q1_batch2.csv
+audit/round2/fig1c_random_vs_topk_gaps_full22.csv
+results/E11/scale_ladder_controls.csv
+paper-salvage/experiments/E13_full_cohort_causal_census/panel.py
+
+# Task 3 (4b) -- top-K-by-norm causal sweep
+results/E13/candidate_manifest_4b.json
+results/E13/raw_4b/dnabert2.json
+results/E13/raw_4b/generator-euk-3b.json
+results/E13/raw_4b/modernbert-base.json
+results/E13/raw_4b/llama.json
+results/E13/raw_4b/mistral.json
+results/E13/raw_4b/olmo.json
+results/E13/raw_4b/genomeocean-4b.json
+paper-salvage/experiments/E13_full_cohort_causal_census/run_singleton_census_4b.py
+paper-salvage/experiments/E13_full_cohort_causal_census/build_4b_manifest.py
+audit/round2/structural_vs_causal_gap.csv
+audit/round2/norm_controls_vs_random_controls.csv
+results/E13/part2_22_model_results.csv

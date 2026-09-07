@@ -6,24 +6,42 @@ single-forward-pass method from Yu et al. (2024) *"The Super Weight in Large Lan
 
 ---
 
-## Current status (Aug 2026) — mechanism session + corrections
+## Mechanism session findings (Aug 2026)
 
-This round moved the project from phenomenology to mechanism, and **retracted or rescoped
-several earlier claims**. Full reports in [`results/mechanism/`](results/mechanism/); start
-with [HANDOFF_ANALYTICAL_SUMMARY.md](results/mechanism/HANDOFF_ANALYTICAL_SUMMARY.md),
-which tags every claim `[MEASURED] / [INFERRED] / [UNTESTED]`.
+A separate mechanism/negative-results session produced a large set of markdown reports and
+new scripts under [`results/mechanism/`](results/mechanism/) and `scripts/mechanism/`,
+`scripts/compression/`, `sae/`. Start with
+[HANDOFF_ANALYTICAL_SUMMARY.md](results/mechanism/HANDOFF_ANALYTICAL_SUMMARY.md).
+
+**Status (updated 2026-08-17):** the raw JSON/CSV/PNG outputs behind these reports are still
+not committed to this repository (only the `.md` reports and the `.py` scripts that would
+produce them were pushed) — see
+[`paper-salvage/docs/MISSING_COLLEAGUE_ARTIFACTS.md`](paper-salvage/docs/MISSING_COLLEAGUE_ARTIFACTS.md)
+for the recovery checklist. **The findings themselves are adopted as established results**,
+per explicit author decision
+([`paper-salvage/docs/DECISIONS.md`](paper-salvage/docs/DECISIONS.md) D-024) — recovering the
+raw artifacts remains desirable for independent reproducibility but is no longer a
+precondition for citing these numbers. Full provenance audit and per-claim evidence table:
+[`paper-salvage/docs/COLLEAGUE_BRANCH_AUDIT.md`](paper-salvage/docs/COLLEAGUE_BRANCH_AUDIT.md);
+enacted claim rows: `paper-salvage/docs/CLAIMS_LEDGER.md` C-036–C-043.
 
 ### What we established
 
-| finding | key numbers | report |
+| finding | key numbers | claim |
 |---|---|---|
-| DNABERT-2's functional unit is a **redundant pair**, not a single row | top-7 pairs 7/7 structurally related, p = 0.00014 (n=5); splice −26.84 ± 2.56 vs sum-of-parts −3.51 | [SUPERADDITIVITY_AND_COMPOSITION_REPORT.md](results/mechanism/SUPERADDITIVITY_AND_COMPOSITION_REPORT.md) |
-| The pair is **intrinsic to pretraining** (MLM loss, no task head) | same critical pair +2.0118; top pair = 136,521× the random-pair sd; same k=5 cliff | [CHECKPOINT_1_PRETRAINED_EPISTASIS.md](results/mechanism/CHECKPOINT_1_PRETRAINED_EPISTASIS.md) |
-| Mechanism = **joint norm carriage** | pair carries 58% of layer-9 residual norm (17.20 → 7.14) | [CHECKPOINT_1_MECHANISM.md](results/mechanism/CHECKPOINT_1_MECHANISM.md) |
-| **Co-dominance** decides joint vs single-point failure | constant total norm; epistasis −33.6 → −0.7 while single-channel effect −0.02 → −33.0 | [E1_E2_CODOMINANCE_AND_CONFOUND.md](results/mechanism/E1_E2_CODOMINANCE_AND_CONFOUND.md) |
-| **Decoder/encoder dissociation** | decoder: 37.96% attention mass at BOS, 33× uniform, 45,585× activation. encoder: 0/40 windows peak at [CLS]; instead a composition detector (Cohen's d = −1.89) | [CHECKPOINT_2_TIER2.md](results/mechanism/CHECKPOINT_2_TIER2.md) |
-| **Causal steering** of generated composition | GC span 38.6× random rows; quality (perplexity, dinuc KL, homopolymer) flat across the range | [CHECKPOINT_2_TIER2.md](results/mechanism/CHECKPOINT_2_TIER2.md) |
-| Compression: SW-aware exemption is a **no-op** | per-row RTN preserves the row max with 0.000e+00 error at INT8–INT2; exemption benefit mean **+0.032 pp** over 32 cells (t = 0.23) | [CHECKPOINT_3_GROUP_SCALE_PRESERVATION.md](results/mechanism/CHECKPOINT_3_GROUP_SCALE_PRESERVATION.md) |
+| DNABERT-2's functional unit is a **redundant pair**, not a single row | top-7 pairs 7/7 structurally related, p = 0.00014 (n=5); splice −26.84 ± 2.56 vs sum-of-parts −3.51; critical pair joint −33.76 pp vs. separate −0.02/−0.11 pp | C-036 |
+| The pair is **intrinsic to pretraining** (MLM loss, no task head) | epistasis +2.0118; top pair = 136,521× the random-pair sd; k=5 enrichment cliff | C-037 |
+| Mechanism = **joint norm carriage**, DNABERT-2-specific — does **not** generalize to NTv3 | pair carries 58% of layer-9 residual norm (17.20 → 7.14); co-dominance intervention moves epistasis −33.6→−0.7; NTv3 MAKE-PAIR produces nothing; NTv3's SW is *more* norm-dominant (29.4× gap) yet functionally inert (−0.02pp) | C-038 |
+| **Decoder/encoder attention-sink dissociation** | GENERator: 37.96% attention mass at BOS, 33× uniform, 45,585× activation. DNABERT-2: 0/40 windows peak at [CLS] | C-039 |
+| **Causal steering** of generated composition (non-monotonic — do not read as a linear knob) | GC span 38.6× random rows; saturates by 2× scale, reverses at 5× | C-040 |
+| **Corrected PROK super-weight**: L8/r260, not the old L2/r1927 (detected via a mismatched eukaryotic probe) | rank 1/3072, content-invariant, out_max=30,167.07; corrected hexamer causal test ρ=+0.0007 (p=0.96, no relationship); ΔPPL +1.25±0.54 vs random | C-001 (updated), C-041 |
+| Corrected PROK: GC-dependence of ablation **cost** survives as the real kingdom contrast | PROK r=−0.661, EUK r=−0.001 | C-042 |
+| Compression: SW-aware exemption is empirically a **no-op** | per-row RTN preserves the row max with 0.000e+00 error at INT8–INT2; per-tensor exemption benefit mean +0.048pp, t≈+0.15 — no reliable benefit at any granularity/precision | C-043 |
+| **NTv3 splice ablation does not functionally replicate** | old ΔMCC=−0.119/p=0.008 was produced under a confirmed truncation bug (`max_length` effectively 80, not 400); refit reaches MCC 0.86–0.91 with SW ablation effect −0.02pp | C-029 (updated) |
+
+**The old NTv3 splice number and the old L2/r1927 PROK story are retired**, not merely
+superseded in place — see `CLAIMS_LEDGER.md` `X-008`, `X-009`. DNABERT-2 remains the sole
+functional replication (n=1) of the SW-ensemble effect across the models tested.
 
 ### 🔴 Retractions and rescopes (read before citing older numbers)
 
@@ -50,18 +68,27 @@ which tags every claim `[MEASURED] / [INFERRED] / [UNTESTED]`.
    gap (more dominant than DNABERT-2's) and is functionally inert. The joint-norm-carriage
    mechanism explains DNABERT-2 and does **not** generalise.
 
-### Infrastructure fixes shipped this round
 
-| fix | why it matters |
-|---|---|
-| `scripts/evaluation/run_gue_ablation.py` — `_NTv3Classifier` pads to the next **multiple** of 256 | NTv3 is a conv/deconv U-Net; skip connections only align on exact multiples |
-| `scripts/detection/run_detection.py` — `--pad_to_multiple` | canonical 504 bp probes gave 504 tokens (504 mod 256 = 248) and crashed detection; NTv3 index went **1 → 30 rows** |
-| `sae/collect.py` — `--store_dtype float32` | the fp16 ±60,000 clamp destroyed 98% of SW-channel variance |
-| `sae/train.py` — `--standardize` | SW channel carries 6,888× the median sd; dead features **74.9% → 0.5%** |
-| `sae/model.py` / `sae/analyze.py` — persist and apply `data_scale` | mismatched preprocessing manufactured the `n_active=1 → r = −0.9949` artifact *even with a healthy dictionary* |
-| `scripts/evaluation/run_sw_pairwise_epistasis.py` — `--sw_index`, `--top_n`, `--max_length`, `--out` | required for NTv3 and for the deep index |
+### New scripts shipped this round
 
-**Standing rule adopted:** never report a correlation without its `n_active`.
+New, non-colliding additions — safe to use, not yet run end-to-end in this repository's own
+CI/tests:
+
+- `scripts/mechanism/` — `run_attention_sink.py`, `run_codominance.py`,
+  `run_compensation_circuit.py`, `run_direction_vs_magnitude.py`, `run_ensemble_encoding.py`,
+  `run_norm_matched_control.py`, `run_pretrained_epistasis.py`, `run_steering_biological.py`,
+  `run_sw_steering.py`
+- `scripts/compression/` — `run_destructive_sw_protection.py`,
+  `run_group_scale_preservation.py`, `run_pair_aware_compression.py`,
+  `run_per_tensor_sw_exemption.py`, `run_proximity_confound_control.py`
+- `scripts/evaluation/run_sw_pairwise_epistasis.py`
+- `sae/analyze_real_sequence.py`, plus float32-storage/standardization fixes to
+  `sae/collect.py`, `sae/train.py`, `sae/model.py`, `sae/analyze.py` (avoids an fp16 clamp
+  that was destroying SW-channel activation variance)
+- `scripts/detection/run_detection.py --pad_to_multiple` and
+  `scripts/evaluation/run_gue_ablation.py`'s `_NTv3Classifier` padding fix — both address the
+  same architectural fact (NTv3's conv/deconv U-Net skip connections require sequence length
+  to be an exact multiple of `2**num_downsamples`, not merely above a minimum)
 
 ---
 
@@ -124,7 +151,7 @@ Restructured 5-part-arc manuscript at `paper/main.tex` (~200 lines, replaces 900
 |---|--------|---------------|-------------|--------|
 | 1 | Architecture restriction (transformer decoders only) | `scripts/analysis/plot_figure1.py` | `super_weight_index.json`, `ablation_results.json` | ✅ |
 | 2 | Quadratic amplifier mechanism | `scripts/analysis/plot_sw_mechanistic.py` | `sw_causal_tracing.json`, `sw_grad_attribution.json` | ✅ |
-| 3 | Kingdom asymmetry (EUK driver +0.437 vs PROK gate −0.710) | `scripts/analysis/plot_figure2.py` | `sw_hexamer_causal.json`, `sw_shuffle_controls.json`, `sw_kmer_scan.json` | ✅ |
+| 3 | Composition encoding (shared magnitude-scaled mechanism; EUK \|write\|–KL r = +0.437, PROK r = +0.710; the PROK −0.710 is a signed-activation write-direction convention, not an opposite mechanism) | `scripts/analysis/plot_figure2.py` | `sw_hexamer_causal.json`, `sw_shuffle_controls.json`, `sw_kmer_scan.json` | ✅ |
 | 4 | GUE functional consequences (splice −25.5% across 3 seeds) | `scripts/analysis/plot_figure4.py` | `gue_multiseed_results.json`, `gue_per_row_ablation.json` | ✅ NEW |
 | 5 | Compression — shadow redundancy + whole-model INT4 | `scripts/analysis/plot_figure5.py` | `compression_sweep_*.json`, `quant_ablation_generator_int4.json`, `int4_downstream_benchmark_splice.json`, `whole_model_quant_generator{,_prokaryote}_100k.json` | ✅ NEW |
 
@@ -156,7 +183,7 @@ CUDA_VISIBLE_DEVICES=0 conda run -n generator --live-stream python3 \
 
 1. **Architecture restriction** (Fig 1) — transformer decoders only; SSM/Hyena/Mamba show no SW.
 2. **Splice collapse** (Fig 4A) — DNABERT-2 SW ablation: −25.5 ± 0.7% across 3 seeds, p = 0.0004.
-3. **Kingdom asymmetry** (Fig 3) — EUK driver r = +0.437 vs PROK suppressive gate r = −0.710.
+3. **Shared magnitude-scaled mechanism** (Fig 3) — in both kingdoms ablation cost scales with SW write magnitude (EUK r = +0.437, PROK r = +0.710); the PROK −0.710 reflects a signed-activation write-direction convention, not an opposite "suppressive gate."
 4. **Quadratic amplifier mechanism** (Fig 2) — single early FFN row + residual propagation.
 5. **Yu et al. non-replication at scale** (Fig 5C) — 100k-token INT4 SW marginal cost ≈ 0.
 6. **Shadow redundancy** (Fig 5A,B) — near-SW rows are the *most* INT4-tolerant; far-SW rows collapse.
@@ -177,9 +204,9 @@ Run with `pytest tests/`.
 
 | Model | Type | Params | HF ID |
 |-------|------|--------|-------|
-| GENERator eukaryote | Causal decoder | 3B | `GenerTeam/GENERator-eukaryote-3b-base` |
-| GENERator prokaryote | Causal decoder | ~200M | `GenerTeam/GENERator-prokaryote-*` |
-| GENERator prokaryote 1B | Causal decoder | 1B | `GenerTeam/GENERator-prokaryote-1b-base` |
+| GENERator eukaryote | Causal decoder | 3B | `GenerTeam/GENERator-v2-eukaryote-3b-base` |
+| GENERator prokaryote | Causal decoder | 3B | `GenerTeam/GENERator-v2-prokaryote-3b-base` |
+| GENERator prokaryote 1B | Causal decoder | 1.2B | `GenerTeam/GENERator-v2-prokaryote-1.2b-base` |
 | Evo 2 7B | StripedHyena2 SSM | 7B | `arcinstitute/evo2_7b` |
 | NTv3 | Encoder (masked LM) | 50M | `InstaDeepAI/nucleotide-transformer-v3-50m-multi-species` |
 | DNABERT-2 | Encoder (masked LM) | 117M | `zhihan1996/DNABERT-2-117M` |
@@ -819,7 +846,19 @@ Output: per-sequence Spearman ρ, aggregate t-tests by genomic context, overlay 
 
 ---
 
-## Prokaryote Interpretability — GENERator Prokaryote 3B SW Row 1927
+## Prokaryote Interpretability — GENERator Prokaryote 3B SW Row 1927 (superseded, kept for history)
+
+> **⚠ SUPERSEDED 2026-08-17.** This whole section (layer 2 / row 1927, including the
+> `r = −0.710` write-direction-convention resolution below) was detected with a mismatched
+> eukaryotic probe (`--probe human_promoter` against the prokaryote model) and is retired —
+> see `paper-salvage/docs/CLAIMS_LEDGER.md` `X-008`, `paper-salvage/docs/DECISIONS.md` D-024.
+> **The corrected super-weight is layer 8 / row 260** (rank 1/3072, content-invariant,
+> out_max=30,167.07): the corrected hexamer causal test finds **no** sign relationship at all
+> (Spearman ρ=+0.0007, p=0.96) — the sign-convention question this section resolves does not
+> arise at the corrected channel, because there is no correlation to have a sign. A different,
+> real kingdom contrast survives at the corrected channel instead: GC-dependence of ablation
+> *cost* (PROK r=−0.661 vs. EUK r=−0.001) — see `CLAIMS_LEDGER.md` C-001/C-041/C-042. Kept
+> below verbatim as project history, not as current findings.
 
 Parallel six-step interpretability pipeline applied to the prokaryote model (SW at layer 2,
 row 1927, out\_max = 506 014) on *E. coli* K-12 sequences (promoters, terminators, random).
@@ -834,18 +873,21 @@ row 1927, out\_max = 506 014) on *E. coli* K-12 sequences (promoters, terminator
 | 4 | K-mer motif enrichment | AT-rich motif hint (OR = 1.5, p_adj = 0.043); below FDR threshold. |
 | 5 | Gradient attribution | 150 sequences (50/label), all valid; saliency profiles computed. |
 | 6 | Attribution comparison | Gradient vs omission agreement: mean Spearman ρ = −0.077, all contexts n.s. Methods disagree in prokaryote context. |
-| 7 | Hexamer causal test | r(SW activation, KL divergence) = **−0.710** (p ≈ 0, t = −118) — **inverted** vs EUK (r = +0.437). AT-rich top activators cause the *least* KL divergence when SW is ablated; low-activation k-mers suffer most (KL 0.884 vs 0.043). SW is not causally necessary for its highest-activating tokens. |
+| 7 | Hexamer causal test | r(signed SW activation, KL divergence) = **−0.710** (p ≈ 0, t = −118). The negative sign is a write-direction convention: the PROK SW writes with **negative** activations, so the most strongly (most negative) activating AT-rich tokens carry the largest write magnitude and the largest ablation KL. On **\|write\| magnitude** the correlation is **r = +0.710**, matching EUK (+0.437) — the same magnitude-scaled mechanism, not an inversion. |
 | 8 | Causal tracing | Mean ΔPPL = **+9.47 log-PPL units** (random control Δ = 0.00033). Uniform across contexts: promoter=9.15, terminator=9.34, random=9.93. No context-specificity — SW is a general-purpose component for E. coli sequences. |
 | 9 | Ablation regression | R² = **0.347** (higher than EUK R² = 0.158). GC fraction (β = −0.306) and k-mer entropy (β = −0.307) dominate: AT-rich, low-complexity sequences suffer most from SW ablation, consistent with AT-rich hexamers being the top activators. |
 
 ### Biological interpretation (prokaryote)
 
-PROK SW row 1927 shows **inverse GC preference** (AT-rich activators, negative activations),
-**context-sensitivity** (shuffle controls significant, p < 0.01), and a **causal paradox**:
-the hexamer causal test (r = −0.710) reveals that ablating the SW most disrupts prediction
-of *low-activation* tokens — the opposite of EUK. This suggests the PROK SW acts as a
-**suppressive gate**: high activations for AT-rich k-mers that are otherwise easy to predict,
-but its removal catastrophically disrupts predictions for GC-rich tokens it barely activates.
+PROK SW row 1927 shows **inverse GC preference** (AT-rich activators, negative activations)
+and **context-sensitivity** (shuffle controls significant, p < 0.01). The hexamer causal
+test (signed-activation r = −0.710) initially looks inverted versus EUK, but the sign is a
+write-direction convention: because the PROK SW writes with negative activations, the most
+strongly (most negative) activating AT-rich tokens carry the largest write magnitude and
+their predictions are most disrupted by ablation. On |write| magnitude the correlation is
+**r = +0.710**, the same magnitude-scaled mechanism as EUK (+0.437). The PROK SW is therefore
+not a "suppressive gate" opposite to EUK but the same magnitude-driven component with a
+flipped activation sign.
 
 The high causal tracing ΔPPL (+9.47 vs EUK ~+3 log-PPL) and higher composition-explained
 variance (R² = 0.347) indicate the PROK SW is more deeply integrated into the model's
@@ -876,6 +918,11 @@ sequence length statistics) that are present across both eukaryotic and prokaryo
 
 Six interpretability experiments consistently characterise SW row 2371 (layer 4,
 out_max = 375 361) as a **context-insensitive housekeeping super-weight**.
+
+> **Note (canonical index):** the EUK detector converged on **two** layer-4 super-rows —
+> the dominant row 2371 (characterised below) and a secondary row 1522 at the same layer.
+> Causal tracing zeroes both rows together; the per-experiment characterisation below was
+> run on the dominant row 2371.
 
 ### Per-experiment findings
 
@@ -913,7 +960,7 @@ interesting but unvalidated secondary signal.
 2. Nucleotide Transformer v2: provides a byte-level transformer to decouple architecture from tokenizer.
 3. Test NF-κB enrichment at larger k (top-500 foreground) and cross-reference with CTCF ChIP-seq.
 4. SW-aware INT4 downstream benchmark: retain SW rows in FP16, INT4 all else → report GUE accuracy.
-5. Investigate PROK SW causal paradox (r = −0.710): why does ablation hurt low-activation k-mers most? Hypothesis: PROK SW row 1927 acts as a residual-stream gain control that dampens AT-rich token predictions while amplifying GC-rich ones.
+5. ~~Investigate PROK SW causal paradox (r = −0.710)~~ ✅ Resolved — the negative sign is a write-direction convention; on |write| magnitude r = +0.710, matching EUK's magnitude-scaled mechanism. PROK SW row 1927 is the same magnitude-driven component with a flipped activation sign, not a suppressive gate.
 
 ---
 
@@ -983,7 +1030,7 @@ interesting but unvalidated secondary signal.
 │       ├── enhancers_ccre_262kb.bed
 │       └── random_262kb.bed
 ├── results/
-│   └── mechanism/            # all mechanism reports + JSON/CSV (see HANDOFF summary)
+│   └── mechanism/            # mechanism .md reports (raw JSON/CSV not yet committed, see MISSING_COLLEAGUE_ARTIFACTS.md)
 ├── docs/
 │   └── superweight_paper.txt  # Reference paper (Yu et al. 2024)
 ├── paper/

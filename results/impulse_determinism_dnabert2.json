@@ -1,0 +1,64 @@
+{
+  "model": "dnabert2",
+  "dtype": "torch.float32",
+  "sw_layer": 5,
+  "sw_row": 603,
+  "sw_pos": 0,
+  "eps_ac": 0.003766565918922424,
+  "ac_meta": {
+    "alpha": 0.01,
+    "std_ac": 0.37665659189224243,
+    "dc_mean": -0.021753711625933647,
+    "median_abs_h": 0.19781625270843506,
+    "max_abs_h": 5.61088752746582
+  },
+  "repeats": 3,
+  "per_layer": [
+    {
+      "layer": 6,
+      "noise_dh": 0.0,
+      "signal_dh": 0.002424719976261258,
+      "snr": Infinity
+    },
+    {
+      "layer": 7,
+      "noise_dh": 0.0,
+      "signal_dh": 0.003016456263139844,
+      "snr": Infinity
+    },
+    {
+      "layer": 8,
+      "noise_dh": 0.0,
+      "signal_dh": 0.0026799961924552917,
+      "snr": Infinity
+    },
+    {
+      "layer": 9,
+      "noise_dh": 0.0,
+      "signal_dh": 0.002308688824996352,
+      "snr": Infinity
+    },
+    {
+      "layer": 10,
+      "noise_dh": 0.0,
+      "signal_dh": 0.0017391365254297853,
+      "snr": Infinity
+    },
+    {
+      "layer": 11,
+      "noise_dh": 0.0,
+      "signal_dh": 0.0007417973247356713,
+      "snr": Infinity
+    }
+  ],
+  "kl_noise_floor": 0.0,
+  "kl_noise_samples": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "kl_signal": 1.824271400607813e-08,
+  "kl_snr": Infinity,
+  "deterministic": true,
+  "verdict": "DETERMINISTIC \u2014 noise floor is exactly zero; T/C/KL are measurements."
+}
