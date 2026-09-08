@@ -114,30 +114,44 @@ inputs) which is the valid contrast.
    the artifact — precisely what could not be answered for 3 models.
 6. **Drop >5 as a selection threshold**; keep it as a reported diagnostic (all 22 exceed >10).
 
-### Remaining exposure — DELEGATED 2026-09-08, runnable script shipped
-Llama-7B, Mistral-7B and OLMo-7B are legacy activation-argmax, **UNVERIFIED**, and uncached
-here (~40 GB). All three are **text decoders** — the cohort carrying the headline ρ = +0.770 —
-so if any is not the ratio-argmax, 3 of those 10 points were selected by the non-predictive
-statistic.
+### Remaining exposure — ✅ RESOLVED 2026-09-08 (run here, all 3 models)
 
-This is no longer blocked on analysis, only on the weights. The text-decoder counterpart of
-the uniform detector now exists and is **verified working**:
+Llama-7B, Mistral-7B and OLMo-7B were the last unverified legacy candidates. All three were
+downloaded (51.8 GB) and run on this machine. Full write-up:
+[`EXP2_LEGACY_DETECTOR_RESOLUTION.md`](EXP2_LEGACY_DETECTOR_RESOLUTION.md); machine-readable
+per-model rows: `audit/detector_provenance_exp2_resolution.csv` (additive — no census or audit
+file was modified).
 
-* script — `scripts/paper_closing/run_uniform_detector_text.py` (one model per invocation)
-* instructions — [`docs/EXP2_INSTRUCTIONS_FOR_COLLABORATOR.md`](../../docs/EXP2_INSTRUCTIONS_FOR_COLLABORATOR.md),
-  self-contained, written for a collaborator who already has the weights
-* four automatic reproduction gates per model, from `audit/census_master.csv`:
-  `baseline_loss`, `R_cand_eps1.0`, `R_cand_eps0.5`, and the 5 stored control rows (redrawn
-  from `SeedSequence(42).spawn(23)[panel_index]`, verified to reproduce exactly for all four
-  models). The run aborts on mismatch.
-* **detector positive control passed** — run on SmolLM2-1.7B, which was selected by the
-  *current* rule so `frozen == ratio-argmax` holds by construction. It returned the frozen
-  coordinate as the global argmax, **rank 1/49152**, stable in 100 % of the 24 inputs, under
-  all three tokenization conventions, with all four gates passing (1.5e-08, 1.6e-07, 1.5e-08,
-  exact). Runtime 43 s. Artifact: `uniform_detector_text_smollm2-1.7b.json`.
+Each run passed **four** reproduction gates from `census_master.csv` before interpretation
+(`baseline_loss`, `R_cand` at ε=1.0 and ε=0.5, and the 5 stored control rows redrawn from
+`SeedSequence(42).spawn(23)[panel_index]`): observed relative errors 2.1e-09 – 3.1e-06, control
+rows exact. The detector positive control on SmolLM2-1.7B also passed (rank 1/49152, 100 %
+stable).
 
-Expect ~15 min per 7B model on one ≥48 GB GPU. Prior probability from the checked legacy
-models is not reassuring: 2 of 3 disagreed with the ratio rule (NTv3, DNABERT-2).
+| model | frozen | ratio-argmax | agree? |
+|---|---|---|---|
+| **Llama-7B** | L2 / r3968 | L2 / r3968 | ✅ rank **1/131072**, **100 %** input-stable, identical under all 3 tokenizations |
+| **Mistral-7B** | L1 / r2070 | L1 / r2070 | ✅ rank **1/131072**, **100 %** input-stable, identical under all 3 tokenizations |
+| **OLMo-7B-0724-hf** | L1 / r269 | **L2 / r269** | ❌ frozen is rank **2/131072**; robust disagreement (same row, one layer deeper) |
+
+**2 of 3 confirm the frozen choice exactly.** For OLMo the disagreement is real but runs
+*against* the ratio rule: ablating the frozen L1/r269 costs **+1.1178** while ablating the
+ratio-argmax L2/r269 costs **+0.0237** — the coordinate the ratio rule prefers is **47× less
+damaging**. DNABERT-2 goes the other way (argmax +0.1072 vs frozen −0.1322), so the ratio rule
+is **neither uniformly better nor worse** than the legacy rule; it is a different statistic and
+neither reliably lands on the most causal coordinate.
+
+**Exposure to the headline ρ is bounded** (`exp2_olmo_exposure_sensitivity.json`): the 22-model
+result is insensitive (+0.766 published → +0.769 dropping OLMo → +0.755 substituting the
+argmax coordinate). The text-decoder subgroup moves +0.770 → +0.673 (p=0.033) in the worst
+case — still significant, but its CI lower bound falls to +0.032, so that **n=10 subgroup was
+already fragile and should not carry weight alone** regardless of this substitution.
+
+**Consequence for §3's "universal selection rule".** Describe it as **the detector**, not as
+the definition of the super row. "Global argmax of the layer-relative ratio, accept if ≥5" is
+a reproducible way to *find* candidates and should be specified as such; it must **not** be
+presented as identifying the most causally important coordinate — OLMo-7B (47×) and
+SmolLM2-1.7B L7 (130×) falsify that in two different geometries.
 
 ---
 

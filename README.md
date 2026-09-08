@@ -16,32 +16,43 @@ one row per question in
 execution notes for the overseeing agent in
 [`results/paper_closing/EXECUTION_REPORT_FOR_OVERSEER.md`](results/paper_closing/EXECUTION_REPORT_FOR_OVERSEER.md).
 
-### 🔬 Open item — delegated, needs a machine with the 7B weights
+### ✅ EXP2 legacy-detector provenance — CLOSED for all 22 census rows (Sep 2026)
 
-**EXP2 on Llama-7B, Mistral-7B and OLMo-7B.** These are the last 3 of 22 census candidates
-whose selection rule is unverified (legacy absolute-activation argmax, never re-checked
-against the current layer-relative ratio rule). Two of the three legacy models already
-checked *disagreed* with the ratio rule, so this is a real gap, not a formality.
+All three previously-unverified legacy candidates were downloaded (51.8 GB) and run here.
+Write-up:
+[`results/paper_closing/EXP2_LEGACY_DETECTOR_RESOLUTION.md`](results/paper_closing/EXP2_LEGACY_DETECTOR_RESOLUTION.md);
+per-model rows: `audit/detector_provenance_exp2_resolution.csv` (additive — no census or audit
+file was modified).
 
-👉 **Instructions:
-[`docs/EXP2_INSTRUCTIONS_FOR_COLLABORATOR.md`](docs/EXP2_INSTRUCTIONS_FOR_COLLABORATOR.md)**
-— self-contained; three commands, ~15 min of GPU each, no training, no downloads if the
-weights are cached.
+| model | frozen | ratio-argmax | agree? |
+|---|---|---|---|
+| Llama-7B | L2 / r3968 | L2 / r3968 | ✅ rank **1/131072**, 100 % input-stable, all 3 tokenizations |
+| Mistral-7B | L1 / r2070 | L1 / r2070 | ✅ rank **1/131072**, 100 % input-stable, all 3 tokenizations |
+| OLMo-7B-0724-hf | L1 / r269 | **L2 / r269** | ❌ frozen is rank 2/131072 (same row, one layer deeper) |
+
+2 of 3 confirm the frozen choice exactly. For OLMo the disagreement runs **against** the ratio
+rule: ablating the frozen L1/r269 costs **+1.1178** vs **+0.0237** for the ratio-argmax
+L2/r269 — the coordinate the ratio rule prefers is **47× less damaging**. DNABERT-2 goes the
+other way, so the ratio rule is **neither uniformly better nor worse** than the legacy rule.
+
+Exposure to the headline ρ is bounded: 22-model ρ = +0.766 → +0.769 (OLMo dropped) → +0.755
+(argmax substituted). The n=10 text-decoder subgroup moves +0.770 → +0.673 (p=0.033) worst
+case, with a CI lower bound of +0.032 — that subgroup was already fragile and should not carry
+weight alone.
+
+**Wording consequence:** the ratio rule is **the detector**, not the definition of the super
+row. It is a reproducible way to *find* candidates; it does **not** identify the most causally
+important coordinate (OLMo-7B 47×, SmolLM2-1.7B L7 130×).
+
+Reproduce (each run self-validates against four stored census quantities and aborts on
+mismatch; ~15 min per 7B model on one ≥48 GB GPU):
 
 ```bash
-# harness check first (1.7B, ~45 s) -- MUST print "uniform rule AGREES"
-python scripts/paper_closing/run_uniform_detector_text.py --model smollm2-1.7b
-# then the three targets
+python scripts/paper_closing/run_uniform_detector_text.py --model smollm2-1.7b   # positive control
 python scripts/paper_closing/run_uniform_detector_text.py --model llama
 python scripts/paper_closing/run_uniform_detector_text.py --model mistral
 python scripts/paper_closing/run_uniform_detector_text.py --model olmo
 ```
-
-Each run self-validates against four quantities stored in `audit/census_master.csv`
-(`baseline_loss`, `R_cand_eps1.0`, `R_cand_eps0.5`, and the 5 control rows redrawn from
-`SeedSequence(42).spawn(23)[panel_index]`) and **aborts** on mismatch. The detector positive
-control on SmolLM2-1.7B passes: frozen coordinate returned as global argmax, rank 1/49152,
-stable in 100 % of 24 inputs, all four gates within 1.6e-07.
 
 ### What this round established
 
@@ -169,6 +180,17 @@ functional replication (n=1) of the SW-ensemble effect across the models tested.
    the rows' extreme geometric alignment (cos = +0.3952, z = +17.6, the maximum of 19,900
    layer pairs) is **[UNTESTED]**. Counts of "the super row" per model should be read as
    *"the census's single frozen candidate"*, not as a complete inventory.
+
+10. **The ratio-argmax rule is a detector, not a definition** (Sep 2026). EXP2 closed
+    provenance for all 22 census rows, and in doing so falsified the reading that the
+    layer-relative-ratio argmax identifies the most causally important coordinate. In
+    OLMo-7B the ratio prefers L2/r269 while the census's L1/r269 is **47× more damaging**
+    (+1.1178 vs +0.0237); in SmolLM2-1.7B layer 7 the row ranked 4th by ratio is **130×
+    more damaging** than the row ranked 2nd; and DNABERT-2 runs the *opposite* way, so the
+    rule is **neither uniformly better nor worse** than the legacy absolute-activation rule.
+    Specify "global argmax of the layer-relative ratio, accept if ≥5" as the **candidate
+    detector** — reproducible and worth stating — and not as a claim about causal importance.
+    Evidence: `results/paper_closing/EXP2_LEGACY_DETECTOR_RESOLUTION.md`.
 
 
 ### New scripts shipped this round

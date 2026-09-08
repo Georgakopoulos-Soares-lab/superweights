@@ -1,3 +1,21 @@
+> # ✅ ALREADY RUN — 2026-09-08. No action needed.
+>
+> This was run on the lab's 8×A100 box instead of being delegated: all three models were
+> downloaded (51.8 GB) and completed, and **provenance is now closed for all 22 census rows**.
+> Results and interpretation:
+> [`results/paper_closing/EXP2_LEGACY_DETECTOR_RESOLUTION.md`](../results/paper_closing/EXP2_LEGACY_DETECTOR_RESOLUTION.md).
+>
+> Headline: **Llama-7B and Mistral-7B confirm the frozen choice exactly** (global rank 1 of
+> 131,072, 100 % input-stable, identical under all three tokenizations). **OLMo-7B disagrees** —
+> the ratio-argmax is L2/r269, one layer deeper on the same row — and the disagreement runs
+> *against* the ratio rule: the frozen coordinate is **47× more damaging** (+1.1178 vs +0.0237).
+>
+> The instructions below are kept as the **reproduction protocol** — they are accurate and the
+> commands still work. Read them if you want to re-run or audit the result, not as a task
+> assignment.
+
+---
+
 # EXP2 — uniform detector + causal re-evaluation on the three 7B text decoders
 
 **For:** the collaborator who already has `llama-7b`, `Mistral-7B-v0.1` and `OLMo-7B-0724-hf`

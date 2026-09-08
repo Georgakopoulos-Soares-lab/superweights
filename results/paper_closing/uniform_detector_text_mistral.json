@@ -1,0 +1,133 @@
+{
+  "experiment": "EXP2_UNIFORM_DETECTOR_TEXT",
+  "model": "Mistral-7B",
+  "repo": "mistralai/Mistral-7B-v0.1",
+  "revision": "27d67f1b5f57dc0953326b2601d68371d40ea8da",
+  "panel_index": 1,
+  "frozen_candidate": {
+    "layer": 1,
+    "row": 2070
+  },
+  "uniform_candidate": {
+    "layer": 1,
+    "row": 2070
+  },
+  "rules_agree": true,
+  "n_layers": 32,
+  "d_model": 4096,
+  "detector_threshold": 5.0,
+  "detector": {
+    "census_ids": {
+      "uniform_layer": 1,
+      "uniform_row": 2070,
+      "uniform_ratio": 1617.1832275390625,
+      "frozen_ratio": 1617.1832275390625,
+      "frozen_global_rank": 1,
+      "n_coords": 131072,
+      "frozen_is_ratio_argmax": true,
+      "frozen_within_layer_rank": 1,
+      "frozen_passes_threshold": true,
+      "per_input_argmax_stability": 1.0,
+      "frac_inputs_frozen_is_argmax": 1.0
+    },
+    "add_special_tokens_true": {
+      "uniform_layer": 1,
+      "uniform_row": 2070,
+      "uniform_ratio": 1617.1832275390625,
+      "frozen_ratio": 1617.1832275390625,
+      "frozen_global_rank": 1,
+      "n_coords": 131072,
+      "frozen_is_ratio_argmax": true,
+      "frozen_within_layer_rank": 1,
+      "frozen_passes_threshold": true,
+      "per_input_argmax_stability": 1.0,
+      "frac_inputs_frozen_is_argmax": 1.0
+    },
+    "add_special_tokens_false": {
+      "uniform_layer": 1,
+      "uniform_row": 2070,
+      "uniform_ratio": 1533.8682861328125,
+      "frozen_ratio": 1533.8682861328125,
+      "frozen_global_rank": 1,
+      "n_coords": 131072,
+      "frozen_is_ratio_argmax": true,
+      "frozen_within_layer_rank": 1,
+      "frozen_passes_threshold": true,
+      "per_input_argmax_stability": 1.0,
+      "frac_inputs_frozen_is_argmax": 1.0
+    }
+  },
+  "corpus_source": "datasets.load_dataset(wikitext,wikitext-2-raw-v1,test)",
+  "n_act_windows": 24,
+  "n_eval_windows": 100,
+  "batch_size": 4,
+  "intact_nll": 2.207224832971502,
+  "reproduction_gates": {
+    "baseline_loss": {
+      "measured": 2.207224832971502,
+      "expected": 2.207224828193799,
+      "rel_err": 2.164574746074271e-09,
+      "pass": true
+    },
+    "R_cand_eps1.0": {
+      "measured": 2.8714930615921634,
+      "expected": 2.871492377308394,
+      "rel_err": 2.3830248516587777e-07,
+      "pass": true
+    },
+    "R_cand_eps0.5": {
+      "measured": 3.013789379842378,
+      "expected": 3.013789457796915,
+      "rel_err": 2.5865953192601485e-08,
+      "pass": true
+    },
+    "control_rows": {
+      "measured": [
+        190,
+        305,
+        746,
+        1912,
+        2687
+      ],
+      "expected": [
+        190,
+        305,
+        746,
+        1912,
+        2687
+      ],
+      "rel_err": 0.0,
+      "pass": true
+    }
+  },
+  "conditions": [
+    {
+      "kind": "frozen_candidate",
+      "layer": 1,
+      "row": 2070,
+      "epsilon": 0.5,
+      "nll": 8.859335593505381,
+      "rel_delta": 3.013789379842378
+    },
+    {
+      "kind": "frozen_candidate",
+      "layer": 1,
+      "row": 2070,
+      "epsilon": 1.0,
+      "nll": 8.545255626223092,
+      "rel_delta": 2.8714930615921634
+    }
+  ],
+  "uniform_control_rows": null,
+  "uniform_median_control_eps1": null,
+  "uniform_G_eps1": null,
+  "provenance": {
+    "seed": 42,
+    "torch": "2.11.0+cu130",
+    "transformers": "5.5.0",
+    "pattern": "model.layers.{i}.mlp.down_proj",
+    "control_stream": "SeedSequence(42).spawn(23)[1]",
+    "wikitext_parquet": "/home/nvidia/superweights/frozen_inputs/wikitext_repo/wikitext-2-raw-v1/test-00000-of-00001.parquet"
+  },
+  "elapsed_seconds": 173.33268928527832
+}
