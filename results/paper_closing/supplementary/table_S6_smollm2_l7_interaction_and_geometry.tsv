@@ -1,0 +1,13 @@
+panel	condition	rows	activation_ratio	ratio_rank	nll	effect_rel	sum_of_singles	interaction	joint_over_sum	verdict
+ablation	single r227	227	3181.70	1	20.88682623	+6.988737				
+ablation	single r161	161	63.54	4	10.12298247	+2.871811				
+ablation	single r749	749	358.56	2	2.67224864	+0.022075				
+ablation	joint r227+r161	227;161			25.27078974	+8.665504	+9.860549	-1.195045	0.8788	SUB-ADDITIVE (partly shared/overlapping damage)
+ablation	joint r227+r749	227;749			22.82208231	+7.728929	+7.010812	+0.718117	1.1024	SUPER-ADDITIVE (synergy: joint damage exceeds the sum)
+ablation	joint r161+r749	161;749			2.66870927	+0.020721	+2.893886	-2.873165	0.0072	MASKING (the joint ablation largely CANCELS the single-row damage)
+geometry	row norm r161	161	63.54	4					7.9069	L2 norm of down_proj row
+geometry	row norm r749	749	358.56	2					24.6090	L2 norm of down_proj row
+geometry	row norm r227	227	3181.70	1					26.8393	L2 norm of down_proj row
+geometry	cosine r161, r749	161;749						+0.3952	z=+17.64	reference n=19900 pairs, mean -0.0001, sd 0.0224
+geometry	cosine r227, r161	227;161						-0.0323	z=-1.44	reference n=19900 pairs, mean -0.0001, sd 0.0224
+geometry	cosine r227, r749	227;749						-0.3980	z=-17.76	reference n=19900 pairs, mean -0.0001, sd 0.0224
