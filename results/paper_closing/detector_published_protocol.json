@@ -1,0 +1,133 @@
+{
+  "olmo": {
+    "model": "OLMo-7B-0724-hf",
+    "repo": "allenai/OLMo-7B-0724-hf",
+    "revision": "1ee306df318ee15bfe4a76ebd5c002b0105b1ab6",
+    "detector_input": "first 20 non-empty WikiText-2 raw test lines, joined, truncation to 512 tokens (measured 512)",
+    "n_layers": 32,
+    "d_model": 4096,
+    "frozen": {
+      "layer": 1,
+      "row": 269
+    },
+    "ratio_argmax": {
+      "layer": 2,
+      "row": 269,
+      "ratio": 2423.207763671875
+    },
+    "activation_argmax": {
+      "layer": 30,
+      "row": 269,
+      "activation_max": 552.58544921875,
+      "ratio_at_that_coord": 1078.0264892578125
+    },
+    "frozen_ratio": 2253.48046875,
+    "frozen_activation_max": 421.76239013671875,
+    "frozen_ratio_global_rank": 2,
+    "frozen_activation_global_rank": 2,
+    "n_coords": 131072,
+    "manuscript_checks": {
+      "manuscript_ratio_argmax": {
+        "claimed": "L2/r269",
+        "measured": "L2/r269",
+        "agrees": true
+      },
+      "manuscript_activation_argmax": {
+        "claimed": "L30/r269",
+        "measured": "L30/r269",
+        "agrees": true
+      }
+    },
+    "provenance": {
+      "torch": "2.11.0+cu130",
+      "transformers": "5.5.0",
+      "pattern": "model.layers.{i}.mlp.down_proj",
+      "parquet": "/home/nvidia/superweights/frozen_inputs/wikitext_repo/wikitext-2-raw-v1/test-00000-of-00001.parquet"
+    },
+    "elapsed_seconds": 7.835241317749023
+  },
+  "llama": {
+    "model": "Llama-7B",
+    "repo": "huggyllama/llama-7b",
+    "revision": "4782ad278652c7c71b72204d462d6d01eaaf7549",
+    "detector_input": "first 20 non-empty WikiText-2 raw test lines, joined, truncation to 512 tokens (measured 512)",
+    "n_layers": 32,
+    "d_model": 4096,
+    "frozen": {
+      "layer": 2,
+      "row": 3968
+    },
+    "ratio_argmax": {
+      "layer": 2,
+      "row": 3968,
+      "ratio": 3959.23095703125
+    },
+    "activation_argmax": {
+      "layer": 30,
+      "row": 3968,
+      "activation_max": 1474.16796875,
+      "ratio_at_that_coord": 585.3182373046875
+    },
+    "frozen_ratio": 3959.23095703125,
+    "frozen_activation_max": 1312.5889892578125,
+    "frozen_ratio_global_rank": 1,
+    "frozen_activation_global_rank": 2,
+    "n_coords": 131072,
+    "manuscript_checks": {
+      "manuscript_ratio_argmax": {
+        "claimed": "L2/r3968",
+        "measured": "L2/r3968",
+        "agrees": true
+      }
+    },
+    "provenance": {
+      "torch": "2.11.0+cu130",
+      "transformers": "5.5.0",
+      "pattern": "model.layers.{i}.mlp.down_proj",
+      "parquet": "/home/nvidia/superweights/frozen_inputs/wikitext_repo/wikitext-2-raw-v1/test-00000-of-00001.parquet"
+    },
+    "elapsed_seconds": 11.378381490707397
+  },
+  "mistral": {
+    "model": "Mistral-7B",
+    "repo": "mistralai/Mistral-7B-v0.1",
+    "revision": "27d67f1b5f57dc0953326b2601d68371d40ea8da",
+    "detector_input": "first 20 non-empty WikiText-2 raw test lines, joined, truncation to 512 tokens (measured 512)",
+    "n_layers": 32,
+    "d_model": 4096,
+    "frozen": {
+      "layer": 1,
+      "row": 2070
+    },
+    "ratio_argmax": {
+      "layer": 1,
+      "row": 2070,
+      "ratio": 1714.3350830078125
+    },
+    "activation_argmax": {
+      "layer": 1,
+      "row": 2070,
+      "activation_max": 283.6225891113281,
+      "ratio_at_that_coord": 1714.3350830078125
+    },
+    "frozen_ratio": 1714.3350830078125,
+    "frozen_activation_max": 283.6225891113281,
+    "frozen_ratio_global_rank": 1,
+    "frozen_activation_global_rank": 1,
+    "n_coords": 131072,
+    "manuscript_checks": {
+      "manuscript_ratio_argmax": {
+        "claimed": "L1/r2070",
+        "measured": "L1/r2070",
+        "agrees": true
+      }
+    },
+    "provenance": {
+      "torch": "2.11.0+cu130",
+      "transformers": "5.5.0",
+      "pattern": "model.layers.{i}.mlp.down_proj",
+      "parquet": "/home/nvidia/superweights/frozen_inputs/wikitext_repo/wikitext-2-raw-v1/test-00000-of-00001.parquet"
+    },
+    "elapsed_seconds": 12.917071342468262
+  }
+}
