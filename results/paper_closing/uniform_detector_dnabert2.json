@@ -1,0 +1,41 @@
+{
+  "model": "dnabert2",
+  "frozen": [
+    5,
+    603
+  ],
+  "conditions": {
+    "default": {
+      "uniform_layer": 8,
+      "uniform_row": 603,
+      "uniform_ratio": 301.8395690917969,
+      "frozen_ratio": 91.5037841796875,
+      "frozen_rank_in_layer": 1,
+      "frozen_global_rank": 11,
+      "same_coordinate": false,
+      "same_row": true,
+      "same_layer": false,
+      "uniform_rank1_fraction": 0.5,
+      "frozen_rank1_fraction": 1.0,
+      "causal_frozen_rel": -0.13221026020944396,
+      "causal_uniform_rel": 0.10721874000925173,
+      "causal_baseline": 5.138636872793238
+    },
+    "no_special": {
+      "uniform_layer": 9,
+      "uniform_row": 264,
+      "uniform_ratio": 246.47508239746094,
+      "frozen_ratio": 127.57157897949219,
+      "frozen_rank_in_layer": 1,
+      "frozen_global_rank": 5,
+      "same_coordinate": false,
+      "same_row": false,
+      "same_layer": false,
+      "uniform_rank1_fraction": 0.16666666666666666,
+      "frozen_rank1_fraction": 0.16666666666666666,
+      "causal_frozen_rel": -0.13221026020944396,
+      "causal_uniform_rel": -0.03417477034443232,
+      "causal_baseline": 5.138636872793238
+    }
+  }
+}

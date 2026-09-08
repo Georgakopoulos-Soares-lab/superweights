@@ -1,0 +1,141 @@
+{
+  "experiment": "EXP4_generator_position_rescue",
+  "model": "GENERator-EUK-3B",
+  "layer": 4,
+  "row": 2371,
+  "revision": "7dc01bccce5b65e15141170538afdc2ff09d8dde",
+  "corpus_meta": {
+    "base_seed": 42,
+    "repartition_tries": 0,
+    "n_regions_total": 50000,
+    "partition_seed_used": 42,
+    "n_prompt": 96,
+    "n_damage": 100
+  },
+  "endpoint": "native causal-LM NLL (pooled per-window)",
+  "provenance": {
+    "intact_measured": 6.385380401611328,
+    "ablated_measured": 8.75432020664215,
+    "intact_historical": 6.385381,
+    "ablated_historical": 8.75432,
+    "intact_ok": true,
+    "ablated_ok": true
+  },
+  "positions": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64
+  ],
+  "rows": [
+    {
+      "position": 0,
+      "n_windows": 100,
+      "nll_restored": 6.386260630488396,
+      "nll_intact": 6.385380401611328,
+      "nll_ablated": 8.75432020664215,
+      "delta_vs_intact": 0.0008802288770679567,
+      "rescue_fraction": 0.9996284291921651,
+      "ci95_lo": 0.9979272564953832,
+      "ci95_hi": 1.0016602157011214,
+      "mean_seq_len": 86.0,
+      "accessibility": 1.0
+    },
+    {
+      "position": 1,
+      "n_windows": 100,
+      "nll_restored": 8.727990984916687,
+      "nll_intact": 6.385380401611328,
+      "nll_ablated": 8.75432020664215,
+      "delta_vs_intact": 2.342610583305359,
+      "rescue_fraction": 0.011114348144072531,
+      "ci95_lo": 0.001320386237141971,
+      "ci95_hi": 0.021276173430185064,
+      "mean_seq_len": 86.0,
+      "accessibility": 0.9883720930232556
+    },
+    {
+      "position": 2,
+      "n_windows": 100,
+      "nll_restored": 8.757547883987426,
+      "nll_intact": 6.385380401611328,
+      "nll_ablated": 8.75432020664215,
+      "delta_vs_intact": 2.3721674823760983,
+      "rescue_fraction": -0.0013624986749014854,
+      "ci95_lo": -0.003763505472013625,
+      "ci95_hi": 0.0012275922849661219,
+      "mean_seq_len": 86.0,
+      "accessibility": 0.9767441860465118
+    },
+    {
+      "position": 4,
+      "n_windows": 100,
+      "nll_restored": 8.753661994934083,
+      "nll_intact": 6.385380401611328,
+      "nll_ablated": 8.75432020664215,
+      "delta_vs_intact": 2.368281593322755,
+      "rescue_fraction": 0.000277850752759116,
+      "ci95_lo": -0.002006771393876669,
+      "ci95_hi": 0.0024993057572028935,
+      "mean_seq_len": 86.0,
+      "accessibility": 0.9534883720930232
+    },
+    {
+      "position": 8,
+      "n_windows": 100,
+      "nll_restored": 8.757372331619262,
+      "nll_intact": 6.385380401611328,
+      "nll_ablated": 8.75432020664215,
+      "delta_vs_intact": 2.371991930007934,
+      "rescue_fraction": -0.0012883927952200983,
+      "ci95_lo": -0.003559785530427722,
+      "ci95_hi": 0.0010090091241785884,
+      "mean_seq_len": 86.0,
+      "accessibility": 0.9069767441860468
+    },
+    {
+      "position": 16,
+      "n_windows": 100,
+      "nll_restored": 8.756822791099548,
+      "nll_intact": 6.385380401611328,
+      "nll_ablated": 8.75432020664215,
+      "delta_vs_intact": 2.3714423894882204,
+      "rescue_fraction": -0.0010564153855166865,
+      "ci95_lo": -0.0030674979652568018,
+      "ci95_hi": 0.0007416082892505758,
+      "mean_seq_len": 86.0,
+      "accessibility": 0.8139534883720928
+    },
+    {
+      "position": 32,
+      "n_windows": 100,
+      "nll_restored": 8.753026962280273,
+      "nll_intact": 6.385380401611328,
+      "nll_ablated": 8.75432020664215,
+      "delta_vs_intact": 2.3676465606689456,
+      "rescue_fraction": 0.0005459169368217082,
+      "ci95_lo": -0.0008030011165322328,
+      "ci95_hi": 0.0019351695267755841,
+      "mean_seq_len": 86.0,
+      "accessibility": 0.6279069767441862
+    },
+    {
+      "position": 64,
+      "n_windows": 100,
+      "nll_restored": 8.754867129325866,
+      "nll_intact": 6.385380401611328,
+      "nll_ablated": 8.75432020664215,
+      "delta_vs_intact": 2.3694867277145386,
+      "rescue_fraction": -0.00023087234321207423,
+      "ci95_lo": -0.0010565267354305668,
+      "ci95_hi": 0.0005745606844174073,
+      "mean_seq_len": 86.0,
+      "accessibility": 0.25581395348837205
+    }
+  ],
+  "elapsed_seconds": 71.25606513023376
+}

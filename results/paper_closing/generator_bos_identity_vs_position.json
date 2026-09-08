@@ -1,0 +1,72 @@
+{
+  "experiment": "EXP5_bos_identity_vs_position",
+  "model": "GENERator-EUK-3B",
+  "layer": 4,
+  "row": 2371,
+  "revision": "7dc01bccce5b65e15141170538afdc2ff09d8dde",
+  "n_windows": 40,
+  "neutral_token": "AAAAAA",
+  "corpus_meta": {
+    "base_seed": 42,
+    "repartition_tries": 0,
+    "n_regions_total": 50000,
+    "partition_seed_used": 42,
+    "n_prompt": 96,
+    "n_damage": 100
+  },
+  "rows": [
+    {
+      "condition": "standard",
+      "n": 40,
+      "nll_mean": 6.228971862792969,
+      "act_max_mean": 375361.3125,
+      "act_at_pos0_mean": 375361.3125,
+      "act_at_bos_mean": 375361.3125,
+      "bos_position": 0,
+      "frac_argmax_at_pos0": 1.0,
+      "frac_argmax_at_bos": 1.0,
+      "median_argmax_pos": 0.0,
+      "activation_ratio_mean": 54122.55997813099
+    },
+    {
+      "condition": "no_bos",
+      "n": 40,
+      "nll_mean": 6.194284301996231,
+      "act_max_mean": 426953.1328125,
+      "act_at_pos0_mean": 374346.59331874846,
+      "act_at_bos_mean": null,
+      "bos_position": null,
+      "frac_argmax_at_pos0": 0.875,
+      "frac_argmax_at_bos": null,
+      "median_argmax_pos": 0.0,
+      "activation_ratio_mean": 67731.13423141708
+    },
+    {
+      "condition": "shifted_bos",
+      "n": 40,
+      "nll_mean": 6.192649661004543,
+      "act_max_mean": 354529.875,
+      "act_at_pos0_mean": 43.089115142822266,
+      "act_at_bos_mean": 354529.875,
+      "bos_position": 1,
+      "frac_argmax_at_pos0": 0.0,
+      "frac_argmax_at_bos": 1.0,
+      "median_argmax_pos": 1.0,
+      "activation_ratio_mean": 48129.484711057834
+    },
+    {
+      "condition": "no_bos_pad",
+      "n": 40,
+      "nll_mean": 6.231288397312165,
+      "act_max_mean": 417580.10078125,
+      "act_at_pos0_mean": 43.089115142822266,
+      "act_at_bos_mean": null,
+      "bos_position": null,
+      "frac_argmax_at_pos0": 0.0,
+      "frac_argmax_at_bos": null,
+      "median_argmax_pos": 1.0,
+      "activation_ratio_mean": 65084.20781895799
+    }
+  ],
+  "elapsed_seconds": 12.75291895866394
+}

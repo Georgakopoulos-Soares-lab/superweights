@@ -1,0 +1,96 @@
+{
+  "experiment": "SMOLLM2_SECOND_CRITICAL_ROW",
+  "model": "HuggingFaceTB/SmolLM2-1.7B",
+  "repo": "HuggingFaceTB/SmolLM2-1.7B",
+  "revision": "effd688a12921b4cc83e3312b6feb579f70f9c71",
+  "layer": 7,
+  "intact_nll": 2.6145340975110076,
+  "note": "row 161 was surfaced by the 36-row graded sweep, not selected by the census detector; row 749 is the high-ratio low-damage contrast, not a random control",
+  "singles": {
+    "cand_227": {
+      "row": 227,
+      "ratio": 3181.7,
+      "nll": 20.886826229207436,
+      "rel_delta": 6.988737362075844
+    },
+    "second_161": {
+      "row": 161,
+      "ratio": 63.54,
+      "nll": 10.12298247156311,
+      "rel_delta": 2.8718112267879845
+    },
+    "highratio_749": {
+      "row": 749,
+      "ratio": 358.56,
+      "nll": 2.6722486354880135,
+      "rel_delta": 0.022074501928259087
+    }
+  },
+  "pairs": {
+    "cand_227+second_161": {
+      "rows": [
+        227,
+        161
+      ],
+      "nll": 25.270789735200587,
+      "joint_rel_delta": 8.665503983772082,
+      "sum_of_singles": 9.860548588863828,
+      "epistasis": -1.1950446050917467,
+      "joint_over_sum": 0.8788054645923666,
+      "epistasis_frac_of_sum": -0.12119453540763339,
+      "verdict": "SUB-ADDITIVE (partly shared/overlapping damage)"
+    },
+    "cand_227+highratio_749": {
+      "rows": [
+        227,
+        749
+      ],
+      "nll": 22.822082314090018,
+      "joint_rel_delta": 7.728928926884624,
+      "sum_of_singles": 7.010811864004103,
+      "epistasis": 0.7181170628805207,
+      "joint_over_sum": 1.1024299434659741,
+      "epistasis_frac_of_sum": 0.10242994346597409,
+      "verdict": "SUPER-ADDITIVE (synergy: joint damage exceeds the sum)"
+    },
+    "second_161+highratio_749": {
+      "rows": [
+        161,
+        749
+      ],
+      "nll": 2.6687092748593444,
+      "joint_rel_delta": 0.02072077675326959,
+      "sum_of_singles": 2.8938857287162434,
+      "epistasis": -2.873164951962974,
+      "joint_over_sum": 0.007160191761428511,
+      "epistasis_frac_of_sum": -0.9928398082385715,
+      "verdict": "MASKING (the joint ablation largely CANCELS the single-row damage)"
+    }
+  },
+  "reproduction_gates": {
+    "baseline_loss": {
+      "measured": 2.6145340975110076,
+      "expected": 2.6145340592893835,
+      "rel_err": 1.4618904638917332e-08,
+      "pass": true
+    },
+    "R_cand_eps1.0": {
+      "measured": 6.988737362075844,
+      "expected": 6.988738472947954,
+      "rel_err": 1.589517355893535e-07,
+      "pass": true
+    }
+  },
+  "provenance": {
+    "seed": 42,
+    "torch": "2.11.0+cu130",
+    "transformers": "5.5.0",
+    "n_windows": 100,
+    "batch_size": 8,
+    "pattern": "model.layers.{i}.mlp.down_proj"
+  },
+  "elapsed_seconds": 78.7793493270874,
+  "sign_convention": "loss-increase endpoint: epistasis>0 = super-additive synergy, epistasis<0 = sub-additive/masking. OPPOSITE sign to the project's accuracy-endpoint epistasis numbers (e.g. DNABERT-2 -33.63 pp), which must be converted before comparison.",
+  "independent_verification": "All six conditions re-measured by an independent implementation that zeroes rows by explicit indexing rather than e10_lib.masked, restoring from separately held clones and re-measuring the intact loss after every restore: every value reproduced exactly, order-independent, weight drift 0.00e+00.",
+  "verdict_227_161": "SUB-ADDITIVE (partly shared/overlapping damage)"
+}

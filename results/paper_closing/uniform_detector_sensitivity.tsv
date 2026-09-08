@@ -1,0 +1,5 @@
+model	condition	frozen	uniform	same_coordinate	same_layer	same_row	frozen_ratio	uniform_ratio	frozen_rank_in_layer	frozen_global_rank	causal_frozen_rel	causal_uniform_rel
+dnabert2	default	L5/r603	L8/r603	False	False	True	91.5	301.84	1	11	-0.13221	0.10722
+dnabert2	no_special	L5/r603	L9/r264	False	False	False	127.57	246.48	1	5	-0.13221	-0.03417
+ntv3	default	L11/r1472	L11/r1472	True	True	True	109.49	109.49	1	1	nan	nan
+ntv3	no_special	L11/r1472	L11/r1472	True	True	True	109.49	109.49	1	1	nan	nan

@@ -1,0 +1,150 @@
+{
+  "experiment": "EXP3_special_token_dependence",
+  "rows": [
+    {
+      "model": "dnabert2",
+      "layer": 5,
+      "row": 603,
+      "condition": "default",
+      "n_seqs": 3,
+      "activation_max": 46.48216565450033,
+      "activation_ratio": 65.21671676635742,
+      "median_max_position": 12.0,
+      "frac_max_at_special": 1.0,
+      "frac_max_at_pos0": 0.3333333333333333
+    },
+    {
+      "model": "dnabert2",
+      "layer": 5,
+      "row": 603,
+      "condition": "no_special",
+      "n_seqs": 3,
+      "activation_max": 0.41652458906173706,
+      "activation_ratio": 2.1575384934743247,
+      "median_max_position": 9.0,
+      "frac_max_at_special": 0.0,
+      "frac_max_at_pos0": 0.3333333333333333
+    },
+    {
+      "model": "dnabert2",
+      "layer": 9,
+      "row": 264,
+      "condition": "default",
+      "n_seqs": 3,
+      "activation_max": 509.7188008626302,
+      "activation_ratio": 238.57609049479166,
+      "median_max_position": 17.0,
+      "frac_max_at_special": 1.0,
+      "frac_max_at_pos0": 0.0
+    },
+    {
+      "model": "dnabert2",
+      "layer": 9,
+      "row": 264,
+      "condition": "no_special",
+      "n_seqs": 3,
+      "activation_max": 0.22430832187334696,
+      "activation_ratio": 1.851042628288269,
+      "median_max_position": 7.0,
+      "frac_max_at_special": 0.0,
+      "frac_max_at_pos0": 0.0
+    },
+    {
+      "model": "dnabert2",
+      "layer": 9,
+      "row": 294,
+      "condition": "default",
+      "n_seqs": 3,
+      "activation_max": 487.124267578125,
+      "activation_ratio": 228.01307678222656,
+      "median_max_position": 17.0,
+      "frac_max_at_special": 1.0,
+      "frac_max_at_pos0": 0.0
+    },
+    {
+      "model": "dnabert2",
+      "layer": 9,
+      "row": 294,
+      "condition": "no_special",
+      "n_seqs": 3,
+      "activation_max": 1.2042351166407268,
+      "activation_ratio": 9.05465841293335,
+      "median_max_position": 3.0,
+      "frac_max_at_special": 0.0,
+      "frac_max_at_pos0": 0.3333333333333333
+    },
+    {
+      "model": "dnabert2",
+      "layer": 3,
+      "row": 86,
+      "condition": "default",
+      "n_seqs": 3,
+      "activation_max": 361.10369364420575,
+      "activation_ratio": 61.34957758585612,
+      "median_max_position": 17.0,
+      "frac_max_at_special": 1.0,
+      "frac_max_at_pos0": 0.0
+    },
+    {
+      "model": "dnabert2",
+      "layer": 3,
+      "row": 86,
+      "condition": "no_special",
+      "n_seqs": 3,
+      "activation_max": 1.6579678853352864,
+      "activation_ratio": 1.455091545979182,
+      "median_max_position": 15.0,
+      "frac_max_at_special": 0.0,
+      "frac_max_at_pos0": 0.0
+    },
+    {
+      "model": "generator",
+      "layer": 4,
+      "row": 2371,
+      "condition": "default",
+      "n_seqs": 3,
+      "activation_max": 375361.5625,
+      "activation_ratio": 7124.09521484375,
+      "median_max_position": 0.0,
+      "frac_max_at_special": 1.0,
+      "frac_max_at_pos0": 1.0
+    },
+    {
+      "model": "generator",
+      "layer": 4,
+      "row": 2371,
+      "condition": "no_special",
+      "n_seqs": 3,
+      "activation_max": 424259.34375,
+      "activation_ratio": 7089.007486979167,
+      "median_max_position": 0.0,
+      "frac_max_at_special": 0.0,
+      "frac_max_at_pos0": 1.0
+    },
+    {
+      "model": "generator_prokaryote",
+      "layer": 8,
+      "row": 260,
+      "condition": "default",
+      "n_seqs": 3,
+      "activation_max": 30167.06640625,
+      "activation_ratio": 257.26806640625,
+      "median_max_position": 0.0,
+      "frac_max_at_special": 1.0,
+      "frac_max_at_pos0": 1.0
+    },
+    {
+      "model": "generator_prokaryote",
+      "layer": 8,
+      "row": 260,
+      "condition": "no_special",
+      "n_seqs": 3,
+      "activation_max": 30103.69921875,
+      "activation_ratio": 257.08225504557294,
+      "median_max_position": 0.0,
+      "frac_max_at_special": 0.0,
+      "frac_max_at_pos0": 1.0
+    }
+  ],
+  "sequences": 3
+}

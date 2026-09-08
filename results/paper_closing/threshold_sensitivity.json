@@ -1,0 +1,10 @@
+{
+  "n_models": 22,
+  "models_gt3": 22,
+  "models_gt5": 22,
+  "models_gt10": 22,
+  "min_median_ratio": 10.421505545183182,
+  "max_median_ratio": 7124.084927150937,
+  "n_obs": 528,
+  "frac_rank1_overall": 1.0
+}

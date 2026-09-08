@@ -1,0 +1,355 @@
+{
+  "experiment": "WITHIN_MODEL_SLOPE",
+  "model": "GENERator-EUK-3B",
+  "layer": 4,
+  "frozen_row": 2371,
+  "revision": "7dc01bccce5b65e15141170538afdc2ff09d8dde",
+  "n_act_windows": 24,
+  "n_damage_windows": 40,
+  "intact_nll": 6.228971862792969,
+  "median_row_peak": 52.689022064208984,
+  "corpus_meta": {
+    "base_seed": 42,
+    "repartition_tries": 0,
+    "n_regions_total": 50000,
+    "partition_seed_used": 42,
+    "n_prompt": 96,
+    "n_damage": 100
+  },
+  "spearman_rho": 0.45379665379665374,
+  "p_value": 0.005438044569556836,
+  "ci95": [
+    0.07686694921891193,
+    0.7598426485589567
+  ],
+  "n": 36,
+  "spearman_rho_excl_candidate": 0.4056022408963586,
+  "p_excl_candidate": 0.015633731471088787,
+  "rows": [
+    {
+      "row": 2371,
+      "rank": 1,
+      "activation_ratio": 7124.08984375,
+      "nll": 8.520703959465028,
+      "delta_nll": 2.2917320966720585,
+      "rel_delta": 0.36791498615703866,
+      "is_frozen_candidate": true
+    },
+    {
+      "row": 1522,
+      "rank": 2,
+      "activation_ratio": 2730.74365234375,
+      "nll": 6.89547720849514,
+      "delta_nll": 0.6665053457021708,
+      "rel_delta": 0.10700085991451576,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 101,
+      "rank": 3,
+      "activation_ratio": 531.278076171875,
+      "nll": 6.2283267885446545,
+      "delta_nll": -0.0006450742483146144,
+      "rel_delta": -0.00010356030859085846,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 1932,
+      "rank": 4,
+      "activation_ratio": 498.3456726074219,
+      "nll": 6.244379204511643,
+      "delta_nll": 0.015407341718673528,
+      "rel_delta": 0.0024734967596667114,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 166,
+      "rank": 5,
+      "activation_ratio": 377.6514892578125,
+      "nll": 6.2365264490246775,
+      "delta_nll": 0.007554586231708349,
+      "rel_delta": 0.0012128143131988713,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 2105,
+      "rank": 6,
+      "activation_ratio": 191.1865234375,
+      "nll": 6.229838888347149,
+      "delta_nll": 0.0008670255541796124,
+      "rel_delta": 0.00013919240177637473,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 410,
+      "rank": 8,
+      "activation_ratio": 180.39328002929688,
+      "nll": 6.232415933907032,
+      "delta_nll": 0.0034440711140630853,
+      "rel_delta": 0.0005529116505783702,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 457,
+      "rank": 10,
+      "activation_ratio": 119.63430786132812,
+      "nll": 6.230428129434586,
+      "delta_nll": 0.001456266641616466,
+      "rel_delta": 0.00023378924703690984,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 2736,
+      "rank": 12,
+      "activation_ratio": 37.1716423034668,
+      "nll": 6.229440045356751,
+      "delta_nll": 0.00046818256378156065,
+      "rel_delta": 7.516209321447075e-05,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 2599,
+      "rank": 15,
+      "activation_ratio": 28.867158889770508,
+      "nll": 6.229899056255817,
+      "delta_nll": 0.0009271934628483081,
+      "rel_delta": 0.0001488517661135444,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 2453,
+      "rank": 18,
+      "activation_ratio": 19.85634422302246,
+      "nll": 6.228675118088722,
+      "delta_nll": -0.00029674470424723154,
+      "rel_delta": -4.763943565386023e-05,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 1496,
+      "rank": 22,
+      "activation_ratio": 14.360159873962402,
+      "nll": 6.229081216454506,
+      "delta_nll": 0.0001093536615366375,
+      "rel_delta": 1.7555651870869923e-05,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 2111,
+      "rank": 27,
+      "activation_ratio": 9.79395580291748,
+      "nll": 6.228940457105637,
+      "delta_nll": -3.140568733250859e-05,
+      "rel_delta": -5.041873365988652e-06,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 6,
+      "rank": 33,
+      "activation_ratio": 7.363296031951904,
+      "nll": 6.229144075512886,
+      "delta_nll": 0.00017221271991729736,
+      "rel_delta": 2.7647053753118094e-05,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 1123,
+      "rank": 41,
+      "activation_ratio": 5.857431888580322,
+      "nll": 6.228991827368736,
+      "delta_nll": 1.9964575766806547e-05,
+      "rel_delta": 3.20511574085916e-06,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 1582,
+      "rank": 50,
+      "activation_ratio": 4.9563798904418945,
+      "nll": 6.229689951241016,
+      "delta_nll": 0.000718088448047105,
+      "rel_delta": 0.00011528201826314334,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 2343,
+      "rank": 61,
+      "activation_ratio": 4.474549293518066,
+      "nll": 6.22894561290741,
+      "delta_nll": -2.6249885559437303e-05,
+      "rel_delta": -4.214160239867785e-06,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 2090,
+      "rank": 75,
+      "activation_ratio": 4.029317855834961,
+      "nll": 6.229116281867027,
+      "delta_nll": 0.00014441907405782217,
+      "rel_delta": 2.3185058022250727e-05,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 2951,
+      "rank": 93,
+      "activation_ratio": 3.6609840393066406,
+      "nll": 6.228750066459179,
+      "delta_nll": -0.00022179633378982544,
+      "rel_delta": -3.5607213947242904e-05,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 3023,
+      "rank": 114,
+      "activation_ratio": 3.5002050399780273,
+      "nll": 6.2290343448519705,
+      "delta_nll": 6.24820590013897e-05,
+      "rel_delta": 1.0030878350022561e-05,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 1937,
+      "rank": 140,
+      "activation_ratio": 3.329253673553467,
+      "nll": 6.229042480885982,
+      "delta_nll": 7.061809301323052e-05,
+      "rel_delta": 1.1337038369854913e-05,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 284,
+      "rank": 172,
+      "activation_ratio": 3.0965628623962402,
+      "nll": 6.228964313864708,
+      "delta_nll": -7.548928261158494e-06,
+      "rel_delta": -1.211905981828224e-06,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 2592,
+      "rank": 211,
+      "activation_ratio": 2.923701286315918,
+      "nll": 6.229339683055878,
+      "delta_nll": 0.00036782026290893555,
+      "rel_delta": 5.9049915621871335e-05,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 2166,
+      "rank": 260,
+      "activation_ratio": 2.7126972675323486,
+      "nll": 6.228914712369442,
+      "delta_nll": -5.715042352694155e-05,
+      "rel_delta": -9.174936857286787e-06,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 544,
+      "rank": 319,
+      "activation_ratio": 2.5605292320251465,
+      "nll": 6.229058268666267,
+      "delta_nll": 8.640587329811211e-05,
+      "rel_delta": 1.3871610789291497e-05,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 2878,
+      "rank": 392,
+      "activation_ratio": 2.383136749267578,
+      "nll": 6.229005578160286,
+      "delta_nll": 3.37153673166668e-05,
+      "rel_delta": 5.412669708472464e-06,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 916,
+      "rank": 482,
+      "activation_ratio": 2.1950225830078125,
+      "nll": 6.22893413156271,
+      "delta_nll": -3.773123025929692e-05,
+      "rel_delta": -6.057376897891276e-06,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 1478,
+      "rank": 592,
+      "activation_ratio": 2.000093460083008,
+      "nll": 6.229001289606094,
+      "delta_nll": 2.942681312489981e-05,
+      "rel_delta": 4.724184628393121e-06,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 2689,
+      "rank": 727,
+      "activation_ratio": 1.8027794361114502,
+      "nll": 6.228663767874241,
+      "delta_nll": -0.00030809491872840766,
+      "rel_delta": -4.9461600648531895e-05,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 338,
+      "rank": 893,
+      "activation_ratio": 1.5870760679244995,
+      "nll": 6.2293508991599085,
+      "delta_nll": 0.00037903636693936704,
+      "rel_delta": 6.0850550506325985e-05,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 383,
+      "rank": 1097,
+      "activation_ratio": 1.3865015506744385,
+      "nll": 6.22921538501978,
+      "delta_nll": 0.00024352222681045532,
+      "rel_delta": 3.909509180239962e-05,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 3014,
+      "rank": 1348,
+      "activation_ratio": 1.1484413146972656,
+      "nll": 6.228780806064606,
+      "delta_nll": -0.00019105672836339238,
+      "rel_delta": -3.0672273462112845e-05,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 1168,
+      "rank": 1656,
+      "activation_ratio": 0.9131579399108887,
+      "nll": 6.229215987026691,
+      "delta_nll": 0.0002441242337223315,
+      "rel_delta": 3.919173807487231e-05,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 2883,
+      "rank": 2035,
+      "activation_ratio": 0.6368252038955688,
+      "nll": 6.229009391367436,
+      "delta_nll": 3.752857446670532e-05,
+      "rel_delta": 6.024842509061861e-06,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 2123,
+      "rank": 2500,
+      "activation_ratio": 0.3632570505142212,
+      "nll": 6.228978200256824,
+      "delta_nll": 6.3374638550328655e-06,
+      "rel_delta": 1.0174173193633998e-06,
+      "is_frozen_candidate": false
+    },
+    {
+      "row": 1643,
+      "rank": 3072,
+      "activation_ratio": 0.02510760724544525,
+      "nll": 6.229040870070458,
+      "delta_nll": 6.90072774887085e-05,
+      "rel_delta": 1.1078437823889408e-05,
+      "is_frozen_candidate": false
+    }
+  ],
+  "elapsed_seconds": 82.46943855285645
+}

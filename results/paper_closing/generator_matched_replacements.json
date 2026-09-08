@@ -1,0 +1,201 @@
+{
+  "experiment": "EXP9_matched_replacements",
+  "revision": "7dc01bccce5b65e15141170538afdc2ff09d8dde",
+  "intact_nll": 6.228971862792969,
+  "ablated_nll": 8.520703959465028,
+  "gc_intact": 0.4592013888888889,
+  "gc_ablated": 0.3454861111111111,
+  "random_same_layer_row": 274,
+  "top_frobenius_row": 101,
+  "corpus_meta": {
+    "base_seed": 42,
+    "repartition_tries": 0,
+    "n_regions_total": 50000,
+    "partition_seed_used": 42,
+    "n_prompt": 96,
+    "n_damage": 100
+  },
+  "rows": [
+    {
+      "family": "random_unit",
+      "scale": 0.5,
+      "cos_to_row": -0.007659853436052799,
+      "nll": 8.465668153762817,
+      "delta_nll": 2.2366962909698476,
+      "gc": 0.359375,
+      "delta_gc": -0.0998263888888889,
+      "frac_of_ablation_damage": 0.9759850613507001
+    },
+    {
+      "family": "random_unit",
+      "scale": 1.0,
+      "cos_to_row": -0.007659853436052799,
+      "nll": 8.387578499317168,
+      "delta_nll": 2.1586066365241994,
+      "gc": 0.3541666666666667,
+      "delta_gc": -0.10503472222222221,
+      "frac_of_ablation_damage": 0.9419105486452027
+    },
+    {
+      "family": "random_unit",
+      "scale": 2.0,
+      "cos_to_row": -0.007659853436052799,
+      "nll": 8.205876910686493,
+      "delta_nll": 1.9769050478935242,
+      "gc": 0.42390046296296297,
+      "delta_gc": -0.03530092592592593,
+      "frac_of_ablation_damage": 0.8626248464051663
+    },
+    {
+      "family": "random_same_layer",
+      "scale": 0.5,
+      "cos_to_row": -0.00544891320168972,
+      "nll": 8.528674113750458,
+      "delta_nll": 2.2997022509574894,
+      "gc": 0.3492476851851852,
+      "delta_gc": -0.10995370370370372,
+      "frac_of_ablation_damage": 1.003477786211139
+    },
+    {
+      "family": "random_same_layer",
+      "scale": 1.0,
+      "cos_to_row": -0.00544891320168972,
+      "nll": 8.53561360836029,
+      "delta_nll": 2.3066417455673207,
+      "gc": 0.35503472222222215,
+      "delta_gc": -0.10416666666666674,
+      "frac_of_ablation_damage": 1.0065058428587326
+    },
+    {
+      "family": "random_same_layer",
+      "scale": 2.0,
+      "cos_to_row": -0.00544891320168972,
+      "nll": 8.547540855407714,
+      "delta_nll": 2.318568992614745,
+      "gc": 0.34809027777777773,
+      "delta_gc": -0.11111111111111116,
+      "frac_of_ablation_damage": 1.0117103111579482
+    },
+    {
+      "family": "top_frobenius",
+      "scale": 0.5,
+      "cos_to_row": -0.5057733058929443,
+      "nll": 8.574828040599822,
+      "delta_nll": 2.345856177806853,
+      "gc": 0.36082175925925924,
+      "delta_gc": -0.09837962962962965,
+      "frac_of_ablation_damage": 1.0236171065603135
+    },
+    {
+      "family": "top_frobenius",
+      "scale": 1.0,
+      "cos_to_row": -0.5057733058929443,
+      "nll": 8.309353518486024,
+      "delta_nll": 2.0803816556930546,
+      "gc": 0.37008101851851843,
+      "delta_gc": -0.08912037037037046,
+      "frac_of_ablation_damage": 0.907776986111982
+    },
+    {
+      "family": "top_frobenius",
+      "scale": 2.0,
+      "cos_to_row": -0.5057733058929443,
+      "nll": 7.370309782028198,
+      "delta_nll": 1.1413379192352293,
+      "gc": 0.39988425925925924,
+      "delta_gc": -0.05931712962962965,
+      "frac_of_ablation_damage": 0.4980241455328154
+    },
+    {
+      "family": "permuted",
+      "scale": 0.5,
+      "cos_to_row": -0.026721373200416565,
+      "nll": 8.50320348739624,
+      "delta_nll": 2.2742316246032708,
+      "gc": 0.35185185185185186,
+      "delta_gc": -0.10734953703703703,
+      "frac_of_ablation_damage": 0.9923636483975588
+    },
+    {
+      "family": "permuted",
+      "scale": 1.0,
+      "cos_to_row": -0.026721373200416565,
+      "nll": 8.494559836387634,
+      "delta_nll": 2.2655879735946645,
+      "gc": 0.3579282407407407,
+      "delta_gc": -0.1012731481481482,
+      "frac_of_ablation_damage": 0.9885919810978957
+    },
+    {
+      "family": "permuted",
+      "scale": 2.0,
+      "cos_to_row": -0.026721373200416565,
+      "nll": 8.436228549480438,
+      "delta_nll": 2.2072566866874688,
+      "gc": 0.365162037037037,
+      "delta_gc": -0.09403935185185192,
+      "frac_of_ablation_damage": 0.963139055342786
+    },
+    {
+      "family": "sign_flipped",
+      "scale": 0.5,
+      "cos_to_row": -0.032661665230989456,
+      "nll": 8.461049783229829,
+      "delta_nll": 2.2320779204368595,
+      "gc": 0.3446180555555555,
+      "delta_gc": -0.11458333333333337,
+      "frac_of_ablation_damage": 0.9739698299282774
+    },
+    {
+      "family": "sign_flipped",
+      "scale": 1.0,
+      "cos_to_row": -0.032661665230989456,
+      "nll": 7.710164612531662,
+      "delta_nll": 1.4811927497386925,
+      "gc": 0.37847222222222227,
+      "delta_gc": -0.08072916666666663,
+      "frac_of_ablation_damage": 0.6463202011655762
+    },
+    {
+      "family": "sign_flipped",
+      "scale": 2.0,
+      "cos_to_row": -0.032661665230989456,
+      "nll": 6.5768935739994046,
+      "delta_nll": 0.34792171120643545,
+      "gc": 0.42997685185185186,
+      "delta_gc": -0.029224537037037035,
+      "frac_of_ablation_damage": 0.15181604853013594
+    },
+    {
+      "family": "orthogonalised",
+      "scale": 0.5,
+      "cos_to_row": 6.984919309616089e-10,
+      "nll": 8.479184365272522,
+      "delta_nll": 2.2502125024795525,
+      "gc": 0.35445601851851855,
+      "delta_gc": -0.10474537037037035,
+      "frac_of_ablation_damage": 0.9818828761648019
+    },
+    {
+      "family": "orthogonalised",
+      "scale": 1.0,
+      "cos_to_row": 6.984919309616089e-10,
+      "nll": 8.418591928482055,
+      "delta_nll": 2.189620065689086,
+      "gc": 0.3677662037037037,
+      "delta_gc": -0.09143518518518517,
+      "frac_of_ablation_damage": 0.9554432949945351
+    },
+    {
+      "family": "orthogonalised",
+      "scale": 2.0,
+      "cos_to_row": 6.984919309616089e-10,
+      "nll": 8.276735818386078,
+      "delta_nll": 2.0477639555931084,
+      "gc": 0.39091435185185186,
+      "delta_gc": -0.06828703703703703,
+      "frac_of_ablation_damage": 0.8935442142503355
+    }
+  ],
+  "elapsed_seconds": 391.71295046806335
+}

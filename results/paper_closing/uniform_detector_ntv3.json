@@ -1,0 +1,35 @@
+{
+  "model": "ntv3",
+  "frozen": [
+    11,
+    1472
+  ],
+  "conditions": {
+    "default": {
+      "uniform_layer": 11,
+      "uniform_row": 1472,
+      "uniform_ratio": 109.49119567871094,
+      "frozen_ratio": 109.49119567871094,
+      "frozen_rank_in_layer": 1,
+      "frozen_global_rank": 1,
+      "same_coordinate": true,
+      "same_row": true,
+      "same_layer": true,
+      "uniform_rank1_fraction": 1.0,
+      "frozen_rank1_fraction": 1.0
+    },
+    "no_special": {
+      "uniform_layer": 11,
+      "uniform_row": 1472,
+      "uniform_ratio": 109.49119567871094,
+      "frozen_ratio": 109.49119567871094,
+      "frozen_rank_in_layer": 1,
+      "frozen_global_rank": 1,
+      "same_coordinate": true,
+      "same_row": true,
+      "same_layer": true,
+      "uniform_rank1_fraction": 1.0,
+      "frozen_rank1_fraction": 1.0
+    }
+  }
+}

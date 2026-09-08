@@ -1,0 +1,133 @@
+{
+  "experiment": "EXP2_UNIFORM_DETECTOR_TEXT",
+  "model": "HuggingFaceTB/SmolLM2-1.7B",
+  "repo": "HuggingFaceTB/SmolLM2-1.7B",
+  "revision": "effd688a12921b4cc83e3312b6feb579f70f9c71",
+  "panel_index": 16,
+  "frozen_candidate": {
+    "layer": 7,
+    "row": 227
+  },
+  "uniform_candidate": {
+    "layer": 7,
+    "row": 227
+  },
+  "rules_agree": true,
+  "n_layers": 24,
+  "d_model": 2048,
+  "detector_threshold": 5.0,
+  "detector": {
+    "census_ids": {
+      "uniform_layer": 7,
+      "uniform_row": 227,
+      "uniform_ratio": 3181.69677734375,
+      "frozen_ratio": 3181.69677734375,
+      "frozen_global_rank": 1,
+      "n_coords": 49152,
+      "frozen_is_ratio_argmax": true,
+      "frozen_within_layer_rank": 1,
+      "frozen_passes_threshold": true,
+      "per_input_argmax_stability": 1.0,
+      "frac_inputs_frozen_is_argmax": 1.0
+    },
+    "add_special_tokens_true": {
+      "uniform_layer": 7,
+      "uniform_row": 227,
+      "uniform_ratio": 3181.69677734375,
+      "frozen_ratio": 3181.69677734375,
+      "frozen_global_rank": 1,
+      "n_coords": 49152,
+      "frozen_is_ratio_argmax": true,
+      "frozen_within_layer_rank": 1,
+      "frozen_passes_threshold": true,
+      "per_input_argmax_stability": 1.0,
+      "frac_inputs_frozen_is_argmax": 1.0
+    },
+    "add_special_tokens_false": {
+      "uniform_layer": 7,
+      "uniform_row": 227,
+      "uniform_ratio": 3181.69677734375,
+      "frozen_ratio": 3181.69677734375,
+      "frozen_global_rank": 1,
+      "n_coords": 49152,
+      "frozen_is_ratio_argmax": true,
+      "frozen_within_layer_rank": 1,
+      "frozen_passes_threshold": true,
+      "per_input_argmax_stability": 1.0,
+      "frac_inputs_frozen_is_argmax": 1.0
+    }
+  },
+  "corpus_source": "datasets.load_dataset(wikitext,wikitext-2-raw-v1,test)",
+  "n_act_windows": 24,
+  "n_eval_windows": 100,
+  "batch_size": 8,
+  "intact_nll": 2.6145340975110076,
+  "reproduction_gates": {
+    "baseline_loss": {
+      "measured": 2.6145340975110076,
+      "expected": 2.6145340592893835,
+      "rel_err": 1.4618904638917332e-08,
+      "pass": true
+    },
+    "R_cand_eps1.0": {
+      "measured": 6.988737362075844,
+      "expected": 6.988738472947954,
+      "rel_err": 1.589517355893535e-07,
+      "pass": true
+    },
+    "R_cand_eps0.5": {
+      "measured": 0.039055755602675046,
+      "expected": 0.03905575617362741,
+      "rel_err": 1.4618904297738416e-08,
+      "pass": true
+    },
+    "control_rows": {
+      "measured": [
+        317,
+        582,
+        1422,
+        1547,
+        2043
+      ],
+      "expected": [
+        317,
+        582,
+        1422,
+        1547,
+        2043
+      ],
+      "rel_err": 0.0,
+      "pass": true
+    }
+  },
+  "conditions": [
+    {
+      "kind": "frozen_candidate",
+      "layer": 7,
+      "row": 227,
+      "epsilon": 0.5,
+      "nll": 2.716646702238258,
+      "rel_delta": 0.039055755602675046
+    },
+    {
+      "kind": "frozen_candidate",
+      "layer": 7,
+      "row": 227,
+      "epsilon": 1.0,
+      "nll": 20.886826229207436,
+      "rel_delta": 6.988737362075844
+    }
+  ],
+  "uniform_control_rows": null,
+  "uniform_median_control_eps1": null,
+  "uniform_G_eps1": null,
+  "provenance": {
+    "seed": 42,
+    "torch": "2.11.0+cu130",
+    "transformers": "5.5.0",
+    "pattern": "model.layers.{i}.mlp.down_proj",
+    "control_stream": "SeedSequence(42).spawn(23)[16]",
+    "wikitext_parquet": "/home/nvidia/superweights/frozen_inputs/wikitext_repo/wikitext-2-raw-v1/test-00000-of-00001.parquet"
+  },
+  "elapsed_seconds": 45.23532581329346
+}

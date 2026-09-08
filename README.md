@@ -6,6 +6,87 @@ single-forward-pass method from Yu et al. (2024) *"The Super Weight in Large Lan
 
 ---
 
+## Paper-closing program (Sep 2026) — start here
+
+Closing analyses for *"Structure is not mechanism: high-gain gated-FFN rows across text and
+genomic foundation models."* Full report:
+[`results/paper_closing/PAPER_CLOSING_REPORT.md`](results/paper_closing/PAPER_CLOSING_REPORT.md);
+one row per question in
+[`results/paper_closing/paper_closing_summary.tsv`](results/paper_closing/paper_closing_summary.tsv);
+execution notes for the overseeing agent in
+[`results/paper_closing/EXECUTION_REPORT_FOR_OVERSEER.md`](results/paper_closing/EXECUTION_REPORT_FOR_OVERSEER.md).
+
+### 🔬 Open item — delegated, needs a machine with the 7B weights
+
+**EXP2 on Llama-7B, Mistral-7B and OLMo-7B.** These are the last 3 of 22 census candidates
+whose selection rule is unverified (legacy absolute-activation argmax, never re-checked
+against the current layer-relative ratio rule). Two of the three legacy models already
+checked *disagreed* with the ratio rule, so this is a real gap, not a formality.
+
+👉 **Instructions:
+[`docs/EXP2_INSTRUCTIONS_FOR_COLLABORATOR.md`](docs/EXP2_INSTRUCTIONS_FOR_COLLABORATOR.md)**
+— self-contained; three commands, ~15 min of GPU each, no training, no downloads if the
+weights are cached.
+
+```bash
+# harness check first (1.7B, ~45 s) -- MUST print "uniform rule AGREES"
+python scripts/paper_closing/run_uniform_detector_text.py --model smollm2-1.7b
+# then the three targets
+python scripts/paper_closing/run_uniform_detector_text.py --model llama
+python scripts/paper_closing/run_uniform_detector_text.py --model mistral
+python scripts/paper_closing/run_uniform_detector_text.py --model olmo
+```
+
+Each run self-validates against four quantities stored in `audit/census_master.csv`
+(`baseline_loss`, `R_cand_eps1.0`, `R_cand_eps0.5`, and the 5 control rows redrawn from
+`SeedSequence(42).spawn(23)[panel_index]`) and **aborts** on mismatch. The detector positive
+control on SmolLM2-1.7B passes: frozen coordinate returned as global argmax, rank 1/49152,
+stable in 100 % of 24 inputs, all four gates within 1.6e-07.
+
+### What this round established
+
+| finding | key numbers | status |
+|---|---|---|
+| Activation ratio is **two-regime**, replicated in a genomic *and* a text decoder | below the detector's ≥5 rule: ρ=+0.040 (p=0.86) genomic, ρ=**−0.584** (p=0.005) text. Above it: ρ=+0.639 (p=0.010) genomic, ρ=**+0.975** (p=7.1e-10) text. n=36 rows/model, n=21 sub- and 15 supra-threshold | [MEASURED]; supra/sub split **post hoc** |
+| Ratio **orders** rows but is **not** a dose-response law | SmolLM2-1.7B L7: the row ranked **4th** by ratio (r161, ratio 63.5) is **130× more damaging** (+287 %) than the row ranked 2nd (r749, ratio 358.6, +2.2 %) | [MEASURED] |
+| A **second critical row** the census cannot see, and a **masking** interaction | r227 +698.9 %, r161 +287.2 % alone; joint(161,749) = **+2.07 %** — ablating r749 (harmless alone, +2.2 %) **abolishes** r161's catastrophe. Independently re-verified, weight drift 0.00e+00 | [MEASURED]; mechanism **[UNTESTED]** |
+| The three rows are the layer's geometric extremes | cos(161,749)=**+0.3952** (z=+17.6, percentile 100.00 of 19,900 pairs); cos(227,749)=**−0.3980** (z=−17.8, percentile 0.00). Aligned, **not** opposed | [MEASURED] |
+
+Earlier wording that **"activation extremeness calibrates causal severity"** is retired — see
+the retractions block below. Supported: the ratio *detects* and *orders*. Not supported:
+damage scaling smoothly with ratio.
+
+> ⚠️ The sub-/supra-threshold decomposition was added **after** the pre-specified statistics
+> (ρ all rows, ρ excluding the frozen candidate, ρ ratio<5) were computed and plotted. The
+> split point is the detector's own pre-existing ≥5 rule and was not fitted to these data,
+> but the decision to decompose came post hoc and is labelled as such everywhere.
+
+Figure: `results/paper_closing/fig_within_model_slope_2panel.{png,pdf}`.
+
+### Reproducing the paper-closing results
+
+```bash
+# Within-model graded sweep, text decoder (SmolLM2-1.7B, ~7 min, 1 GPU)
+python scripts/paper_closing/run_within_model_slope_text.py
+
+# ...and the genomic counterpart (GENERator-EUK-3B; needs the frozen E12 harness + hg38)
+python scripts/paper_closing/run_within_model_slope.py
+
+# The second critical row and its masking interaction (~2 min)
+python scripts/paper_closing/run_smollm2_second_row_epistasis.py
+
+# Two-panel cross-domain figure
+python scripts/paper_closing/plot_within_model_slope_2panel.py
+```
+
+Text-decoder endpoints need no dataset download: the frozen WikiText-2 test parquet is
+committed at `frozen_inputs/wikitext_repo/` (sha256 `5f1bea06…`, provenance in
+[`frozen_inputs/README.md`](frozen_inputs/README.md)). It is the *same* file the census
+resolved via `datasets.load_dataset`, not a substitute corpus — verified by reproducing the
+census's stored `baseline_loss` to 1.5e-08 relative.
+
+---
+
 ## Mechanism session findings (Aug 2026)
 
 A separate mechanism/negative-results session produced a large set of markdown reports and
@@ -67,6 +148,27 @@ functional replication (n=1) of the SW-ensemble effect across the models tested.
 7. **Norm dominance does not predict criticality** — NTv3's SW is rank 1/1536 with a 29.4×
    gap (more dominant than DNABERT-2's) and is functionally inert. The joint-norm-carriage
    mechanism explains DNABERT-2 and does **not** generalise.
+
+8. **"Activation extremeness *calibrates* causal severity" is withdrawn** (Sep 2026). The
+   between-model ρ = +0.766 is real but must be read as *"models with a more extreme top row
+   have a more damaging top row"* — **not** as a dose-response law. Two within-model graded
+   sweeps (36 rows inside one layer, one genomic and one text decoder) show the relation is
+   **two-regime**: below the detector's ≥5 accept rule the ratio carries no positive graded
+   signal (ρ=+0.040, p=0.86 genomic; ρ=−0.584, p=0.005 text), and although it *orders* rows
+   well above the threshold, magnitudes do not follow — in SmolLM2-1.7B layer 7 the row
+   ranked **4th** by ratio is **130× more damaging** than the row ranked **2nd**. Supported:
+   the ratio **detects** and **orders**. Withdrawn: smooth severity calibration.
+   Evidence: `results/paper_closing/within_model_slope_comparison.json`.
+
+9. **The one-candidate-per-model census design undercounts critical rows** (Sep 2026, scope
+   limit rather than a retraction). Sweeping 36 rows instead of 1 found a **second**
+   independently catastrophic row in SmolLM2-1.7B layer 7 (r161, +287 %) that appears in no
+   census artifact, plus a **masking** interaction: ablating r749 — which costs +2.2 % alone
+   — *abolishes* r161's catastrophe (joint +2.07 %). Independently re-verified with an
+   alternative implementation, weight drift 0.00e+00. No mechanism is claimed; the link to
+   the rows' extreme geometric alignment (cos = +0.3952, z = +17.6, the maximum of 19,900
+   layer pairs) is **[UNTESTED]**. Counts of "the super row" per model should be read as
+   *"the census's single frozen candidate"*, not as a complete inventory.
 
 
 ### New scripts shipped this round

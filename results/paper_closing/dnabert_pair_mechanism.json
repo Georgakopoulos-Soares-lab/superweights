@@ -1,0 +1,31 @@
+{
+  "experiment": "EXP10_dnabert_pair_mechanism",
+  "model": "DNABERT-2-117M",
+  "layer": 9,
+  "rows": [
+    264,
+    294
+  ],
+  "task": "splice/reconstructed",
+  "summary": {
+    "cosine_similarity": -0.18763157725334167,
+    "cosine_random_mean": 0.0007973027601838111,
+    "cosine_random_sd": 0.0538189806202147,
+    "cosine_z": 3.5011603312075845,
+    "activation_corr_per_token": 0.9985590190112129,
+    "n_tokens": 20305,
+    "act_a_intact": 8.716177940368652,
+    "act_b_intact": 9.689433097839355,
+    "act_a_after_ablating_b": 8.716177940368652,
+    "act_b_after_ablating_a": 9.689433097839355,
+    "ratio_a_after_ablating_b": 1.0,
+    "ratio_b_after_ablating_a": 1.0,
+    "acc_baseline": 0.9287593160894344,
+    "acc_ablate_a": 0.9285401139850943,
+    "acc_ablate_b": 0.9276633055677335,
+    "acc_ablate_both": 0.5911880754055239,
+    "epistasis_pp": -33.62560280578695,
+    "compensation_detected": false
+  },
+  "elapsed_seconds": 30.218343019485474
+}

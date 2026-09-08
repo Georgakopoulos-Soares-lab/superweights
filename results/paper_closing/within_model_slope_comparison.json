@@ -1,0 +1,129 @@
+{
+  "experiment": "WITHIN_MODEL_SLOPE_CROSS_DOMAIN_COMPARISON",
+  "question": "Does the within-model activation-ratio -> causal-damage relation found in a genomic decoder reproduce in a TEXT decoder, and is it graded or threshold-like?",
+  "detector_threshold": 5.0,
+  "design": "36 rows log-spaced by activation-ratio RANK inside ONE layer of ONE model; each ablated to alpha=0 (epsilon=1.0); native LM NLL on that model's frozen census eval pool. Row selection by activation ratio only, never by causal outcome. Identical logic in both models.",
+  "statistic_provenance": {
+    "prespecified": "rho(all rows), rho(excl. frozen candidate), rho(ratio<5) -- fixed before the run",
+    "posthoc": "rho(ratio>=5) and rho(ratio>=5, excl. candidate) -- added after seeing the scatter. The split point is the detector's own pre-existing >=5 accept rule and was NOT fitted to these data, but the decision to decompose by regime was made post hoc."
+  },
+  "finding": "Two-regime, replicated in both domains. BELOW the detector threshold the ratio carries no positive graded signal (genomic rho=+0.040 p=0.86; text rho=-0.584 p=0.005, i.e. mildly INVERTED). ABOVE it the ratio grades severity strongly (genomic rho=+0.639 p=0.010; text rho=+0.975 p=7.1e-10), and survives removing the frozen candidate (+0.556 / +0.969). The mediocre pooled rho reported earlier (+0.454 genomic) is a dilution artifact of averaging a noise regime with a graded one.",
+  "caveats": [
+    "one layer and one candidate per model",
+    "n=15 per supra-threshold regime",
+    "sub-threshold rel_delta magnitudes are ~1e-5, ~1e3x above the harness's float reproducibility (baseline reproduced to 1.5e-8 rel) but physically negligible -- the negative text correlation is a real ordering of trivial effects, not a mechanism",
+    "supra/sub decomposition is post hoc (see statistic_provenance)"
+  ],
+  "models": [
+    {
+      "model": "GENERator-EUK-3B",
+      "domain": "genomic",
+      "coord": "L4/r2371",
+      "source_file": "within_model_slope.json",
+      "n": 36,
+      "ratio_min": 0.02510760724544525,
+      "ratio_max": 7124.08984375,
+      "candidate_ratio": 7124.08984375,
+      "candidate_rel_delta": 0.36791498615703866,
+      "intact_nll": 6.228971862792969,
+      "prespecified": {
+        "all_rows": {
+          "rho": 0.45379665379665374,
+          "p": 0.005438044569556836,
+          "n": 36
+        },
+        "excl_candidate": {
+          "rho": 0.4056022408963586,
+          "p": 0.015633731471088787,
+          "n": 35
+        },
+        "sub_threshold": {
+          "rho": 0.04025974025974026,
+          "p": 0.8624424916554133,
+          "n": 21
+        }
+      },
+      "posthoc": {
+        "supra_threshold": {
+          "rho": 0.6392857142857141,
+          "p": 0.010288446619594209,
+          "n": 15
+        },
+        "supra_threshold_excl_candidate": {
+          "rho": 0.5560439560439561,
+          "p": 0.038943650418660554,
+          "n": 14
+        }
+      },
+      "median_rel_delta_sub_threshold": 6.024842509061861e-06,
+      "candidate_over_sub_threshold_median": 61066.324240619426,
+      "reproduction_gates": null
+    },
+    {
+      "model": "SmolLM2-1.7B",
+      "domain": "text",
+      "coord": "L7/r227",
+      "source_file": "within_model_slope_smollm2_1.7b.json",
+      "n": 36,
+      "ratio_min": 0.4879939556121826,
+      "ratio_max": 3181.69677734375,
+      "candidate_ratio": 3181.69677734375,
+      "candidate_rel_delta": 6.988737362075844,
+      "intact_nll": 2.6145340975110076,
+      "prespecified": {
+        "all_rows": {
+          "rho": 0.6252252252252253,
+          "p": 4.564744791342839e-05,
+          "n": 36
+        },
+        "excl_candidate": {
+          "rho": 0.592156862745098,
+          "p": 0.00017873893664811273,
+          "n": 35
+        },
+        "sub_threshold": {
+          "rho": -0.5844155844155844,
+          "p": 0.005399998364912398,
+          "n": 21
+        }
+      },
+      "posthoc": {
+        "supra_threshold": {
+          "rho": 0.9749999999999999,
+          "p": 7.14370596522927e-10,
+          "n": 15
+        },
+        "supra_threshold_excl_candidate": {
+          "rho": 0.9692307692307693,
+          "p": 1.1465229425475097e-08,
+          "n": 14
+        }
+      },
+      "median_rel_delta_sub_threshold": 1.28646359543087e-05,
+      "candidate_over_sub_threshold_median": 543251.8562435601,
+      "reproduction_gates": {
+        "activation_ratio": {
+          "measured": 4439.3408203125,
+          "expected": 4439.338244560368,
+          "rel_err": 5.802108309250299e-07,
+          "rank_measured": 1,
+          "rank_expected": 1,
+          "pass": true
+        },
+        "baseline_loss": {
+          "measured": 2.6145340975110076,
+          "expected": 2.6145340592893835,
+          "rel_err": 1.4618904638917332e-08,
+          "pass": true
+        },
+        "R_cand": {
+          "measured": 6.988737362075844,
+          "expected": 6.988738472947954,
+          "rel_err": 1.589517355893535e-07,
+          "epsilon": 1.0,
+          "pass": true
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+condition	n_windows	S_bos_mean	exp0_causal_baseline	fold_sink_mean	fold_sink_max	frac_queries_bos_top	frac_layerhead_fold_gt2
+A_intact	24	0.375256	0.047498	7.900381	21.032833	0.557739	0.829167
+B_full_ablation_weight	24	0.486508	0.047498	10.242613	21.053331	0.620048	0.801042
+C_ablate_bos_only	24	0.481766	0.047498	10.142780	21.053331	0.620908	0.800000
+D_ablate_all_except_bos	24	0.374929	0.047498	7.893497	20.994795	0.554696	0.828125
+E_restore_at_bos	24	0.374929	0.047498	7.893497	20.994795	0.554696	0.828125
+F_restore_at_matched_nonbos	24	0.486379	0.047498	10.239892	21.053331	0.619984	0.801042
