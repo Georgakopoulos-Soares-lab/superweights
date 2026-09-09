@@ -19,10 +19,10 @@ STRUCTURAL GEOMETRY  !=  FUNCTIONAL CRITICALITY  !=  CAUSAL RESPONSE COMPLEXITY
 
 | what | where |
 |---|---|
-| **Manuscript** | [`paper-salvage/actual_manuscript.md`](paper-salvage/actual_manuscript.md) and [`.tex`](paper-salvage/actual_manuscript.tex) — kept content-identical |
+| **Manuscript** | [`manuscript/actual_manuscript.md`](manuscript/actual_manuscript.md) and [`.tex`](manuscript/actual_manuscript.tex) — kept content-identical |
 | **Every experiment → its code → its artifacts** | [`docs/EXPERIMENT_MAP.md`](docs/EXPERIMENT_MAP.md) (20 experiments) |
 | **Verify that map against this tree** | `python scripts/build_experiment_map.py` — exits non-zero if any script is missing |
-| **Panel-by-panel figure provenance** | [`paper-salvage/figures/FIGURE_PROVENANCE.md`](paper-salvage/figures/FIGURE_PROVENANCE.md) |
+| **Panel-by-panel figure provenance** | [`manuscript/figures/FIGURE_PROVENANCE.md`](manuscript/figures/FIGURE_PROVENANCE.md) |
 | **What we withdrew and why** | [Retractions and rescopes](#retractions-and-rescopes) below — please read before citing any older number |
 | **Supplementary tables** | [`results/paper_closing/supplementary/`](results/paper_closing/supplementary/) |
 
@@ -128,28 +128,37 @@ signature, not a code bug.
 
 ### Commands
 
-```bash
-# ── structural panel and the causal census ────────────────────────────────────
-python paper-salvage/experiments/E11_scale_ladder/run_model.py --model <slug>
-python paper-salvage/experiments/E13_full_cohort_causal_census/run_singleton_census.py --model <slug>
+Prefer the pipelines. Each one skips stages whose output already exists, so an interrupted
+run resumes and a finished one costs nothing; set `FORCE=1` to recompute.
 
-# ── detector provenance (self-validating: 4 gates from census_master.csv) ─────
+```bash
+bash pipelines/fig5_within_layer.sh      # Figure 5: both within-layer sweeps, second row, geometry, plot
+bash pipelines/detector_provenance.sh    # EXP2: positive control first, then the three 7B decoders
+bash pipelines/census.sh                 # the frozen 22-model census (restartable; add slugs to subset)
+bash pipelines/census.sh dnabert2 ntv3   # ...or just these
+```
+
+Individual stages, if you want them directly:
+
+```bash
+# structural panel and the causal census
+python manuscript/experiments/E11_scale_ladder/run_model.py --model <slug>
+python manuscript/experiments/E13_full_cohort_causal_census/run_singleton_census.py --model <slug>
+
+# detector provenance (self-validating: 4 gates from census_master.csv)
 python scripts/paper_closing/run_uniform_detector_text.py --model smollm2-1.7b   # harness check
-python scripts/paper_closing/run_uniform_detector_text.py --model llama          # then mistral, olmo
 python scripts/paper_closing/run_detector_published_protocol.py --model olmo
 
-# ── within-layer graded sweep (Figure 5) ─────────────────────────────────────
+# within-layer sweeps (Figure 5)
 python scripts/paper_closing/run_within_model_slope_text.py        # SmolLM2-1.7B, ~7 min, 1 GPU
-python scripts/paper_closing/run_within_model_slope.py             # GENERator-EUK-3B
 python scripts/paper_closing/run_smollm2_second_row_epistasis.py   # second critical row + masking
-python scripts/paper_closing/plot_within_model_slope_2panel.py     # figure; checks legend/data overlap
+python scripts/paper_closing/run_smollm2_row_geometry.py           # data-free, no GPU needed
 
-# ── mechanism case studies ───────────────────────────────────────────────────
-python paper-salvage/experiments/E9_mechanistic_tomography/run_fit_observers.py
-python paper-salvage/experiments/E12_generator_degradation_control/run_bos_mediation_main.py
-python scripts/mechanism/run_pretrained_epistasis.py
+# mechanism case studies
+python manuscript/experiments/E9_mechanistic_tomography/run_fit_observers.py
+python manuscript/experiments/E12_generator_degradation_control/run_bos_mediation_main.py
 
-# ── two flags that are REQUIRED and silently wrong if omitted ────────────────
+# two flags that are REQUIRED and silently wrong if omitted
 python scripts/detection/run_detection.py --model ntv3 --pad_to_multiple 256   # stride-256 U-Net
 python scripts/evaluation/run_gue_multiseed.py --model ntv3 --max_length 400   # nucleotide tokenizer
 ```
@@ -159,24 +168,40 @@ quantities (`baseline_loss`, `R_cand` at both ε, and the seeded control rows) a
 mismatch, on the principle that a gate failure means the harness is wrong rather than that the
 science changed. Observed reproduction errors are 1e-9 to 1e-6 relative.
 
+Preregistrations are content-locked; verify them with:
+
+```bash
+python manuscript/src/prereg_lock.py verify --all      # 12 documents, all OK
+```
+
 ## Repository layout
 
 | path | contents |
 |---|---|
-| `paper-salvage/` | The manuscript, its figures, and the **frozen experiment harnesses** (`experiments/E1`–`E13`). Frozen means: not edited to make later results come out differently. |
-| `paper-salvage/figures/` | Figure scripts, rendered output, and `source_data/` — the exact plotted values |
-| `scripts/paper_closing/` | The closing round: detector provenance, within-layer sweeps, BOS/attention analyses |
-| `scripts/mechanism/`, `scripts/compression/`, `scripts/diagnostics/` | Mechanism, quantisation, and health-check tooling |
+| `manuscript/` | The paper (`actual_manuscript.md` / `.tex`), its `figures/`, its `docs/` including the preregistrations, and the **frozen experiment harnesses** in `experiments/E1`–`E13`. *Frozen* means not edited to make later results come out differently. |
+| `manuscript/figures/` | Figure scripts, rendered output, and `source_data/` — the exact plotted values |
+| `pipelines/` | One idempotent runner per experiment group. Skips completed stages, parallelises over free GPUs. **Start here to reproduce anything.** |
+| `scripts/paper_closing/` | The closing round: detector provenance, within-layer sweeps, BOS and attention analyses |
+| `scripts/mechanism/`, `scripts/compression/`, `scripts/diagnostics/` | Mechanism, quantisation, and super-row health-check tooling. Several produced the negative results behind the retractions above. |
 | `scripts/detection/`, `scripts/evaluation/` | Super-row detection and GUE downstream evaluation |
-| `scripts/analysis/`, `scripts/interpretability/`, `scripts/dev/` | Exploratory and superseded analyses, kept for provenance |
+| `scripts/analysis/`, `scripts/interpretability/` | Analyses feeding the figures and the audit |
+| `src/` | Shared libraries: activation capture, ablation, spike detection, DNA probes |
+| `models/`, `configs/` | Per-model wrapper classes and YAML, loaded dynamically via `WRAPPER_MAP` |
+| `stubs/` | Import shims for optional dependencies (`mamba_ssm`, HybriDNA config) |
 | `audit/` | `census_master.csv` (22 models × 44 columns), detector provenance, and the round-2 audit |
-| `results/` | Artifacts. Gitignored by default; files backing manuscript claims are force-added |
+| `results/` | Artifacts. Gitignored by default; files backing a manuscript claim are force-added |
 | `results/paper_closing/supplementary/` | Supplementary Tables S5–S6 |
-| `configs/`, `models/` | Per-model YAML and wrapper classes |
+| `sae/` | Sparse-autoencoder tooling. Its PROK result is **withdrawn** (retraction 6); kept so the withdrawal is inspectable. |
 | `docs/` | Experiment map, evidence packets, collaborator instructions |
-| `docs/history/` | Superseded material, kept deliberately: the 1,443-line previous README, old session notes |
-| `paper/` | **Superseded** earlier draft under a different title ("A Structural Predictor of Super-Weights"). Retained for history; not the manuscript. |
+| `docs/history/` | Superseded material, kept deliberately: the previous 1,443-line README, the earlier draft under its old title, removed-script inventory, old session notes |
 | `frozen_inputs/` | Content-hashed evaluation inputs |
+| `tests/` | Includes a test that fails if the experiment map goes stale |
+
+The layout was consolidated on 2026-09-09: 136 unused files were removed (mostly Slurm job
+scripts for a cluster this project no longer runs on), four single-module top-level packages
+were merged into `src/`, and `paper-salvage/` — a name that made no sense to anyone outside
+the project — became `manuscript/`. Inventory and rationale:
+[`docs/history/REMOVED_SCRIPTS.md`](docs/history/REMOVED_SCRIPTS.md).
 
 ## Provenance and known gaps
 
@@ -185,7 +210,7 @@ Stated plainly, because a reviewer will find them anyway:
 1. **Some raw artifacts are not committed.** Several were produced on a TACC cluster and never
    transferred; `docs/EXPERIMENT_MAP.md` marks the affected rows and points at the committed
    figure source-data snapshot that carries the same plotted values. Inventory:
-   [`paper-salvage/docs/MISSING_COLLEAGUE_ARTIFACTS.md`](paper-salvage/docs/MISSING_COLLEAGUE_ARTIFACTS.md).
+   [`manuscript/docs/MISSING_COLLEAGUE_ARTIFACTS.md`](manuscript/docs/MISSING_COLLEAGUE_ARTIFACTS.md).
 2. **NTv3's original weight revision was not recorded** and is not recoverable. Resolved Hub
    commits exist for 21 of 22 models.
 3. **Supplementary Tables S1–S4 are described in the manuscript but not yet built as files.**
@@ -203,7 +228,9 @@ This repository accreted across many sessions, including experiments that were l
 withdrawn. That history is kept rather than rewritten:
 
 * [`docs/history/README_ARCHIVE.md`](docs/history/README_ARCHIVE.md) — the full previous README
-* [`paper-salvage/docs/DECISIONS.md`](paper-salvage/docs/DECISIONS.md), `CLAIMS_LEDGER.md` — dated decisions and per-claim status
+* [`docs/history/REMOVED_SCRIPTS.md`](docs/history/REMOVED_SCRIPTS.md) — the 136 files removed in the 2026-09-09 consolidation, why, and how to retrieve any of them from git history
+* [`docs/history/superseded_draft/`](docs/history/superseded_draft/) — the earlier manuscript under its previous title
+* [`manuscript/docs/DECISIONS.md`](manuscript/docs/DECISIONS.md), `CLAIMS_LEDGER.md` — dated decisions and per-claim status
 * [`results/paper_closing/PAPER_CLOSING_REPORT.md`](results/paper_closing/PAPER_CLOSING_REPORT.md) — the closing round in full
 * [`results/mechanism/`](results/mechanism/) — the mechanism/negative-results session reports
 

@@ -19,8 +19,8 @@ import numpy as np
 import torch
 
 ROOT = Path(__file__).resolve().parents[3]
-E7_DIR = ROOT / "paper-salvage/experiments/E7_exact_dimensionality"
-E13_DIR = ROOT / "paper-salvage/experiments/E13_full_cohort_causal_census"
+E7_DIR = ROOT / "manuscript/experiments/E7_exact_dimensionality"
+E13_DIR = ROOT / "manuscript/experiments/E13_full_cohort_causal_census"
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(E7_DIR))
 sys.path.insert(0, str(E13_DIR))

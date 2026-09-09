@@ -128,7 +128,7 @@ def dc_ac(h: torch.Tensor) -> dict:
 
 
 def main() -> int:
-    from probes.dna_probes import get_probe
+    from src.dna_probes import get_probe
 
     device = "cuda"
     # Same length (504 nt) so the diff is coordinate-aligned end to end.

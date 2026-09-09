@@ -161,8 +161,8 @@ Panels A/B use a signed symmetric-log axis (`linthresh=0.1 percentage points`), 
 
 - `results/E13/figure2_candidate_control_data.csv`
 - `results/E13/figure2_structure_function_data.csv`
-- `paper-salvage/figures/main/fig2_part2_functional_criticality.png`
-- `paper-salvage/figures/main/fig2_part2_functional_criticality.pdf`
+- `manuscript/figures/main/fig2_part2_functional_criticality.png`
+- `manuscript/figures/main/fig2_part2_functional_criticality.pdf`
 
 ## Claims directly supported by the completed experiment
 
@@ -197,9 +197,9 @@ Panels A/B use a signed symmetric-log axis (`linthresh=0.1 percentage points`), 
 - `results/E13/part1_22_control_effects.csv`
 - `results/E13/part1_22_cohort_summary.csv`
 - `results/E13/part1_22_structure_function_correlations.json`
-- `paper-salvage/experiments/E13_full_cohort_causal_census/run_singleton_census.py`
-- `paper-salvage/experiments/E13_full_cohort_causal_census/write_part1_22_report.py`
-- `paper-salvage/experiments/E10_nlp_architecture_causal/e10_lib.py`
-- `paper-salvage/experiments/E9_mechanistic_tomography/tomography_lib.py`
-- `paper-salvage/experiments/E12_generator_degradation_control/e12_lib.py`
+- `manuscript/experiments/E13_full_cohort_causal_census/run_singleton_census.py`
+- `manuscript/experiments/E13_full_cohort_causal_census/write_part1_22_report.py`
+- `manuscript/experiments/E10_nlp_architecture_causal/e10_lib.py`
+- `manuscript/experiments/E9_mechanistic_tomography/tomography_lib.py`
+- `manuscript/experiments/E12_generator_degradation_control/e12_lib.py`
 - `results/E13_dnabert2_reproducibility/DNABERT2_EXECUTION_PATH_DIAGNOSTIC.md`

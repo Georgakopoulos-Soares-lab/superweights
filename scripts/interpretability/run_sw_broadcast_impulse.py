@@ -587,7 +587,7 @@ def run_model_assay(model_name: str, epsilon: float, n_controls: int,
 
     print(f"\n[broadcast:{model_name}] sw_layer={sw_layer}  sw_row={sw_row}")
 
-    from probes.dna_probes import get_probe
+    from src.dna_probes import get_probe
     seq = get_probe(tgt["probe"])
 
     print(f"[broadcast:{model_name}] loading model …")

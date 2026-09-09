@@ -27,7 +27,7 @@ import torch
 import yaml
 
 ROOT = Path(__file__).resolve().parents[3]
-E12_DIR = ROOT / "paper-salvage/experiments/E12_generator_degradation_control"
+E12_DIR = ROOT / "manuscript/experiments/E12_generator_degradation_control"
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(E12_DIR))
 import e12_lib as el  # noqa: E402

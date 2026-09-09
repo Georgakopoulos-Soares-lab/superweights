@@ -24,10 +24,10 @@ import torch
 import yaml
 
 ROOT = Path(__file__).resolve().parents[3]
-E5_DIR = ROOT / "paper-salvage/experiments/E5_dimensionality"
-E7_DIR = ROOT / "paper-salvage/experiments/E7_exact_dimensionality"
-E11_DIR = ROOT / "paper-salvage/experiments/E11_scale_ladder"
-E13_DIR = ROOT / "paper-salvage/experiments/E13_full_cohort_causal_census"
+E5_DIR = ROOT / "manuscript/experiments/E5_dimensionality"
+E7_DIR = ROOT / "manuscript/experiments/E7_exact_dimensionality"
+E11_DIR = ROOT / "manuscript/experiments/E11_scale_ladder"
+E13_DIR = ROOT / "manuscript/experiments/E13_full_cohort_causal_census"
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(E5_DIR))
 sys.path.insert(0, str(E7_DIR))

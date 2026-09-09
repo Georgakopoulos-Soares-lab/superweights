@@ -1,0 +1,21 @@
+model_id: "kuleshov-group/caduceus-ps_seqlen-131k_d_model-256_n_layer-16"
+model_type: "caduceus"
+hf_trust_remote_code: true
+# Caduceus is a bidirectional, reverse-complement-equivariant Mamba (RCPS)
+# masked-LM. There is NO gated FFN anywhere in the block -- each block is a
+# pure sequence-mixing SSM (Mamba) stack; the RCPS wrapper splits the outer
+# 512-dim residual channel space in half (256 "forward-strand" + 256
+# "RC-strand"), runs the same bidirectional-Mamba submodule on each half, and
+# concatenates back to 512 -- so "d_model" in the HF config (256) is the
+# INNER mixer width; the OUTER residual-stream width (what hooks.ablation_trace
+# operates on) is 512. Blocks return a (hidden_states, residual) tuple
+# (mamba_ssm's fused-add-norm convention) -- the true residual-stream value at
+# a block boundary is their ELEMENT-WISE SUM, handled specially in
+# hooks/ablation_trace.py.
+down_proj_pattern: null   # no down_proj exists; ablation hooks the block itself (see hooks/ablation_trace.py)
+num_layers: 16
+d_model_outer: 512
+d_model_inner: 256
+dtype: "float32"
+device: "cuda"
+causal: false

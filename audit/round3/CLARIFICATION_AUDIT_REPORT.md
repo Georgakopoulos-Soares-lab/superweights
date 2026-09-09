@@ -1,8 +1,8 @@
 # Response to `clarification.md` — audit of 17 manuscript ambiguities
 
-**Ground truth used:** `paper-salvage/actual_manuscript.md` (source: `new v9(1).pdf`), per
+**Ground truth used:** `manuscript/actual_manuscript.md` (source: `new v9(1).pdf`), per
 explicit instruction that this supersedes every other manuscript copy in the repo
-(`paper/main.tex`, `manuscript.txt`, `paper-salvage/docs/MANUSCRIPT_SOURCE_OF_TRUTH.md`,
+(`paper/main.tex`, `manuscript.txt`, `manuscript/docs/MANUSCRIPT_SOURCE_OF_TRUTH.md`,
 etc. — all pre-date this version and were not used to answer any question below except
 where noted as historical context).
 
@@ -31,7 +31,7 @@ The manuscript's "12-model" and "22-model" numbers differ on two independent axe
 | Fig. 1C / the 22-model comparison | all 22 causal-census models | mean of 5 random controls (same rule) | **median** (0.935) | random **and** top-norm (0.014) |
 
 Random-control q1 gaps were **recomputed for all 22 models**, not just retained for 12 —
-confirmed directly from `paper-salvage/figures/source_data/fig1_panel_c_full22_source.csv`
+confirmed directly from `manuscript/figures/source_data/fig1_panel_c_full22_source.csv`
 (22 rows, `random_control_gap` column populated for every row). The 12-model number is not
 a subset read of this file; it is a separately-reported, earlier statistic over a narrower
 panel that (per Methods, "Structural statistical analysis") is *defined* as mean+range, not
@@ -58,14 +58,14 @@ to a different illustrative q1 value).
 
 **Canonical 22-model statistic and exact definition:** median across 22 models of
 (candidate q1 − mean of 5 random same-layer-control q1's) = **0.9346752031084058** (rounds
-to 0.935). Source: `paper-salvage/figures/source_data/fig1_panel_c_full22_source.csv`,
-column `random_control_gap`, aggregated by `paper-salvage/figures/fig1_structural.py:127`
+to 0.935). Source: `manuscript/figures/source_data/fig1_panel_c_full22_source.csv`,
+column `random_control_gap`, aggregated by `manuscript/figures/fig1_structural.py:127`
 (`med_rc = np.median(...)`).
 
-**Citations:** `paper-salvage/actual_manuscript.md` lines 116–125 (12-model paragraph),
+**Citations:** `manuscript/actual_manuscript.md` lines 116–125 (12-model paragraph),
 131–143 (22-model/top-norm paragraph), Fig. 1 caption panel C, Methods "Structural
-statistical analysis"; `paper-salvage/figures/source_data/fig1_panel_c_full22_source.csv`;
-`paper-salvage/figures/fig1_structural.py:59,71,81,127-129`; `audit/AUDIT_REPORT.md` Section
+statistical analysis"; `manuscript/figures/source_data/fig1_panel_c_full22_source.csv`;
+`manuscript/figures/fig1_structural.py:59,71,81,127-129`; `audit/AUDIT_REPORT.md` Section
 2 (independent confirmation that the 12-model coverage is exactly the E11 cohort).
 
 **Classification: REAL DESIGN CHOICE**, with a **MANUSCRIPT STALE/AMBIGUOUS TEXT**
@@ -111,8 +111,8 @@ since random controls are not being tested for a "closest competitor" property. 
 formulas explicitly in the Fig. 1 legend and Methods, and drop (or clearly footnote) the
 alternative mean-based top-norm column in S2 rather than leaving two live definitions.
 
-**Citations:** `paper-salvage/figures/source_data/fig1_panel_c_full22_source.csv`;
-`paper-salvage/figures/fig1_structural.py:127-129`; `audit/round2/tables/S2_structural_metrics.csv`
+**Citations:** `manuscript/figures/source_data/fig1_panel_c_full22_source.csv`;
+`manuscript/figures/fig1_structural.py:127-129`; `audit/round2/tables/S2_structural_metrics.csv`
 header (`random_control_gap`, `topk_by_norm_gap`, `mean_random_control_q1`,
 `mean_topk_norm_control_q1` columns); `audit/round2/FINAL_CHECK_RESULTS.md` Section 4.
 
@@ -144,7 +144,7 @@ GenomeOcean-4B) exactly match `topnorm_control_gap < 0` in the source CSV — al
 no fewer.
 
 **Citations:** recomputed directly this session from
-`paper-salvage/figures/source_data/fig1_panel_c_full22_source.csv` (22 rows).
+`manuscript/figures/source_data/fig1_panel_c_full22_source.csv` (22 rows).
 
 **Classification: no defect — VERIFIED CORRECT.** No manuscript change needed. (Optional
 improvement: state one more significant figure for at least one of the two source numbers
@@ -253,7 +253,7 @@ median, top-6 by that ranking, computed and frozen **before** E10b tomography �
 same "top-K-by-exact-norm" selection logic used for MosaicBERT/ModernBERT-base's 10-row
 bases (Q10's operator), not the activation-ratio detector and not the single-row
 activation-magnitude protocol used for the other 5 grandfathered models. Source:
-`paper-salvage/experiments/E10b_phi3_tomography/PHI3_BASIS_AUDIT.md`,
+`manuscript/experiments/E10b_phi3_tomography/PHI3_BASIS_AUDIT.md`,
 `results/e10_exact_uknorm_phi3.json`.
 
 **Should Phi-3 count toward "23 models with accepted candidates"?** The manuscript already
@@ -262,7 +262,7 @@ Methods paragraph. This audit found nothing inconsistent with that choice; the o
 that its selection protocol is not mentioned in the Candidate-provenance paragraph (Q4).
 
 **Citations:** `results/E11/scale_ladder.csv` (Phi-3-mini row);
-`paper-salvage/experiments/E10b_phi3_tomography/PHI3_BASIS_AUDIT.md`;
+`manuscript/experiments/E10b_phi3_tomography/PHI3_BASIS_AUDIT.md`;
 `results/E13/PART2B_BASIS_RULE_PROPOSAL.md` (independently confirms the six-row top-K-by-
 norm provenance and that Phi-3 is excluded from the 22-model causal cohort);
 `actual_manuscript.md` Supplementary Fig. S1 caption ("(A) Exact q1 values for all six
@@ -278,7 +278,7 @@ the in-text disclosure (Q4) is missing.
 **Two distinct rankings are combined in one panel, both over a diagonal (non-bilinear)
 proxy, and the manuscript's own caption already flags this as diagonal-only.**
 
-Implementation: `paper-salvage/src/uk_frobenius.py`. Per-hidden-unit diagonal contribution:
+Implementation: `manuscript/src/uk_frobenius.py`. Per-hidden-unit diagonal contribution:
 ```
 c_{k,i} = W_down[k,i]^2 * ||W_gate[i,:]||^2 * ||W_up[i,:]||^2        (uk_contributions, L40-66)
 ```
@@ -301,7 +301,7 @@ units; it was used only for the retrospective Llama/Mistral/OLMo calibration in 
 
 **Confirmed ranks and top1_share for the three calibration models**, from
 `results/e1_nlp_retrospective.json` (STORED, computed by
-`paper-salvage/experiments/E1_nlp_validation/run_e1_retrospective.py`):
+`manuscript/experiments/E1_nlp_validation/run_e1_retrospective.py`):
 
 | model | row_rank (Level 1) | top1_share (Level 2) | regime |
 |---|---|---|---|
@@ -315,9 +315,9 @@ Mistral-7B, and OLMo-7B"). The caption's phrase "the scalar top-1 share is shown
 diagonal calibration metric" is accurate and already disambiguates this from the exact
 bilinear-operator analyses used in Fig. 1B–D.
 
-**Citations:** `paper-salvage/src/uk_frobenius.py:40-169`;
-`paper-salvage/experiments/E1_nlp_validation/run_e1_retrospective.py`;
-`results/e1_nlp_retrospective.json`; `paper-salvage/figures/fig1_structural.py:90-94`.
+**Citations:** `manuscript/src/uk_frobenius.py:40-169`;
+`manuscript/experiments/E1_nlp_validation/run_e1_retrospective.py`;
+`results/e1_nlp_retrospective.json`; `manuscript/figures/fig1_structural.py:90-94`.
 
 **Classification: no defect — VERIFIED, manuscript caption is already accurate.**
 
@@ -364,7 +364,7 @@ This matches round 1's independent audit (`audit/AUDIT_REPORT.md` Section 6:
 "6/22 models... sourced from `results/e7_legacy_reanalysis.json`... no ratio field at all").
 
 **Citations:**
-`paper-salvage/experiments/E13_full_cohort_causal_census/run_rowwise_detector.py:29,60-113`;
+`manuscript/experiments/E13_full_cohort_causal_census/run_rowwise_detector.py:29,60-113`;
 `actual_manuscript.md` Methods "Candidate provenance."
 
 **Classification: no defect — VERIFIED, manuscript's Methods description is consistent
@@ -413,7 +413,7 @@ manuscript's own terminology is already precise in the body text — "exact gate
 operator" without "bilinear" appears only as a section header, not as a substantive claim.**
 
 Manuscript Methods, verbatim: `U_k = Σ_i d_{k,i} g_i u_i^T` — exactly the formula in the
-question. Implementation, `paper-salvage/experiments/E7_exact_dimensionality/spectral_lib.py`:
+question. Implementation, `manuscript/experiments/E7_exact_dimensionality/spectral_lib.py`:
 ```python
 def materialize_Uk(W_gate, W_up, w_down_row, ...):
     """U_k = (d * W_gate)^T @ W_up, exactly."""
@@ -441,10 +441,10 @@ operator" means the full nonlinear function, adding "bilinear" to the header wou
 any ambiguity at essentially zero cost.
 
 **Implementation pointers:** exact `U_k` matrix + full singular spectrum:
-`paper-salvage/experiments/E7_exact_dimensionality/spectral_lib.py` (`materialize_Uk`,
+`manuscript/experiments/E7_exact_dimensionality/spectral_lib.py` (`materialize_Uk`,
 `singular_values`, `SpectralMetrics`). Vectorized Frobenius-norm-only computation (no
 `U_k` ever materialized, used for the full census's per-row control-selection sweep):
-`paper-salvage/experiments/E5_dimensionality/dimensionality_lib.py:92-111`
+`manuscript/experiments/E5_dimensionality/dimensionality_lib.py:92-111`
 (`exact_uk_all_rows`, via the Gram identity `K = (W_gate W_gate^T) ⊙ (W_up W_up^T)`,
 `‖U_k‖_F² = W_down[k,:] K W_down[k,:]^T` — algebraically identical to the manuscript's
 `K_{ij} = (g_i^T g_j)(u_i^T u_j)`).
@@ -467,7 +467,7 @@ divided by the median norm of the five same-layer control rows."*
 The artifact column actually used for the correlations is `frob_ratio_to_layer_median`
 (`results/E13/part2_22_model_results.csv`, `part1_22_candidate_effects.csv`,
 `figure2_structure_function_data.csv`; = S4's `layer_relative_frobenius`). Its source,
-`paper-salvage/experiments/E13_full_cohort_causal_census/backfill_layer_median.py`, computes
+`manuscript/experiments/E13_full_cohort_causal_census/backfill_layer_median.py`, computes
 `layer_median_frob_norm` as:
 ```python
 median = frobs[n // 2] if n % 2 else 0.5 * (frobs[n // 2 - 1] + frobs[n // 2])   # L110
@@ -494,7 +494,7 @@ and matching round 1's audit (`audit/AUDIT_REPORT.md` Section 3: "ρ=0.440994, p
 
 **Citations:**
 `actual_manuscript.md` Methods "Exact gated-FFN operator and structural metrics";
-`paper-salvage/experiments/E13_full_cohort_causal_census/backfill_layer_median.py:97-118,304-306`;
+`manuscript/experiments/E13_full_cohort_causal_census/backfill_layer_median.py:97-118,304-306`;
 `results/E13/part2_22_model_results.csv` (`layer_median_frob_norm`,
 `frob_ratio_to_layer_median` columns); `audit/round2/tables/S4_structure_function_correlations.csv`.
 
@@ -581,7 +581,7 @@ Methods content for a quantity the paper never uses.
 **Citations:** `grep` of `actual_manuscript.md`;
 `audit/round2/tables/S2_structural_metrics.csv` header;
 `audit/round2/tables/S4_structure_function_correlations.csv`;
-`paper-salvage/experiments/E7_exact_dimensionality/spectral_lib.py:24-26`.
+`manuscript/experiments/E7_exact_dimensionality/spectral_lib.py:24-26`.
 
 **Classification: MANUSCRIPT STALE TEXT (in the sense of unused Methods content)** —
 recommend moving the `PR_spec` definition to a supplementary methods note (it is already
@@ -597,7 +597,7 @@ values `c`; the manuscript's singular-form Methods language ("a fixed random uni
 direction") is correct, and one Discussion sentence's plural ("random directions") is a
 genuine, minor wording slip.**
 
-Direction sampling: `paper-salvage/experiments/E12_generator_degradation_control/e12_lib.py`:
+Direction sampling: `manuscript/experiments/E12_generator_degradation_control/e12_lib.py`:
 ```python
 def make_unit_random_direction(intermediate_size, row, dtype, device, base_seed=20260823):
     rng = np.random.default_rng(base_seed + row)
@@ -631,7 +631,7 @@ direction itself (1 value). This is the exact ambiguity the question flagged, co
 real (if minor) wording inconsistency against the correctly-singular Methods text
 ("a fixed random unit direction scaled by a factor c").
 
-**Citations:** `paper-salvage/experiments/E12_generator_degradation_control/e12_lib.py`
+**Citations:** `manuscript/experiments/E12_generator_degradation_control/e12_lib.py`
 (`make_unit_random_direction`, `set_row_random_direction`); `actual_manuscript.md` Methods
 "GENERator GC-composition and BOS analyses" (singular, correct) vs. Discussion paragraph on
 GENERator (plural, "random directions" — the slip); `audit/round2/AUDIT_ROUND2_REPORT.md`
@@ -760,7 +760,7 @@ interaction..."), Fig. 3 caption, Methods "Finite-intervention tomography" and "
 pretrained masked-language-model experiment" (both containing the identical "standalone
 regression check... 118 measured non-singleton conditions" sentence — itself duplicated
 verbatim across two Methods subsections, a minor redundancy worth trimming to one place);
-`paper-salvage/experiments/E9_mechanistic_tomography/run_baseline_regression.py`,
+`manuscript/experiments/E9_mechanistic_tomography/run_baseline_regression.py`,
 `baseline_regression_results.json`; `audit/AUDIT_REPORT.md` Section 1 epistasis-chain table.
 
 **Classification: MANUSCRIPT STALE/AMBIGUOUS TEXT** (terminology collision, not a factual
@@ -780,7 +780,7 @@ to a fixed six-row Phi-3 basis. No third-order model was fit; the full-ablation 
 therefore reported as unresolved rather than modeled with higher-order terms after observing
 the data."* This is explicitly a **null/negative disclosure** (F0–F3 fitting was attempted
 and abandoned rather than silently dropped), consistent with this project's own working
-discipline (`paper-salvage/CLAUDE.md`: "Do not silently drop a negative result... contested
+discipline (`manuscript/CLAUDE.md`: "Do not silently drop a negative result... contested
 NTv3, contested PROK — all get reported, not smoothed over in either direction").
 
 **Does it support any current Results claim?** No dedicated Results subsection discusses
@@ -796,7 +796,7 @@ extended to a third-order model for Phi-3's 6-row basis) and as one point in the
 structural panel. It is not evidence-orphaned in the strict sense (every claim about it has
 a live artifact: `results/e10_exact_uknorm_phi3.json` for the structural median-q1 value,
 and the F0–F3 fit attempt itself, per round-1's audit map, under
-`paper-salvage/experiments/E10b_phi3_tomography/`) — but the one Methods sentence about it
+`manuscript/experiments/E10b_phi3_tomography/`) — but the one Methods sentence about it
 sits somewhat disconnected from Results, with no "(see Supplementary Fig. S1A)" pointer, so
 a reader hitting that sentence in Methods has no cue where its supporting figure is.
 
@@ -806,7 +806,7 @@ sentence to Supplementary Fig. S1A so it does not read as an unsupported aside.
 
 **Citations:** `actual_manuscript.md` Methods "Finite-intervention tomography" (Phi-3
 sentence), Methods "Cross-model singleton functional-criticality census" (exclusion
-rationale), Supplementary Fig. S1 caption; `paper-salvage/CLAUDE.md` ("do not silently drop
+rationale), Supplementary Fig. S1 caption; `manuscript/CLAUDE.md` ("do not silently drop
 a negative result"); `results/E13/PART2B_BASIS_RULE_PROPOSAL.md` (independently confirms
 Phi-3's tomography "remains a mechanistic case study... not carried forward" into any
 cohort-level claim).

@@ -5,7 +5,7 @@ BASIS_FREEZE.md before treating any set as independent evidence.
 
 CRITICAL CORRECTION from the first pass: OLMo's and Phi-3's multi-layer row sets were
 NOT independently discovered by this project's detectors -- they are direct citations of
-Yu et al.'s published Table 2 (see paper-salvage/experiments/E10_nlp_architecture_causal/
+Yu et al.'s published Table 2 (see manuscript/experiments/E10_nlp_architecture_causal/
 DECODER_INTERVENTION_FREEZE.md). Phi-3's set is therefore fully circular and excluded from
 the chance-magnitude analysis. OLMo's set is *mostly* circular (Yu et al. published row 269
 at layers {1,2,7,24}); only this session's independent detector finding of L30/r269

@@ -26,7 +26,7 @@ def main():
     args = p.parse_args()
 
     import sys; sys.path.insert(0, str(ROOT))
-    from probes.dna_probes import get_probe
+    from src.dna_probes import get_probe
     from evo import Evo
 
     print("[evo1_resid_attr fp32] loading Evo1 (bfloat16 — fp32-range exponent) …")

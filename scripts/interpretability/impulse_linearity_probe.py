@@ -47,7 +47,7 @@ def main() -> int:
     sw_layer, sw_row, arch, is_causal = (
         tgt["sw_layer"], tgt["sw_row"], tgt["arch"], tgt["causal"])
 
-    from probes.dna_probes import get_probe
+    from src.dna_probes import get_probe
     seq = get_probe(tgt["probe"])
 
     model, tok = _load_model(args.model, args.device)

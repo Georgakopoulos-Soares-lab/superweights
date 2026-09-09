@@ -2,7 +2,7 @@
 """Smoke test: hooks attach, record, and detach cleanly."""
 import torch
 import torch.nn as nn
-from hooks.activation_hooks import ActivationRecorder
+from src.activation_hooks import ActivationRecorder
 
 
 class FakeWrapper:

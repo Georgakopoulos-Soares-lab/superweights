@@ -17,7 +17,7 @@ rows    2891 non-empty lines
 
 **Why it is committed.** The E13 census resolved this split through
 `datasets.load_dataset("wikitext", "wikitext-2-raw-v1", "test")`, and the frozen path
-recorded in `paper-salvage/experiments/E13_full_cohort_causal_census/run_rowwise_detector.py`
+recorded in `manuscript/experiments/E13_full_cohort_causal_census/run_rowwise_detector.py`
 points at a TACC scratch filesystem that does not exist on other machines. Committing the
 file lets the text-decoder endpoints run anywhere, offline, on the *same* bytes.
 

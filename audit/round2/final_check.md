@@ -30,8 +30,8 @@ If either count differs from 20/22 or 19/22, say so plainly — it appears in th
 ## Section 2 — Regenerate three figures
 
 All three need source-data CSVs alongside them, in `audit/round2/figures/` and
-`paper-salvage/figures/source_data/`. Match the existing figure style in
-`paper-salvage/figures/` (fonts, marker conventions, encoder/decoder shape coding, text/genomic
+`manuscript/figures/source_data/`. Match the existing figure style in
+`manuscript/figures/` (fonts, marker conventions, encoder/decoder shape coding, text/genomic
 colour coding) — find the existing plotting scripts and reuse their style helpers rather than
 starting fresh.
 

@@ -9,8 +9,8 @@ import json
 import yaml
 from pathlib import Path
 
-from probes.dna_probes import get_probe
-from analysis.ablation import run_destruction_test
+from src.dna_probes import get_probe
+from src.ablation import run_destruction_test
 from models import WRAPPER_MAP
 
 

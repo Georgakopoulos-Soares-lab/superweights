@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Fig. 4C replacement (round-2 Section 2): GC vs. random-direction scale c, and GC vs.
-damage (native NLL), restyled to match paper-salvage figure conventions and combined into
+damage (native NLL), restyled to match manuscript figure conventions and combined into
 one two-panel figure.
 
 Restyles the substance already produced by audit/round2/scripts/section1_final_plots.py
@@ -25,7 +25,7 @@ section1_final_plots.py; read directly, not recomputed).
 Output:
   audit/round2/figures/fig4c_replacement.{png,pdf}
   audit/round2/figures/fig4_panel_c_source.csv
-  paper-salvage/figures/source_data/fig4_panel_c_source.csv
+  manuscript/figures/source_data/fig4_panel_c_source.csv
 """
 from __future__ import annotations
 
@@ -44,13 +44,13 @@ ROOT = HERE.parents[2]
 AUDIT2 = ROOT / "audit" / "round2"
 FIG_DIR = AUDIT2 / "figures"
 FIG_DIR.mkdir(parents=True, exist_ok=True)
-SRC_DIR2 = ROOT / "paper-salvage" / "figures" / "source_data"
+SRC_DIR2 = ROOT / "manuscript" / "figures" / "source_data"
 SRC_DIR2.mkdir(parents=True, exist_ok=True)
 
 sys.path.insert(0, str(ROOT / "scripts" / "analysis"))
 from _figstyle import apply_style, panel_label  # noqa: E402
 
-sys.path.insert(0, str(ROOT / "paper-salvage" / "figures"))
+sys.path.insert(0, str(ROOT / "manuscript" / "figures"))
 from _paper_encoding import DOMAIN_COLOR  # noqa: E402
 
 BASELINE_GC = 0.4204

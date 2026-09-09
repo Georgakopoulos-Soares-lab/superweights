@@ -95,16 +95,42 @@
   },
   "generator_prokaryote": {
     "mode": "superrow",
-    "source": "detection_run_sbatch",
+    "source": "corrected_detection_pseudomonadota_probe",
     "results": [
       {
+        "layer": 8,
+        "row": 260,
+        "col": 4484,
+        "in_max": 6292.1328125,
+        "out_max": 30167.07421875
+      },
+      {
+        "layer": 8,
+        "row": 1325,
+        "col": null,
+        "in_max": null,
+        "out_max": 19812.40625
+      }
+    ],
+    "provenance": {
+      "corrected_on": "2026-08-07",
+      "previous_entry": {
         "layer": 2,
         "row": 1927,
         "col": 1769,
-        "out_max": 506014.0,
-        "in_max": null
-      }
-    ]
+        "out_max": 506014.0
+      },
+      "previous_entry_status": "INVALID - eukaryotic-probe contamination",
+      "why_invalid": "Detected with --probe human_promoter (human ACTB, eukaryotic) against the prokaryote-specialised model. Does not reproduce on any of the 4 canonical probes; |row 1927| < 1.0 at layer 2 on all of them.",
+      "why_corrected_entry_is_right": [
+        "Fresh detection with the matching prokaryotic probe (pseudomonadota) finds L8/r260 as the primary super row.",
+        "Activation at L8/r260 is 30167.07 and IDENTICAL across all 4 canonical probes -- content-invariant, the Yu et al. super-activation signature.",
+        "||U_k||_F rank of row 260 at layer 8 = 1/3072, matching GENERator EUK's row 2371 (also rank 1/3072)."
+      ],
+      "archived_original": "results/super_weight_index_generator_prokaryote_ORIGINAL_SUSPECT.json",
+      "corrected_detection_reference": "results/mechanism/generator_prokaryote_sw_corrected.json",
+      "audit": "results/mechanism/prok_contamination_audit.md"
+    }
   },
   "generator_prokaryote_1b": {
     "mode": "superrow",
@@ -117,7 +143,12 @@
         "out_max": 85983.0,
         "in_max": null
       }
-    ]
+    ],
+    "provenance_warning": {
+      "status": "SUSPECT - UNVERIFIED",
+      "flagged_on": "2026-08-07",
+      "reason": "Same source ('detection_run_sbatch') and same suspicious layer-2 signature as the 3B prokaryote entry that was proven to be eukaryotic-probe contamination. This entry has NOT been re-detected with a matching prokaryotic probe and must not be used or cited until it is. Not corrected here because no corrected detection exists for it."
+    }
   },
   "ntv3": {
     "mode": "superrow",

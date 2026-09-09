@@ -35,7 +35,7 @@ from scripts.interpretability.evo1_input_sensitivity_gate import (  # noqa: E402
 
 
 def main() -> int:
-    from probes.dna_probes import get_probe
+    from src.dna_probes import get_probe
 
     seq = get_probe("actb_500")
     print("loading Evo1 (bf16 except poles/residues) ...", flush=True)

@@ -47,10 +47,10 @@ model in the cohort; worth a sentence in the text if not already there.
 ## Section 2 — Three regenerated figures (final, fixed, visually verified)
 
 **Update after this report was first written:** the new panels were folded into the
-unified `paper-salvage/figures/main/fig1_structural.png`, `fig2_causal.png`,
+unified `manuscript/figures/main/fig1_structural.png`, `fig2_causal.png`,
 `fig4_generator.png` themselves (not left as standalone sub-panel files) — those are now
 the complete, publication-ready figures, each committed with source data in
-`paper-salvage/figures/source_data/`. The standalone sub-panel versions described below
+`manuscript/figures/source_data/`. The standalone sub-panel versions described below
 still exist in `audit/round2/figures/` for the audit trail, but **use the `main/` files for
 the manuscript.**
 
@@ -74,7 +74,7 @@ real Figure 2, `build_part2_evidence_packet.py`'s `fig2_part2_functional_critica
 ε=0.5/1.0, C = q1-vs-effect correlation), as panel D there — verified against the target
 caption: 20/22 exceed the median top-norm control at ε=0.5, 19/22 at ε=1.0, and the
 top-norm controls' own median effect (+0.035% at ε=0.5, +0.110% at ε=1.0) is annotated on
-the panel. **Use `paper-salvage/figures/main/fig2_part2_functional_criticality.png` for
+the panel. **Use `manuscript/figures/main/fig2_part2_functional_criticality.png` for
 the manuscript's Figure 2 — not `fig2_causal.png`.**
 
 **`fig4c_replacement.{png,pdf}`** — Fig. 4C replacement, two panels. Left: GC vs.
@@ -162,7 +162,7 @@ mean-based column — deliberately not reconciled, flagged in the table.
 >
 > *Reproducing the census:* candidate detection, structural spectrum computation (q1,
 > PR_spec, Frobenius norm), and causal ablation at ε∈{0.5, 1.0} for each model are each
-> driven by a per-domain detector/measurement script under `paper-salvage/experiments/`
+> driven by a per-domain detector/measurement script under `manuscript/experiments/`
 > and `scripts/`; per-model provenance is recorded in Supplementary Table S1 and
 > `audit/detector_provenance.csv`.
 
@@ -186,7 +186,7 @@ has been stripped so the artifact matches what the current script actually emits
 `audit/round2/manuscript_numbers.csv` — **119 rows** (+header), columns `section,
 claim_text, value, units, source_file, obtained_via, git_commit, notes`, ordered Abstract →
 R1-structural → R2-causal/correlations → R3-tomography → R4-generator → Methods/Availability
-(matching `paper-salvage/docs/MANUSCRIPT_SOURCE_OF_TRUTH.md` §1.3's four-part Results
+(matching `manuscript/docs/MANUSCRIPT_SOURCE_OF_TRUTH.md` §1.3's four-part Results
 structure). This is the number-by-number check file — walk v8's draft against it top to
 bottom before submission.
 
@@ -213,19 +213,19 @@ audit/round2/tables/S2_structural_metrics.{csv,md}
 audit/round2/tables/S3_causal_census_full.{csv,md}
 audit/round2/tables/S4_structure_function_correlations.{csv,md}
 audit/round2/tables/S5_generator_conditions.{csv,md}
-paper-salvage/figures/main/fig1_structural.{png,pdf}                    -- USE THIS: unified Fig 1 (A/B/C-new/D)
-paper-salvage/figures/main/fig2_part2_functional_criticality.{png,pdf}  -- USE THIS: the real Fig 2 (A/B/C/D-new,
+manuscript/figures/main/fig1_structural.{png,pdf}                    -- USE THIS: unified Fig 1 (A/B/C-new/D)
+manuscript/figures/main/fig2_part2_functional_criticality.{png,pdf}  -- USE THIS: the real Fig 2 (A/B/C/D-new,
                                                                              22-model functional-criticality census)
-paper-salvage/figures/main/fig4_generator.{png,pdf}                     -- USE THIS: unified Fig 4 (A/B/C-new)
-paper-salvage/figures/main/fig2_causal.{png,pdf}                        -- NOT Fig 2 -- older decoder-spectrum/OLMo-
+manuscript/figures/main/fig4_generator.{png,pdf}                     -- USE THIS: unified Fig 4 (A/B/C-new)
+manuscript/figures/main/fig2_causal.{png,pdf}                        -- NOT Fig 2 -- older decoder-spectrum/OLMo-
                                                                              dissociation/tomography-adequacy figure,
                                                                              supplementary/case-study material only
                                                                              (see PART2_EVIDENCE_PACKET.md's own note)
-paper-salvage/figures/fig1_structural.py, fig4_generator.py             -- scripts for Fig 1 / Fig 4
-paper-salvage/experiments/E13_full_cohort_causal_census/build_part2_evidence_packet.py  -- script for the real Fig 2
-paper-salvage/figures/source_data/fig1_panel_c_full22_source.csv
-paper-salvage/figures/source_data/fig2_panel_d_source.csv
-paper-salvage/figures/source_data/fig4_panel_c_source.csv
+manuscript/figures/fig1_structural.py, fig4_generator.py             -- scripts for Fig 1 / Fig 4
+manuscript/experiments/E13_full_cohort_causal_census/build_part2_evidence_packet.py  -- script for the real Fig 2
+manuscript/figures/source_data/fig1_panel_c_full22_source.csv
+manuscript/figures/source_data/fig2_panel_d_source.csv
+manuscript/figures/source_data/fig4_panel_c_source.csv
 audit/round2/figures/fig1c_full22_two_panel.{png,pdf}         -- standalone new-panel-only versions (audit trail)
 audit/round2/figures/fig2_topnorm_panel.{png,pdf}              -- standalone new-panel-only versions (audit trail)
 audit/round2/figures/fig4c_replacement.{png,pdf}               -- standalone new-panel-only versions (audit trail)

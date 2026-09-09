@@ -14,7 +14,7 @@ from pathlib import Path
 import torch
 
 ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "paper-salvage/experiments/E7_exact_dimensionality"))
+sys.path.insert(0, str(ROOT / "manuscript/experiments/E7_exact_dimensionality"))
 from spectral_lib import row_spectral_metrics  # noqa: E402
 
 REPO = "allenai/OLMo-7B-0724-hf"

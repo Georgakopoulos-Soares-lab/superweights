@@ -2,9 +2,9 @@
 """Smoke test: detection runs end-to-end on a tiny fake model."""
 import torch
 import torch.nn as nn
-from detection.sweep import sweep
-from detection.identify_spikes import find_spike_layer, extract_coords
-from hooks.activation_hooks import ActivationRecorder
+from src.sweep import sweep
+from src.identify_spikes import find_spike_layer, extract_coords
+from src.activation_hooks import ActivationRecorder
 
 
 class TinyFakeWrapper:

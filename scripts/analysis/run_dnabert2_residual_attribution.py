@@ -34,7 +34,7 @@ ROW = 603  # the SW row of interest (appears at layers 3, 5, 6, 7)
 def main():
     import sys; sys.path.insert(0, str(ROOT))
     from models import WRAPPER_MAP
-    from probes.dna_probes import get_probe
+    from src.dna_probes import get_probe
 
     config = yaml.safe_load((ROOT / "configs/dnabert2.yaml").read_text())
     wrapper_cls = WRAPPER_MAP["dnabert2"]

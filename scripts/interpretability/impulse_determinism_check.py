@@ -51,7 +51,7 @@ def main() -> int:
     t = SW_TARGETS[args.model]
     sl, sr, arch, causal = t["sw_layer"], t["sw_row"], t["arch"], t["causal"]
 
-    from probes.dna_probes import get_probe
+    from src.dna_probes import get_probe
     model, tok = _load_model(args.model, args.device)
     blocks = _get_blocks(model, arch)
     inp = _tokenize(tok, get_probe(t["probe"]), arch, args.device)

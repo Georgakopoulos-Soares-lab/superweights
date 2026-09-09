@@ -17,7 +17,7 @@ rather than all at once. All six sections are complete.
    is git-tracked, but current working-tree state of that code is **untracked** (the whole
    `E13_full_cohort_causal_census/` directory is untracked — see Orientation). Flagged here;
    resolved per-number in Section 2.
-2. **[LOW severity, informational]** `paper-salvage/docs/MANUSCRIPT_SOURCE_OF_TRUTH.md`
+2. **[LOW severity, informational]** `manuscript/docs/MANUSCRIPT_SOURCE_OF_TRUTH.md`
    (99KB, dated 2026-08-23) — the apparent authoritative claims document — is **untracked**,
    i.e. has no git history at all. Any number sourced from it alone should be treated as
    provisional/uncommitted.
@@ -36,13 +36,13 @@ rather than all at once. All six sections are complete.
    problem was found.
 4. **[MEDIUM severity, informational — not a numerical error]** Section 2's entire evidence
    base (`results/E13/`, `results/E11/`, and the code in
-   `paper-salvage/experiments/{E13_full_cohort_causal_census,E11_scale_ladder}/`) is
+   `manuscript/experiments/{E13_full_cohort_causal_census,E11_scale_ladder}/`) is
    **completely absent from git** — either gitignored (data) or untracked (code,
    including the OLS regression backing a Fig 1 statistic,
    `E11_scale_ladder/regression.py`). All 30+ Section-2 manuscript numbers checked
    **PASS** against these files, but none of them would survive a fresh clone. Recommend
    committing the E11/E13 code (with `git add -f` for the results, per this project's own
-   `paper-salvage/CLAUDE.md` convention: "Results we are keeping get copied into
+   `manuscript/CLAUDE.md` convention: "Results we are keeping get copied into
    `results/keep/`... `git add -f`, since `results/` is gitignored") before this goes
    further.
 5. **[LOW severity, resolved]** The "+111.78%" appearing both as OLMo-7B's own ε=1.0
@@ -68,30 +68,30 @@ rather than all at once. All six sections are complete.
 - **Repo root:** `/work/11034/atzanakak/glm_super_weight/genomic-super-weights`
 - **Branch:** `integrate/mechanism-and-negative-results` (not `main`)
 - **HEAD:** `fafd44d` "E10b Phase 8 + final synthesis: split decision, three-way redundancy break"
-- **Working tree:** 7 modified tracked files (`paper-salvage/docs/{CLAIMS_LEDGER,DECISIONS,PROJECT_STATUS}.md`,
-  `paper-salvage/docs/prereg/LOCKS.jsonl`, `paper-salvage/figures/README.md`,
+- **Working tree:** 7 modified tracked files (`manuscript/docs/{CLAIMS_LEDGER,DECISIONS,PROJECT_STATUS}.md`,
+  `manuscript/docs/prereg/LOCKS.jsonl`, `manuscript/figures/README.md`,
   `scripts/evaluation/run_sw_pairwise_epistasis.py`, `scripts/mechanism/run_attention_sink.py`)
   plus a long list of untracked files/directories, notably: `check_prompt.md` itself,
   `PART2_EVIDENCE_PACKET.md`, `INVENTORY.md`, several loose `*_prompt.md` files,
   `manuscript.txt`, `previous_main.tex`, `"source_of _truth.md"`, and the untracked
-  experiment directories `paper-salvage/experiments/{E11_scale_ladder,E12_generator_degradation_control,E13_full_cohort_causal_census}/`
-  and all of `paper-salvage/figures/{main,output,source_data,supplement}/`.
+  experiment directories `manuscript/experiments/{E11_scale_ladder,E12_generator_degradation_control,E13_full_cohort_causal_census}/`
+  and all of `manuscript/figures/{main,output,source_data,supplement}/`.
   **Implication**: E11, E12, E13 — i.e. the GENERator damage-matching (Section 5), full
   census (Section 2), and scale-ladder work — exist only in the working tree, not in any
   commit. `git log -1` on their files returns nothing; provenance for that code is
   mtime/sha256 only, tracked explicitly per-file below and in `provenance.json`.
 - **E9 (DNABERT-2 tomography, Section 1)** is fully committed and clean: all files under
-  `paper-salvage/experiments/E9_mechanistic_tomography/` are tracked, last touched by
+  `manuscript/experiments/E9_mechanistic_tomography/` are tracked, last touched by
   commits `2a76d99`, `ad10a03`, `e5e3dce` (all 2026-08-22), working tree clean against HEAD.
-- **Governing doc**: `paper-salvage/CLAUDE.md` establishes this project's own evidence
+- **Governing doc**: `manuscript/CLAUDE.md` establishes this project's own evidence
   discipline (`CLAIMS_LEDGER.md`, `DECISIONS.md`, "if you cannot fill the evidence path,
   the claim is not ready to be written"). This audit's hard rules are consistent with,
   and enforced by, that existing project discipline.
 - **Experiment → section map:**
-  - Section 1 (tomography) → `paper-salvage/experiments/E9_mechanistic_tomography/`
-  - Section 2 (census) → `paper-salvage/experiments/E13_full_cohort_causal_census/` (code, untracked)
+  - Section 1 (tomography) → `manuscript/experiments/E9_mechanistic_tomography/`
+  - Section 2 (census) → `manuscript/experiments/E13_full_cohort_causal_census/` (code, untracked)
     + `results/E13/` (data, gitignored)
-  - Section 5 (GENERator) → `paper-salvage/experiments/E12_generator_degradation_control/` (untracked)
+  - Section 5 (GENERator) → `manuscript/experiments/E12_generator_degradation_control/` (untracked)
     + `results/E12/`
 
 ---
@@ -112,7 +112,7 @@ same object at two levels: 78 conditions (design-matrix rows) map through the 55
 lift (10 main + 45 pairwise indicator columns) — there is no contradiction once "mask" is
 read as "condition."
 
-**Code**: `paper-salvage/experiments/E9_mechanistic_tomography/generate_masks.py`
+**Code**: `manuscript/experiments/E9_mechanistic_tomography/generate_masks.py`
 (committed `2a76d99`, 2026-08-22 15:54:18).
 
 ```python
@@ -391,7 +391,7 @@ apparent identity is likely to raise the same question in review.
 ### Fig 1 structural claims (all PASS)
 
 Recomputed from `results/E11/scale_ladder.csv`, `scale_ladder_controls.csv`, and
-`regression_summary.json` (the OLS is run by `paper-salvage/experiments/E11_scale_ladder/regression.py`,
+`regression_summary.json` (the OLS is run by `manuscript/experiments/E11_scale_ladder/regression.py`,
 untracked, output also untracked/gitignored):
 
 - **23 models with accepted candidates** — confirmed (23 rows in `scale_ladder.csv` with
@@ -518,7 +518,7 @@ control type is worth pursuing at all.
 
 ### 1. The Gram-identity function — found, and confirmed vectorizable
 
-`paper-salvage/experiments/E5_dimensionality/dimensionality_lib.py:92-111`,
+`manuscript/experiments/E5_dimensionality/dimensionality_lib.py:92-111`,
 `exact_uk_all_rows`:
 
 ```python
@@ -693,7 +693,7 @@ row: int` throughout — **no list-of-rows parameter anywhere**, confirming the 
 text's "single-row context manager" description exactly.
 
 However, the repo already has a **generalized multi-row engine that does exactly this**,
-built for DNABERT-2's tomography (Section 1): `paper-salvage/experiments/E9_mechanistic_tomography/tomography_lib.py`'s
+built for DNABERT-2's tomography (Section 1): `manuscript/experiments/E9_mechanistic_tomography/tomography_lib.py`'s
 `_scale_rows`/`with_mask` (accepting `coords: Sequence[tuple[layer,row]]` and per-coordinate
 alphas), itself built on the same `_save_row`/`_restore_row`/`_resolve_module` primitives
 `e12_lib.py` also uses (from `run_gue_ablation.py`). **Entry point for adapting it**: the
@@ -894,7 +894,7 @@ is fully resolved but 5 more models remain unverified either way).
 
 **What this audit did not find**: no fabricated numbers, no numbers that fail to
 reproduce, no internally-inconsistent arithmetic anywhere it checked. The manuscript's own
-evidence discipline (`paper-salvage/CLAUDE.md`'s claim-ledger requirement) appears to be
+evidence discipline (`manuscript/CLAUDE.md`'s claim-ledger requirement) appears to be
 working — every number traced back to a real, if sometimes untracked, artifact.
 
 **What this audit does flag as needing attention before this goes further**, ranked:

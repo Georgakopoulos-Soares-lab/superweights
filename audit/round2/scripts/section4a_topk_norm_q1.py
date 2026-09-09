@@ -22,9 +22,9 @@ import numpy as np
 import torch
 
 ROOT = Path(__file__).resolve().parents[3]
-E11_DIR = ROOT / "paper-salvage/experiments/E11_scale_ladder"
-E5_DIR = ROOT / "paper-salvage/experiments/E5_dimensionality"
-E7_DIR = ROOT / "paper-salvage/experiments/E7_exact_dimensionality"
+E11_DIR = ROOT / "manuscript/experiments/E11_scale_ladder"
+E5_DIR = ROOT / "manuscript/experiments/E5_dimensionality"
+E7_DIR = ROOT / "manuscript/experiments/E7_exact_dimensionality"
 sys.path.insert(0, str(E11_DIR))
 sys.path.insert(0, str(E5_DIR))
 sys.path.insert(0, str(E7_DIR))

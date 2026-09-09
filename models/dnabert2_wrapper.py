@@ -50,6 +50,16 @@ class DNABERT2Wrapper(BaseGenomicWrapper):
         if self.config.get("device") == "cuda":
             self.model = self.model.cuda()
 
+        # DNABERT-2 ships a 2022-era Triton flash-attention kernel that uses the
+        # removed tl.dot(trans_b=...) API and breaks on modern Triton (>=3.x).
+        # Force the mathematically-equivalent PyTorch attention fallback
+        # (bert_layers.py uses it whenever the Triton func is None), matching
+        # the workaround already applied in scripts/evaluation/run_gue_multiseed.py.
+        import sys as _sys
+        for _name, _mod in list(_sys.modules.items()):
+            if _name.endswith("bert_layers") and "DNABERT" in _name:
+                _mod.flash_attn_qkvpacked_func = None
+
     def forward(self, sequence: str):
         inputs = self.tokenizer(
             sequence, return_tensors="pt", truncation=True, max_length=512

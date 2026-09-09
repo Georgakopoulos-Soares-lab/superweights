@@ -7,7 +7,7 @@
 
 **How to use this file.** Upload this file together with the current manuscript PDF (source
 file `new v9(1).pdf`; a converted, searchable copy lives in the repository at
-`paper-salvage/actual_manuscript.md`) to an LLM, and ask it anything about the paper's design,
+`manuscript/actual_manuscript.md`) to an LLM, and ask it anything about the paper's design,
 terminology, controls, provenance, or interpretation. This document is not a summary of the
 paper — the paper does that job well enough on its own. It exists to carry the *scaffolding
 around* the paper: why it looks the way it does now, what it used to claim, which numbers are
@@ -75,8 +75,8 @@ plausible-looking predictor breaks, and by how much."*
 
 The manuscript has gone through more than one distinct scientific framing, and the current text
 is the result of several deliberate, documented pivots — not organic drift. The project's
-internal decision log (`paper-salvage/docs/DECISIONS.md`, append-only, entries D-001 through
-D-028) and its removed-claims ledger (`paper-salvage/docs/CUT_LIST.md`) record these explicitly,
+internal decision log (`manuscript/docs/DECISIONS.md`, append-only, entries D-001 through
+D-028) and its removed-claims ledger (`manuscript/docs/CUT_LIST.md`) record these explicitly,
 and are worth knowing about because **old drafts, old prose, and even the file `paper/main.tex`
 on disk still reflect an earlier, retired framing** — if you or an LLM ever consults that file
 directly, treat it as historical, not current.
@@ -998,7 +998,7 @@ model.
 
 These are copy/formatting/internal-consistency issues only — none of them affects any reported
 number, and none should be conflated with a scientific finding. All were identified against the
-current manuscript text (`paper-salvage/actual_manuscript.md`, source `new v9(1).pdf`); verify
+current manuscript text (`manuscript/actual_manuscript.md`, source `new v9(1).pdf`); verify
 against whatever version you are looking at before acting, since some may already be fixed.
 
 - **Empty end-matter.** The Acknowledgments, Author contributions, and Competing interests

@@ -55,7 +55,7 @@ exact checkpoint state cannot be guaranteed to reproduce bit-for-bit on a fresh 
 
 *Reproducing the census:* candidate detection, structural spectrum computation (q1,
 PR_spec, Frobenius norm), and causal ablation at ε∈{0.5, 1.0} for each model are each
-driven by a per-domain detector/measurement script under `paper-salvage/experiments/` and
+driven by a per-domain detector/measurement script under `manuscript/experiments/` and
 `scripts/`; per-model provenance (repo, requested/resolved revision, selection protocol)
 is recorded in Supplementary Table S1 and `audit/detector_provenance.csv`.
 

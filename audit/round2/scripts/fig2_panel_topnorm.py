@@ -2,7 +2,7 @@
 """Fig. 2, new panel D (round-2 Section 2): candidate vs. top-norm-control causal effect,
 both intervention strengths, full 22-model cohort.
 
-Standalone deliverable -- does NOT overwrite paper-salvage/figures/fig2_causal.py or its
+Standalone deliverable -- does NOT overwrite manuscript/figures/fig2_causal.py or its
 output. Produces its own PNG/PDF in audit/round2/figures/.
 
 Plots causal_topk_gap = candidate relative-NLL-change minus median top-norm-control
@@ -19,7 +19,7 @@ Data: audit/round2/structural_vs_causal_gap.csv (44 rows = 22 models x 2 epsilon
 Output:
   audit/round2/figures/fig2_topnorm_panel.{png,pdf}
   audit/round2/figures/fig2_panel_d_source.csv
-  paper-salvage/figures/source_data/fig2_panel_d_source.csv
+  manuscript/figures/source_data/fig2_panel_d_source.csv
 """
 from __future__ import annotations
 
@@ -39,13 +39,13 @@ ROOT = HERE.parents[2]
 AUDIT2 = ROOT / "audit" / "round2"
 FIG_DIR = AUDIT2 / "figures"
 FIG_DIR.mkdir(parents=True, exist_ok=True)
-SRC_DIR2 = ROOT / "paper-salvage" / "figures" / "source_data"
+SRC_DIR2 = ROOT / "manuscript" / "figures" / "source_data"
 SRC_DIR2.mkdir(parents=True, exist_ok=True)
 
 sys.path.insert(0, str(ROOT / "scripts" / "analysis"))
 from _figstyle import apply_style, panel_label  # noqa: E402
 
-sys.path.insert(0, str(ROOT / "paper-salvage" / "figures"))
+sys.path.insert(0, str(ROOT / "manuscript" / "figures"))
 from _paper_encoding import DOMAIN_COLOR, ARCH_MARKER  # noqa: E402
 
 # same display-name / arch / domain mapping used in fig1_full22_two_panel.py

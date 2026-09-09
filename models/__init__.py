@@ -19,3 +19,11 @@ try:
     WRAPPER_MAP["evo1"] = Evo1Wrapper
 except ImportError:
     pass
+
+# Caduceus wrapper depends on `mamba_ssm` (compiled CUDA extension), only
+# installed in the dedicated `caduceus` conda env. Import lazily.
+try:
+    from .caduceus_wrapper import CaduceusWrapper
+    WRAPPER_MAP["caduceus"] = CaduceusWrapper
+except ImportError:
+    pass

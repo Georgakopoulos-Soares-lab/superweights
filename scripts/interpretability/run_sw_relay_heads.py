@@ -269,7 +269,7 @@ def run_relay_assay(model_name: str, top_k: int, n_rand_ablations: int,
 
     print(f"\n[relay:{model_name}] sw_layer={sw_layer}  sw_row={sw_row}")
 
-    from probes.dna_probes import get_probe
+    from src.dna_probes import get_probe
     seq = get_probe(probe)
 
     print(f"[relay:{model_name}] loading model …")

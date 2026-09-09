@@ -67,14 +67,14 @@ matched-norm arms.
 
 | What | Path |
 |---|---|
-| The decision itself | `paper-salvage/docs/DECISIONS.md` D-024 |
-| Updated claims | `paper-salvage/docs/CLAIMS_LEDGER.md` (C-001, C-020→X-008/C-041, C-021→X-008/C-042, C-029→X-009, C-036–C-040, C-043) |
-| Constraint annotations | `paper-salvage/CLAUDE.md` §B |
+| The decision itself | `manuscript/docs/DECISIONS.md` D-024 |
+| Updated claims | `manuscript/docs/CLAIMS_LEDGER.md` (C-001, C-020→X-008/C-041, C-021→X-008/C-042, C-029→X-009, C-036–C-040, C-043) |
+| Constraint annotations | `manuscript/CLAUDE.md` §B |
 | Updated findings summary | `README.md` §"Mechanism session findings (Aug 2026)" |
-| Residual open item | `paper-salvage/docs/CLAIMS_LEDGER.md` N-013 (2026-08-17 update) |
+| Residual open item | `manuscript/docs/CLAIMS_LEDGER.md` N-013 (2026-08-17 update) |
 
 Everything from the prior seven sessions is unchanged except where D-024 explicitly updates
-it — see `paper-salvage/docs/PROJECT_STATUS.md`'s session log.
+it — see `manuscript/docs/PROJECT_STATUS.md`'s session log.
 
 ## 5. What this session did NOT do (deliberately)
 
@@ -111,7 +111,7 @@ cd /work/11034/atzanakak/glm_super_weight/genomic-super-weights
 git branch --show-current   # should be integrate/mechanism-and-negative-results
 
 # verify all five prereg locks still hold
-python3 paper-salvage/src/prereg_lock.py verify --all
+python3 manuscript/src/prereg_lock.py verify --all
 ```
 
 ## 8. Environment traps (unchanged from prior sessions)
@@ -121,7 +121,7 @@ python3 paper-salvage/src/prereg_lock.py verify --all
   REQUESTS_CA_BUNDLE` for any `huggingface_hub` network call.
 - Live `git fetch` fails non-interactively in this environment (no askpass, no cached
   credentials) — pre-existing `refs/remotes/origin/*` are reliable and fully walkable.
-- `paper-salvage/results/` is gitignored via the `results/` pattern — use `git add -f`.
+- `manuscript/results/` is gitignored via the `results/` pattern — use `git add -f`.
 - Background shell `cd` does not persist across separate Bash tool calls; always
   `cd <absolute path> &&` at the start of every background command.
 - No LaTeX toolchain on this node.

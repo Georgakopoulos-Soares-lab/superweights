@@ -64,9 +64,9 @@ import yaml
 import torch
 from pathlib import Path
 
-from probes.dna_probes import get_probe
-from detection.sweep import sweep
-from detection.identify_spikes import find_spike_layer, extract_coords
+from src.dna_probes import get_probe
+from src.sweep import sweep
+from src.identify_spikes import find_spike_layer, extract_coords
 from models import WRAPPER_MAP
 
 

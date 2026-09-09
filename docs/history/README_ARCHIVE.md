@@ -118,14 +118,14 @@ new scripts under [`results/mechanism/`](results/mechanism/) and `scripts/mechan
 **Status (updated 2026-08-17):** the raw JSON/CSV/PNG outputs behind these reports are still
 not committed to this repository (only the `.md` reports and the `.py` scripts that would
 produce them were pushed) — see
-[`paper-salvage/docs/MISSING_COLLEAGUE_ARTIFACTS.md`](paper-salvage/docs/MISSING_COLLEAGUE_ARTIFACTS.md)
+[`manuscript/docs/MISSING_COLLEAGUE_ARTIFACTS.md`](manuscript/docs/MISSING_COLLEAGUE_ARTIFACTS.md)
 for the recovery checklist. **The findings themselves are adopted as established results**,
 per explicit author decision
-([`paper-salvage/docs/DECISIONS.md`](paper-salvage/docs/DECISIONS.md) D-024) — recovering the
+([`manuscript/docs/DECISIONS.md`](manuscript/docs/DECISIONS.md) D-024) — recovering the
 raw artifacts remains desirable for independent reproducibility but is no longer a
 precondition for citing these numbers. Full provenance audit and per-claim evidence table:
-[`paper-salvage/docs/COLLEAGUE_BRANCH_AUDIT.md`](paper-salvage/docs/COLLEAGUE_BRANCH_AUDIT.md);
-enacted claim rows: `paper-salvage/docs/CLAIMS_LEDGER.md` C-036–C-043.
+[`manuscript/docs/COLLEAGUE_BRANCH_AUDIT.md`](manuscript/docs/COLLEAGUE_BRANCH_AUDIT.md);
+enacted claim rows: `manuscript/docs/CLAIMS_LEDGER.md` C-036–C-043.
 
 ### What we established
 
@@ -985,7 +985,7 @@ Output: per-sequence Spearman ρ, aggregate t-tests by genomic context, overlay 
 > **⚠ SUPERSEDED 2026-08-17.** This whole section (layer 2 / row 1927, including the
 > `r = −0.710` write-direction-convention resolution below) was detected with a mismatched
 > eukaryotic probe (`--probe human_promoter` against the prokaryote model) and is retired —
-> see `paper-salvage/docs/CLAIMS_LEDGER.md` `X-008`, `paper-salvage/docs/DECISIONS.md` D-024.
+> see `manuscript/docs/CLAIMS_LEDGER.md` `X-008`, `manuscript/docs/DECISIONS.md` D-024.
 > **The corrected super-weight is layer 8 / row 260** (rank 1/3072, content-invariant,
 > out_max=30,167.07): the corrected hexamer causal test finds **no** sign relationship at all
 > (Spearman ρ=+0.0007, p=0.96) — the sign-convention question this section resolves does not

@@ -65,7 +65,7 @@ import numpy as np, torch
 from scipy import stats  # noqa: F401  (kept for parity with the sibling scripts)
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "paper-salvage/experiments/E10_nlp_architecture_causal"))
+sys.path.insert(0, str(ROOT / "manuscript/experiments/E10_nlp_architecture_causal"))
 import e10_lib as L  # noqa: E402
 
 OUT = ROOT / "results/paper_closing"

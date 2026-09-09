@@ -13,10 +13,10 @@ import json
 import yaml
 from pathlib import Path
 
-from probes.dna_probes import get_probe
-from detection.iterative_finder import find_all_super_weights
-from detection.sweep import sweep
-from analysis.visualize_activations import plot_activation_profile
+from src.dna_probes import get_probe
+from src.iterative_finder import find_all_super_weights
+from src.sweep import sweep
+from src.visualize_activations import plot_activation_profile
 from models import WRAPPER_MAP
 
 

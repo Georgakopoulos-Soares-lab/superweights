@@ -9,10 +9,10 @@ section by section, reported after each. GATED sections wait for explicit go-ahe
 
 ### 0a. Inventory of untracked root-level / one-level-down `.md`/`.txt`/`.tex`
 
-**On `"source_of _truth.md"` vs `paper-salvage/docs/MANUSCRIPT_SOURCE_OF_TRUTH.md`**:
+**On `"source_of _truth.md"` vs `manuscript/docs/MANUSCRIPT_SOURCE_OF_TRUTH.md`**:
 diffed — **not duplicates**. The root file (12.3KB, first line `# Claude Code Prompt —
 Build the Manuscript Source-of-Truth Package`) is the *prompt* used to generate the
-99.5KB doc under `paper-salvage/docs/`. Classified as SCRATCH, alongside the other
+99.5KB doc under `manuscript/docs/`. Classified as SCRATCH, alongside the other
 `*_prompt.md` files, not as a stale copy of the evidence doc.
 
 | file | size | mtime | classification | reasoning |
@@ -28,13 +28,13 @@ Build the Manuscript Source-of-Truth Package`) is the *prompt* used to generate 
 | `part13b_prompt.md` | 10.1KB | 08-25 | SCRATCH | Later draft of the same task prompt (superseded by `e13_prompt.md`) |
 | `prompt.md` | 2.4KB | 08-23 | SCRATCH | One-off "update figures" instruction |
 | `source_of _truth.md` | 12.3KB | 08-23 | SCRATCH | Confirmed via diff: the prompt that built `MANUSCRIPT_SOURCE_OF_TRUTH.md`, not a duplicate of it |
-| `INVENTORY.md` | 11.3KB | 08-23 | **UNCLEAR** | Real technical content (function/line-number map of `spectral_lib.py` etc.) written as a one-off orientation note per `e_11_e_12_prompt.md §0`. Useful reference, but a root-level orphan relative to `paper-salvage/docs/`. |
+| `INVENTORY.md` | 11.3KB | 08-23 | **UNCLEAR** | Real technical content (function/line-number map of `spectral_lib.py` etc.) written as a one-off orientation note per `e_11_e_12_prompt.md §0`. Useful reference, but a root-level orphan relative to `manuscript/docs/`. |
 | `manuscript.txt` | 38.6KB | 06-25 | EVIDENCE | The actual manuscript text |
 | `previous_main.tex` | 43.2KB | 06-25 | **UNCLEAR** | A prior LaTeX version of the manuscript. Could be a deliberately retained historical baseline or superseded scratch — no signal either way in the file itself. |
 | `PART1_STRUCTURAL_MANUSCRIPT_PACKET.md` | 11.1KB | 08-25 | EVIDENCE | Cited extensively by the prior audit (Section 2's Fig 1 verification) |
 | `PART2_EVIDENCE_PACKET.md` | 18.5KB | 08-25 | EVIDENCE | Cited extensively by the prior audit (Section 2's whole-cohort verification) |
-| `reports/single_neuron_pilot_dnabert2.md` | 29.9KB | 08-01 | EVIDENCE | Referenced by tracked `paper-salvage/docs/NEW_DIRECTION_EVIDENCE_AUDIT.md`; supporting scripts (`scripts/interpretability/neuron_pilot_common.py` etc.) still in repo — cited, live evidence, not an orphan |
-| `paper-salvage/docs/MANUSCRIPT_SOURCE_OF_TRUTH.md` | 99.5KB | 08-23 | EVIDENCE | Authoritative claims doc |
+| `reports/single_neuron_pilot_dnabert2.md` | 29.9KB | 08-01 | EVIDENCE | Referenced by tracked `manuscript/docs/NEW_DIRECTION_EVIDENCE_AUDIT.md`; supporting scripts (`scripts/interpretability/neuron_pilot_common.py` etc.) still in repo — cited, live evidence, not an orphan |
+| `manuscript/docs/MANUSCRIPT_SOURCE_OF_TRUTH.md` | 99.5KB | 08-23 | EVIDENCE | Authoritative claims doc |
 
 **3 UNCLEAR items awaiting author decision**: `e10_prompt_correction.md`, `INVENTORY.md`,
 `previous_main.tex`. Not acted on.
@@ -859,8 +859,8 @@ but currently mechanistically unexplained split.
 **Correction, flagged unprompted: two of the seven original rows were not independent
 findings of this project at all.** The original pass in this section treated Phi-3's
 6-row basis and 3 of OLMo's 3 recorded coordinates as evidence this audit's detectors had
-independently produced. Checking provenance (`paper-salvage/experiments/
-E10_nlp_architecture_causal/DECODER_INTERVENTION_FREEZE.md`, `paper-salvage/experiments/
+independently produced. Checking provenance (`manuscript/experiments/
+E10_nlp_architecture_causal/DECODER_INTERVENTION_FREEZE.md`, `manuscript/experiments/
 E9_mechanistic_tomography/BASIS_FREEZE.md`) shows that is wrong for Phi-3 and partly wrong
 for OLMo:
 
