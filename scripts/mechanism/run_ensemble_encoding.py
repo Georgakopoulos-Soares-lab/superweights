@@ -194,7 +194,16 @@ def read_windows(fasta, bed, n, win_bp, rng):
 def run_sae_mode(args):
     from models import WRAPPER_MAP
     sys.path.insert(0, str(ROOT))
-    from sae.model import BatchTopKSAE
+    try:
+        from sae.model import BatchTopKSAE
+    except ModuleNotFoundError as e:  # pragma: no cover
+        raise SystemExit(
+            "--mode sae needs the sparse-autoencoder package, which was removed from this "
+            "repository on 2026-09-09. Its PROK result is withdrawn (README retraction 6), so "
+            "the tooling is not needed to reproduce any reported number. Recover it with "
+            "`git log --diff-filter=D --name-only -- sae/` and `git show <commit>^:sae/model.py`. "
+            "Every other mode of this script works without it."
+        ) from e
 
     feats = json.loads(Path(args.feature_json).read_text())["per_feature"]
     sel = [f for f in feats if f["r_with_sw"] is not None

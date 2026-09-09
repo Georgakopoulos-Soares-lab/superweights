@@ -129,6 +129,7 @@ signature, not a code bug.
   substitute corpus; see [`frozen_inputs/README.md`](frozen_inputs/README.md).
 * **hg38** — not committed (size). Place or symlink at `data/reference/hg38/hg38.fa`.
 * **GUE** — not committed. Point `$GUE_ROOT` at it.
+* Other large public inputs are documented rather than vendored: see [`data/README.md`](data/README.md).
 * **Checkpoints** — pinned Hugging Face revisions, listed per model in `audit/census_master.csv`.
 
 ### Commands
@@ -184,16 +185,16 @@ science changed. Observed reproduction errors are 1e-9 to 1e-6 relative.
 | `experiments/results/keep/` | Provenance-locked artifacts for E1 and E2 |
 | `pipelines/` | One idempotent runner per experiment group. **Start here to reproduce anything.** |
 | `scripts/paper_closing/` | Detector provenance, within-layer sweeps, BOS and attention analyses |
-| `scripts/mechanism/`, `scripts/compression/`, `scripts/diagnostics/` | Mechanism, quantisation, and super-row health-check tooling. Several produced the negative results behind the retractions above. |
+| `scripts/mechanism/`, `scripts/compression/`, `scripts/diagnostics/` | Mechanism, quantisation, and health-check tooling. Several produced the negative results behind the retractions above. |
+| `scripts/analysis/_figstyle.py` | The codified figure style, applied by every render script |
 | `scripts/detection/`, `scripts/evaluation/` | Super-row detection and GUE downstream evaluation |
-| `scripts/analysis/`, `scripts/interpretability/` | Analyses feeding the figures and the audit |
 | `src/` | Shared libraries: activation capture, ablation, spike detection, DNA probes |
 | `models/`, `configs/` | Per-model wrapper classes and YAML, loaded dynamically via `WRAPPER_MAP` |
 | `stubs/` | Import shims so models with heavy optional dependencies load without them (`mamba_ssm` for Caduceus, a HybriDNA config). Put on `sys.path` at runtime by `scripts/evaluation/run_gue_ablation.py`; not type stubs, despite the name. |
 | `audit/` | The verification record across three adversarial rounds. `census_master.csv` is the canonical census table (22 models × 44 columns); `round2/tables/` holds Supplementary S1–S5. See [`audit/README.md`](audit/README.md). |
 | `results/` | Artifacts. Gitignored by default; files backing a manuscript claim are force-added. |
 | `results/paper_closing/supplementary/` | Supplementary Tables S6–S7 |
-| `sae/` | Sparse-autoencoder tooling. Its PROK result is **withdrawn** (retraction 6); kept so the withdrawal is inspectable. |
+| `data/` | Small region and reference files. Large public inputs are documented, not vendored — see [`data/README.md`](data/README.md) |
 | `frozen_inputs/` | Content-hashed evaluation inputs |
 | `docs/` | The experiment map |
 | `tests/` | Includes a test that fails if the experiment map goes stale |
@@ -220,7 +221,13 @@ Stated plainly, because a reader will find them anyway:
    (`DECISIONS.md`, `CLAIMS_LEDGER.md`) and manuscript drafts that were removed in the same
    cleanup. They were kept because the figure manifest cites them as evidence; their onward
    references are stale. Everything they point at is in git history.
-6. **No licence file yet.** Add one before publication; the appropriate choice is the authors'.
+6. **Superseded experiment lines were removed, not just their prose.** E2 (Evo1 broadcast),
+   E4 (quantisation granularity), E5 and E6 (both superseded by E7's exact operator), the
+   sparse-autoencoder package, and the exploratory `scripts/analysis`/`scripts/interpretability`
+   trees are gone from the working tree. None is cited by the figure-provenance manifest or the
+   experiment map. `E5_dimensionality/dimensionality_lib.py` was retained because three
+   surviving audit table-builders import it. All of it is in git history.
+7. **No licence file yet.** Add one before publication; the appropriate choice is the authors'.
 
 ## Reference
 
