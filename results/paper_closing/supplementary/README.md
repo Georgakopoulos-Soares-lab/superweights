@@ -5,8 +5,8 @@ tab-separated with a single header row.
 
 | table | file | rows | source artifacts |
 |---|---|---|---|
-| **S5** | `table_S5_within_layer_activation_ratio_sweep.tsv` | 72 (36 per model) | `../within_model_slope.json`, `../within_model_slope_smollm2_1.7b.json` |
-| **S6** | `table_S6_smollm2_l7_interaction_and_geometry.tsv` | 12 (6 ablation + 6 geometry) | `../smollm2_second_row_epistasis.json`, `../smollm2_161_749_geometry.json` |
+| **S7** | `table_S6_within_layer_activation_ratio_sweep.tsv` | 72 (36 per model) | `../within_model_slope.json`, `../within_model_slope_smollm2_1.7b.json` |
+| **S7** | `table_S7_smollm2_l7_interaction_and_geometry.tsv` | 12 (6 ablation + 6 geometry) | `../smollm2_second_row_epistasis.json`, `../smollm2_161_749_geometry.json` |
 
 Regenerate both from the JSON artifacts with the snippet recorded in the commit that added
 them; no value here is transcribed by hand.

@@ -10,11 +10,11 @@ echo "[queue] waiting for Mistral-7B (PID 3979747) to finish..."
 tail --pid=3979747 -f /dev/null 2>/dev/null
 echo "[queue] Mistral-7B done, proceeding."
 
-source manuscript/experiments/E13_full_cohort_causal_census/env_cached.sh
+source experiments/frozen/E13_full_cohort_causal_census/env_cached.sh
 export HF_HUB_OFFLINE=1
 export HF_DATASETS_CACHE=/work/11034/atzanakak/ls6/huggingface/.hf-cache/datasets
 export HF_DATASETS_OFFLINE=1
-cd manuscript/experiments/E13_full_cohort_causal_census
+cd experiments/frozen/E13_full_cohort_causal_census
 
 for m in olmo genomeocean-4b qwen25-7b mosaicbert ntv3; do
   echo "[queue] starting $m at $(date)"

@@ -5,7 +5,7 @@ Left panel:  candidate q1 vs. 5 random same-layer controls (jittered points), al
 Right panel: candidate q1 vs. 5 top-norm-by-rank same-layer controls, same 22 models, same
              y-axis. The 7 models with a negative candidate-vs-topnorm gap are text-labeled.
 
-Style matches manuscript/figures/fig1_structural.py panel C (filled candidate marker +
+Style matches experiments/figures/fig1_structural.py panel C (filled candidate marker +
 5 small hollow-ring controls per model, one x-position per model), extended from 12 to the
 full 22-model cohort and split into two side-by-side panels sharing a y-axis.
 
@@ -22,7 +22,7 @@ same raw model-name strings):
 Output:
   audit/round2/figures/fig1c_full22_two_panel.{png,pdf}
   audit/round2/figures/fig1_panel_c_full22_source.csv
-  manuscript/figures/source_data/fig1_panel_c_full22_source.csv
+  experiments/figures/source_data/fig1_panel_c_full22_source.csv
 """
 from __future__ import annotations
 

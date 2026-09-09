@@ -24,7 +24,7 @@ import numpy as np, torch
 from scipy import stats
 
 ROOT = Path("/home/nvidia/superweights")
-D = ROOT / "manuscript/experiments/E12_generator_degradation_control"
+D = ROOT / "experiments/frozen/E12_generator_degradation_control"
 sys.path.insert(0, str(D))
 import run_bos_mediation as bm
 import e12_lib as e12

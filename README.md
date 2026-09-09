@@ -1,13 +1,16 @@
 # Structure is not mechanism
 
-### High-gain gated-FFN rows across text and genomic foundation models
+### Code and data for *"High-gain gated-FFN rows across text and genomic foundation models"*
 
-Code and artifacts for the manuscript of the same name. The project asks whether the
-"super weight" phenomenon reported in text LLMs recurs in genomic foundation models, and — the
-sharper question — whether a high-gain row's **structural** prominence tells you anything
-about its **causal** importance. Across a frozen 22-model census and focused mechanistic case
-studies, the answer is that structural geometry, functional criticality, and causal response
-complexity are three different things.
+This repository is the computational companion to the paper. It contains the code that
+produced every reported number, the artifacts those runs emitted, the figure pipeline, and
+the preregistrations — but **not the manuscript text**, which lives with the publication.
+
+The project asks whether the "super weight" phenomenon reported in text LLMs recurs in
+genomic foundation models, and — the sharper question — whether a high-gain row's
+**structural** prominence tells you anything about its **causal** importance. Across a frozen
+22-model census and focused mechanistic case studies, the answer is that structural geometry,
+functional criticality, and causal response complexity are three different things.
 
 ```
 STRUCTURAL GEOMETRY  !=  FUNCTIONAL CRITICALITY  !=  CAUSAL RESPONSE COMPLEXITY
@@ -15,16 +18,18 @@ STRUCTURAL GEOMETRY  !=  FUNCTIONAL CRITICALITY  !=  CAUSAL RESPONSE COMPLEXITY
 
 ---
 
-## For reviewers — start here
+## Start here
 
 | what | where |
 |---|---|
-| **Manuscript** | [`manuscript/actual_manuscript.md`](manuscript/actual_manuscript.md) and [`.tex`](manuscript/actual_manuscript.tex) — kept content-identical |
-| **Every experiment → its code → its artifacts** | [`docs/EXPERIMENT_MAP.md`](docs/EXPERIMENT_MAP.md) (20 experiments) |
+| **Every experiment → its code → its artifacts** | [`docs/EXPERIMENT_MAP.md`](docs/EXPERIMENT_MAP.md) — 20 experiments |
 | **Verify that map against this tree** | `python scripts/build_experiment_map.py` — exits non-zero if any script is missing |
-| **Panel-by-panel figure provenance** | [`manuscript/figures/FIGURE_PROVENANCE.md`](manuscript/figures/FIGURE_PROVENANCE.md) |
-| **What we withdrew and why** | [Retractions and rescopes](#retractions-and-rescopes) below — please read before citing any older number |
-| **Supplementary tables** | [`results/paper_closing/supplementary/`](results/paper_closing/supplementary/) |
+| **Panel-by-panel figure provenance** | [`experiments/figures/FIGURE_PROVENANCE.md`](experiments/figures/FIGURE_PROVENANCE.md) |
+| **Reproduce anything** | [`pipelines/`](pipelines/) — idempotent runners, GPU-parallel |
+| **Supplementary tables S1–S5** | [`audit/round2/tables/`](audit/round2/tables/) |
+| **Supplementary tables S6–S7** | [`results/paper_closing/supplementary/`](results/paper_closing/supplementary/) |
+| **Preregistrations (12, content-locked)** | [`experiments/docs/prereg/`](experiments/docs/prereg/) — `python experiments/src/prereg_lock.py verify --all` |
+| **What we withdrew and why** | [Retractions and rescopes](#retractions-and-rescopes) — please read before citing any older number |
 
 Every plotted number in Figures 1–4 is loaded programmatically from a raw artifact at render
 time; none is transcribed from prose. Where a narratively interesting number had no raw
@@ -43,7 +48,6 @@ artifact, the panel was not rendered rather than approximated.
 | Causal organization **differs by model**, and interaction sign is not fixed | DNABERT-2: two near-inert rows, joint epistasis **+2.0118**, held-out R² 0.888 (F3) vs 0.517 (F2). SmolLM2 L7: super-additive, sub-additive, and near-total **masking** all within one layer |
 | GENERator's effect is **position-localized at BOS**, and not direction-specific | restoring the BOS contribution rescues essentially all damage; a damage-matched random direction reproduces the GC phenotype |
 | Detector provenance is **closed for all 22 census rows** | 16 by the current rule; Llama-7B and Mistral-7B verified at global rank 1/131,072; OLMo-7B, DNABERT-2 and NTv3 characterised disagreements |
-
 ## Retractions and rescopes
 
 
@@ -101,6 +105,7 @@ artifact, the panel was not rendered rather than approximated.
     Specify "global argmax of the layer-relative ratio, accept if ≥5" as the **candidate
     detector** — reproducible and worth stating — and not as a claim about causal importance.
     Evidence: `results/paper_closing/EXP2_LEGACY_DETECTOR_RESOLUTION.md`.
+
 ## Reproducing
 
 ### Environments
@@ -128,35 +133,35 @@ signature, not a code bug.
 
 ### Commands
 
-Prefer the pipelines. Each one skips stages whose output already exists, so an interrupted
-run resumes and a finished one costs nothing; set `FORCE=1` to recompute.
+Prefer the pipelines. Each skips stages whose output already exists, so an interrupted run
+resumes and a finished one costs nothing; set `FORCE=1` to recompute.
 
 ```bash
-bash pipelines/fig5_within_layer.sh      # Figure 5: both within-layer sweeps, second row, geometry, plot
-bash pipelines/detector_provenance.sh    # EXP2: positive control first, then the three 7B decoders
-bash pipelines/census.sh                 # the frozen 22-model census (restartable; add slugs to subset)
+bash pipelines/fig5_within_layer.sh      # Fig 5: both within-layer sweeps, second row, geometry, plot
+bash pipelines/detector_provenance.sh    # positive control first, then the three 7B decoders
+bash pipelines/census.sh                 # the frozen 22-model census (restartable)
 bash pipelines/census.sh dnabert2 ntv3   # ...or just these
 ```
 
-Individual stages, if you want them directly:
+Individual stages:
 
 ```bash
 # structural panel and the causal census
-python manuscript/experiments/E11_scale_ladder/run_model.py --model <slug>
-python manuscript/experiments/E13_full_cohort_causal_census/run_singleton_census.py --model <slug>
+python experiments/frozen/E11_scale_ladder/run_model.py --model <slug>
+python experiments/frozen/E13_full_cohort_causal_census/run_singleton_census.py --model <slug>
 
 # detector provenance (self-validating: 4 gates from census_master.csv)
 python scripts/paper_closing/run_uniform_detector_text.py --model smollm2-1.7b   # harness check
 python scripts/paper_closing/run_detector_published_protocol.py --model olmo
 
-# within-layer sweeps (Figure 5)
+# within-layer sweeps
 python scripts/paper_closing/run_within_model_slope_text.py        # SmolLM2-1.7B, ~7 min, 1 GPU
 python scripts/paper_closing/run_smollm2_second_row_epistasis.py   # second critical row + masking
 python scripts/paper_closing/run_smollm2_row_geometry.py           # data-free, no GPU needed
 
 # mechanism case studies
-python manuscript/experiments/E9_mechanistic_tomography/run_fit_observers.py
-python manuscript/experiments/E12_generator_degradation_control/run_bos_mediation_main.py
+python experiments/frozen/E9_mechanistic_tomography/run_fit_observers.py
+python experiments/frozen/E12_generator_degradation_control/run_bos_mediation_main.py
 
 # two flags that are REQUIRED and silently wrong if omitted
 python scripts/detection/run_detection.py --model ntv3 --pad_to_multiple 256   # stride-256 U-Net
@@ -168,70 +173,54 @@ quantities (`baseline_loss`, `R_cand` at both ε, and the seeded control rows) a
 mismatch, on the principle that a gate failure means the harness is wrong rather than that the
 science changed. Observed reproduction errors are 1e-9 to 1e-6 relative.
 
-Preregistrations are content-locked; verify them with:
-
-```bash
-python manuscript/src/prereg_lock.py verify --all      # 12 documents, all OK
-```
-
 ## Repository layout
 
 | path | contents |
 |---|---|
-| `manuscript/` | The paper and everything that produced it: `actual_manuscript.md` / `.tex` (kept identical), `media/` (figure artwork), `figures/` (render scripts + `source_data/`), `docs/` (12 content-locked preregistrations, `DECISIONS.md`, `CLAIMS_LEDGER.md`), and the **frozen experiment harnesses** in `experiments/E1`–`E13`. *Frozen* means not edited to make later results come out differently. See [`manuscript/README.md`](manuscript/README.md) — it also records the non-obvious `imageN.png` → figure-number mapping. |
-| `manuscript/figures/` | Figure scripts, rendered output, and `source_data/` — the exact plotted values |
-| `pipelines/` | One idempotent runner per experiment group. Skips completed stages, parallelises over free GPUs. **Start here to reproduce anything.** |
-| `scripts/paper_closing/` | The closing round: detector provenance, within-layer sweeps, BOS and attention analyses |
+| `experiments/frozen/E1`–`E13` | The **frozen** experiment harnesses — the code that produced the census and the case studies. *Frozen* means not edited to make later results come out differently. |
+| `experiments/figures/` | The figure pipeline: render scripts, output, `source_data/` (the exact plotted values), and `FIGURE_PROVENANCE.md` |
+| `experiments/docs/prereg/` | 12 content-locked preregistrations, with the ledger and verifier |
+| `experiments/src/` | `prereg_lock.py` |
+| `experiments/results/keep/` | Provenance-locked artifacts for E1 and E2 |
+| `pipelines/` | One idempotent runner per experiment group. **Start here to reproduce anything.** |
+| `scripts/paper_closing/` | Detector provenance, within-layer sweeps, BOS and attention analyses |
 | `scripts/mechanism/`, `scripts/compression/`, `scripts/diagnostics/` | Mechanism, quantisation, and super-row health-check tooling. Several produced the negative results behind the retractions above. |
 | `scripts/detection/`, `scripts/evaluation/` | Super-row detection and GUE downstream evaluation |
 | `scripts/analysis/`, `scripts/interpretability/` | Analyses feeding the figures and the audit |
 | `src/` | Shared libraries: activation capture, ablation, spike detection, DNA probes |
 | `models/`, `configs/` | Per-model wrapper classes and YAML, loaded dynamically via `WRAPPER_MAP` |
-| `stubs/` | Import shims so models with heavy optional dependencies load without them — `mamba_ssm` (Caduceus) and a HybriDNA config. `scripts/evaluation/run_gue_ablation.py` puts this on `sys.path` at runtime; it is not type stubs, despite the name. |
-| `audit/` | The verification record across three adversarial rounds. `census_master.csv` is the canonical census table (22 models × 44 columns). Files here are retained even when uncited — see [`audit/README.md`](audit/README.md). |
-| `results/` | Artifacts. Gitignored by default; files backing a manuscript claim are force-added |
-| `results/paper_closing/supplementary/` | Supplementary Tables S5–S6 |
+| `stubs/` | Import shims so models with heavy optional dependencies load without them (`mamba_ssm` for Caduceus, a HybriDNA config). Put on `sys.path` at runtime by `scripts/evaluation/run_gue_ablation.py`; not type stubs, despite the name. |
+| `audit/` | The verification record across three adversarial rounds. `census_master.csv` is the canonical census table (22 models × 44 columns); `round2/tables/` holds Supplementary S1–S5. See [`audit/README.md`](audit/README.md). |
+| `results/` | Artifacts. Gitignored by default; files backing a manuscript claim are force-added. |
+| `results/paper_closing/supplementary/` | Supplementary Tables S6–S7 |
 | `sae/` | Sparse-autoencoder tooling. Its PROK result is **withdrawn** (retraction 6); kept so the withdrawal is inspectable. |
-| `docs/` | Experiment map, evidence packets, collaborator instructions — see [`docs/README.md`](docs/README.md) |
-| `docs/history/` | Superseded material, kept deliberately: the previous 1,443-line README, the removed-file inventory, old session notes, and the E2 run logs |
 | `frozen_inputs/` | Content-hashed evaluation inputs |
+| `docs/` | The experiment map |
 | `tests/` | Includes a test that fails if the experiment map goes stale |
-
-The layout was consolidated on 2026-09-09: 136 unused files were removed (mostly Slurm job
-scripts for a cluster this project no longer runs on), four single-module top-level packages
-were merged into `src/`, and `paper-salvage/` — a name that made no sense to anyone outside
-the project — became `manuscript/`. Inventory and rationale:
-[`docs/history/REMOVED_SCRIPTS.md`](docs/history/REMOVED_SCRIPTS.md).
 
 ## Provenance and known gaps
 
-Stated plainly, because a reviewer will find them anyway:
+Stated plainly, because a reader will find them anyway:
 
 1. **Some raw artifacts are not committed.** Several were produced on a TACC cluster and never
-   transferred; `docs/EXPERIMENT_MAP.md` marks the affected rows and points at the committed
-   figure source-data snapshot that carries the same plotted values. Inventory:
-   [`manuscript/docs/MISSING_COLLEAGUE_ARTIFACTS.md`](manuscript/docs/MISSING_COLLEAGUE_ARTIFACTS.md).
+   transferred. For every affected item the committed figure source-data snapshot under
+   `experiments/figures/source_data/` carries the plotted values, so each reported number
+   remains inspectable.
 2. **NTv3's original weight revision was not recorded** and is not recoverable. Resolved Hub
    commits exist for 21 of 22 models.
-3. **Supplementary Tables S1–S4 are described in the manuscript but not yet built as files.**
-   Their values live in `audit/census_master.csv` (S1–S3) and
-   `results/paper_closing/activation_vs_causality.tsv` (S4). S5 and S6 are built.
-4. **The manuscript's Data-availability commit hash is stale** and must be updated to the
-   submission commit before submission.
-5. **One n=10 subgroup is fragile.** The text-decoder correlation moves from ρ=0.770 to 0.673
+3. **One n=10 subgroup is fragile.** The text-decoder correlation moves from ρ=0.770 to 0.673
    under an OLMo coordinate substitution, with a CI lower bound of +0.032. It should not be
    reported as independently robust; the 22-model result is insensitive.
-
-## History
-
-This repository accreted across many sessions, including experiments that were later
-withdrawn. That history is kept rather than rewritten:
-
-* [`docs/history/README_ARCHIVE.md`](docs/history/README_ARCHIVE.md) — the full previous README
-* [`docs/history/REMOVED_SCRIPTS.md`](docs/history/REMOVED_SCRIPTS.md) — every file removed in the 2026-09-09 consolidation, the rule used, and how to retrieve any of them from git history
-* [`manuscript/docs/DECISIONS.md`](manuscript/docs/DECISIONS.md), `CLAIMS_LEDGER.md` — dated decisions and per-claim status
-* [`results/paper_closing/PAPER_CLOSING_REPORT.md`](results/paper_closing/PAPER_CLOSING_REPORT.md) — the closing round in full
-* [`results/mechanism/`](results/mechanism/) — the mechanism/negative-results session reports
+4. **The manuscript text is not in this repository.** Earlier revisions of it, and the internal
+   process documents, decision logs and session reports that accompanied its preparation, were
+   removed on 2026-09-09 to leave a repository that is only code, data, and provenance. All of
+   it remains in git history.
+5. **Some retained notes cite documents that are no longer here.** A number of per-experiment
+   `RESULTS.md` files and the figure-provenance manifest reference internal decision logs
+   (`DECISIONS.md`, `CLAIMS_LEDGER.md`) and manuscript drafts that were removed in the same
+   cleanup. They were kept because the figure manifest cites them as evidence; their onward
+   references are stale. Everything they point at is in git history.
+6. **No licence file yet.** Add one before publication; the appropriate choice is the authors'.
 
 ## Reference
 

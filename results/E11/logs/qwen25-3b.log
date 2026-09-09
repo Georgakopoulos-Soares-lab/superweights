@@ -1,20 +1,0 @@
-/work/11034/atzanakak/work/11034/atzanakak/miniconda3/envs/grlm/lib/python3.10/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-`torch_dtype` is deprecated! Use `dtype` instead!
-Verifying E11 prereg lock before any forward pass ...
-OK       PREREG_E11_scale_ladder.md  locked 2026-08-23T16:03:20+00:00
-loading Qwen/Qwen2.5-3B@3aab1f1954e9cc14eb9509a215f9e5ca08227a9b ...
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:10<00:10, 10.59s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:18<00:00,  8.75s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:18<00:00,  9.03s/it]
-  loaded in 21.0s on cuda, dtype=float32
-  gated-FFN verification (layer 0): gate_proj/up_proj/down_proj (separate SwiGLU-style projections)
-  input token count: 512
-  candidate layer=30 row=318 out_max=2634 ratio=425.06 ACCEPTED
-  total_params=3085938688 embed_params=311164928 non_embed=2774773760
-  candidate q1=0.817360 pr_spec=1.4394 frob_norm=37.9051
-  control rows (seeded, layer 30): [145, 218, 1437, 1453, 1579]
-    control row 145: q1=0.011001 pr_spec=635.6612 frob_norm=4.55694
-    control row 218: q1=0.011501 pr_spec=626.5787 frob_norm=4.56492
-    control row 1437: q1=0.011373 pr_spec=621.3472 frob_norm=4.62739
-    control row 1453: q1=0.011734 pr_spec=636.2202 frob_norm=4.33743
-    control row 1579: q1=0.090208 pr_spec=86.2405 frob_norm=2.67333
-wrote /work/11034/atzanakak/glm_super_weight/genomic-super-weights/results/E11/raw/qwen25-3b.json

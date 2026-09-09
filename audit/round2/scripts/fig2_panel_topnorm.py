@@ -2,7 +2,7 @@
 """Fig. 2, new panel D (round-2 Section 2): candidate vs. top-norm-control causal effect,
 both intervention strengths, full 22-model cohort.
 
-Standalone deliverable -- does NOT overwrite manuscript/figures/fig2_causal.py or its
+Standalone deliverable -- does NOT overwrite experiments/figures/fig2_causal.py or its
 output. Produces its own PNG/PDF in audit/round2/figures/.
 
 Plots causal_topk_gap = candidate relative-NLL-change minus median top-norm-control
@@ -19,7 +19,7 @@ Data: audit/round2/structural_vs_causal_gap.csv (44 rows = 22 models x 2 epsilon
 Output:
   audit/round2/figures/fig2_topnorm_panel.{png,pdf}
   audit/round2/figures/fig2_panel_d_source.csv
-  manuscript/figures/source_data/fig2_panel_d_source.csv
+  experiments/figures/source_data/fig2_panel_d_source.csv
 """
 from __future__ import annotations
 

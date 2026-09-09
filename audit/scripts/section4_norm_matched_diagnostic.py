@@ -17,11 +17,11 @@ import numpy as np
 import torch
 
 ROOT = Path(__file__).resolve().parents[2]
-E11_DIR = ROOT / "manuscript/experiments/E11_scale_ladder"
-E5_DIR = ROOT / "manuscript/experiments/E5_dimensionality"
+E11_DIR = ROOT / "experiments/frozen/E11_scale_ladder"
+E5_DIR = ROOT / "experiments/frozen/E5_dimensionality"
 sys.path.insert(0, str(E11_DIR))
 sys.path.insert(0, str(E5_DIR))
-sys.path.insert(0, str(ROOT / "manuscript/experiments/E7_exact_dimensionality"))
+sys.path.insert(0, str(ROOT / "experiments/frozen/E7_exact_dimensionality"))
 
 import run_model as rm  # noqa: E402
 from dimensionality_lib import exact_uk_all_rows  # noqa: E402

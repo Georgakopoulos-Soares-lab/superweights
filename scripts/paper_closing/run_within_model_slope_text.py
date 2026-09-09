@@ -47,7 +47,7 @@ import numpy as np, torch
 from scipy import stats
 
 ROOT = Path("/home/nvidia/superweights")
-sys.path.insert(0, str(ROOT / "manuscript/experiments/E10_nlp_architecture_causal"))
+sys.path.insert(0, str(ROOT / "experiments/frozen/E10_nlp_architecture_causal"))
 import e10_lib as L  # noqa: E402
 
 OUT = ROOT / "results/paper_closing"

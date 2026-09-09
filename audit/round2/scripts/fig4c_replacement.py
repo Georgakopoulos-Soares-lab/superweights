@@ -25,7 +25,7 @@ section1_final_plots.py; read directly, not recomputed).
 Output:
   audit/round2/figures/fig4c_replacement.{png,pdf}
   audit/round2/figures/fig4_panel_c_source.csv
-  manuscript/figures/source_data/fig4_panel_c_source.csv
+  experiments/figures/source_data/fig4_panel_c_source.csv
 """
 from __future__ import annotations
 

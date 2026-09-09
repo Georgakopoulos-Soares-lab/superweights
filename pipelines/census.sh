@@ -8,7 +8,7 @@
 #
 # Usage:  bash pipelines/census.sh [model-slug ...]     (default: all)
 source "$(dirname "$0")/_lib.sh"
-CENSUS=manuscript/experiments/E13_full_cohort_causal_census/run_singleton_census.py
+CENSUS=experiments/frozen/E13_full_cohort_causal_census/run_singleton_census.py
 ALL=(llama mistral olmo qwen25-7b mosaicbert modernbert-base ntv3 dnabert2 generator-euk-3b
      genomeocean-4b qwen25-0.5b qwen25-1.5b qwen25-3b smollm2-135m smollm2-360m smollm2-1.7b
      generator-prok-1.2b generator-prok-3b eurobert-210m eurobert-610m eurobert-2.1b
@@ -21,5 +21,5 @@ log "census: ${#MODELS[@]} model(s)"
   done
 } | parallel_stage "${WORKERS:-4}"
 stage results/E13/part2_22_model_results.csv census_compile "$PY_GENERATOR" \
-      manuscript/experiments/E13_full_cohort_causal_census/compile_census.py
+      experiments/frozen/E13_full_cohort_causal_census/compile_census.py
 log "done"
