@@ -38,7 +38,7 @@ To determine whether this spectral concentration was locally distinctive, we com
 
 This comparison alone, however, does not establish that spectral concentration is distinctive independently of operator magnitude. The random controls carried only 3–8% of the candidate’s Frobenius norm, motivating a stricter comparison with the five highest-Frobenius-norm same-layer rows after excluding the candidate. For this stricter comparison, we defined the top-norm margin as candidate q₁ minus the largest q₁ among those five neighbours, asking whether even the most spectrally concentrated high-norm alternative remained less concentrated than the candidate. Across the cohort, these controls carried 3.9–133.3% of the candidate’s Frobenius norm (median 21.7%). In GENERator-PROK-1.2B, two controls exceeded the candidate’s norm, making it the only model in which the candidate was not the strict highest-norm row in its layer. The median top-norm margin across models was only 0.014, and in 7 of 22 models at least one high-norm neighbour was more concentrated than the candidate (SmolLM2-360M[19], EuroBERT-210M, EuroBERT-2.1B, ModernBERT-large[17], DNABERT-2, GENERator-EUK-3B, and GenomeOcean-4B; Fig. 1C, bottom). The transferable structural result is therefore narrower: high-gain candidates are unusually large and often highly concentrated, but their spectral concentration is generally not distinctive relative to the strongest available same-layer alternatives.
 
-![](image6.png)
+![](media/image6.png)
 
 Figure 1. Structural properties of high-gain gated-FFN rows. (A) Retrospective diagonal-proxy calibration for the published super-weight-containing rows in Llama-7B, Mistral-7B, and OLMo-7B. (B) Spectral concentration q₁ across the 23-model structural panel; the Phi-3 value is the median across its six frozen rows. Evo2-7B did not pass the predefined activation-ratio threshold and is shown without a q₁ value. (C) Candidate q₁ compared with five random same-layer controls (left) and the five highest-Frobenius-norm rows in the same layer after excluding the candidate in the same layer (right). The random-control gap is candidate q₁ minus the mean control q₁; the top-norm margin is candidate q₁ minus the maximum control q₁.
 
@@ -70,7 +70,7 @@ Taken together, the singleton census narrows the relationship between structure 
 
 The census deliberately tests one primary row at a time and therefore cannot determine how multiple high-gain components combine. In particular, a row with a small singleton effect could still participate in a strongly interaction-dependent system. We therefore treat singleton functional criticality and multi-component causal response complexity as separate questions and examine the latter only in focused mechanistic case studies.
 
-![](image1.png)
+![](media/image1.png)
 
 Figure 2. Causal effects of frozen high-gain candidates across the 22-model census. (A) Signed relative native-loss change after partial suppression (ε = 0.5) for each candidate and five random same-layer controls. (B) Corresponding effects under full ablation (ε = 1.0). Diamonds denote candidates, grey points individual controls, and horizontal bars within-model control medians. (C) Candidate spectral concentration q₁ versus signed full-ablation native-loss effect. (D) Candidate-minus-median-top-norm-control causal gap at both intervention strengths. Symmetric-log axes are used where necessary to display negative, near-zero, and large positive effects on the same scale.
 
@@ -84,7 +84,7 @@ Pairwise terms substantially improved held-out prediction at both intervention s
 
 The directly measured L9/r264–L9/r294 interaction also re-emerged without being privileged during model fitting. Among all 45 pairwise F3 coefficients, this pair ranked first by absolute coefficient at both ε = 0.5 and ε = 1.0 (Fig. 3D). Thus, the same interaction identified by direct joint ablation was independently recovered as the dominant pairwise term in the held-out tomography analysis. DNABERT-2 therefore provides a robust example of a high-gain system whose finite-intervention response is genuinely interaction-dependent on the pretrained masked-language-model objective.
 
-![](image3.png)
+![](media/image3.png)
 
 **Figure 3. DNABERT-2 multi-row causal-response analysis. (A) Full-ablation effects of L9/r264 and L9/r294 individually and jointly. (B) Pairwise epistasis at ε = 0.5 and ε = 1.0, defined as the joint effect minus the sum of the singleton effects; these measurements come from a standalone direct pair-ablation experiment. (C) Held-out predictive performance of observer families F0–F3 across multi-row intervention conditions. (D) Fitted F3 pairwise interaction coefficients across all 45 row pairs.**
 
@@ -104,7 +104,7 @@ The compositional shift was also not dominated by a single trivial sequence arti
 
 Together, the DNABERT-2 and GENERator case studies illustrate distinct causal organizations underlying high-gain structure. DNABERT-2 exhibits strong pairwise dependence on its pretrained masked-language-model objective, such that individually weak rows become consequential when perturbed jointly. GENERator instead exhibits sharply position-localized dependence: essentially the entire native-loss effect of row L4/r2371 is mediated through its contribution at BOS, with restoration at a matched non-BOS position providing no rescue. The complementary random-direction experiment further shows that the associated compositional phenotype does not require preservation of the learned row direction under comparably severe damage. These qualitatively different mechanisms reinforce the central conclusion that structural prominence does not specify a universal causal organization.
 
-![](image7.png)
+![](media/image7.png)
 
 **Figure 4. Beginning-of-sequence mediation of GENERator EUK row L4/r2371. (A) Spectral concentration q₁ of row L4/r2371. (B) Beginning-of-sequence attention and activation measurements at position 0; these measurements establish co-localization but do not test whether the row causes the attention sink. (C) Native language-model loss under intact, full-ablation, BOS-only ablation, BOS-preservation, BOS-restoration, and matched non-BOS-restoration interventions. Removing the row contribution only at BOS reproduced nearly all full-ablation damage, whereas preserving or restoring the BOS contribution produced approximately complete rescue; restoration at the matched non-BOS position produced essentially none. (D) Generated GC fraction under the same position-specific interventions. Error intervals denote paired 95% bootstrap intervals.**
 
@@ -118,7 +118,7 @@ Pooled across all 36 rows, ratio and relative native-loss increase were positive
 
 We report this partition as exploratory. The split point is the detector’s acceptance threshold, which was fixed before these measurements and not fitted to them, but the decision to analyze the two regimes separately followed inspection of the swept data. The consistent reading across both domains is that the activation ratio acts as a detector and, above its own threshold, as an ordering, but not as a dose-response measure of severity. This is the within-model counterpart of the cohort-level dissociation reported above, and it supports rather than revises the description of structural prominence as an enrichment signal.
 
-![](image8.png)
+![](media/image8.png)
 
 Figure 5. Within a single layer, activation ratio detects and orders high-gain rows but does not grade their severity. Relative native-loss increase after ablating a single down-projection row (α = 0), plotted against that row’s layer-relative activation ratio, for 36 rows log-spaced by ratio rank within one layer. (A) GENERator-EUK-3B layer 4 (genomic decoder; frozen candidate r2371, star). (B) SmolLM2-1.7B layer 7 (text decoder; frozen candidate r227, star). Rows were selected by activation ratio alone and never by causal outcome. Both axes are logarithmic, with the vertical axis symmetric-log below 10⁻⁵ so that negative, near-zero, and large positive effects appear on the same scale. Shading marks the detector’s acceptance region (ratio ≥ 5). Inset Spearman coefficients are computed over all rows, over rows excluding the frozen candidate, over sub-threshold rows only, and over supra-threshold rows only; the last is an exploratory partition. n = 36 rows per panel, of which 21 fall below and 15 at or above the acceptance threshold.
 
@@ -316,7 +316,7 @@ The authors declare no competing interests.
 
 <w:left w:space="0" w:sz="0" w:val="nil"/><w:bottom w:space="0" w:sz="0" w:val="nil"/><w:right w:space="0" w:sz="0" w:val="nil"/><w:between w:space="0" w:sz="0" w:val="nil"/></w:pBdr><w:shd w:fill="auto" w:val="clear"/><w:spacing w:after="60" w:before="0" w:line="276" w:lineRule="auto"/><w:ind w:left="360" w:right="0" w:hanging="360"/><w:jc w:val="both"/><w:rPr><w:sz w:val="19"/><w:szCs w:val="19"/></w:rPr></w:pPr><w:r w:rsidDel="00000000" w:rsidR="00000000" w:rsidRPr="00000000"><w:rPr><w:sz w:val="19"/><w:szCs w:val="19"/><w:rtl w:val="0"/></w:rPr><w:t xml:space="preserve">21. Schneider VA, Graves-Lindsay T, Howe K, et al. Evaluation of GRCh38 and de novo haploid genome assemblies demonstrates the enduring quality of the reference assembly. Genome Research 27, 849–864 (2017).
 
-![](image4.png)
+![](media/image4.png)
 
 **Supplementary Figure S1. Structural and causal control detail.**
 
@@ -324,7 +324,7 @@ The authors declare no competing interests.
 
 Supplementary Note S1. Phi-3 finite-intervention tomography.The F0–F3 observer-family progression was also applied to the pre-frozen six-row Phi-3 basis shown in Supplementary Fig. S1A. No third-order model was fit. The full-ablation response is therefore treated as unresolved rather than modeled with higher-order terms after observing the data, and the Phi-3 tomography result is not used to support any main-text cohort claim.
 
-![](image2.png)
+![](media/image2.png)
 
 Supplementary Figure S2. Damage-matched random-direction analysis of GENERator EUK row L4/r2371. Left: generated GC fraction across scales of one fixed random unit direction replacing the learned row-2371 weight vector. Right: generated GC fraction versus native-loss damage for the row-2371 scale sweep, five non-2371 control rows, and the fixed random-direction replacement sweep. The experiment tests whether the compositional phenotype requires preservation of the learned row direction; even the largest random replacement remained substantially damaging.
 

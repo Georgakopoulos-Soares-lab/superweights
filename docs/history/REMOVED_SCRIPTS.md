@@ -194,3 +194,26 @@ content is the Python they invoked, which is retained wherever a claim depends o
 - `run_train_euk_v5.sbatch`
 - `run_train_sae.sbatch`
 - `run_train_sae.sh`
+
+---
+
+## Non-code removals (same date)
+
+Also removed from the working tree, and likewise recoverable from git history:
+
+| path | size | why |
+|---|---|---|
+| `docs/superweight_paper.txt` | 889 lines | A full text dump of Yu et al. 2024, *The Super Weight in Large Language Models*. A third-party preprint should be cited (arXiv:2411.07191), not redistributed in the repository. |
+| `docs/history/superseded_draft/` | 2.7 MB | The earlier manuscript (`main.tex`, `main_old.tex`) under its previous title, "A Structural Predictor of Super-Weights", plus its figure artwork. No current claim depends on it, and its presence alongside `manuscript/` invited confusion about which document is the paper. |
+
+## Deliberately NOT removed, despite looking redundant
+
+* **`audit/`** — three rounds of independent re-derivation of the same quantities. Most
+  top-level files there are cited by nothing current; that is what an audit trail looks like.
+* **`results/sw_broadcast_impulse.json` and its copy under `manuscript/results/keep/`** — an
+  18.5 MB artifact tracked twice. The root path is what several live scripts read; the `keep/`
+  copy is provenance-locked. Removing either breaks something.
+* **`results/sw_broadcast_impulse_PRE_D011_fixed_eps.json`** — the pre-fix version of that
+  artifact, retained as evidence of the correction.
+* **Python analyses under `scripts/{compression,mechanism,detection,evaluation,diagnostics}`**
+  — several produced the negative results behind the retraction items.

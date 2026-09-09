@@ -14,9 +14,10 @@ env/
 .ruff_cache/
 .ipynb_checkpoints/
 
-# Logs
+# Logs. The E2 run logs under docs/history/ are evidence and stay tracked.
 logs/
 *.log
+!docs/history/e2_logs/*.log
 
 # Experiment/results outputs (force-add key files with git add -f)
 results/
@@ -35,6 +36,11 @@ token_cache/
 # Weights & Biases
 wandb/
 
+# Merge/patch debris
+*.orig
+*.rej
+*.bak
+
 # OS/editor files
 .DS_Store
 Thumbs.db
@@ -46,7 +52,7 @@ Thumbs.db
 .env.*
 
 # Round-2 audit hygiene (2026-08-26): loose prompt/scratch files at repo root.
-# Copies preserved in paper-salvage/docs/history/prompts/. Explicit, not
+# Copies preserved in manuscript/docs/history/prompts/. Explicit, not
 # globbed -- avoids ever catching a future docs/*prompt*.md.
 /check_prompt.md
 /audit_2_prompt.md
@@ -59,3 +65,6 @@ Thumbs.db
 /prompt.md
 /source_of _truth.md
 /INVENTORY.md
+
+# Pipeline stage logs (results/ is already ignored; listed so the path is discoverable)
+results/pipeline_logs/

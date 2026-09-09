@@ -1,3 +1,9 @@
+> **Status (2026-09-09): historical.** This file's *hard constraints on claims* remain worth
+> reading — they encode specific errors that made earlier versions unpublishable. Its *thesis*
+> is superseded. The current thesis, retractions, and per-claim status live in
+> `../README.md` (repo root), `docs/DECISIONS.md`, and `docs/CLAIMS_LEDGER.md`. Do not treat
+> the thesis statement below as current.
+
 # CLAUDE.md — operating rules for this folder (v2, 2026-08-13)
 
 You are working on the salvage and restructure of a manuscript on super-weights in genomic

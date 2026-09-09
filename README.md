@@ -178,7 +178,7 @@ python manuscript/src/prereg_lock.py verify --all      # 12 documents, all OK
 
 | path | contents |
 |---|---|
-| `manuscript/` | The paper (`actual_manuscript.md` / `.tex`), its `figures/`, its `docs/` including the preregistrations, and the **frozen experiment harnesses** in `experiments/E1`–`E13`. *Frozen* means not edited to make later results come out differently. |
+| `manuscript/` | The paper and everything that produced it: `actual_manuscript.md` / `.tex` (kept identical), `media/` (figure artwork), `figures/` (render scripts + `source_data/`), `docs/` (12 content-locked preregistrations, `DECISIONS.md`, `CLAIMS_LEDGER.md`), and the **frozen experiment harnesses** in `experiments/E1`–`E13`. *Frozen* means not edited to make later results come out differently. See [`manuscript/README.md`](manuscript/README.md) — it also records the non-obvious `imageN.png` → figure-number mapping. |
 | `manuscript/figures/` | Figure scripts, rendered output, and `source_data/` — the exact plotted values |
 | `pipelines/` | One idempotent runner per experiment group. Skips completed stages, parallelises over free GPUs. **Start here to reproduce anything.** |
 | `scripts/paper_closing/` | The closing round: detector provenance, within-layer sweeps, BOS and attention analyses |
@@ -187,13 +187,13 @@ python manuscript/src/prereg_lock.py verify --all      # 12 documents, all OK
 | `scripts/analysis/`, `scripts/interpretability/` | Analyses feeding the figures and the audit |
 | `src/` | Shared libraries: activation capture, ablation, spike detection, DNA probes |
 | `models/`, `configs/` | Per-model wrapper classes and YAML, loaded dynamically via `WRAPPER_MAP` |
-| `stubs/` | Import shims for optional dependencies (`mamba_ssm`, HybriDNA config) |
-| `audit/` | `census_master.csv` (22 models × 44 columns), detector provenance, and the round-2 audit |
+| `stubs/` | Import shims so models with heavy optional dependencies load without them — `mamba_ssm` (Caduceus) and a HybriDNA config. `scripts/evaluation/run_gue_ablation.py` puts this on `sys.path` at runtime; it is not type stubs, despite the name. |
+| `audit/` | The verification record across three adversarial rounds. `census_master.csv` is the canonical census table (22 models × 44 columns). Files here are retained even when uncited — see [`audit/README.md`](audit/README.md). |
 | `results/` | Artifacts. Gitignored by default; files backing a manuscript claim are force-added |
 | `results/paper_closing/supplementary/` | Supplementary Tables S5–S6 |
 | `sae/` | Sparse-autoencoder tooling. Its PROK result is **withdrawn** (retraction 6); kept so the withdrawal is inspectable. |
-| `docs/` | Experiment map, evidence packets, collaborator instructions |
-| `docs/history/` | Superseded material, kept deliberately: the previous 1,443-line README, the earlier draft under its old title, removed-script inventory, old session notes |
+| `docs/` | Experiment map, evidence packets, collaborator instructions — see [`docs/README.md`](docs/README.md) |
+| `docs/history/` | Superseded material, kept deliberately: the previous 1,443-line README, the removed-file inventory, old session notes, and the E2 run logs |
 | `frozen_inputs/` | Content-hashed evaluation inputs |
 | `tests/` | Includes a test that fails if the experiment map goes stale |
 
@@ -228,8 +228,7 @@ This repository accreted across many sessions, including experiments that were l
 withdrawn. That history is kept rather than rewritten:
 
 * [`docs/history/README_ARCHIVE.md`](docs/history/README_ARCHIVE.md) — the full previous README
-* [`docs/history/REMOVED_SCRIPTS.md`](docs/history/REMOVED_SCRIPTS.md) — the 136 files removed in the 2026-09-09 consolidation, why, and how to retrieve any of them from git history
-* [`docs/history/superseded_draft/`](docs/history/superseded_draft/) — the earlier manuscript under its previous title
+* [`docs/history/REMOVED_SCRIPTS.md`](docs/history/REMOVED_SCRIPTS.md) — every file removed in the 2026-09-09 consolidation, the rule used, and how to retrieve any of them from git history
 * [`manuscript/docs/DECISIONS.md`](manuscript/docs/DECISIONS.md), `CLAIMS_LEDGER.md` — dated decisions and per-claim status
 * [`results/paper_closing/PAPER_CLOSING_REPORT.md`](results/paper_closing/PAPER_CLOSING_REPORT.md) — the closing round in full
 * [`results/mechanism/`](results/mechanism/) — the mechanism/negative-results session reports

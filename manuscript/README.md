@@ -1,66 +1,40 @@
-# manuscript
+# manuscript/
 
-Restructure of the super-weights-in-genomic-LMs manuscript. Drop this folder inside the
-existing repo (it references the old tree but never writes to it).
+The paper and everything that produced it. Named `paper-salvage/` until 2026-09-09, when it
+was renamed because "salvage" described a past rescue effort rather than the directory's
+contents.
 
-**Read `CLAUDE.md` first.** It contains the hard constraints on claims — those are not
-style preferences, they encode the specific errors that made v15 unpublishable.
+## Current thesis
 
-## Thesis
+> High-gain gated-FFN rows recur across text and genomic foundation models, but structural
+> prominence, functional criticality, and finite-intervention causal response complexity are
+> distinct quantities.
 
-> Gated MLPs create structurally predictable high-gain channels, but architectures differ
-> fundamentally in how these signals are routed and recruited for biological computation.
+```
+STRUCTURAL GEOMETRY  !=  FUNCTIONAL CRITICALITY  !=  CAUSAL RESPONSE COMPLEXITY
+```
 
-`structural amplifier → architectural routing → encoded information → causal steering → downstream recruitment`
+Two earlier theses are retired: the v1 U_k-led framing (`docs/DECISIONS.md` D-016) and the
+"structural amplifier → architectural routing → causal steering" chain that an earlier version
+of this README stated as current. Do not reinstate either.
 
 ## Layout
 
-```
-CLAUDE.md                     operating rules — read first
-docs/
-  PROJECT_STATUS.md           live state; update at the end of every session
-  PAPER_OUTLINE.md            frozen skeleton, figures, model coverage table
-  DECISIONS.md                append-only decision log (D-001 … D-013)
-  CLAIMS_LEDGER.md            every claim → evidence → strength → status, plus N-notes
-  CUT_LIST.md                 keep / demote-to-supplement / removed as a claim
-  ENVIRONMENT.md              container hashes + package versions for Methods
-  PHASE_0_TRIAGE.md           inventory, migration, submission blockers
-  PHASE_1_BLOCKING.md         E1–E4 + the binding stop rule
-  PHASE_2_WRITING.md          Evo1-independent drafting, runs in parallel with Phase 1
-  PHASE_3_ASSEMBLY.md         consistency pass, stats audit, reviewer anticipation
-  prereg/                     locked predictions + LOCKS.jsonl ledger
-    archive/                  superseded prereg versions (see the notice in each)
-src/
-  uk_frobenius.py             the predictor: ‖U_k‖_F, c_{k,i}, granularity, layer ranks
-  test_uk_frobenius.py        self-test — run before trusting any audit
-  prereg_lock.py              hash + commit + timestamp locking
-experiments/E1…E5/            one folder per experiment, spec in its README
-results/keep/                 migrated artifacts, each with PROVENANCE.md
-figures/                      one script per figure
-```
+| path | contents |
+|---|---|
+| `actual_manuscript.md` / `.tex` | The paper. Kept content-identical; edit both or neither. Converted from a Word original, so notation is text-extracted — check equations against the source before editing them. |
+| `media/` | Figure artwork as referenced by the manuscript (`image1`–`image8`). Both formats point at this one copy. |
+| `figures/` | The figure pipeline: render scripts, output, `source_data/` (the exact plotted values), and `FIGURE_PROVENANCE.md` (panel-by-panel manifest) |
+| `experiments/E1`–`E13` | **Frozen** experiment harnesses — the code that produced the census and the case studies. *Frozen* means not edited to make later results come out differently. `run_bos_mediation.py` and `e12_lib.py` in particular are reused unmodified by later analyses. |
+| `docs/` | Preregistrations (content-locked), `DECISIONS.md`, `CLAIMS_LEDGER.md`, outlines, audit correspondence |
+| `docs/prereg/` | 12 locked preregistrations. Verify with `python src/prereg_lock.py verify --all` |
+| `src/` | `prereg_lock.py` and manuscript-side helpers |
+| `results/keep/` | Curated, provenance-locked artifacts for E1 and E2. `sw_broadcast_impulse.json` is duplicated at `results/` in the repo root: the root copy is the working path several scripts read, this one is the locked archival copy. |
+| `CLAUDE.md` | Historical operating rules. Its hard constraints on claims are still worth reading; its stated thesis is not current. |
 
-`prereg_lock.py` resolves its ledger relative to its own location, so it only writes to
-`docs/prereg/LOCKS.jsonl` when it sits in `src/`. Keep that layout.
+## Numbering note
 
-## First session
-
-```bash
-python src/test_uk_frobenius.py          # verify the predictor before anything else
-cat CLAUDE.md docs/PAPER_OUTLINE.md
-# then work PHASE_0_TRIAGE.md top to bottom
-```
-
-Priority in Phase 0: **locate the GENERator JSONs.** Figure 2 panels A–D cannot be rendered
-without them and the v15 caption currently admits they are missing.
-
-## Status at a glance
-
-- Phases 1 and 2 run **in parallel**. R1, R2, R4, R6, R7 do not depend on Evo1.
-- The only thing blocked on Evo1 is R3's thesis sentence, and both variants are pre-drafted.
-- The stop rule in `PHASE_1_BLOCKING.md` is binding. Four experiments, then re-assess.
-
-## Requirements
-
-`torch`, `transformers`, `numpy`. The predictor needs no GPU beyond loading weights — it
-is pure weight algebra and runs in float64. It is also the artifact worth releasing: a
-reviewer can reproduce Figure 1 in minutes on a laptop for the small models.
+The manuscript figures are `image6`→Fig 1, `image1`→Fig 2, `image3`→Fig 3, `image7`→Fig 4,
+`image8`→Fig 5, `image4`→Fig S1, `image2`→Fig S2. The names come from the Word export and are
+not sequential; `image5` is unused. The mapping to the real artwork in `figures/` is recorded
+here because it is not inferable from the filenames.
