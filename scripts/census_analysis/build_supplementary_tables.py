@@ -51,7 +51,7 @@ def r(x, n=6):
 
 # ── S2: structural metrics + 24-input stability ──────────────────────────────
 def s2():
-    base = list(csv.DictReader((OUT / "S2_structural_metrics.tsv").open(), delimiter="\t"))
+    base = list(csv.DictReader((OUT / "sources/S2_structural_metrics.tsv").open(), delimiter="\t"))
     stab = {d["model"]: d for d in
             csv.DictReader((ROOT / "results/census_analysis/input_stability.tsv").open(),
                            delimiter="\t")}
@@ -65,7 +65,7 @@ def s2():
                     [s.get("n_inputs", ""), r(s.get("ratio_median")), r(s.get("ratio_min")),
                      r(s.get("ratio_max")), s.get("frac_rank1", ""),
                      s.get("frac_max_at_pos0", "")])
-    write("S2_structural_metrics_and_stability",
+    write("S2_structural_metrics_stability",
           "S2 — Structural metrics and candidate input stability",
           "Structural columns reformatted verbatim from the round-2 audit table. Stability "
           "columns from `results/census_analysis/input_stability.tsv`: each frozen coordinate "
@@ -77,7 +77,7 @@ def s2():
 
 # ── S3: causal census + selection rule + disagreement coordinates ────────────
 def s3():
-    base = list(csv.DictReader((OUT / "S3_causal_census_full.tsv").open(), delimiter="\t"))
+    base = list(csv.DictReader((OUT / "sources/S3_causal_census_full.tsv").open(), delimiter="\t"))
     res = {d["model"]: d for d in
            csv.DictReader((ROOT / "audit/detector_provenance_exp2_resolution.csv").open())}
     hdr = ["coordinate_class", "selection_rule", "endpoint"] + list(base[0].keys())
@@ -105,7 +105,7 @@ def s3():
                       "MLM loss on 6 fixed DNA probes -- NOT the census endpoint",
                       "DNABERT-2", 1.0, r(c["causal_frozen_rel"]), "", "", "", "", "", ""])
     rows += [e[:len(hdr)] + [""] * (len(hdr) - len(e)) for e in extra]
-    write("S3_causal_census_and_disagreements",
+    write("S3_causal_census_disagreements",
           "S3 — Full causal census, with selection rule and disagreement coordinates",
           "The 44 census rows are reformatted verbatim from the round-2 audit table. Appended "
           "rows give the causal effect of the coordinate the layer-relative ratio rule selects "
