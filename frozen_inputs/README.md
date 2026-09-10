@@ -22,8 +22,8 @@ points at a TACC scratch filesystem that does not exist on other machines. Commi
 file lets the text-decoder endpoints run anywhere, offline, on the *same* bytes.
 
 **It is the same file, not a substitute corpus.** `build_windows_local()` in
-`scripts/paper_closing/run_uniform_detector_text.py` and
-`scripts/paper_closing/run_within_model_slope_text.py` reimplements
+`scripts/detection/run_uniform_detector_text.py` and
+`scripts/within_layer_sweep/run_within_model_slope_text.py` reimplements
 `e10_lib.build_windows` against this parquet line-for-line: same non-empty filter, same
 `random.Random(42)` shuffle, same fill-to-512-tokens concatenation. Both scripts prefer
 `datasets.load_dataset` when it is available and fall back to this file otherwise; the two

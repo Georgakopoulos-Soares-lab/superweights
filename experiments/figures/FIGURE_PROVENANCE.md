@@ -1,6 +1,6 @@
 # FIGURE_PROVENANCE.md — panel-by-panel provenance manifest (v3)
 
-Governing figure specification: `scripts/analysis/_figstyle.py` (repo root) — the only
+Governing figure specification: `experiments/figures/_figstyle.py` (repo root) — the only
 codified figure-style module in this repository, applied via `apply_style()` /
 `panel_label()` in every script below. See the final report for the full rules trace.
 Shared model-class visual encoding: `experiments/figures/_paper_encoding.py`.

@@ -264,4 +264,4 @@ Render the three Phase 13 figures from the already-complete JSON source data (ob
 prediction F0-F3 scatter per model/epsilon; DNABERT-2 pair-interaction map with the known
 pair highlighted; GENERator dose-response with the control band) — no new measurement is
 needed, only plotting from `fit_results_dnabert2.json` and `baseline_regression_results.json`
-using the repo's shared `scripts/analysis/_figstyle.py` convention.
+using the repo's shared `experiments/figures/_figstyle.py` convention.

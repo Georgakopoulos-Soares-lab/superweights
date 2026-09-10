@@ -26,7 +26,7 @@ GENERator's sequence-quality/specificity claim and NTv3's corrected falsificatio
 splice supplement (previously shown for transparency) has been **removed** per instruction —
 an invalid result is not plotted even labeled as retired.
 
-Governing figure specification: `scripts/analysis/_figstyle.py` (see
+Governing figure specification: `experiments/figures/_figstyle.py` (see
 `FIGURE_PROVENANCE.md` for the full rules trace — this is the only codified,
 repo-wide figure style module found in this repository; there is no separate
 prose "figure spec" document). Shared model-class visual encoding:

@@ -13,7 +13,7 @@ structure with NTv3's own repo/revision/tokenizer/model class in place of DNABER
 the row-scaling pattern reused from `configs/ntv3.yaml`'s already-confirmed
 `down_proj_pattern` (== `uk_frobenius.adapter_ntv3`'s `core.transformer_blocks.{i}.fc2`,
 independently verified in that adapter's own test suite,
-`experiments/src/test_ntv3_adapter.py`).
+`experiments/tools/test_ntv3_adapter.py`).
 
 Same masking convention as DNABERT-2 (mask_prob=0.15), same fixed-seed batch construction
 (seed 42), same row-scaling intervention (`tomography_lib._scale_rows`/`with_mask`, imported

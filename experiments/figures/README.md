@@ -4,7 +4,7 @@ One script per manuscript figure. See `FIGURE_PLAN_v3.md` for the panel-by-panel
 `FIGURE_PROVENANCE.md` for the source-artifact manifest, and `FIGURE_CAPTIONS_v3.md` for
 draft captions.
 
-Governing style: `../../scripts/analysis/_figstyle.py` (`apply_style()`/`panel_label()`),
+Governing style: `../../experiments/figures/_figstyle.py` (`apply_style()`/`panel_label()`),
 shared model-class encoding: `_paper_encoding.py`.
 
 - `main/` — 4 main-text figures (`fig1_structural`, `fig2_causal`, `fig3_dnabert`,

@@ -27,8 +27,8 @@ STRUCTURAL GEOMETRY  !=  FUNCTIONAL CRITICALITY  !=  CAUSAL RESPONSE COMPLEXITY
 | **Panel-by-panel figure provenance** | [`experiments/figures/FIGURE_PROVENANCE.md`](experiments/figures/FIGURE_PROVENANCE.md) |
 | **Reproduce anything** | [`pipelines/`](pipelines/) — idempotent runners, GPU-parallel |
 | **Supplementary tables S1–S5** | [`audit/round2/tables/`](audit/round2/tables/) |
-| **Supplementary tables S6–S7** | [`results/paper_closing/supplementary/`](results/paper_closing/supplementary/) |
-| **Preregistrations (12, content-locked)** | [`experiments/docs/prereg/`](experiments/docs/prereg/) — `python experiments/src/prereg_lock.py verify --all` |
+| **Supplementary tables S6–S7** | [`results/within_layer_sweep/supplementary/`](results/within_layer_sweep/supplementary/) |
+| **Preregistrations (12, content-locked)** | [`experiments/docs/prereg/`](experiments/docs/prereg/) — `python experiments/tools/prereg_lock.py verify --all` |
 | **What we withdrew and why** | [Retractions and rescopes](#retractions-and-rescopes) — please read before citing any older number |
 
 Every plotted number in Figures 1–4 is loaded programmatically from a raw artifact at render
@@ -83,7 +83,7 @@ artifact, the panel was not rendered rather than approximated.
    well above the threshold, magnitudes do not follow — in SmolLM2-1.7B layer 7 the row
    ranked **4th** by ratio is **130× more damaging** than the row ranked **2nd**. Supported:
    the ratio **detects** and **orders**. Withdrawn: smooth severity calibration.
-   Evidence: `results/paper_closing/within_model_slope_comparison.json`.
+   Evidence: `results/within_layer_sweep/within_model_slope_comparison.json`.
 
 9. **The one-candidate-per-model census design undercounts critical rows** (Sep 2026, scope
    limit rather than a retraction). Sweeping 36 rows instead of 1 found a **second**
@@ -104,7 +104,7 @@ artifact, the panel was not rendered rather than approximated.
     rule is **neither uniformly better nor worse** than the legacy absolute-activation rule.
     Specify "global argmax of the layer-relative ratio, accept if ≥5" as the **candidate
     detector** — reproducible and worth stating — and not as a claim about causal importance.
-    Evidence: `results/paper_closing/EXP2_LEGACY_DETECTOR_RESOLUTION.md`.
+    Evidence: `results/detector_provenance/EXP2_LEGACY_DETECTOR_RESOLUTION.md`.
 
 ## Reproducing
 
@@ -114,7 +114,7 @@ Three conda environments, because the model families pin incompatible `transform
 
 | env | `transformers` | used for |
 |---|---|---|
-| `generator` | 5.5.0 | GENERator, NTv3, all text decoders, the census, everything in `scripts/paper_closing/` |
+| `generator` | 5.5.0 | GENERator, NTv3, all text decoders, the census, everything in `scripts/mechanism/` |
 | `dnabert` | 4.29.2 | DNABERT-2 (its remote code predates the Transformers 5 config API) |
 | `evo` | 4.48.1 | Evo1 |
 
@@ -152,13 +152,13 @@ python experiments/frozen/E11_scale_ladder/run_model.py --model <slug>
 python experiments/frozen/E13_full_cohort_causal_census/run_singleton_census.py --model <slug>
 
 # detector provenance (self-validating: 4 gates from census_master.csv)
-python scripts/paper_closing/run_uniform_detector_text.py --model smollm2-1.7b   # harness check
-python scripts/paper_closing/run_detector_published_protocol.py --model olmo
+python scripts/detection/run_uniform_detector_text.py --model smollm2-1.7b   # harness check
+python scripts/detection/run_detector_published_protocol.py --model olmo
 
 # within-layer sweeps
-python scripts/paper_closing/run_within_model_slope_text.py        # SmolLM2-1.7B, ~7 min, 1 GPU
-python scripts/paper_closing/run_smollm2_second_row_epistasis.py   # second critical row + masking
-python scripts/paper_closing/run_smollm2_row_geometry.py           # data-free, no GPU needed
+python scripts/within_layer_sweep/run_within_model_slope_text.py        # SmolLM2-1.7B, ~7 min, 1 GPU
+python scripts/within_layer_sweep/run_smollm2_second_row_epistasis.py   # second critical row + masking
+python scripts/within_layer_sweep/run_smollm2_row_geometry.py           # data-free, no GPU needed
 
 # mechanism case studies
 python experiments/frozen/E9_mechanistic_tomography/run_fit_observers.py
@@ -181,19 +181,23 @@ science changed. Observed reproduction errors are 1e-9 to 1e-6 relative.
 | `experiments/frozen/E1`–`E13` | The **frozen** experiment harnesses — the code that produced the census and the case studies. *Frozen* means not edited to make later results come out differently. |
 | `experiments/figures/` | The figure pipeline: render scripts, output, `source_data/` (the exact plotted values), and `FIGURE_PROVENANCE.md` |
 | `experiments/docs/prereg/` | 12 content-locked preregistrations, with the ledger and verifier |
-| `experiments/src/` | `prereg_lock.py` |
+| `experiments/tools/` | `prereg_lock.py` |
 | `experiments/results/keep/` | Provenance-locked artifacts for E1 and E2 |
 | `pipelines/` | One idempotent runner per experiment group. **Start here to reproduce anything.** |
-| `scripts/paper_closing/` | Detector provenance, within-layer sweeps, BOS and attention analyses |
-| `scripts/mechanism/`, `scripts/compression/`, `scripts/diagnostics/` | Mechanism, quantisation, and health-check tooling. Several produced the negative results behind the retractions above. |
-| `scripts/analysis/_figstyle.py` | The codified figure style, applied by every render script |
-| `scripts/detection/`, `scripts/evaluation/` | Super-row detection and GUE downstream evaluation |
+| `scripts/mechanism/` | Detector provenance, within-layer sweeps, BOS and attention analyses |
+| `scripts/mechanism/` | Mechanism follow-ups: BOS mediation, attention sink, special-token dependence, matched replacements |
+| `scripts/negative_results/` | The experiments whose only result is a null — quantisation exemption, norm-matched controls, the super-row health check. See [`scripts/negative_results/README.md`](scripts/negative_results/README.md). |
+| `experiments/figures/_figstyle.py` | The codified figure style, applied by every render script |
+| `scripts/detection/` | Super-row detection and detector-provenance resolution |
+| `scripts/evaluation/` | GUE downstream evaluation |
+| `scripts/within_layer_sweep/` | The graded within-layer sweeps, the second critical row, and Figure 5 |
+| `scripts/census_analysis/` | Cohort structure–function correlations and sensitivity analyses |
 | `src/` | Shared libraries: activation capture, ablation, spike detection, DNA probes |
 | `models/`, `configs/` | Per-model wrapper classes and YAML, loaded dynamically via `WRAPPER_MAP` |
 | `stubs/` | Import shims so models with heavy optional dependencies load without them (`mamba_ssm` for Caduceus, a HybriDNA config). Put on `sys.path` at runtime by `scripts/evaluation/run_gue_ablation.py`; not type stubs, despite the name. |
 | `audit/` | The verification record across three adversarial rounds. `census_master.csv` is the canonical census table (22 models × 44 columns); `round2/tables/` holds Supplementary S1–S5. See [`audit/README.md`](audit/README.md). |
 | `results/` | Artifacts. Gitignored by default; files backing a manuscript claim are force-added. |
-| `results/paper_closing/supplementary/` | Supplementary Tables S6–S7 |
+| `results/within_layer_sweep/supplementary/` | Supplementary Tables S6–S7 |
 | `data/` | Small region and reference files. Large public inputs are documented, not vendored — see [`data/README.md`](data/README.md) |
 | `frozen_inputs/` | Content-hashed evaluation inputs |
 | `docs/` | The experiment map |
@@ -227,7 +231,11 @@ Stated plainly, because a reader will find them anyway:
    trees are gone from the working tree. None is cited by the figure-provenance manifest or the
    experiment map. `E5_dimensionality/dimensionality_lib.py` was retained because three
    surviving audit table-builders import it. All of it is in git history.
-7. **No licence file yet.** Add one before publication; the appropriate choice is the authors'.
+7. **Directories were renamed for clarity on 2026-09-10**, so paths in older commits differ:
+   `scripts/paper_closing/` was split by function into `detection/`, `within_layer_sweep/`,
+   `mechanism/` and `census_analysis/`; `scripts/compression/` and the health check became
+   `scripts/negative_results/`; `results/paper_closing/` was split to match.
+8. **No licence file yet.** Add one before publication; the appropriate choice is the authors'.
 
 ## Reference
 

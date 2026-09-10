@@ -6,7 +6,7 @@ formula here is fixed by `docs/prereg/PREREG_dimensionality_gate0.md` and must n
 after that file is locked. If a formula needs to change, the prereg is re-locked (a new,
 separately-disclosed entry), not silently edited alongside this module.
 
-Conventions match `experiments/src/uk_frobenius.py` throughout:
+Conventions match `experiments/tools/uk_frobenius.py` throughout:
     W_gate, W_up : [d_ffn, d_model]
     W_down       : [d_model, d_ffn]
 c_{k,i} here is called C_i (D_i * A_i) for a fixed target row k, consistent with

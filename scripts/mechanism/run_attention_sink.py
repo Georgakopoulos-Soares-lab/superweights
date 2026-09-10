@@ -59,7 +59,7 @@ def main():
     ap.add_argument("--n_windows", type=int, default=40)
     ap.add_argument("--win_bp", type=int, default=512)
     ap.add_argument("--max_len", type=int, default=128)
-    ap.add_argument("--out", default="results/mechanism/attention_sink_implicit_bias.json")
+    ap.add_argument("--out", default="results/mechanism_generator/attention_sink_implicit_bias.json")
     args = ap.parse_args()
 
     from models import WRAPPER_MAP

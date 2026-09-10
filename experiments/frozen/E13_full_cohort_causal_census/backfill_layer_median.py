@@ -10,7 +10,7 @@ This is NOT a new causal measurement and does not touch candidate selection (all
 candidate (layer, row) pairs are read verbatim from results/E11/scale_ladder.csv, which is
 itself locked/frozen structural output from E7/E8/E10/E11). It is a pure weight-space
 Frobenius-norm computation, reusing:
-  - experiments/src/uk_frobenius.py (layer_report, ADAPTERS: llama_swiglu / dnabert2 / ntv3)
+  - experiments/tools/uk_frobenius.py (layer_report, ADAPTERS: llama_swiglu / dnabert2 / ntv3)
   - the partial-safetensors-shard-download pattern from E1's fetch_layer_tensors /
     E10's exact_uk_norm_all_rows.py fetch_layer_tensors (llama-style separate gate/up/down
     projections; downloads ONLY the shard(s) holding one layer's MLP weights, not the whole
