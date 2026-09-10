@@ -68,8 +68,8 @@ REVISION = "7dc01bccce5b65e15141170538afdc2ff09d8dde"  # resolved commit found i
                                                           # 2026-08-22); pinned explicitly here
                                                           # per the checkpoint-provenance gap
                                                           # flagged in the Priority-3 cost audit.
-HIST_DAMAGE_INTACT = 6.385381    # results/E12/run_e12_full.log:23, damage[row2371](1.0)
-HIST_DAMAGE_ABLATED = 8.754320   # results/E12/run_e12_full.log:27, damage[row2371](0.0)
+HIST_DAMAGE_INTACT = 6.385381    # results/experiments/E12/run_e12_full.log:23, damage[row2371](1.0)
+HIST_DAMAGE_ABLATED = 8.754320   # results/experiments/E12/run_e12_full.log:27, damage[row2371](0.0)
 REPRO_RTOL = 1e-3
 
 

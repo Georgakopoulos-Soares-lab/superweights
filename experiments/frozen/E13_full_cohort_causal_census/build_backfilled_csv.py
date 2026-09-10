@@ -2,8 +2,8 @@
 """
 experiments/E13_full_cohort_causal_census/build_backfilled_csv.py
 
-Merges results/E11/scale_ladder.csv (untouched, frozen) with
-results/E13/layer_median_backfill.json to produce results/E11/scale_ladder_backfilled.csv:
+Merges results/experiments/E11/scale_ladder.csv (untouched, frozen) with
+results/experiments/E13/layer_median_backfill.json to produce results/experiments/E11/scale_ladder_backfilled.csv:
 every row from the original CSV, plus filled-in layer_median_frob_norm /
 candidate_frob_norm_ratio_to_layer_median for the 11 "cited" rows that originally lacked
 them, plus a new `layer_median_source` column documenting exactly how each value was
@@ -14,7 +14,7 @@ backfill methods -- "precomputed" read-back or "new" weight-only computation -- 
 Phi-3-mini-4k-instruct is a special case: its scale_ladder.csv row lists 6 published rows
 across 2 layers as one entry, so it has no single layer-relative ||U_k||_F scalar. Its
 per-row breakdown is recorded in a separate note file
-(results/E13/phi3_layer_median_breakdown.json) and the CSV row's
+(results/experiments/E13/phi3_layer_median_breakdown.json) and the CSV row's
 layer_median_frob_norm/candidate_frob_norm_ratio_to_layer_median are left blank with
 `layer_median_source` pointing at that file, rather than fabricating one averaged number for
 a 6-row/2-layer entry.

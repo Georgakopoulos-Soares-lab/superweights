@@ -10,7 +10,7 @@ Four panels:
      row's activation and incoming attention both concentrate at position 0, but this does
      not establish that the row CAUSES the sink. UNCHANGED.
   C. (NEW, 2026-09-01, replaces the old random-direction panel -- see Supplement S2) Native
-     NLL under the six BOS-mediation conditions from results/E_BOS_MEDIATION/
+     NLL under the six BOS-mediation conditions from results/experiments/E_BOS_MEDIATION/
      bos_mediation_results.json: intact, full row-2371 ablation, BOS-only ablation,
      preserve-BOS-only, restore-at-BOS, restore-at-matched-non-BOS. Loss of the row's BOS
      contribution alone reproduces essentially the full ablation damage; preserving or
@@ -22,16 +22,16 @@ Four panels:
      it (not explained here, plotted as measured).
 
 Provenance gate and 6 smoke/invariance tests behind panels C/D both passed; see
-results/E_BOS_MEDIATION/{provenance_check,smoke_tests}.json and
-results/E13/PRIORITY1_2_3_INTEGRATED_REPORT.md.
+results/experiments/E_BOS_MEDIATION/{provenance_check,smoke_tests}.json and
+results/experiments/E13/PRIORITY1_2_3_INTEGRATED_REPORT.md.
 
 The pre-2026-09-01 panel C (random-direction / damage-tracking control) is NOT deleted -- it
 answers a different question (direction-specificity vs. location-sensitivity) and is retained
 essentially unchanged as candidate Supplementary Figure S2
 (figures/supplement/fig_s2_random_direction.py).
 
-Source: results/E7/e7_legacy_reanalysis.json, results/mechanism/attention_sink_implicit_bias.json,
-results/E_BOS_MEDIATION/bos_mediation_results.json.
+Source: results/experiments/E7/e7_legacy_reanalysis.json, results/mechanism/attention_sink_implicit_bias.json,
+results/experiments/E_BOS_MEDIATION/bos_mediation_results.json.
 Output: figures/main/fig4_generator.{png,pdf}, figures/source_data/fig4_generator.json
 """
 from __future__ import annotations

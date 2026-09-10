@@ -1,0 +1,788 @@
+{
+  "provenance": "E11 structural inputs only; built before Stage 1 causal measurement",
+  "source_csv": "results/experiments/E11/scale_ladder_backfilled.csv",
+  "panel_order": [
+    "Llama-7B",
+    "Mistral-7B",
+    "OLMo-7B-0724-hf",
+    "Phi-3-mini-4k-instruct",
+    "Qwen2.5-7B",
+    "MosaicBERT",
+    "ModernBERT-base",
+    "NTv3",
+    "DNABERT-2",
+    "GENERator-EUK-3B",
+    "GenomeOcean-4B",
+    "Qwen/Qwen2.5-0.5B",
+    "Qwen/Qwen2.5-1.5B",
+    "Qwen/Qwen2.5-3B",
+    "HuggingFaceTB/SmolLM2-135M",
+    "HuggingFaceTB/SmolLM2-360M",
+    "HuggingFaceTB/SmolLM2-1.7B",
+    "GenerTeam/GENERator-v2-prokaryote-1.2b-base",
+    "GenerTeam/GENERator-v2-prokaryote-3b-base",
+    "EuroBERT/EuroBERT-210m",
+    "EuroBERT/EuroBERT-610m",
+    "EuroBERT/EuroBERT-2.1B",
+    "answerdotai/ModernBERT-large"
+  ],
+  "candidate_counts": {
+    "Llama-7B": 1,
+    "Mistral-7B": 1,
+    "OLMo-7B-0724-hf": 1,
+    "Phi-3-mini-4k-instruct": 6,
+    "Qwen2.5-7B": 1,
+    "MosaicBERT": 1,
+    "ModernBERT-base": 1,
+    "NTv3": 1,
+    "DNABERT-2": 1,
+    "GENERator-EUK-3B": 1,
+    "GenomeOcean-4B": 1,
+    "Qwen/Qwen2.5-0.5B": 1,
+    "Qwen/Qwen2.5-1.5B": 1,
+    "Qwen/Qwen2.5-3B": 1,
+    "HuggingFaceTB/SmolLM2-135M": 1,
+    "HuggingFaceTB/SmolLM2-360M": 1,
+    "HuggingFaceTB/SmolLM2-1.7B": 1,
+    "GenerTeam/GENERator-v2-prokaryote-1.2b-base": 1,
+    "GenerTeam/GENERator-v2-prokaryote-3b-base": 1,
+    "EuroBERT/EuroBERT-210m": 1,
+    "EuroBERT/EuroBERT-610m": 1,
+    "EuroBERT/EuroBERT-2.1B": 1,
+    "answerdotai/ModernBERT-large": 1
+  },
+  "n_models": 23,
+  "n_candidates": 28,
+  "candidates": [
+    {
+      "model": "Llama-7B",
+      "panel_index": 0,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 2,
+      "row": 3968,
+      "q1": 0.9888168037615727,
+      "frob_norm": 137.61641832032996,
+      "layer_median_frob_norm": 4.205097956825915,
+      "frob_ratio_to_layer_median": 29.40138041715147,
+      "source": "results/experiments/E7/e7_legacy_reanalysis.json"
+    },
+    {
+      "model": "Mistral-7B",
+      "panel_index": 1,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 1,
+      "row": 2070,
+      "q1": 0.9922047361077938,
+      "frob_norm": 0.38834723364706875,
+      "layer_median_frob_norm": 0.01397999823680717,
+      "frob_ratio_to_layer_median": 26.83185497075223,
+      "source": "results/experiments/E7/e7_legacy_reanalysis.json"
+    },
+    {
+      "model": "OLMo-7B-0724-hf",
+      "panel_index": 2,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 1,
+      "row": 269,
+      "q1": 0.964564665808712,
+      "frob_norm": 0.9110752807676615,
+      "layer_median_frob_norm": 0.023241070761400518,
+      "frob_ratio_to_layer_median": 39.201088887877,
+      "source": "results/experiments/E7/e7_legacy_reanalysis.json"
+    },
+    {
+      "model": "Phi-3-mini-4k-instruct",
+      "panel_index": 3,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 2,
+      "row": 525,
+      "q1": 0.9528710903808127,
+      "frob_norm": 120.77459257177593,
+      "layer_median_frob_norm": 15.579189188998432,
+      "frob_ratio_to_layer_median": 7.752302838519815,
+      "source": "results/experiments/E7/e7_phi3_spectral.json"
+    },
+    {
+      "model": "Phi-3-mini-4k-instruct",
+      "panel_index": 3,
+      "candidate_index": 1,
+      "primary": false,
+      "layer": 2,
+      "row": 1693,
+      "q1": 0.9137319310958342,
+      "frob_norm": 105.85558346872463,
+      "layer_median_frob_norm": 15.579189188998432,
+      "frob_ratio_to_layer_median": 6.7946786051850685,
+      "source": "results/experiments/E7/e7_phi3_spectral.json"
+    },
+    {
+      "model": "Phi-3-mini-4k-instruct",
+      "panel_index": 3,
+      "candidate_index": 2,
+      "primary": false,
+      "layer": 2,
+      "row": 1113,
+      "q1": 0.7504591089115811,
+      "frob_norm": 97.51920420321956,
+      "layer_median_frob_norm": 15.579189188998432,
+      "frob_ratio_to_layer_median": 6.259581485283963,
+      "source": "results/experiments/E7/e7_phi3_spectral.json"
+    },
+    {
+      "model": "Phi-3-mini-4k-instruct",
+      "panel_index": 3,
+      "candidate_index": 3,
+      "primary": false,
+      "layer": 4,
+      "row": 525,
+      "q1": 0.9278407363912048,
+      "frob_norm": 72.11570570033068,
+      "layer_median_frob_norm": 16.43891946918779,
+      "frob_ratio_to_layer_median": 4.3868884348171395,
+      "source": "results/experiments/E7/e7_phi3_spectral.json"
+    },
+    {
+      "model": "Phi-3-mini-4k-instruct",
+      "panel_index": 3,
+      "candidate_index": 4,
+      "primary": false,
+      "layer": 4,
+      "row": 1113,
+      "q1": 0.5584424600728349,
+      "frob_norm": 61.70154919964694,
+      "layer_median_frob_norm": 16.43891946918779,
+      "frob_ratio_to_layer_median": 3.7533822898301,
+      "source": "results/experiments/E7/e7_phi3_spectral.json"
+    },
+    {
+      "model": "Phi-3-mini-4k-instruct",
+      "panel_index": 3,
+      "candidate_index": 5,
+      "primary": false,
+      "layer": 4,
+      "row": 1693,
+      "q1": 0.8919424632634048,
+      "frob_norm": 46.49362134418052,
+      "layer_median_frob_norm": 16.43891946918779,
+      "frob_ratio_to_layer_median": 2.8282650469383475,
+      "source": "results/experiments/E7/e7_phi3_spectral.json"
+    },
+    {
+      "model": "Qwen2.5-7B",
+      "panel_index": 4,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 26,
+      "row": 458,
+      "q1": 0.9529104185966117,
+      "frob_norm": 29.68742128221388,
+      "layer_median_frob_norm": 2.6271665824882557,
+      "frob_ratio_to_layer_median": 9.28343928087795,
+      "source": "results/experiments/E7/e7_phase1_detection_qwen25.json"
+    },
+    {
+      "model": "MosaicBERT",
+      "panel_index": 5,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 9,
+      "row": 287,
+      "q1": 0.4765682244123624,
+      "frob_norm": 19.997746047192482,
+      "layer_median_frob_norm": 3.960733647229508,
+      "frob_ratio_to_layer_median": 5.049000470198418,
+      "source": "results/e8_detection_mosaicbert.json"
+    },
+    {
+      "model": "ModernBERT-base",
+      "panel_index": 6,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 15,
+      "row": 251,
+      "q1": 0.8969889514776379,
+      "frob_norm": 836.046538392924,
+      "layer_median_frob_norm": 35.502951692459455,
+      "frob_ratio_to_layer_median": 23.548648733071218,
+      "source": "results/e8_detection_modernbert.json"
+    },
+    {
+      "model": "NTv3",
+      "panel_index": 7,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 11,
+      "row": 1472,
+      "q1": 0.38889396751753286,
+      "frob_norm": 441.5173190114778,
+      "layer_median_frob_norm": 108.79981978838849,
+      "frob_ratio_to_layer_median": 3.612997884175097,
+      "source": "results/experiments/E7/e7_legacy_reanalysis.json"
+    },
+    {
+      "model": "DNABERT-2",
+      "panel_index": 8,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 5,
+      "row": 603,
+      "q1": 0.7933113982887636,
+      "frob_norm": 74.00855774610585,
+      "layer_median_frob_norm": 10.350278730754415,
+      "frob_ratio_to_layer_median": 5.018335080977002,
+      "source": "results/experiments/E7/e7_legacy_reanalysis.json"
+    },
+    {
+      "model": "GENERator-EUK-3B",
+      "panel_index": 9,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 4,
+      "row": 2371,
+      "q1": 0.9688691252375834,
+      "frob_norm": 522.1322102348346,
+      "layer_median_frob_norm": 17.62986778564838,
+      "frob_ratio_to_layer_median": 12.244005701455277,
+      "source": "results/experiments/E7/e7_legacy_reanalysis.json"
+    },
+    {
+      "model": "GenomeOcean-4B",
+      "panel_index": 10,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 1,
+      "row": 2604,
+      "q1": 0.8989077166811766,
+      "frob_norm": 2.8832156466529963,
+      "layer_median_frob_norm": 0.10813996640762157,
+      "frob_ratio_to_layer_median": 19.50444951690311,
+      "source": "results/experiments/E7/e7_phase1_detection_genomeocean.json"
+    },
+    {
+      "model": "Qwen/Qwen2.5-0.5B",
+      "panel_index": 11,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 21,
+      "row": 62,
+      "q1": 0.9981566830594912,
+      "frob_norm": 18.726591709019885,
+      "layer_median_frob_norm": 0.6115151144957984,
+      "frob_ratio_to_layer_median": 30.623268771468037,
+      "source": "results/experiments/E11/raw/qwen25-0.5b.json"
+    },
+    {
+      "model": "Qwen/Qwen2.5-1.5B",
+      "panel_index": 12,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 26,
+      "row": 408,
+      "q1": 0.9950986414892103,
+      "frob_norm": 86.68857568622904,
+      "layer_median_frob_norm": 3.8898088808637614,
+      "frob_ratio_to_layer_median": 22.28607583079485,
+      "source": "results/experiments/E11/raw/qwen25-1.5b.json"
+    },
+    {
+      "model": "Qwen/Qwen2.5-3B",
+      "panel_index": 13,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 30,
+      "row": 318,
+      "q1": 0.8173600221565082,
+      "frob_norm": 37.905147328895474,
+      "layer_median_frob_norm": 4.556944867725429,
+      "frob_ratio_to_layer_median": 8.318105315988955,
+      "source": "results/experiments/E11/raw/qwen25-3b.json"
+    },
+    {
+      "model": "HuggingFaceTB/SmolLM2-135M",
+      "panel_index": 14,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 11,
+      "row": 507,
+      "q1": 0.9243918826993042,
+      "frob_norm": 2002.997197003894,
+      "layer_median_frob_norm": 160.53284229581737,
+      "frob_ratio_to_layer_median": 12.47718017297001,
+      "source": "results/experiments/E11/raw/smollm2-135m.json"
+    },
+    {
+      "model": "HuggingFaceTB/SmolLM2-360M",
+      "panel_index": 15,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 3,
+      "row": 87,
+      "q1": 0.9742504779226046,
+      "frob_norm": 5692.495943194842,
+      "layer_median_frob_norm": 254.39390864147404,
+      "frob_ratio_to_layer_median": 22.37669908683808,
+      "source": "results/experiments/E11/raw/smollm2-360m.json"
+    },
+    {
+      "model": "HuggingFaceTB/SmolLM2-1.7B",
+      "panel_index": 16,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 7,
+      "row": 227,
+      "q1": 0.9663919138439745,
+      "frob_norm": 3922.6019896226653,
+      "layer_median_frob_norm": 252.49372027442428,
+      "frob_ratio_to_layer_median": 15.535443754242134,
+      "source": "results/experiments/E11/raw/smollm2-1.7b.json"
+    },
+    {
+      "model": "GenerTeam/GENERator-v2-prokaryote-1.2b-base",
+      "panel_index": 17,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 4,
+      "row": 798,
+      "q1": 0.8468514071586476,
+      "frob_norm": 6.219604570429286,
+      "layer_median_frob_norm": 1.9301461179918071,
+      "frob_ratio_to_layer_median": 3.222349081478031,
+      "source": "results/experiments/E11/raw/generator-prok-1.2b.json"
+    },
+    {
+      "model": "GenerTeam/GENERator-v2-prokaryote-3b-base",
+      "panel_index": 18,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 8,
+      "row": 260,
+      "q1": 0.934973533990709,
+      "frob_norm": 52.16156499457906,
+      "layer_median_frob_norm": 6.812614124053642,
+      "frob_ratio_to_layer_median": 7.656615220640426,
+      "source": "results/experiments/E11/raw/generator-prok-3b.json"
+    },
+    {
+      "model": "EuroBERT/EuroBERT-210m",
+      "panel_index": 19,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 3,
+      "row": 300,
+      "q1": 0.9838491163147434,
+      "frob_norm": 2.0419119424635404,
+      "layer_median_frob_norm": 0.13658333982428578,
+      "frob_ratio_to_layer_median": 14.949934194686236,
+      "source": "results/experiments/E11/raw/eurobert-210m.json"
+    },
+    {
+      "model": "EuroBERT/EuroBERT-610m",
+      "panel_index": 20,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 13,
+      "row": 762,
+      "q1": 0.9996238293034937,
+      "frob_norm": 8.106532412548177,
+      "layer_median_frob_norm": 0.14167986124950258,
+      "frob_ratio_to_layer_median": 57.21725262189751,
+      "source": "results/experiments/E11/raw/eurobert-610m.json"
+    },
+    {
+      "model": "EuroBERT/EuroBERT-2.1B",
+      "panel_index": 21,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 14,
+      "row": 2198,
+      "q1": 0.9977414719034632,
+      "frob_norm": 2.750915946112038,
+      "layer_median_frob_norm": 0.13166230468278498,
+      "frob_ratio_to_layer_median": 20.893724690144545,
+      "source": "results/experiments/E11/raw/eurobert-2.1b.json"
+    },
+    {
+      "model": "answerdotai/ModernBERT-large",
+      "panel_index": 22,
+      "candidate_index": 0,
+      "primary": true,
+      "layer": 19,
+      "row": 379,
+      "q1": 0.9701337490592797,
+      "frob_norm": 708.1322939648359,
+      "layer_median_frob_norm": 26.645597736876592,
+      "frob_ratio_to_layer_median": 26.575958286152655,
+      "source": "results/experiments/E11/raw/modernbert-large.json"
+    }
+  ],
+  "control_sets": [
+    {
+      "model": "Llama-7B",
+      "panel_index": 0,
+      "layer": 2,
+      "excluded_candidate_rows": [
+        3968
+      ],
+      "control_rows": [
+        892,
+        2034,
+        2379,
+        3729,
+        3751
+      ]
+    },
+    {
+      "model": "Mistral-7B",
+      "panel_index": 1,
+      "layer": 1,
+      "excluded_candidate_rows": [
+        2070
+      ],
+      "control_rows": [
+        190,
+        305,
+        746,
+        1912,
+        2687
+      ]
+    },
+    {
+      "model": "OLMo-7B-0724-hf",
+      "panel_index": 2,
+      "layer": 1,
+      "excluded_candidate_rows": [
+        269
+      ],
+      "control_rows": [
+        292,
+        437,
+        2877,
+        2908,
+        3160
+      ]
+    },
+    {
+      "model": "Phi-3-mini-4k-instruct",
+      "panel_index": 3,
+      "layer": 2,
+      "excluded_candidate_rows": [
+        525,
+        1113,
+        1693
+      ],
+      "control_rows": [
+        356,
+        2345,
+        2759,
+        2830,
+        2983
+      ]
+    },
+    {
+      "model": "Phi-3-mini-4k-instruct",
+      "panel_index": 3,
+      "layer": 4,
+      "excluded_candidate_rows": [
+        525,
+        1113,
+        1693
+      ],
+      "control_rows": [
+        655,
+        1126,
+        1426,
+        1830,
+        2706
+      ]
+    },
+    {
+      "model": "Qwen2.5-7B",
+      "panel_index": 4,
+      "layer": 26,
+      "excluded_candidate_rows": [
+        458
+      ],
+      "control_rows": [
+        62,
+        1257,
+        2926,
+        3419,
+        3553
+      ]
+    },
+    {
+      "model": "MosaicBERT",
+      "panel_index": 5,
+      "layer": 9,
+      "excluded_candidate_rows": [
+        287
+      ],
+      "control_rows": [
+        56,
+        173,
+        193,
+        517,
+        545
+      ]
+    },
+    {
+      "model": "ModernBERT-base",
+      "panel_index": 6,
+      "layer": 15,
+      "excluded_candidate_rows": [
+        251
+      ],
+      "control_rows": [
+        23,
+        325,
+        421,
+        487,
+        687
+      ]
+    },
+    {
+      "model": "NTv3",
+      "panel_index": 7,
+      "layer": 11,
+      "excluded_candidate_rows": [
+        1472
+      ],
+      "control_rows": [
+        2,
+        142,
+        527,
+        924,
+        1152
+      ]
+    },
+    {
+      "model": "DNABERT-2",
+      "panel_index": 8,
+      "layer": 5,
+      "excluded_candidate_rows": [
+        603
+      ],
+      "control_rows": [
+        72,
+        216,
+        513,
+        542,
+        757
+      ]
+    },
+    {
+      "model": "GENERator-EUK-3B",
+      "panel_index": 9,
+      "layer": 4,
+      "excluded_candidate_rows": [
+        2371
+      ],
+      "control_rows": [
+        435,
+        915,
+        1058,
+        1490,
+        2073
+      ]
+    },
+    {
+      "model": "GenomeOcean-4B",
+      "panel_index": 10,
+      "layer": 1,
+      "excluded_candidate_rows": [
+        2604
+      ],
+      "control_rows": [
+        569,
+        739,
+        1012,
+        1471,
+        2581
+      ]
+    },
+    {
+      "model": "Qwen/Qwen2.5-0.5B",
+      "panel_index": 11,
+      "layer": 21,
+      "excluded_candidate_rows": [
+        62
+      ],
+      "control_rows": [
+        35,
+        488,
+        620,
+        714,
+        763
+      ]
+    },
+    {
+      "model": "Qwen/Qwen2.5-1.5B",
+      "panel_index": 12,
+      "layer": 26,
+      "excluded_candidate_rows": [
+        408
+      ],
+      "control_rows": [
+        443,
+        571,
+        930,
+        1118,
+        1343
+      ]
+    },
+    {
+      "model": "Qwen/Qwen2.5-3B",
+      "panel_index": 13,
+      "layer": 30,
+      "excluded_candidate_rows": [
+        318
+      ],
+      "control_rows": [
+        94,
+        128,
+        147,
+        668,
+        1146
+      ]
+    },
+    {
+      "model": "HuggingFaceTB/SmolLM2-135M",
+      "panel_index": 14,
+      "layer": 11,
+      "excluded_candidate_rows": [
+        507
+      ],
+      "control_rows": [
+        294,
+        320,
+        402,
+        441,
+        448
+      ]
+    },
+    {
+      "model": "HuggingFaceTB/SmolLM2-360M",
+      "panel_index": 15,
+      "layer": 3,
+      "excluded_candidate_rows": [
+        87
+      ],
+      "control_rows": [
+        238,
+        258,
+        338,
+        577,
+        934
+      ]
+    },
+    {
+      "model": "HuggingFaceTB/SmolLM2-1.7B",
+      "panel_index": 16,
+      "layer": 7,
+      "excluded_candidate_rows": [
+        227
+      ],
+      "control_rows": [
+        317,
+        582,
+        1422,
+        1547,
+        2043
+      ]
+    },
+    {
+      "model": "GenerTeam/GENERator-v2-prokaryote-1.2b-base",
+      "panel_index": 17,
+      "layer": 4,
+      "excluded_candidate_rows": [
+        798
+      ],
+      "control_rows": [
+        411,
+        1094,
+        1207,
+        1619,
+        1799
+      ]
+    },
+    {
+      "model": "GenerTeam/GENERator-v2-prokaryote-3b-base",
+      "panel_index": 18,
+      "layer": 8,
+      "excluded_candidate_rows": [
+        260
+      ],
+      "control_rows": [
+        960,
+        1268,
+        1327,
+        1440,
+        1680
+      ]
+    },
+    {
+      "model": "EuroBERT/EuroBERT-210m",
+      "panel_index": 19,
+      "layer": 3,
+      "excluded_candidate_rows": [
+        300
+      ],
+      "control_rows": [
+        97,
+        316,
+        361,
+        486,
+        620
+      ]
+    },
+    {
+      "model": "EuroBERT/EuroBERT-610m",
+      "panel_index": 20,
+      "layer": 13,
+      "excluded_candidate_rows": [
+        762
+      ],
+      "control_rows": [
+        47,
+        405,
+        830,
+        979,
+        1088
+      ]
+    },
+    {
+      "model": "EuroBERT/EuroBERT-2.1B",
+      "panel_index": 21,
+      "layer": 14,
+      "excluded_candidate_rows": [
+        2198
+      ],
+      "control_rows": [
+        560,
+        1905,
+        1946,
+        2212,
+        2286
+      ]
+    },
+    {
+      "model": "answerdotai/ModernBERT-large",
+      "panel_index": 22,
+      "layer": 19,
+      "excluded_candidate_rows": [
+        379
+      ],
+      "control_rows": [
+        144,
+        154,
+        374,
+        841,
+        940
+      ]
+    }
+  ]
+}

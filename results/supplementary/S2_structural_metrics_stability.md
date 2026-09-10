@@ -1,6 +1,6 @@
 # S2 — Structural metrics and candidate input stability
 
-Structural columns reformatted verbatim from the round-2 audit table. Stability columns from `results/census_analysis/input_stability.tsv`: each frozen coordinate re-evaluated on 24 independent domain-matched inputs, with no reselection. `frac_rank1` is the fraction of inputs on which the candidate is the layer's activation-ratio maximum; `frac_max_at_pos0` the fraction on which its own maximum falls at the first token.
+Structural columns reformatted verbatim from the round-2 audit table. Stability columns from `results/analyses/census_analysis/input_stability.tsv`: each frozen coordinate re-evaluated on 24 independent domain-matched inputs, with no reselection. `frac_rank1` is the fraction of inputs on which the candidate is the layer's activation-ratio maximum; `frac_max_at_pos0` the fraction on which its own maximum falls at the first token.
 
 | model | candidate_q1 | PR_spec | frobenius_norm_Uk | layer_median_norm | layer_relative_frobenius | mean_random_control_q1 | mean_topk_norm_control_q1 | random_control_gap | topk_by_norm_gap | control_source | cross_check_batch | n_inputs | ratio_median | ratio_min | ratio_max | frac_rank1 | frac_max_at_pos0 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|

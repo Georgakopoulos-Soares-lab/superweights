@@ -82,7 +82,7 @@ artifact, the panel was not rendered rather than approximated.
    well above the threshold, magnitudes do not follow — in SmolLM2-1.7B layer 7 the row
    ranked **4th** by ratio is **130× more damaging** than the row ranked **2nd**. Supported:
    the ratio **detects** and **orders**. Withdrawn: smooth severity calibration.
-   Evidence: `results/within_layer_sweep/within_model_slope_comparison.json`.
+   Evidence: `results/analyses/within_layer_sweep/within_model_slope_comparison.json`.
 
 9. **The one-candidate-per-model census design undercounts critical rows** (Sep 2026, scope
    limit rather than a retraction). Sweeping 36 rows instead of 1 found a **second**
@@ -103,7 +103,7 @@ artifact, the panel was not rendered rather than approximated.
     rule is **neither uniformly better nor worse** than the legacy absolute-activation rule.
     Specify "global argmax of the layer-relative ratio, accept if ≥5" as the **candidate
     detector** — reproducible and worth stating — and not as a claim about causal importance.
-    Evidence: `results/detector_provenance/EXP2_LEGACY_DETECTOR_RESOLUTION.md`.
+    Evidence: `results/analyses/detector_provenance/EXP2_LEGACY_DETECTOR_RESOLUTION.md`.
 
 ## Reproducing
 
@@ -195,8 +195,7 @@ science changed. Observed reproduction errors are 1e-9 to 1e-6 relative.
 | `models/`, `configs/` | Per-model wrapper classes and YAML, loaded dynamically via `WRAPPER_MAP` |
 | `stubs/` | Import shims so models with heavy optional dependencies load without them (`mamba_ssm` for Caduceus, a HybriDNA config). Put on `sys.path` at runtime by `scripts/evaluation/run_gue_ablation.py`; not type stubs, despite the name. |
 | `audit/` | The verification record across three adversarial rounds. `census_master.csv` is the canonical census table (22 models × 44 columns); See [`audit/README.md`](audit/README.md). |
-| `results/` | Artifacts. Gitignored by default; files backing a manuscript claim are force-added. |
-| `results/supplementary/` | All eight supplementary tables (S1–S8), with the builder for the five that are generated |
+| `results/` | Artifacts, in four groups: `experiments/` (one subdirectory per frozen harness), `analyses/` (derived analyses), `negative_results/`, `supplementary/` (the eight tables). Gitignored by default; files backing a reported number are force-added. See [`results/README.md`](results/README.md). |
 | `data/` | Small region and reference files. Large public inputs are documented, not vendored — see [`data/README.md`](data/README.md) |
 | `frozen_inputs/` | Content-hashed evaluation inputs |
 | `docs/` | The experiment map |

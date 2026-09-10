@@ -25,7 +25,7 @@ sys.path.insert(0, str(D))
 import run_bos_mediation as bm
 import e12_lib as e12
 
-OUT = ROOT / "results/mechanism_generator"; OUT.mkdir(parents=True, exist_ok=True)
+OUT = ROOT / "results/analyses/mechanism_generator"; OUT.mkdir(parents=True, exist_ok=True)
 N_DMG, N_GC, SCALES = 40, 12, [0.5, 1.0, 2.0]
 
 

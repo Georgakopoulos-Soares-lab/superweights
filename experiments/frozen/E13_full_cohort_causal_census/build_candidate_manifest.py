@@ -3,8 +3,8 @@
 
 E11 has one primary detected candidate per cohort row.  Phi-3 is the sole row whose E11
 entry explicitly aggregates a six-component published structural basis; those six rows are
-expanded here from ``results/E7/e7_phi3_spectral.json`` and their layer-relative norms are
-joined from ``results/E13/phi3_layer_median_breakdown.json``.  No causal artifact is read.
+expanded here from ``results/experiments/E7/e7_phi3_spectral.json`` and their layer-relative norms are
+joined from ``results/experiments/E13/phi3_layer_median_breakdown.json``.  No causal artifact is read.
 """
 from __future__ import annotations
 

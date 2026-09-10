@@ -33,7 +33,7 @@ MODELS=(mosaicbert modernbert-base ntv3 genomeocean-4b \
 
 echo "[$(STAMP)] ONLINE QUEUE START" | tee -a "$MASTER"
 for m in "${MODELS[@]}"; do
-    out="$REPO/results/E13_candidate_stability/${m}.json"
+    out="$REPO/results/experiments/E13_candidate_stability/${m}.json"
     if [ -f "$out" ]; then
         echo "[$(STAMP)] SKIP  $m (already succeeded)" | tee -a "$MASTER"
         continue

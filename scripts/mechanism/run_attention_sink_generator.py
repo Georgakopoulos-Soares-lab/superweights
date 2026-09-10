@@ -32,7 +32,7 @@ sys.path.insert(0, str(D))
 import run_bos_mediation as bm
 import e12_lib as e12
 
-OUT = ROOT / "results/mechanism_generator"; OUT.mkdir(parents=True, exist_ok=True)
+OUT = ROOT / "results/analyses/mechanism_generator"; OUT.mkdir(parents=True, exist_ok=True)
 N_WIN = 24
 CONDS = ["A_intact", "B_full_ablation_weight", "C_ablate_bos_only",
          "D_ablate_all_except_bos", "E_restore_at_bos", "F_restore_at_matched_nonbos"]

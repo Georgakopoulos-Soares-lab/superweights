@@ -14,7 +14,7 @@ Supplement S1 -- full structural / control-row detail behind Figures 1 and 2.
      with B while adding its own one-off term ("local spectral exceptionalness"). Not
      deleted, only moved: same data, same script logic as the old panel D.
 
-Source: results/E7/e7_phi3_spectral.json, results/E10/e10_decoder_concentration.json,
+Source: results/experiments/E7/e7_phi3_spectral.json, results/experiments/E10/e10_decoder_concentration.json,
         experiments/figures/source_data/fig1_structural_panel_bcd.csv (written by
         experiments/figures/fig1_structural.py).
 Output: figures/supplement/fig_s1_structural_detail.{png,pdf}

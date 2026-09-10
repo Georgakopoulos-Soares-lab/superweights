@@ -5,19 +5,19 @@ Primary analysis: the 16 models whose E13 candidate coordinate was originally se
 the activation-based detector (ratio >= 5.0, `candidate.ratio` in the E7/E8/E11 per-model
 detection JSONs). The other 6 candidates in the 22-model causal cohort (Llama-7B, Mistral-7B,
 OLMo-7B-0724-hf, NTv3, DNABERT-2, GENERator-EUK-3B) were carried over from
-`results/E7/e7_legacy_reanalysis.json`, which has no activation-ratio field at all -- those
+`results/experiments/E7/e7_legacy_reanalysis.json`, which has no activation-ratio field at all -- those
 coordinates came from published/structural provenance, not the prospective ratio detector.
 Phi-3 is excluded throughout, matching `part1_22_structure_function_correlations.json`.
 
 Existing artifacts only -- no new model runs. Sources:
-  - results/E11/scale_ladder_backfilled.csv        (detection_ratio, when backfilled)
-  - results/E7/e7_phase1_detection_qwen25.json         (candidate.ratio, Qwen2.5-7B)
+  - results/experiments/E11/scale_ladder_backfilled.csv        (detection_ratio, when backfilled)
+  - results/experiments/E7/e7_phase1_detection_qwen25.json         (candidate.ratio, Qwen2.5-7B)
   - results/e8_detection_mosaicbert.json            (candidate.ratio, MosaicBERT)
   - results/e8_detection_modernbert.json            (candidate.ratio, ModernBERT-base)
-  - results/E7/e7_phase1_detection_genomeocean.json    (candidate.ratio, GenomeOcean-4B)
-  - results/E13/part1_22_candidate_effects.csv      (signed relative-loss effect, both eps)
-  - results/E13/part1_22_cohort_summary.csv         (candidate-minus-random-control gap)
-  - audit/round2/structural_vs_causal_gap.csv       (candidate-minus-top-norm-control gap)
+  - results/experiments/E7/e7_phase1_detection_genomeocean.json    (candidate.ratio, GenomeOcean-4B)
+  - results/experiments/E13/part1_22_candidate_effects.csv      (signed relative-loss effect, both eps)
+  - results/experiments/E13/part1_22_cohort_summary.csv         (candidate-minus-random-control gap)
+  - audit/rederivations/structural_vs_causal_gap.csv       (candidate-minus-top-norm-control gap)
 """
 from __future__ import annotations
 
@@ -217,7 +217,7 @@ def main() -> None:
     report["twentytwo_model_sensitivity_note"] = (
         "The 6 non-ratio-selected models (Llama-7B, Mistral-7B, OLMo-7B-0724-hf, NTv3, "
         "DNABERT-2, GENERator-EUK-3B) have no activation-ratio detector value at all -- their "
-        "candidates came from results/E7/e7_legacy_reanalysis.json (published/structural "
+        "candidates came from results/experiments/E7/e7_legacy_reanalysis.json (published/structural "
         "provenance), which never recorded an activation ratio. A 22-model activation-ratio "
         "correlation therefore cannot be constructed. The existing 22-model sensitivity check "
         "on the adjacent structural quantity (frob_ratio_to_layer_median) is already computed "

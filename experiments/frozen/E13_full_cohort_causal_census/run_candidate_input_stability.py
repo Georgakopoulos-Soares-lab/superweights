@@ -2,7 +2,7 @@
 """Priority-2 multi-input stability check on the FROZEN E13 candidates.
 
 Never re-selects a candidate. For each model, loads its frozen (layer, row) from
-results/E13/candidate_manifest.json, builds N independent domain-appropriate inputs
+results/experiments/E13/candidate_manifest.json, builds N independent domain-appropriate inputs
 using the exact same window-sampling machinery / per-model tokenizer conventions
 already used by run_singleton_census.py and run_rowwise_detector.py (build_windows for
 text, read_fasta_windows_mlm for genomic encoders, e12.build_corpora's damage pool for

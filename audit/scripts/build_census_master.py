@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """Build audit/census_master.csv and audit/census_controls_structural.csv.
 
-Source: results/E13/part2_22_model_results.csv (STORED, gitignored, mtime/sha256
-provenance only -- see audit/provenance.json) + results/E13/raw/*.json (endpoint
-metadata) + results/E13/candidate_manifest.json (control seed stream formula).
+Source: results/experiments/E13/part2_22_model_results.csv (STORED, gitignored, mtime/sha256
+provenance only -- see audit/provenance.json) + results/experiments/E13/raw/*.json (endpoint
+metadata) + results/experiments/E13/candidate_manifest.json (control seed stream formula).
 
 Fields activation_ratio / activation_max / selection_statistic_used are left
 blank here by design -- they require reconciling multiple, sometimes-disagreeing
@@ -17,9 +17,9 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-CENSUS = ROOT / "results/E13/part2_22_model_results.csv"
-RAW_DIR = ROOT / "results/E13/raw"
-MANIFEST = ROOT / "results/E13/candidate_manifest.json"
+CENSUS = ROOT / "results/experiments/E13/part2_22_model_results.csv"
+RAW_DIR = ROOT / "results/experiments/E13/raw"
+MANIFEST = ROOT / "results/experiments/E13/candidate_manifest.json"
 OUT = ROOT / "audit"
 
 FIELDS = ["model_id", "hf_repo", "hf_revision", "domain", "architecture",
@@ -87,7 +87,7 @@ def main():
     # R values) -- those structural quantities exist only for the 12-model E11 cohort
     # (scale_ladder_controls.csv) plus the 2 recovered legacy models (MosaicBERT,
     # ModernBERT-base), per PART1_STRUCTURAL_MANUSCRIPT_PACKET.md Sections 2-3.
-    ladder_controls = ROOT / "results/E11/scale_ladder_controls.csv"
+    ladder_controls = ROOT / "results/experiments/E11/scale_ladder_controls.csv"
     struct_rows = []
     if ladder_controls.exists():
         by_model = {}

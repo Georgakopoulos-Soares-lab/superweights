@@ -3,11 +3,11 @@ experiments/E13_full_cohort_causal_census/backfill_layer_median.py
 
 Phase 1, job 1 of the full-cohort causal census (part_prompt.md). Backfills
 `layer_median_frob_norm` / `candidate_frob_norm_ratio_to_layer_median` for the 11 "cited"
-rows in results/E11/scale_ladder.csv (Llama-7B, Mistral-7B, OLMo-7B-0724-hf, Phi-3-mini,
+rows in results/experiments/E11/scale_ladder.csv (Llama-7B, Mistral-7B, OLMo-7B-0724-hf, Phi-3-mini,
 Qwen2.5-7B, MosaicBERT, ModernBERT-base, GENERator-EUK-3B, GenomeOcean-4B, DNABERT-2, NTv3).
 
 This is NOT a new causal measurement and does not touch candidate selection (all 11
-candidate (layer, row) pairs are read verbatim from results/E11/scale_ladder.csv, which is
+candidate (layer, row) pairs are read verbatim from results/experiments/E11/scale_ladder.csv, which is
 itself locked/frozen structural output from E7/E8/E10/E11). It is a pure weight-space
 Frobenius-norm computation, reusing:
   - experiments/tools/uk_frobenius.py (layer_report, ADAPTERS: llama_swiglu / dnabert2 / ntv3)
@@ -18,14 +18,14 @@ Frobenius-norm computation, reusing:
 
 For 4 of the 11 models, the exact full-layer computation ALREADY EXISTS on disk from prior
 experiments and is simply read back, not recomputed:
-  - OLMo-7B-0724-hf: results/E10/e10_exact_uknorm_olmo.json (layer 1, all 4096 rows, Gram-identity
+  - OLMo-7B-0724-hf: results/experiments/E10/e10_exact_uknorm_olmo.json (layer 1, all 4096 rows, Gram-identity
     exact ||U_k||_F, validated against spectral_lib SVD to rel_err < 1e-6 in that script)
-  - Phi-3-mini-4k-instruct: results/E10/e10_exact_uknorm_phi3.json (layers 2 and 4 separately, all
+  - Phi-3-mini-4k-instruct: results/experiments/E10/e10_exact_uknorm_phi3.json (layers 2 and 4 separately, all
     3072 rows each)
-  - MosaicBERT: results/E10/e10_encoder_row_ranking_mosaicbert.json (full per-row q1/frob_norm scan,
+  - MosaicBERT: results/experiments/E10/e10_encoder_row_ranking_mosaicbert.json (full per-row q1/frob_norm scan,
     all 12 layers x 768 rows, via row_spectral_metrics/SVD -- exact, not the Gram shortcut, but
     the same frob_norm quantity)
-  - ModernBERT-base: results/E10/e10_encoder_row_ranking_modernbert.json (same, 22 layers x 768 rows)
+  - ModernBERT-base: results/experiments/E10/e10_encoder_row_ranking_modernbert.json (same, 22 layers x 768 rows)
 
 For the remaining 7, this script performs a NEW (but cheap, weight-only) computation:
   - Llama-7B, Mistral-7B, Qwen2.5-7B, GENERator-EUK-3B, GenomeOcean-4B: llama-style separate
@@ -39,9 +39,9 @@ For the remaining 7, this script performs a NEW (but cheap, weight-only) computa
     size) via AutoModelForMaskedLM, then the same layer_report() call, restricted to the one
     candidate layer (not all layers, to keep this a targeted backfill, not a full re-audit).
 
-Output: results/E13/layer_median_backfill.json (one entry per model, full LayerReport-shaped
+Output: results/experiments/E13/layer_median_backfill.json (one entry per model, full LayerReport-shaped
 data for the candidate's own layer) AND an updated
-results/E11/scale_ladder_backfilled.csv (scale_ladder.csv is NOT edited in place --
+results/experiments/E11/scale_ladder_backfilled.csv (scale_ladder.csv is NOT edited in place --
 it is treated as an existing frozen artifact; the backfilled copy is a new file, with a
 `layer_median_source` column documenting exactly which of the two paths above was used per
 row).
@@ -221,7 +221,7 @@ def compute_small_full_load(repo: str, adapter: str, layer: int, row: int,
 
 
 # --------------------------------------------------------------------------------------
-# Model registry: exactly the 11 "cited" rows in results/E11/scale_ladder.csv. (layer, row)
+# Model registry: exactly the 11 "cited" rows in results/experiments/E11/scale_ladder.csv. (layer, row)
 # and repo copied verbatim from that CSV -- candidate selection is NOT touched here.
 # --------------------------------------------------------------------------------------
 
@@ -304,7 +304,7 @@ def run_one(key: str) -> dict:
         # 6 published candidate rows across layers 2 and 4 -- report per-layer median
         # (median computed WITHIN each layer, over that layer's own d_model=3072 rows),
         # matching the CSV's own "6 published rows, median" framing. Both layers already
-        # fully computed in results/E10/e10_exact_uknorm_phi3.json.
+        # fully computed in results/experiments/E10/e10_exact_uknorm_phi3.json.
         rows_l2 = [525, 1693, 1113]
         rows_l4 = [525, 1113, 1693]
         per_row = {}
@@ -313,7 +313,7 @@ def run_one(key: str) -> dict:
         for r in rows_l4:
             per_row[f"L4/r{r}"] = from_exact_uknorm_json("phi3", 4, r)
         out = dict(
-            source_file="results/E10/e10_exact_uknorm_phi3.json",
+            source_file="results/experiments/E10/e10_exact_uknorm_phi3.json",
             method="Gram-identity exact ||U_k||_F, all rows in each of layers 2 and 4 "
                    "separately (Phi-3's 6 published candidate rows split across 2 layers; "
                    "layer_median_frob_norm/candidate_frob_norm_ratio_to_layer_median are "

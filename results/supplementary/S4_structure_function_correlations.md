@@ -1,6 +1,6 @@
 # S4 -- Structure-function correlations
 
-Source: `audit/round2/structure_function_correlations.csv` (STORED, reformatted verbatim -- no values recomputed). 16 rows: 2 predictors (`q1`, `layer_relative_frobenius`) x 2 epsilons (0.5, 1.0) x 4 panels (all-22, text-decoders-only, text-encoders-only, genomic-only). The `underpowered_n_lt_8` flag is retained as-is (not dropped or renamed) -- panels with n<8 (text-encoders-only, n=6; genomic-only, n=6) are flagged `True`.
+Source: `audit/rederivations/structure_function_correlations.csv` (STORED, reformatted verbatim -- no values recomputed). 16 rows: 2 predictors (`q1`, `layer_relative_frobenius`) x 2 epsilons (0.5, 1.0) x 4 panels (all-22, text-decoders-only, text-encoders-only, genomic-only). The `underpowered_n_lt_8` flag is retained as-is (not dropped or renamed) -- panels with n<8 (text-encoders-only, n=6; genomic-only, n=6) are flagged `True`.
 
 | Predictor | epsilon | Panel | n | rho | p | CI low | CI high | seed | LOO rho min | LOO rho max | Underpowered (n<8) |
 |---|---|---|---|---|---|---|---|---|---|---|---|

@@ -351,7 +351,7 @@ def main():
     parser.add_argument("--max_length", type=int,   default=None)
     parser.add_argument("--ckpt_dir",   default=None)
     parser.add_argument("--sw_index",   default="results/negative_results/super_weight_index.json")
-    parser.add_argument("--out",        default="results/gue/gue_per_row_ablation.json")
+    parser.add_argument("--out",        default="results/experiments/gue/gue_per_row_ablation.json")
     parser.add_argument("--batch",      type=int,   default=64)
     parser.add_argument("--n_rand",     type=int,   default=10)
     parser.add_argument("--hf_token",   default=None)

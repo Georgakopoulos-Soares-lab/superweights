@@ -1,7 +1,7 @@
 # E10b Phase 8 / final synthesis — Phi-3 mechanistic tomography
 
 Written only after the primary F0-F3 decision was frozen at both epsilons
-(`results/E10/e10b_phi3_fit_results.json`). Governing lock:
+(`results/experiments/E10/e10b_phi3_fit_results.json`). Governing lock:
 `PREREG_E10b_phi3_tomography.md` (sha256 `098fd52cd398b2f574490fb64dee3842aad057b2a367921bc8ba38926338cda0`).
 No E10 v2 result (commit `626cddd`) is touched by this experiment.
 
@@ -32,7 +32,7 @@ At ε=1.0, exactly the masks that fully ablate **all three layer-2 rows together
 | rows {0,1,2,3} | +9.25 |
 
 Every other mask in fit/calibration/held-out — including every mask containing only **2 of
-the 3** layer-2 rows — stays in the +0.02 to +1.1 range (`results/E10/e10b_phi3_tomography_responses.json`).
+the 3** layer-2 rows — stays in the +0.02 to +1.1 range (`results/experiments/E10/e10b_phi3_tomography_responses.json`).
 Two of the ten held-out masks land in the catastrophic regime (rows {0,1,2} and {0,1,2,4}),
 which is what drives F0-F3's negative held-out R² — a linear or pairwise model fit
 predominantly on the "normal" regime cannot represent an effect that only appears when a
@@ -131,8 +131,8 @@ exceeds what either family in this ladder can capture, on a decoder.
 | Basis audit | `experiments/frozen/E10b_phi3_tomography/PHI3_BASIS_AUDIT.md` |
 | Locked prereg | `experiments/docs/prereg/PREREG_E10b_phi3_tomography.md` (sha256 `098fd52c...`) |
 | Mask design + validity checks | `experiments/frozen/E10b_phi3_tomography/masks_phi3.json` |
-| Raw per-mask, per-batch responses (both epsilons) | `results/E10/e10b_phi3_tomography_responses.json` |
-| F0-F3 coefficients, metrics, bootstrap, retrospective pairs | `results/E10/e10b_phi3_fit_results.json` |
+| Raw per-mask, per-batch responses (both epsilons) | `results/experiments/E10/e10b_phi3_tomography_responses.json` |
+| F0-F3 coefficients, metrics, bootstrap, retrospective pairs | `results/experiments/E10/e10b_phi3_fit_results.json` |
 | Measurement script | `experiments/frozen/E10b_phi3_tomography/run_phi3_tomography.py` |
 | Fitting script | `experiments/frozen/E10b_phi3_tomography/fit_phi3_observers.py` |
 | Mask-generation library | `experiments/frozen/E10b_phi3_tomography/mask_lib_e10b.py` |

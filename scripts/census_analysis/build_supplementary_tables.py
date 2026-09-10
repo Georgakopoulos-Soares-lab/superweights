@@ -53,7 +53,7 @@ def r(x, n=6):
 def s2():
     base = list(csv.DictReader((OUT / "sources/S2_structural_metrics.tsv").open(), delimiter="\t"))
     stab = {d["model"]: d for d in
-            csv.DictReader((ROOT / "results/census_analysis/input_stability.tsv").open(),
+            csv.DictReader((ROOT / "results/analyses/census_analysis/input_stability.tsv").open(),
                            delimiter="\t")}
     add = ["n_inputs", "ratio_median", "ratio_min", "ratio_max", "frac_rank1",
            "frac_max_at_pos0"]
@@ -68,7 +68,7 @@ def s2():
     write("S2_structural_metrics_stability",
           "S2 — Structural metrics and candidate input stability",
           "Structural columns reformatted verbatim from the round-2 audit table. Stability "
-          "columns from `results/census_analysis/input_stability.tsv`: each frozen coordinate "
+          "columns from `results/analyses/census_analysis/input_stability.tsv`: each frozen coordinate "
           "re-evaluated on 24 independent domain-matched inputs, with no reselection. "
           "`frac_rank1` is the fraction of inputs on which the candidate is the layer's "
           "activation-ratio maximum; `frac_max_at_pos0` the fraction on which its own maximum "
@@ -85,7 +85,7 @@ def s3():
             [b[k] for k in base[0]] for b in base]
 
     extra = []
-    olmo = json.loads((ROOT / "results/detector_provenance/uniform_detector_text_olmo.json").read_text())
+    olmo = json.loads((ROOT / "results/analyses/detector_provenance/uniform_detector_text_olmo.json").read_text())
     for c in olmo["conditions"]:
         if c["kind"] == "uniform_candidate":
             extra.append(["ratio-argmax (disagreement)", "layer-relative ratio argmax",
@@ -95,7 +95,7 @@ def s3():
     if med is not None:
         extra.append(["ratio-argmax controls (5, same layer)", "seeded", "census native-loss",
                       "OLMo-7B-0724-hf", 1.0, "", "", "", r(med), "", "", ""])
-    dna = json.loads((ROOT / "results/detector_provenance/uniform_detector_dnabert2.json").read_text())
+    dna = json.loads((ROOT / "results/analyses/detector_provenance/uniform_detector_dnabert2.json").read_text())
     c = dna["conditions"]["default"]
     if "causal_uniform_rel" in c:
         extra.append(["ratio-argmax (disagreement)", "layer-relative ratio argmax",
@@ -121,7 +121,7 @@ def s3():
 def s6():
     fit = json.loads((ROOT / "experiments/frozen/E9_mechanistic_tomography/"
                              "fit_results_dnabert2.json").read_text())["by_epsilon"]
-    stab = list(csv.DictReader((ROOT / "audit/round2/tomography_split_stability.csv").open()))
+    stab = list(csv.DictReader((ROOT / "audit/rederivations/tomography_split_stability.csv").open()))
     fam_hdr = ["epsilon", "observer_family", "held_out_r2", "held_out_mae", "rmse",
                "normalized_mae", "resplit_median_r2", "resplit_p2.5", "resplit_p97.5",
                "n_resplits"]
@@ -147,7 +147,7 @@ def s6():
           "Resplit columns are the median and 95% interval over 100 alternative "
           "fit/calibration/held-out partitions. Sources: "
           "`experiments/frozen/E9_mechanistic_tomography/fit_results_dnabert2.json`, "
-          "`audit/round2/tomography_split_stability.csv`, `audit/tomography_pair_coeffs.csv`.",
+          "`audit/rederivations/tomography_split_stability.csv`, `audit/tomography_pair_coeffs.csv`.",
           fam_hdr, fam_rows,
           sections=[("A — Observer families, held-out performance", fam_hdr, fam_rows),
                     ("B — Pairwise interaction coefficients (45 pairs x 2 strengths)",
@@ -161,7 +161,7 @@ def s7():
     rows = []
     for fn, model, layer in [("within_model_slope.json", "GENERator-EUK-3B", 4),
                              ("within_model_slope_smollm2_1.7b.json", "SmolLM2-1.7B", 7)]:
-        d = json.loads((ROOT / "results/within_layer_sweep" / fn).read_text())
+        d = json.loads((ROOT / "results/analyses/within_layer_sweep" / fn).read_text())
         for q in sorted(d["rows"], key=lambda x: x["rank"]):
             rows.append([model, layer, q["row"], q["rank"], r(q["activation_ratio"], 4),
                          r(q["nll"], 8), r(q["delta_nll"], 8), r(q["rel_delta"], 8),
@@ -173,13 +173,13 @@ def s7():
           "pool. Selection used the activation ratio alone and never a causal outcome. "
           "`above_detector_threshold` marks the detector's own >=5 acceptance rule and "
           "reproduces the 21/15 partition used in the main text. Sources: "
-          "`results/within_layer_sweep/within_model_slope{,_smollm2_1.7b}.json`.", hdr, rows)
+          "`results/analyses/within_layer_sweep/within_model_slope{,_smollm2_1.7b}.json`.", hdr, rows)
 
 
 # ── S8: two critical rows -- ablations and geometry ──────────────────────────
 def s8():
-    e = json.loads((ROOT / "results/within_layer_sweep/smollm2_second_row_epistasis.json").read_text())
-    g = json.loads((ROOT / "results/within_layer_sweep/smollm2_161_749_geometry.json").read_text())
+    e = json.loads((ROOT / "results/analyses/within_layer_sweep/smollm2_second_row_epistasis.json").read_text())
+    g = json.loads((ROOT / "results/analyses/within_layer_sweep/smollm2_161_749_geometry.json").read_text())
     RATIO, RANK = {227: 3181.70, 161: 63.54, 749: 358.56}, {227: 1, 161: 4, 749: 2}
     a_hdr = ["condition", "rows", "activation_ratio", "ratio_rank", "nll", "effect_rel",
              "sum_of_singles", "interaction", "joint_over_sum", "verdict"]
@@ -211,8 +211,8 @@ def s8():
           "re-measured with an independent implementation that zeroes rows by explicit "
           "indexing and re-checks the intact loss after every restoration; every value "
           "reproduced exactly and the result was invariant to ablation order. Geometry is "
-          "data-free. Sources: `results/within_layer_sweep/smollm2_second_row_epistasis.json`, "
-          "`results/within_layer_sweep/smollm2_161_749_geometry.json`.",
+          "data-free. Sources: `results/analyses/within_layer_sweep/smollm2_second_row_epistasis.json`, "
+          "`results/analyses/within_layer_sweep/smollm2_161_749_geometry.json`.",
           a_hdr, a_rows,
           sections=[("A — Single and pairwise ablations", a_hdr, a_rows),
                     ("B — Row geometry against a same-layer null", g_hdr, g_rows)])

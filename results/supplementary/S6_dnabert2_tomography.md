@@ -1,6 +1,6 @@
 # S6 — DNABERT-2 finite-intervention tomography
 
-Observer families fitted on a fixed 10-row high-gain basis and evaluated on 20 held-out intervention conditions at each strength. F0 sums independently measured singleton effects; F1 adds one global calibration scalar; F2 fits each row's contribution but stays additive; F3 adds all 45 pairwise interaction terms. Resplit columns are the median and 95% interval over 100 alternative fit/calibration/held-out partitions. Sources: `experiments/frozen/E9_mechanistic_tomography/fit_results_dnabert2.json`, `audit/round2/tomography_split_stability.csv`, `audit/tomography_pair_coeffs.csv`.
+Observer families fitted on a fixed 10-row high-gain basis and evaluated on 20 held-out intervention conditions at each strength. F0 sums independently measured singleton effects; F1 adds one global calibration scalar; F2 fits each row's contribution but stays additive; F3 adds all 45 pairwise interaction terms. Resplit columns are the median and 95% interval over 100 alternative fit/calibration/held-out partitions. Sources: `experiments/frozen/E9_mechanistic_tomography/fit_results_dnabert2.json`, `audit/rederivations/tomography_split_stability.csv`, `audit/tomography_pair_coeffs.csv`.
 
 ## A — Observer families, held-out performance
 

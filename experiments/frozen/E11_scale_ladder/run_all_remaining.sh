@@ -8,7 +8,7 @@ export HF_HUB_CACHE="$HF_HOME"
 unset SSL_CERT_FILE REQUESTS_CA_BUNDLE
 cd /work/11034/atzanakak/glm_super_weight/genomic-super-weights
 
-LOGDIR=results/E11/logs
+LOGDIR=results/experiments/E11/logs
 mkdir -p "$LOGDIR"
 
 MODELS=(smollm2-360m smollm2-1.7b qwen25-0.5b qwen25-1.5b qwen25-3b generator-prok-1.2b generator-prok-3b eurobert-210m eurobert-610m eurobert-2.1b modernbert-large)

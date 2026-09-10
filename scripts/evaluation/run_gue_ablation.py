@@ -709,7 +709,7 @@ def main():
                         help="Where to save/load the fine-tune checkpoint "
                              "(default: results/gue_checkpoints/<model>_<task_leaf>)")
     parser.add_argument("--sw_index", default="results/negative_results/super_weight_index.json")
-    parser.add_argument("--out",      default="results/gue/gue_ablation_results.json")
+    parser.add_argument("--out",      default="results/experiments/gue/gue_ablation_results.json")
     parser.add_argument("--sweep",    action="store_true",
                         help="Run layer sweep to find task-specific super rows")
     parser.add_argument("--structured_rand", type=int, default=0, metavar="N",

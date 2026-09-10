@@ -29,7 +29,7 @@ sys.path.insert(0, str(D))
 import run_bos_mediation as bm
 import e12_lib as e12
 
-OUT = ROOT / "results/within_layer_sweep"; OUT.mkdir(parents=True, exist_ok=True)
+OUT = ROOT / "results/analyses/within_layer_sweep"; OUT.mkdir(parents=True, exist_ok=True)
 N_ACT_WIN, N_DMG_WIN, N_ROWS = 24, 40, 40
 
 

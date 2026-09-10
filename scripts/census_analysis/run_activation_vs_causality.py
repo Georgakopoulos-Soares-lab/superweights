@@ -47,7 +47,7 @@ cen = list(csv.DictReader(open(os.path.join(ROOT, "audit/census_master.csv"))))
 
 # ---- load 24-input stability assay, keyed by (layer,row) + slug --------------
 stab = {}
-for f in glob.glob(os.path.join(ROOT, "results/E13_candidate_stability/*.json")):
+for f in glob.glob(os.path.join(ROOT, "results/experiments/E13_candidate_stability/*.json")):
     j = json.load(open(f))
     s = j["summary"]
     per = j.get("per_input", [])
@@ -157,8 +157,8 @@ for cname, filt in COHORTS.items():
                                  spearman_rho=st["rho"], p_value=st["p"],
                                  ci95_lo=st["lo"], ci95_hi=st["hi"]))
 
-os.makedirs(os.path.join(ROOT, "results/census_analysis"), exist_ok=True)
-tsv = os.path.join(ROOT, "results/census_analysis/activation_vs_causality.tsv")
+os.makedirs(os.path.join(ROOT, "results/analyses/census_analysis"), exist_ok=True)
+tsv = os.path.join(ROOT, "results/analyses/census_analysis/activation_vs_causality.tsv")
 with open(tsv, "w", newline="") as f:
     w = csv.DictWriter(f, fieldnames=["cohort","n","predictor","endpoint","spearman_rho",
                                       "p_value","ci95_lo","ci95_hi"], delimiter="\t")
@@ -166,7 +166,7 @@ with open(tsv, "w", newline="") as f:
     for r in out_rows:
         w.writerow({k: ("" if r[k] is None else r[k]) for k in r})
 
-per = os.path.join(ROOT, "results/census_analysis/activation_vs_causality_per_model.tsv")
+per = os.path.join(ROOT, "results/analyses/census_analysis/activation_vs_causality_per_model.tsv")
 cols = ["model_id","slug","domain","architecture","candidate_layer","candidate_row",
         "activation_max","activation_ratio","ratio_median_24","ratio_cv_24","rank_median_24",
         "frac_rank1","max_position_at_0_fraction","q1","layer_relative_frobenius",

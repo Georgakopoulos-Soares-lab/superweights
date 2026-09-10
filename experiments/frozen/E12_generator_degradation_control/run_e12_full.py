@@ -38,7 +38,7 @@ import e12_lib as el  # noqa: E402
 
 SMOKE = os.environ.get("E12_SMOKE_TEST", "0") == "1"
 
-RESULTS_DIR = REPO_ROOT / ("results/E12_smoke" if SMOKE else "results/E12")
+RESULTS_DIR = REPO_ROOT / ("results/E12_smoke" if SMOKE else "results/experiments/E12")
 FIG_DIR = REPO_ROOT / ("figures/E12_smoke" if SMOKE else "figures/E12")
 RAW_DIR = RESULTS_DIR / "raw"
 RAW_DIR.mkdir(parents=True, exist_ok=True)
@@ -649,7 +649,7 @@ def write_summary(all_recs, matches, target_damage, n_prompt, control_rows, kmer
         f"{frac_attrib_kmer:.4f} (GC baseline={kmer_info['gc_base']:.4f}, "
         f"GC alpha=0={kmer_info['gc_abl']:.4f}, GC alpha=0 with longest run removed="
         f"{kmer_info['gc_abl_norun_mean']:.4f}). Top enriched 3-mers/6-mers are in "
-        f"`results/E12/kmer_attribution.csv`.\n")
+        f"`results/experiments/E12/kmer_attribution.csv`.\n")
 
     lines.append(
         f"**Corpus.** {corpus_meta.get('n_prompt')} generation-prompt windows "

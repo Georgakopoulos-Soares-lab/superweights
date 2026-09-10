@@ -1,6 +1,6 @@
 # S8 — Two critical rows in SmolLM2-1.7B layer 7: ablations and geometry
 
-**Sign convention:** the endpoint is a loss increase, so `interaction = effect_rel - sum_of_singles` is positive for super-additivity. This is the opposite sign to this project's accuracy-endpoint epistasis figures (e.g. DNABERT-2's -33.63 pp), which must be converted before comparison. All six ablation conditions were re-measured with an independent implementation that zeroes rows by explicit indexing and re-checks the intact loss after every restoration; every value reproduced exactly and the result was invariant to ablation order. Geometry is data-free. Sources: `results/within_layer_sweep/smollm2_second_row_epistasis.json`, `results/within_layer_sweep/smollm2_161_749_geometry.json`.
+**Sign convention:** the endpoint is a loss increase, so `interaction = effect_rel - sum_of_singles` is positive for super-additivity. This is the opposite sign to this project's accuracy-endpoint epistasis figures (e.g. DNABERT-2's -33.63 pp), which must be converted before comparison. All six ablation conditions were re-measured with an independent implementation that zeroes rows by explicit indexing and re-checks the intact loss after every restoration; every value reproduced exactly and the result was invariant to ablation order. Geometry is data-free. Sources: `results/analyses/within_layer_sweep/smollm2_second_row_epistasis.json`, `results/analyses/within_layer_sweep/smollm2_161_749_geometry.json`.
 
 ## A — Single and pairwise ablations
 

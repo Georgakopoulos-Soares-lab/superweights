@@ -7,7 +7,7 @@ This literal list is the authoritative source of truth for `panel_index` in ever
 `SeedSequence(42).spawn(23)` same-layer control draw this experiment makes -- the display
 table in the PREREG doc is illustrative only; this file is what the code actually uses.
 
-Generated verbatim from `results/E11/scale_ladder.csv` row order at protocol-authoring time
+Generated verbatim from `results/experiments/E11/scale_ladder.csv` row order at protocol-authoring time
 (2026-08-24), which already contains one row per model for the exact 23-model cohort
 part_prompt.md specifies (verified name-for-name). Do not reorder after the PREREG lock.
 """
@@ -20,7 +20,7 @@ SALVAGE = Path(__file__).resolve().parents[2]
 ROOT = SALVAGE.parent
 SCALE_LADDER_CSV = ROOT / "results" / "E11" / "scale_ladder.csv"
 
-# Frozen 2026-08-24. Matches results/E11/scale_ladder.csv row order exactly.
+# Frozen 2026-08-24. Matches results/experiments/E11/scale_ladder.csv row order exactly.
 PANEL_ORDER = [
     "Llama-7B",
     "Mistral-7B",
@@ -60,7 +60,7 @@ def _verify_against_csv() -> None:
     csv_order = [r["model"] for r in rows]
     if csv_order != PANEL_ORDER:
         raise RuntimeError(
-            "panel.py PANEL_ORDER has drifted from results/E11/scale_ladder.csv row order. "
+            "panel.py PANEL_ORDER has drifted from results/experiments/E11/scale_ladder.csv row order. "
             f"csv={csv_order}\npanel={PANEL_ORDER}\n"
             "This must not happen silently -- it would shift every model's SeedSequence(42) "
             "control-row draw. Fix by hand and re-check, do not auto-sort."

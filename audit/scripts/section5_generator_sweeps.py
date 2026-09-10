@@ -4,9 +4,9 @@
 Columns: row_id, alpha, nll, gc_fraction, gc_ci_low, gc_ci_high, n_prompts, n_seeds
 for row 2371, the five control rows, and the random-direction condition.
 
-nll/damage comes from results/E12/raw/damage_evals.jsonl (100-window damage pool,
+nll/damage comes from results/experiments/E12/raw/damage_evals.jsonl (100-window damage pool,
 matches the manuscript's "damage" endpoint). gc_fraction/CI comes from aggregating
-results/E12/dose_response_extended.csv's per-record gc column (96-window generation
+results/experiments/E12/dose_response_extended.csv's per-record gc column (96-window generation
 pool) over prompts and seeds at matching alpha values, with a percentile bootstrap CI
 (5000 draws, seed 42 -- matches E12's own bootstrap_gc_diff convention in e12_lib.py).
 """
@@ -20,8 +20,8 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
-DAMAGE = ROOT / "results/E12/raw/damage_evals.jsonl"
-DOSE = ROOT / "results/E12/dose_response_extended.csv"
+DAMAGE = ROOT / "results/experiments/E12/raw/damage_evals.jsonl"
+DOSE = ROOT / "results/experiments/E12/dose_response_extended.csv"
 OUT = ROOT / "audit/generator_alpha_sweeps.csv"
 
 LABEL_TO_ROW = {"row2371": 2371, "control_row_2621": 2621, "control_row_456": 456,

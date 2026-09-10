@@ -35,7 +35,7 @@ sys.path.insert(0, str(D))
 import run_bos_mediation as bm   # noqa: E402
 import e12_lib as e12            # noqa: E402
 
-OUT = ROOT / "results/mechanism_generator"
+OUT = ROOT / "results/analyses/mechanism_generator"
 OUT.mkdir(parents=True, exist_ok=True)
 POSITIONS = [0, 1, 2, 4, 8, 16, 32, 64]
 

@@ -21,7 +21,7 @@ from pathlib import Path
 import numpy as np, torch
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / "results/within_layer_sweep"
+OUT = ROOT / "results/analyses/within_layer_sweep"
 RATIO = {227: 3181.70, 161: 63.54, 749: 358.56}
 RANK = {227: 1, 161: 4, 749: 2}
 
@@ -34,7 +34,7 @@ def main():
     ap.add_argument("--rows", type=int, nargs="+", default=[161, 749, 227])
     ap.add_argument("--n_ref", type=int, default=200,
                     help="reference pool: the N highest-norm rows of the layer")
-    ap.add_argument("--out", default="results/within_layer_sweep/smollm2_161_749_geometry.json")
+    ap.add_argument("--out", default="results/analyses/within_layer_sweep/smollm2_161_749_geometry.json")
     args = ap.parse_args()
 
     from transformers import AutoModelForCausalLM

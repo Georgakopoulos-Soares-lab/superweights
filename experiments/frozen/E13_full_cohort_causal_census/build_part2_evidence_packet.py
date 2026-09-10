@@ -22,7 +22,7 @@ EXCLUDED = "Phi-3-mini-4k-instruct"
 N_BOOT = 5000
 
 # round-2 panel D: display-name / sign-flip model set for the top-norm-control comparison
-# (audit/round2/final_check.md Section 2; audit/round2/scripts/fig2_panel_topnorm.py)
+# (audit/rederivations/final_check.md Section 2; audit/rederivations/scripts/fig2_panel_topnorm.py)
 DISPLAY_D = {
     "Qwen/Qwen2.5-0.5B": "Qwen2.5-0.5B", "Qwen/Qwen2.5-1.5B": "Qwen2.5-1.5B",
     "Qwen/Qwen2.5-3B": "Qwen2.5-3B", "HuggingFaceTB/SmolLM2-135M": "SmolLM2-135M",
@@ -100,7 +100,7 @@ def main() -> None:
             "frob_ratio_to_layer_median": c["frob_ratio_to_layer_median"],
             "control_rows": ";".join(str(x) for x in cs["control_rows"]),
             "baseline_loss": d["baseline_loss"], "endpoint_json": json.dumps(d["endpoint"], sort_keys=True),
-            "raw_artifact": f"results/E13/raw/{d['slug']}.json",
+            "raw_artifact": f"results/experiments/E13/raw/{d['slug']}.json",
         }
         for eps, tag in ((0.5, "eps0p5"), (1.0, "eps1p0")):
             cand = next(x for x in candidate_conditions if x["epsilon"] == eps)
@@ -175,7 +175,7 @@ def cohort_stats(rows: list[dict]) -> dict:
     for r in rows: groups[f"{r['domain']}/{r['architecture']}"].append(float(r["candidate_relative_loss_change_eps1p0"]))
     out["descriptive_subgroup_medians"]={k:{"n":len(v),"median":statistics.median(v)} for k,v in groups.items()}
 
-    # round-2 panel D: candidate vs. top-norm-control causal gap (audit/round2/structural_vs_causal_gap.csv)
+    # round-2 panel D: candidate vs. top-norm-control causal gap (audit/rederivations/structural_vs_causal_gap.csv)
     topnorm = read_csv(AUDIT2 / "structural_vs_causal_gap.csv")
     assert len(topnorm) == 44, f"expected 44 rows (22 models x 2 eps), got {len(topnorm)}"
     by_model_eps_d = {(r["model"], r["epsilon"]): r for r in topnorm}
@@ -326,7 +326,7 @@ def write_packet(rows: list[dict], manifest: dict, stats: dict) -> None:
               "| Text encoders (n=6) | Same WikiText construction, 256 × 512-token windows; batch 16. One fixed mask realization, seed 42, probability .15; CLS/SEP/PAD excluded; selected tokens replaced by MASK and all other labels set to -100. | Summed cross-entropy over masked tokens divided by masked-token count. | 16 fixed MLM batches; identical inputs/masks reused for baseline and every condition. MosaicBERT uses `bert-base-uncased` tokenizer; others use checkpoint tokenizers. |",
               "| Genomic decoders (n=4) | hg38 `random_262kb.bed`; seed-42 disjoint partition; 100 damage windows of 512 bp, <1% N. GENERator trims the left `len%6` bases, prepends BOS, then tokenizes with specials disabled. GenomeOcean does no 6-bp trim or forced BOS and tokenizes with specials disabled. | Teacher-forced shifted causal-LM mean token NLL (`labels=input_ids`; internal label shift), weighted over tokens. | 100 individual-window bootstrap units. The separately constructed 96-window prompt pool is not used in this endpoint. |",
               "| Genomic encoders (n=2) | hg38 FASTA + `random_262kb.bed`; regions shuffled and starts sampled with `random.Random(42)`; 256 windows of 600 bp, <1% N; tokenizer padding/truncation to 256 tokens; batch 16. Fixed .15 masks with seed 42; special/PAD excluded. | Masked-nucleotide summed loss divided by masked-token count. | 16 fixed MLM batches. DNABERT-2 uses the pinned pretrained MLM/eager compatibility loader; NTv3 uses its pinned remote code revision. |","",
-              "Raw `endpoint` metadata and actual unit counts are preserved model-by-model in `part2_22_model_results.csv` and `results/E13/raw/*.json`.","",
+              "Raw `endpoint` metadata and actual unit counts are preserved model-by-model in `part2_22_model_results.csv` and `results/experiments/E13/raw/*.json`.","",
               "Checkpoint provenance note: NTv3's weight revision remains recorded as unpinned (`E5/E6 original`); only its required remote-code loader is pinned to commit `0ecff3637f0d3ba5b686d1095083218157c2ca34` (matches `NTV3_CODE_REVISION` in `genomic_encoder_lib.py`). That is a provenance limitation, not an exact weight revision. For models requested without a revision, the resolved Hub commit recorded by the completed run is reported in the table above.","",
               "## 3. Effect definitions","",
               "For evaluation unit j, raw records store `(S_j,N_j)`: summed loss and contributing-token count. `L0=ΣS0j/ΣN0j`; `Lε=ΣSεj/ΣNεj`; absolute change `ΔL=Lε-L0`; signed relative change `R=(Lε-L0)/L0`; percent change is `100R`. Candidate effect is R for the frozen candidate. Each control effect is its independently measured R. Same-layer median control is the median of five signed control R values. Candidate-minus-control is `G=Rcandidate-median(Rcontrol,1..5)`.","",
@@ -351,14 +351,14 @@ def write_packet(rows: list[dict], manifest: dict, stats: dict) -> None:
     lines += ["","These are descriptive only. Objectives, architectures, domains, tokenizers, and panel composition are confounded; no architecture/domain determination claim is licensed.","",
               "## 8. Figure 2 deliverables","",
               "Panels A/B use a signed symmetric-log axis (`linthresh=0.1 percentage points`), retaining negative, sub-percent, and catastrophic effects. Diamonds are candidates; gray points are all five controls; short bars are within-model control medians. Models share one order based on full-ablation candidate effect. Panel C uses q1 and the exact signed full-ablation candidate R used in the correlation. No Frobenius panel is included because robustness analyses do not exist.","",
-              "- `results/E13/figure2_candidate_control_data.csv`","- `results/E13/figure2_structure_function_data.csv`","- `experiments/figures/main/fig2_part2_functional_criticality.png`","- `experiments/figures/main/fig2_part2_functional_criticality.pdf`","",
+              "- `results/experiments/E13/figure2_candidate_control_data.csv`","- `results/experiments/E13/figure2_structure_function_data.csv`","- `experiments/figures/main/fig2_part2_functional_criticality.png`","- `experiments/figures/main/fig2_part2_functional_criticality.pdf`","",
               "## Claims directly supported by the completed experiment","",
               "- Frozen candidates exceed same-layer median controls in 18/22 models at ε=.5 and 20/22 at ε=1.","- The cohort-median signed candidate-minus-control gap is positive at both strengths with model-bootstrap CIs above zero.","- Full-ablation candidate effects span negative/sub-percent values through approximately +699%.","- q1 does not predict full-ablation causal magnitude in this 22-model panel; its CI spans substantial negative and positive correlations.","- The measured candidate effect is heterogeneous across models and native objectives.","",
               "## Claims not supported / caveats","",
               "- No universal effect: NTv3 and EuroBERT-2.1B have nonpositive full-ablation candidate-minus-control gaps.","- No claim that architecture or domain causes the descriptive subgroup differences.","- Native-objective relative losses are useful within each model but objectives/tokenizers differ across groups.","- No downstream-task mechanism, interaction order, or cohort-wide tomography conclusion follows from singleton effects.","- The Frobenius association lacks existing influence/covariate/leave-group robustness analyses and is not a headline result.","- DNABERT-2 discovery is input-boundary dependent; its ACTB discovery preprocessing must not be conflated with its hg38 causal endpoint.","",
               "## Remaining manuscript issues","",
               "- Decide how briefly to disclose that the original DNABERT-2 wrapper recorded revision `main`; the pinned state reproduces its stored activation exactly, but the original resolved commit/environment were not recorded.","- Replace the old five-decoder/tomography Figure 2 references and captions with this 22-model singleton census; retain tomography only as mechanistic case-study material.","- Keep the Frobenius result secondary unless a separately authorized robustness analysis is completed.","- Universal Part 2B tomography remains stopped.","",
-              "## Primary provenance paths","","- `results/E13/candidate_manifest.json`","- `results/E11/scale_ladder_backfilled.csv`","- `results/E13/raw/*.json`","- `results/E13/part1_22_candidate_effects.csv`","- `results/E13/part1_22_control_effects.csv`","- `results/E13/part1_22_cohort_summary.csv`","- `results/E13/part1_22_structure_function_correlations.json`","- `experiments/frozen/E13_full_cohort_causal_census/run_singleton_census.py`","- `experiments/frozen/E13_full_cohort_causal_census/write_part1_22_report.py`","- `experiments/frozen/E10_nlp_architecture_causal/e10_lib.py`","- `experiments/frozen/E9_mechanistic_tomography/tomography_lib.py`","- `experiments/frozen/E12_generator_degradation_control/e12_lib.py`","- `results/E13_dnabert2_reproducibility/DNABERT2_EXECUTION_PATH_DIAGNOSTIC.md`",""]
+              "## Primary provenance paths","","- `results/experiments/E13/candidate_manifest.json`","- `results/experiments/E11/scale_ladder_backfilled.csv`","- `results/experiments/E13/raw/*.json`","- `results/experiments/E13/part1_22_candidate_effects.csv`","- `results/experiments/E13/part1_22_control_effects.csv`","- `results/experiments/E13/part1_22_cohort_summary.csv`","- `results/experiments/E13/part1_22_structure_function_correlations.json`","- `experiments/frozen/E13_full_cohort_causal_census/run_singleton_census.py`","- `experiments/frozen/E13_full_cohort_causal_census/write_part1_22_report.py`","- `experiments/frozen/E10_nlp_architecture_causal/e10_lib.py`","- `experiments/frozen/E9_mechanistic_tomography/tomography_lib.py`","- `experiments/frozen/E12_generator_degradation_control/e12_lib.py`","- `results/experiments/E13_dnabert2_reproducibility/DNABERT2_EXECUTION_PATH_DIAGNOSTIC.md`",""]
     OUT_MD.write_text("\n".join(lines))
 
 

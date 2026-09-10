@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Section 2 audit recomputation: 22-model causal census verification.
 
-Reads results/E13/part2_22_model_results.csv (STORED census master) and
+Reads results/experiments/E13/part2_22_model_results.csv (STORED census master) and
 recomputes every cohort-level manuscript claim independently of
 PART2_EVIDENCE_PACKET.md's narrative, using only the formulas stated in that
 packet's Sections 3 and 6 (G = R_candidate - median(R_control_1..5); model-level
@@ -17,7 +17,7 @@ import numpy as np
 from scipy.stats import spearmanr
 
 ROOT = Path(__file__).resolve().parents[2]
-CENSUS = ROOT / "results/E13/part2_22_model_results.csv"
+CENSUS = ROOT / "results/experiments/E13/part2_22_model_results.csv"
 OUT = ROOT / "audit"
 
 

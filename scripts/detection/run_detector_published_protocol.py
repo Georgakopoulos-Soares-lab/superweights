@@ -40,7 +40,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "experiments/frozen/E10_nlp_architecture_causal"))
 import e10_lib as L  # noqa: E402
 
-OUT = ROOT / "results/detector_provenance"
+OUT = ROOT / "results/analyses/detector_provenance"
 PATTERN = "model.layers.{i}.mlp.down_proj"
 PARQUET = ROOT / "frozen_inputs/wikitext_repo/wikitext-2-raw-v1/test-00000-of-00001.parquet"
 

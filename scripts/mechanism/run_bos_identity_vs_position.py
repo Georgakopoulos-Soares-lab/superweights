@@ -32,7 +32,7 @@ sys.path.insert(0, str(D))
 import run_bos_mediation as bm
 import e12_lib as e12
 
-OUT = ROOT / "results/mechanism_generator"; OUT.mkdir(parents=True, exist_ok=True)
+OUT = ROOT / "results/analyses/mechanism_generator"; OUT.mkdir(parents=True, exist_ok=True)
 NEUTRAL = "AAAAAA"   # single in-vocab 6-mer (id 32)
 N_WIN = 40
 

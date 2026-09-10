@@ -23,7 +23,7 @@ from run_gue_multiseed import _load_model
 from run_gue_ablation import (GUEDataset, _resolve_module, _save_row, _zero_row,
                               _restore_row, evaluate, collate_fn, _MAX_LEN, _task_key)
 
-OUT = ROOT / "results/mechanism_generator"; OUT.mkdir(parents=True, exist_ok=True)
+OUT = ROOT / "results/analyses/mechanism_generator"; OUT.mkdir(parents=True, exist_ok=True)
 GUE = "/data/nvidia/data/gue/GUE"; TASK = "splice/reconstructed"
 CKPT = ROOT / "results/gue_checkpoints_multiseed/dnabert2_reconstructed/seed_0/model_state.pt"
 LAYER, A, B = 9, 264, 294

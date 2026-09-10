@@ -47,7 +47,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "experiments/frozen/E10_nlp_architecture_causal"))
 import e10_lib as L  # noqa: E402
 
-OUT = ROOT / "results/within_layer_sweep"
+OUT = ROOT / "results/analyses/within_layer_sweep"
 REPO, REV = "HuggingFaceTB/SmolLM2-1.7B", "effd688a12921b4cc83e3312b6feb579f70f9c71"
 LAYER, PATTERN = 7, "model.layers.{i}.mlp.down_proj"
 EXPECT_BASELINE, EXPECT_R227 = 2.6145340592893835, 6.988738472947954

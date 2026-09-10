@@ -28,7 +28,7 @@ for model in "${MODELS[@]}"; do
     # Per-model JSONs are written by os.replace only after every paired condition
     # finishes, so a nonempty final path is an atomic completion checkpoint.  Avoid
     # paying the multi-minute Torch/Transformers import cost merely to discover it.
-    if [ -s "$ROOT/results/E13/raw/$model.json" ]; then
+    if [ -s "$ROOT/results/experiments/E13/raw/$model.json" ]; then
         echo "[$(date --iso-8601=seconds)] SKIP checkpointed $model"
         continue
     fi

@@ -67,14 +67,14 @@ def main():
                          "bootstrap_excludes_zero":boot["excludes_zero"],
                          "pair_terms_materially_improved":x["mechanical_decision"] == "PAIR_TERMS_REQUIRED",
                          "decision":x["mechanical_decision"],
-                         "provenance":"results/E10/e10b_phi3_fit_results.json + locked raw responses"})
+                         "provenance":"results/experiments/E10/e10b_phi3_fit_results.json + locked raw responses"})
     out = E13 / "tomography_results.csv"
     with out.open("w",newline="") as f:
         w=csv.DictWriter(f,fieldnames=list(rows[0])); w.writeheader(); w.writerows(rows)
     provenance={"reuse_reason":"exact basis/revision/endpoint/epsilon identity",
                 "basis":e13_basis,"fit_masks":36,"calibration_masks":10,"held_out_masks":10,
-                "raw_source":"results/E10/e10b_phi3_tomography_responses.json",
-                "fit_source":"results/E10/e10b_phi3_fit_results.json",
+                "raw_source":"results/experiments/E10/e10b_phi3_tomography_responses.json",
+                "fit_source":"results/experiments/E10/e10b_phi3_fit_results.json",
                 "design_source":"experiments/frozen/E10b_phi3_tomography/masks_phi3.json"}
     (E13 / "tomography_provenance.json").write_text(json.dumps(provenance,indent=2)+"\n")
     print(f"wrote {out} ({len(rows)} model-epsilon rows)")

@@ -4,7 +4,7 @@ Supplement S2 -- GENERator EUK random-direction / damage-tracking control (retir
 main-text Figure 4C, 2026-09-01).
 
 This is the SAME panel that was main-text Figure 4C before the BOS-mediation experiment
-(results/E_BOS_MEDIATION/) produced a substantially stronger, position-resolved mechanistic
+(results/experiments/E_BOS_MEDIATION/) produced a substantially stronger, position-resolved mechanistic
 result for the same row (now the new main-text Fig. 4C/D). This panel is not superseded --
 it answers a different question (is the row-2371 phenotype specific to its learned weight
 direction, or does any equally damaging perturbation at that location reproduce it?) and
@@ -18,7 +18,7 @@ qualification. Retained unchanged, only relabeled a/b and moved out of the main 
      random-direction grid, and 5 inert same-layer control rows, all on shared axes --
      composition tracks damage magnitude, not which intervention produced it.
 
-Source: audit/round2/generator_random_direction_full.csv (unchanged from the original
+Source: audit/rederivations/generator_random_direction_full.csv (unchanged from the original
 fig4_generator.py; see that file's git history for the pre-2026-09-01 version of this code).
 Output: figures/supplement/fig_s2_random_direction.{png,pdf}
 """

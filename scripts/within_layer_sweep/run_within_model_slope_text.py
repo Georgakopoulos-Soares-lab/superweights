@@ -50,7 +50,7 @@ ROOT = Path("/home/nvidia/superweights")
 sys.path.insert(0, str(ROOT / "experiments/frozen/E10_nlp_architecture_causal"))
 import e10_lib as L  # noqa: E402
 
-OUT = ROOT / "results/within_layer_sweep"
+OUT = ROOT / "results/analyses/within_layer_sweep"
 SEED = 42
 DETECTOR_THRESHOLD = 5.0   # the E11/E13 detector's own >=5 rule, used unchanged here
 

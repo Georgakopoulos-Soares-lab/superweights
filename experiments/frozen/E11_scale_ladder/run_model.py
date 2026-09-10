@@ -7,7 +7,7 @@ Reuses E7's spectral_lib.py, E7/E8's DownProjRecorder + ratio/threshold detectio
 and E8/E10's SeedSequence(42)-based control-row draw, unmodified in method.
 
 Fixed panel ordering (N=12, spawn index = position below) -- declared here and must match
-results/E11/scale_ladder.csv's own header before any control row is drawn:
+results/experiments/E11/scale_ladder.csv's own header before any control row is drawn:
 
   0 qwen25-0.5b        6 generator-prok-1.2b
   1 qwen25-1.5b        7 generator-prok-3b

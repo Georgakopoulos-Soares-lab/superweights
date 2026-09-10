@@ -18,7 +18,7 @@ from pathlib import Path
 import numpy as np, torch, yaml
 
 ROOT = Path("/home/nvidia/superweights"); sys.path.insert(0, str(ROOT))
-OUT = ROOT / "results/mechanism_generator"; OUT.mkdir(parents=True, exist_ok=True)
+OUT = ROOT / "results/analyses/mechanism_generator"; OUT.mkdir(parents=True, exist_ok=True)
 SEQS = ["ACGTACGTACGTAAGGCCTTACGATCGATCGGCTAGCTAGCTTACGATCGATCGGCATGCATCGATCGTAGC",
         "GCCGCCGCCGGGCCCGGGCCGCGGCCGGCCGCGGGCCCGCGGCCGCCGGGCCCGGGCCGCGGCCGGCCGCGG",
         "ATTTATTTAAATATTTATTAAATTTATTTAAATATTTATTAAATTTATTTAAATATTTATTAAATTTATTTA"]

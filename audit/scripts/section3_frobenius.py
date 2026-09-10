@@ -9,7 +9,7 @@ import numpy as np
 from scipy.stats import spearmanr
 
 ROOT = Path(__file__).resolve().parents[2]
-CENSUS = ROOT / "results/E13/part2_22_model_results.csv"
+CENSUS = ROOT / "results/experiments/E13/part2_22_model_results.csv"
 
 
 def load():

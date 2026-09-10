@@ -11,19 +11,19 @@
 source "$(dirname "$0")/_lib.sh"
 log "EXP2 detector provenance"
 
-stage results/detector_provenance/uniform_detector_text_smollm2-1.7b.json exp2_control \
+stage results/analyses/detector_provenance/uniform_detector_text_smollm2-1.7b.json exp2_control \
       "$PY_GENERATOR" scripts/detection/run_uniform_detector_text.py --model smollm2-1.7b \
   || { log "positive control FAILED -- harness is wrong, stopping"; exit 1; }
 
 parallel_stage 3 <<EOF
-results/detector_provenance/uniform_detector_text_llama.json|exp2_llama|$PY_GENERATOR|scripts/detection/run_uniform_detector_text.py --model llama
-results/detector_provenance/uniform_detector_text_mistral.json|exp2_mistral|$PY_GENERATOR|scripts/detection/run_uniform_detector_text.py --model mistral
-results/detector_provenance/uniform_detector_text_olmo.json|exp2_olmo|$PY_GENERATOR|scripts/detection/run_uniform_detector_text.py --model olmo
+results/analyses/detector_provenance/uniform_detector_text_llama.json|exp2_llama|$PY_GENERATOR|scripts/detection/run_uniform_detector_text.py --model llama
+results/analyses/detector_provenance/uniform_detector_text_mistral.json|exp2_mistral|$PY_GENERATOR|scripts/detection/run_uniform_detector_text.py --model mistral
+results/analyses/detector_provenance/uniform_detector_text_olmo.json|exp2_olmo|$PY_GENERATOR|scripts/detection/run_uniform_detector_text.py --model olmo
 EOF
 
 # published single-input protocol; appends all three models to one JSON, so run serially
 for m in llama mistral olmo; do
-  FORCE=1 stage results/detector_provenance/detector_published_protocol.json "exp2_published_$m" \
+  FORCE=1 stage results/analyses/detector_provenance/detector_published_protocol.json "exp2_published_$m" \
         "$PY_GENERATOR" scripts/detection/run_detector_published_protocol.py --model $m
 done
-log "done -- see results/detector_provenance/EXP2_LEGACY_DETECTOR_RESOLUTION.md"
+log "done -- see results/analyses/detector_provenance/EXP2_LEGACY_DETECTOR_RESOLUTION.md"

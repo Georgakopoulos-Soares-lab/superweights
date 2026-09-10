@@ -22,7 +22,7 @@ import numpy as np, torch, yaml
 
 ROOT = Path("/home/nvidia/superweights"); sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts/mechanism"))
-OUT = ROOT / "results/detector_provenance"; OUT.mkdir(parents=True, exist_ok=True)
+OUT = ROOT / "results/analyses/detector_provenance"; OUT.mkdir(parents=True, exist_ok=True)
 
 PROBES = [
  "ACGTACGTACGTAAGGCCTTACGATCGATCGGCTAGCTAGCTTACGATCGATCGGCATGCATCGATCGTAGCTAGCTAGGCTA",

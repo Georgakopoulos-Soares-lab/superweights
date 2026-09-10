@@ -8,8 +8,8 @@ E11 frozen analysis (PREREG_E11_scale_ladder.md, "Analysis (frozen)"):
   4. q1 vs relative depth
   5. candidate-vs-control gap by scale
 
-Reads results/E11/scale_ladder.csv (+ scale_ladder_controls.csv), writes
-results/E11/regression_summary.json.
+Reads results/experiments/E11/scale_ladder.csv (+ scale_ladder_controls.csv), writes
+results/experiments/E11/regression_summary.json.
 """
 from __future__ import annotations
 

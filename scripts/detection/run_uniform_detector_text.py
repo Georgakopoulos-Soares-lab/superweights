@@ -68,7 +68,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "experiments/frozen/E10_nlp_architecture_causal"))
 import e10_lib as L  # noqa: E402
 
-OUT = ROOT / "results/detector_provenance"
+OUT = ROOT / "results/analyses/detector_provenance"
 SEED = 42
 THRESHOLD = 5.0            # the E11/E13 detector's own accept rule, used unchanged
 PATTERN = "model.layers.{i}.mlp.down_proj"

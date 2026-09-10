@@ -14,7 +14,7 @@
 # (NTv3 entry: layer 11, row 1472).
 #
 # Outputs
-#   results/gue/gue_multiseed_ntv3_splice.json
+#   results/experiments/gue/gue_multiseed_ntv3_splice.json
 #   results/gue_checkpoints_multiseed/ntv3_reconstructed/seed{0,1,2}/
 #
 # Estimated wall-clock: ~1.5 h on a single A100-80GB.
@@ -36,6 +36,6 @@ CUDA_VISIBLE_DEVICES=$GPU "$PYTHON" -u scripts/evaluation/run_gue_multiseed.py \
   --gue_root "$GUE_ROOT" \
   --seeds    $SEEDS \
   --ckpt_dir results/gue_checkpoints_multiseed/ntv3_reconstructed \
-  --out      results/gue/gue_multiseed_ntv3_splice.json \
+  --out      results/experiments/gue/gue_multiseed_ntv3_splice.json \
   --device   cuda \
   2>&1 | tee logs/ntv3_splice_multiseed.log

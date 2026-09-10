@@ -1,10 +1,10 @@
 #!/usr/bin/env/env python3
 """Revised structural Figure 1, sourced only from final artifacts.
 
-Panel C was extended in round-2 (audit/round2/final_check.md Section 2) from the original
+Panel C was extended in round-2 (audit/rederivations/final_check.md Section 2) from the original
 12-model E11 panel to the full 22-model cohort, and split into two sub-panels (random
 same-layer controls / top-norm same-layer controls) sharing one "C" label -- see
-audit/round2/scripts/fig1_full22_two_panel.py for the standalone version this was folded
+audit/rederivations/scripts/fig1_full22_two_panel.py for the standalone version this was folded
 back into the unified Fig. 1.
 
 Round-3 change: the two C sub-panels are now stacked vertically (sharing the x-axis of 22
@@ -154,7 +154,7 @@ def main():
         w=csv.DictWriter(f,fieldnames=['model','architecture','domain','non_embedding_params','candidate_q1','control_q1_values','mean_control_q1','candidate_control_gap']); w.writeheader()
         for r in cohort: w.writerow({'model':r['model'],'architecture':ARCH[r['model']],'domain':DOMAIN[r['model']],'non_embedding_params':r['non_embed_params'],'candidate_q1':r['q1'],'control_q1_values':';'.join(map(str,by[r['model']])), 'mean_control_q1':np.mean(by[r['model']]),'candidate_control_gap':r['gap']})
     # panel C source data already lives at experiments/figures/source_data/fig1_panel_c_full22_source.csv
-    # (written by audit/round2/scripts/fig1_full22_two_panel.py); not rewritten here.
+    # (written by audit/rederivations/scripts/fig1_full22_two_panel.py); not rewritten here.
 
     print(f'saved -> {out}.png / .pdf')
 

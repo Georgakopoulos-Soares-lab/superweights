@@ -25,7 +25,7 @@ from matplotlib.patches import Patch
 from scipy import stats
 
 ROOT = Path(__file__).resolve().parents[2]
-R = ROOT / "results/within_layer_sweep"
+R = ROOT / "results/analyses/within_layer_sweep"
 TH = 5.0
 
 PANELS = [("within_model_slope.json",              "A", "GENERator-EUK-3B  L4", "#1f4e79"),

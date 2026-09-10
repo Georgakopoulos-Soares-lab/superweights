@@ -32,7 +32,7 @@ TARGETS = [
     ("smollm2-360m", 3, 87),
 ]
 
-CONTROLS_CSV = ROOT / "results/E11/scale_ladder_controls.csv"
+CONTROLS_CSV = ROOT / "results/experiments/E11/scale_ladder_controls.csv"
 
 
 def main():

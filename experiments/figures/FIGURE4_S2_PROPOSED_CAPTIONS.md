@@ -1,7 +1,7 @@
 # Proposed captions — new Figure 4 and candidate Supplementary Figure S2
 
 Not yet inserted into `actual_manuscript.md`. Every number below was checked directly against
-`results/E_BOS_MEDIATION/bos_mediation_results.json` (see the assert block in
+`results/experiments/E_BOS_MEDIATION/bos_mediation_results.json` (see the assert block in
 `fig4_generator.py::main()`, which fails loudly if the artifact ever drifts from these values).
 
 ---
@@ -18,7 +18,7 @@ position 0 can only attend to itself, so part of this co-occurrence is architect
 guaranteed; this panel does not establish that row 2371 causes the sink. **(C)** Native NLL
 under six interventions on row 2371's FFN/down-projection contribution (n=100 damage windows;
 provenance gate and all 6 required smoke/invariance tests passed —
-`results/E_BOS_MEDIATION/{provenance_check,smoke_tests}.json`): intact (6.385), full ablation
+`results/experiments/E_BOS_MEDIATION/{provenance_check,smoke_tests}.json`): intact (6.385), full ablation
 (8.754), ablating the row's contribution at the BOS position only (8.722; paired-bootstrap gap
 vs. intact 2.336, 95% CI [2.20, 2.49] — statistically indistinguishable from full ablation),
 preserving the row's contribution at BOS only while ablating it everywhere else (6.386; gap

@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 """Section 5 point 6: independently recompute the interval intersection between the
 E12 96-window generation-prompt pool and the 100-window damage pool, from the stored
-sampled coordinates (results/E12/raw/corpora.json), rather than trusting build_corpora's
+sampled coordinates (results/experiments/E12/raw/corpora.json), rather than trusting build_corpora's
 own live assertion or E12_summary.md's docstring claim.
 """
 import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-d = json.loads((ROOT / "results/E12/raw/corpora.json").read_text())
+d = json.loads((ROOT / "results/experiments/E12/raw/corpora.json").read_text())
 
 print("meta:", d["meta"])
 print("n_prompt_windows:", len(d["prompt_windows"]))

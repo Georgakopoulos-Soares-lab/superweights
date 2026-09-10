@@ -2,7 +2,7 @@
 """Restartable Stage-1 singleton/control causal census, one model per invocation.
 
 The candidate/control identities come exclusively from candidate_manifest.json.  Each
-output is written atomically to results/E13/raw/<slug>.json only after the complete model
+output is written atomically to results/experiments/E13/raw/<slug>.json only after the complete model
 finishes; the nohup queue skips already-valid outputs on restart.
 """
 from __future__ import annotations

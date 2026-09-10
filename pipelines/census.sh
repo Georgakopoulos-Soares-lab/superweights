@@ -17,9 +17,9 @@ MODELS=("${@:-${ALL[@]}}")
 log "census: ${#MODELS[@]} model(s)"
 { for m in "${MODELS[@]}"; do
     py="$PY_GENERATOR"; [[ "$m" == dnabert2 ]] && py="$PY_DNABERT"
-    echo "results/E13/raw/$m.json|census_$m|$py|$CENSUS --model $m"
+    echo "results/experiments/E13/raw/$m.json|census_$m|$py|$CENSUS --model $m"
   done
 } | parallel_stage "${WORKERS:-4}"
-stage results/E13/part2_22_model_results.csv census_compile "$PY_GENERATOR" \
+stage results/experiments/E13/part2_22_model_results.csv census_compile "$PY_GENERATOR" \
       experiments/frozen/E13_full_cohort_causal_census/compile_census.py
 log "done"

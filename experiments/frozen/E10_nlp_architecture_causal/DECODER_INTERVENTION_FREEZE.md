@@ -72,7 +72,7 @@ was chosen or reordered by looking at any causal response — none has been meas
 Intervention hook: `_resolve_module(model, "model.layers.{i}.mlp.down_proj", 2).weight.data[3968, :] *= alpha`.
 
 **Same-layer controls** (layer 2, seed `SeedSequence(42).spawn(5)[0]`, target row 3968
-excluded from the pool): rows `[892, 2034, 2379, 3729, 3751]` (`results/E10/e10_decoder_control_rows.json`).
+excluded from the pool): rows `[892, 2034, 2379, 3729, 3751]` (`results/experiments/E10/e10_decoder_control_rows.json`).
 
 ## 2. Mistral (`mistralai/Mistral-7B-v0.1`) — K=1
 
@@ -88,7 +88,7 @@ Intervention hook: `_resolve_module(model, "model.layers.{i}.mlp.down_proj", 1).
 ## 3. OLMo (`allenai/OLMo-7B-0724-hf`) — K=4
 
 Output row 269 recurring at 4 layers, each with a distinct scalar `i` (Yu et al. Table 2).
-Ranked by exact ‖U_k‖_F relative to layer median (`results/E10/e10_exact_uknorm_olmo.json`).
+Ranked by exact ‖U_k‖_F relative to layer median (`results/experiments/E10/e10_exact_uknorm_olmo.json`).
 
 | Rank | Layer | Row | ‖U_k‖_F / layer median | exact ‖U_k‖_F | within-layer rank | `q1` (annotation) | Published `i` |
 |---:|---:|---:|---:|---:|---:|---:|---:|
@@ -117,7 +117,7 @@ excluded): rows `[292, 437, 2877, 2908, 3160]`.
 ## 4. Phi-3 (`microsoft/Phi-3-mini-4k-instruct` @ `f39ac1d28e925b323eae81227eaba4464caced4e`) — K=6
 
 Full pre-existing published set (Yu et al. Table 2), ranked by exact ‖U_k‖_F relative to layer
-median (`results/E10/e10_exact_uknorm_phi3.json`).
+median (`results/experiments/E10/e10_exact_uknorm_phi3.json`).
 
 | Rank | Layer | Row | ‖U_k‖_F / layer median | exact ‖U_k‖_F | within-layer rank | `q1` (annotation) | Published `i` |
 |---:|---:|---:|---:|---:|---:|---:|---:|

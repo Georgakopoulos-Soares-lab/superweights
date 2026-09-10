@@ -1,6 +1,6 @@
 # S7 — Within-layer activation-ratio sweep
 
-36 rows per model, log-spaced by activation-ratio rank within one layer, each ablated to alpha=0 with the model's native loss re-evaluated on its own frozen pool. Selection used the activation ratio alone and never a causal outcome. `above_detector_threshold` marks the detector's own >=5 acceptance rule and reproduces the 21/15 partition used in the main text. Sources: `results/within_layer_sweep/within_model_slope{,_smollm2_1.7b}.json`.
+36 rows per model, log-spaced by activation-ratio rank within one layer, each ablated to alpha=0 with the model's native loss re-evaluated on its own frozen pool. Selection used the activation ratio alone and never a causal outcome. `above_detector_threshold` marks the detector's own >=5 acceptance rule and reproduces the 21/15 partition used in the main text. Sources: `results/analyses/within_layer_sweep/within_model_slope{,_smollm2_1.7b}.json`.
 
 | model | layer | row | ratio_rank | activation_ratio | nll | delta_nll | rel_delta | above_detector_threshold | is_frozen_candidate |
 |---|---|---|---|---|---|---|---|---|---|

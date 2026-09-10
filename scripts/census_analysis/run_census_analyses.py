@@ -15,7 +15,7 @@ import numpy as np
 from scipy import stats
 
 ROOT = "/home/nvidia/superweights"
-OUT = os.path.join(ROOT, "results/census_analysis")
+OUT = os.path.join(ROOT, "results/analyses/census_analysis")
 SEED = 42
 
 per = list(csv.DictReader(open(os.path.join(OUT, "activation_vs_causality_per_model.tsv")), delimiter="\t"))
@@ -97,7 +97,7 @@ for pred in PRED:
 
 # ── N: threshold sensitivity + O: input stability ────────────────────────────
 stab_rows, all_ratios, all_ranks = [], [], []
-for f in sorted(glob.glob(os.path.join(ROOT, "results/E13_candidate_stability/*.json"))):
+for f in sorted(glob.glob(os.path.join(ROOT, "results/experiments/E13_candidate_stability/*.json"))):
     j = json.load(open(f)); s = j["summary"]
     rr = [p["activation_ratio"] for p in j["per_input"]]
     rk = [p["rank"] for p in j["per_input"]]
