@@ -152,8 +152,8 @@ M = [
   ["results/within_layer_sweep/within_model_slope.json",
    "results/within_layer_sweep/within_model_slope_smollm2_1.7b.json",
    "results/within_layer_sweep/within_model_slope_comparison.json",
-   "results/within_layer_sweep/supplementary/table_S6_within_layer_activation_ratio_sweep.tsv",
-   "results/within_layer_sweep/fig_within_model_slope_2panel.pdf"],
+   "results/within_layer_sweep/fig_within_model_slope_2panel.pdf",
+   "results/supplementary/S7_within_layer_sweep.tsv"],
   "Two-regime: no graded signal below the ratio>=5 accept threshold, strong ordering above."),
 
  ("W2", "Second critical row r161 and the r161/r749 masking interaction, with geometry",
@@ -162,7 +162,7 @@ M = [
    "scripts/within_layer_sweep/run_smollm2_row_geometry.py"],
   ["results/within_layer_sweep/smollm2_second_row_epistasis.json",
    "results/within_layer_sweep/smollm2_161_749_geometry.json",
-   "results/within_layer_sweep/supplementary/table_S7_smollm2_l7_interaction_and_geometry.tsv"],
+   "results/supplementary/S8_two_critical_rows.tsv"],
   "Independently re-verified; mechanism explicitly not claimed."),
 
  ("P1", "Phi-3 six-row basis and its tomography (not used for any cohort claim)",
@@ -178,6 +178,17 @@ M = [
   ["experiments/frozen/E10_nlp_architecture_causal/run_decoder_spectrum.py"],
   ["results/e10_decoder_control_rows.json"],
   "Individual control values behind the cohort medians."),
+
+ ("T1", "Supplementary tables S2, S3, S6, S7, S8 (built from committed artifacts)",
+  "Tables S2, S3, S6-S8",
+  ["scripts/census_analysis/build_supplementary_tables.py"],
+  ["results/supplementary/S2_structural_metrics_and_stability.tsv",
+   "results/supplementary/S3_causal_census_and_disagreements.tsv",
+   "results/supplementary/S6_dnabert2_tomography.tsv",
+   "results/supplementary/S7_within_layer_sweep.tsv",
+   "results/supplementary/S8_two_critical_rows.tsv",
+   "results/supplementary/README.md"],
+  "S1, S4 and S5 are reformatted verbatim from the round-2 audit and are not rebuilt."),
 
  ("A1", "Cohort structure-function correlations and figures",
   "Fig 2C; Table S4",

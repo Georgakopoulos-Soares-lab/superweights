@@ -26,8 +26,7 @@ STRUCTURAL GEOMETRY  !=  FUNCTIONAL CRITICALITY  !=  CAUSAL RESPONSE COMPLEXITY
 | **Verify that map against this tree** | `python scripts/build_experiment_map.py` — exits non-zero if any script is missing |
 | **Panel-by-panel figure provenance** | [`experiments/figures/FIGURE_PROVENANCE.md`](experiments/figures/FIGURE_PROVENANCE.md) |
 | **Reproduce anything** | [`pipelines/`](pipelines/) — idempotent runners, GPU-parallel |
-| **Supplementary tables S1–S5** | [`audit/round2/tables/`](audit/round2/tables/) |
-| **Supplementary tables S6–S7** | [`results/within_layer_sweep/supplementary/`](results/within_layer_sweep/supplementary/) |
+| **Supplementary tables S1–S8** | [`results/supplementary/`](results/supplementary/) |
 | **Preregistrations (12, content-locked)** | [`experiments/docs/prereg/`](experiments/docs/prereg/) — `python experiments/tools/prereg_lock.py verify --all` |
 | **What we withdrew and why** | [Retractions and rescopes](#retractions-and-rescopes) — please read before citing any older number |
 
@@ -195,9 +194,9 @@ science changed. Observed reproduction errors are 1e-9 to 1e-6 relative.
 | `src/` | Shared libraries: activation capture, ablation, spike detection, DNA probes |
 | `models/`, `configs/` | Per-model wrapper classes and YAML, loaded dynamically via `WRAPPER_MAP` |
 | `stubs/` | Import shims so models with heavy optional dependencies load without them (`mamba_ssm` for Caduceus, a HybriDNA config). Put on `sys.path` at runtime by `scripts/evaluation/run_gue_ablation.py`; not type stubs, despite the name. |
-| `audit/` | The verification record across three adversarial rounds. `census_master.csv` is the canonical census table (22 models × 44 columns); `round2/tables/` holds Supplementary S1–S5. See [`audit/README.md`](audit/README.md). |
+| `audit/` | The verification record across three adversarial rounds. `census_master.csv` is the canonical census table (22 models × 44 columns); See [`audit/README.md`](audit/README.md). |
 | `results/` | Artifacts. Gitignored by default; files backing a manuscript claim are force-added. |
-| `results/within_layer_sweep/supplementary/` | Supplementary Tables S6–S7 |
+| `results/supplementary/` | All eight supplementary tables (S1–S8), with the builder for the five that are generated |
 | `data/` | Small region and reference files. Large public inputs are documented, not vendored — see [`data/README.md`](data/README.md) |
 | `frozen_inputs/` | Content-hashed evaluation inputs |
 | `docs/` | The experiment map |
