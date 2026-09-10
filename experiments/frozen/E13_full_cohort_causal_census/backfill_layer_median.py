@@ -18,14 +18,14 @@ Frobenius-norm computation, reusing:
 
 For 4 of the 11 models, the exact full-layer computation ALREADY EXISTS on disk from prior
 experiments and is simply read back, not recomputed:
-  - OLMo-7B-0724-hf: results/e10_exact_uknorm_olmo.json (layer 1, all 4096 rows, Gram-identity
+  - OLMo-7B-0724-hf: results/E10/e10_exact_uknorm_olmo.json (layer 1, all 4096 rows, Gram-identity
     exact ||U_k||_F, validated against spectral_lib SVD to rel_err < 1e-6 in that script)
-  - Phi-3-mini-4k-instruct: results/e10_exact_uknorm_phi3.json (layers 2 and 4 separately, all
+  - Phi-3-mini-4k-instruct: results/E10/e10_exact_uknorm_phi3.json (layers 2 and 4 separately, all
     3072 rows each)
-  - MosaicBERT: results/e10_encoder_row_ranking_mosaicbert.json (full per-row q1/frob_norm scan,
+  - MosaicBERT: results/E10/e10_encoder_row_ranking_mosaicbert.json (full per-row q1/frob_norm scan,
     all 12 layers x 768 rows, via row_spectral_metrics/SVD -- exact, not the Gram shortcut, but
     the same frob_norm quantity)
-  - ModernBERT-base: results/e10_encoder_row_ranking_modernbert.json (same, 22 layers x 768 rows)
+  - ModernBERT-base: results/E10/e10_encoder_row_ranking_modernbert.json (same, 22 layers x 768 rows)
 
 For the remaining 7, this script performs a NEW (but cheap, weight-only) computation:
   - Llama-7B, Mistral-7B, Qwen2.5-7B, GENERator-EUK-3B, GenomeOcean-4B: llama-style separate
@@ -304,7 +304,7 @@ def run_one(key: str) -> dict:
         # 6 published candidate rows across layers 2 and 4 -- report per-layer median
         # (median computed WITHIN each layer, over that layer's own d_model=3072 rows),
         # matching the CSV's own "6 published rows, median" framing. Both layers already
-        # fully computed in results/e10_exact_uknorm_phi3.json.
+        # fully computed in results/E10/e10_exact_uknorm_phi3.json.
         rows_l2 = [525, 1693, 1113]
         rows_l4 = [525, 1113, 1693]
         per_row = {}
@@ -313,7 +313,7 @@ def run_one(key: str) -> dict:
         for r in rows_l4:
             per_row[f"L4/r{r}"] = from_exact_uknorm_json("phi3", 4, r)
         out = dict(
-            source_file="results/e10_exact_uknorm_phi3.json",
+            source_file="results/E10/e10_exact_uknorm_phi3.json",
             method="Gram-identity exact ||U_k||_F, all rows in each of layers 2 and 4 "
                    "separately (Phi-3's 6 published candidate rows split across 2 layers; "
                    "layer_median_frob_norm/candidate_frob_norm_ratio_to_layer_median are "

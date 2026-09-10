@@ -33,7 +33,7 @@ M = [
   ["experiments/frozen/E7_exact_dimensionality/run_legacy_reanalysis.py",
    "experiments/frozen/E7_exact_dimensionality/run_phase1_detection.py",
    "experiments/frozen/E7_exact_dimensionality/spectral_lib.py"],
-  ["results/e7_legacy_reanalysis.json",
+  ["results/E7/e7_legacy_reanalysis.json",
    "experiments/figures/source_data/fig1_structural.json"],
   "Exact spectrum, no diagonal approximation."),
 
@@ -169,14 +169,14 @@ M = [
   "Fig S1A; Note S1",
   ["experiments/frozen/E10b_phi3_tomography/run_phi3_tomography.py",
    "experiments/frozen/E7_exact_dimensionality/run_phi3_spectral.py"],
-  ["results/e10b_phi3_tomography_responses.json",
+  ["results/E10/e10b_phi3_tomography_responses.json",
    "experiments/figures/source_data/fig_s1_structural_detail.json"],
   "Full-ablation response treated as unresolved."),
 
  ("P2", "Per-model random-control causal detail for the decoder audit",
   "Fig S1B",
   ["experiments/frozen/E10_nlp_architecture_causal/run_decoder_spectrum.py"],
-  ["results/e10_decoder_control_rows.json"],
+  ["results/E10/e10_decoder_control_rows.json"],
   "Individual control values behind the cohort medians."),
 
  ("T1", "Supplementary tables S2, S3, S6, S7, S8 (built from committed artifacts)",

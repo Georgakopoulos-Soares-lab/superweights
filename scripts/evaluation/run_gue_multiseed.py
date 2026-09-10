@@ -242,9 +242,9 @@ def main():
     parser.add_argument("--n_rand",       type=int, default=10,
                         help="Random control repeats per seed (default 10)")
     parser.add_argument("--ckpt_dir",     default=None)
-    parser.add_argument("--sw_index",     default="results/super_weight_index.json")
+    parser.add_argument("--sw_index",     default="results/negative_results/super_weight_index.json")
     parser.add_argument("--configs_dir",  default="configs")
-    parser.add_argument("--out",          default="results/gue_multiseed_results.json")
+    parser.add_argument("--out",          default="results/gue/gue_multiseed_results.json")
     parser.add_argument("--hf_token",     default=None)
     parser.add_argument("--device",       default="cuda")
     parser.add_argument("--min_baseline_acc", type=float, default=0.0,

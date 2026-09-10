@@ -17,7 +17,7 @@ checkable origin.
 | dtype / device | `float32` / `cuda`, `device_map="auto"` | `configs/generator.yaml:9-10`, `models/generator_wrapper.py:16-21` |
 | `down_proj_pattern` | `model.layers.{i}.mlp.down_proj` | `configs/generator.yaml:6-7` |
 
-**High-gain row identity** — `results/super_weight_index.json["generator"]["results"]`:
+**High-gain row identity** — `results/negative_results/super_weight_index.json["generator"]["results"]`:
 
 | rank | layer | row | col | out_max |
 |---|---|---|---|---|
@@ -89,7 +89,7 @@ repository* prior to E9.
 different input rows).
 
 **10-row ensemble** (the canonical pre-E9 basis; C-027/C-028) —
-`results/super_weight_index.json["dnabert2"]["results"]`, all 10 entries, sorted by
+`results/negative_results/super_weight_index.json["dnabert2"]["results"]`, all 10 entries, sorted by
 `out_max` descending as `run_pretrained_epistasis.py:219` already does:
 
 | rank | layer | row | col | out_max |

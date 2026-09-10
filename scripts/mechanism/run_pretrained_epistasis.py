@@ -200,7 +200,7 @@ def main():
     ap.add_argument("--batch_size", type=int, default=16)
     ap.add_argument("--mask_prob", type=float, default=0.15)
     ap.add_argument("--n_rand_pairs", type=int, default=10)
-    ap.add_argument("--sw_index", default="results/super_weight_index.json")
+    ap.add_argument("--sw_index", default="results/negative_results/super_weight_index.json")
     ap.add_argument("--top_n", type=int, default=0)
     ap.add_argument("--pad_to_multiple", type=int, default=0,
                     help="Pad token length to a multiple (use 256 for NTv3).")

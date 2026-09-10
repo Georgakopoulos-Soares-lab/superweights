@@ -182,7 +182,7 @@ mutated.
 |---|---|
 | Producing scripts | `run_phi3_spectral.py`, `run_phase1_detection.py`, `run_phase1_detection_evo2.py`, `run_confirmatory_spectral_lite.py`, `run_phase5_decision.py`, `run_legacy_reanalysis.py` |
 | Shared library | `spectral_lib.py` (6/6 synthetic tests green pre-lock) |
-| Raw outputs | `results/e7_phi3_spectral.json`, `results/e7_phase1_detection_{qwen25,genomeocean,evo2}.json`, `results/e7_phase5_decision.json`, `results/e7_legacy_reanalysis.json` |
+| Raw outputs | `results/E7/e7_phi3_spectral.json`, `results/e7_phase1_detection_{qwen25,genomeocean,evo2}.json`, `results/E7/e7_phase5_decision.json`, `results/E7/e7_legacy_reanalysis.json` |
 | Checkpoints | `microsoft/Phi-3-mini-4k-instruct` (unpinned); `Qwen/Qwen2.5-7B` (unpinned); `DOEJGI/GenomeOcean-4B` (unpinned); `arcinstitute/evo2_7b` (`evo2_7b.pt`, resolved via the `evo2` package's own checkpoint loader, no separate hash captured); legacy panel checkpoints as pinned in E5/E6 |
 | Dtype | float32 for all forward passes and weight-only extractions; float64 for every spectral/SVD computation |
 | Device | CUDA, A100-PCIE-40GB; Evo 2 required `evo2.sif` with `--cleanenv --env PYTHONNOUSERSITE=1` (container's own `transformer_engine`, not the host `~/.local` one — see `MODEL_PANEL.md`) and the same FP8-autocast no-op monkeypatch already established in `models/evo2_wrapper.py` (A100 is compute capability 8.0; FP8 needs 8.9+) |

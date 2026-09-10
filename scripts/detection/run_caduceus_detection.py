@@ -13,7 +13,7 @@ detection/iterative_finder.py (zero the found channel via
 hooks.ablation_trace.install_ablation_hook, re-sweep, repeat).
 
 Output: results/mechanism/caduceus_sw_detected.json (NOT written to the
-canonical results/super_weight_index.json, since Caduceus is not yet a
+canonical results/negative_results/super_weight_index.json, since Caduceus is not yet a
 first-class registered model there and this is exploratory Tier-2 work).
 """
 import json

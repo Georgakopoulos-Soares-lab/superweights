@@ -18,7 +18,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", required=True, choices=list(WRAPPER_MAP.keys()))
     parser.add_argument("--probe", default="actb_full")
-    parser.add_argument("--sw_index", default="results/super_weight_index.json")
+    parser.add_argument("--sw_index", default="results/negative_results/super_weight_index.json")
     parser.add_argument("--out",      default="results/ablation_results.json")
     args = parser.parse_args()
 

@@ -130,7 +130,7 @@ def main():
     ap.add_argument("--task", required=True)
     ap.add_argument("--gue_root", required=True)
     ap.add_argument("--ckpt_dir", required=True)
-    ap.add_argument("--sw_index", default="results/super_weight_index.json")
+    ap.add_argument("--sw_index", default="results/negative_results/super_weight_index.json")
     ap.add_argument("--fracs", nargs="+", type=float, default=[5.0, 10.0, 20.0, 30.0])
     ap.add_argument("--n_rand_seeds", type=int, default=5)
     ap.add_argument("--out", required=True)

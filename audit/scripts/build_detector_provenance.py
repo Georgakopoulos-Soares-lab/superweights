@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parents[2]
 CENSUS = ROOT / "results/E13/part2_22_model_results.csv"
 OUT = ROOT / "audit/detector_provenance.csv"
 
-LEGACY_SOURCE = "results/e7_legacy_reanalysis.json"
+LEGACY_SOURCE = "results/E7/e7_legacy_reanalysis.json"
 
 
 def main():

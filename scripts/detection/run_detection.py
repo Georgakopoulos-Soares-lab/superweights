@@ -35,7 +35,7 @@ def main():
              "inside modeling_ntv3_pretrained.py. Use --pad_to_multiple 256.")
     parser.add_argument("--threshold", type=float, default=0.1)
     parser.add_argument("--max_iter",  type=int,   default=10)
-    parser.add_argument("--out",       default="results/super_weight_index.json")
+    parser.add_argument("--out",       default="results/negative_results/super_weight_index.json")
     parser.add_argument(
         "--mode",
         default="superweight",

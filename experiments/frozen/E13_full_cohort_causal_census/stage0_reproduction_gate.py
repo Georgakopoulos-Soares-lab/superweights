@@ -261,7 +261,7 @@ def run_modernbert(with_controls: bool, local_files_only: bool = False) -> dict:
                 domain="text", architecture="encoder", endpoint="mlm_loss",
                 baseline_loss=base_loss, baseline_per_batch=base_pb,
                 candidate_layer=layer, candidate_row=row,
-                old_reference="results/e10_encoder_fit_results.json (key 'modernbert')",
+                old_reference="results/E10/e10_encoder_fit_results.json (key 'modernbert')",
                 new_control_rows=crows, control_layer=layer,
                 conditions=results)
 

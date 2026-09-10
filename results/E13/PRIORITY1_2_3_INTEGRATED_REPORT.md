@@ -17,7 +17,7 @@ causal cohort (Phi-3 excluded, matching `part1_22_structure_function_correlation
 models' E13 candidate coordinate was originally found by the activation-based detector
 (`candidate.ratio >= 5.0` in the E7/E8/E11 per-model detection JSONs). The other 6 — Llama-7B,
 Mistral-7B, OLMo-7B-0724-hf, NTv3, DNABERT-2, GENERator-EUK-3B — are sourced from
-`results/e7_legacy_reanalysis.json`, which carries published/structural coordinates and has
+`results/E7/e7_legacy_reanalysis.json`, which carries published/structural coordinates and has
 **no activation-ratio field at all**. This is why a 22-model activation-ratio correlation
 cannot be built; the 22-model number reported below is a correlation on the adjacent
 *structural* ratio, already computed before this session, used here only as sensitivity

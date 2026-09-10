@@ -177,7 +177,7 @@ def peak_for_probes(model, tok, layer_mod, channel, device, pad_multiple=0):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--models", nargs="+", required=True)
-    ap.add_argument("--sw_index", default="results/super_weight_index.json")
+    ap.add_argument("--sw_index", default="results/negative_results/super_weight_index.json")
     ap.add_argument("--extra_index", default=None,
                     help="second index merged in (e.g. the deep NTv3 index)")
     ap.add_argument("--top_n", type=int, default=3, help="rows per model to check")

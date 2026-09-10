@@ -75,7 +75,7 @@
     ],
     "candidate_layer": 15,
     "candidate_row": 251,
-    "old_reference": "results/e10_encoder_fit_results.json (key 'modernbert')",
+    "old_reference": "results/E10/e10_encoder_fit_results.json (key 'modernbert')",
     "new_control_rows": [
       23,
       325,

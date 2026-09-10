@@ -219,7 +219,7 @@ def main():
     parser.add_argument("--gue_root", type=str, default="/home/nvidia/data/gue/GUE")
     parser.add_argument("--ckpt_dir", type=str, default=None)
     parser.add_argument("--configs_dir", type=str, default=str(_ROOT / "configs"))
-    parser.add_argument("--sw_index", type=str, default=str(_ROOT / "results/super_weight_index.json"))
+    parser.add_argument("--sw_index", type=str, default=str(_ROOT / "results/negative_results/super_weight_index.json"))
     parser.add_argument("--uk_path", type=str, default=str(_ROOT / "results/sw_mechanistic_dnabert2.json"))
     parser.add_argument("--fracs", type=float, nargs="+", default=[10.0, 20.0, 30.0])
     parser.add_argument("--n_seeds", type=int, default=5)

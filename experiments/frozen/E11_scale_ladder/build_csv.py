@@ -9,8 +9,8 @@ CSVs. Writes:
   results/E11/scale_ladder_controls.csv
 
 Cited-model numbers are transcribed by hand from:
-  results/e7_phase1_detection_qwen25.json, results/e7_phase1_detection_genomeocean.json
-  results/e7_legacy_reanalysis.json (Llama-7B, Mistral-7B, OLMo-7B, GENERator-EUK-3B, DNABERT-2, NTv3)
+  results/E7/e7_phase1_detection_qwen25.json, results/E7/e7_phase1_detection_genomeocean.json
+  results/E7/e7_legacy_reanalysis.json (Llama-7B, Mistral-7B, OLMo-7B, GENERator-EUK-3B, DNABERT-2, NTv3)
   results/e8_detection_mosaicbert.json, results/e8_detection_modernbert.json
   experiments/E7_exact_dimensionality/RESULTS.md (Phi-3 median-of-6-rows)
   docs/MANUSCRIPT_SOURCE_OF_TRUTH.md (NTv3 architecture: hidden=1536 from n_singular_values,
@@ -53,21 +53,21 @@ CITED = [
          d_model=4096, d_ffn=11008, n_layers=32, layer=2, row=3968,
          q1=0.9888168037615727, pr_spec=1.022653174688543, frob_norm=137.61641832032996,
          gated_evidence="gate_proj/up_proj/down_proj (LlamaMLP SwiGLU)", dtype="float32",
-         source="results/e7_legacy_reanalysis.json"),
+         source="results/E7/e7_legacy_reanalysis.json"),
     dict(model="Mistral-7B", repo="mistralai/Mistral-7B-v0.1", revision="unpinned (E5/E6 original)",
          family="Mistral", domain="text", architecture="decoder",
          total_params=7241732096, non_embed_params=7241732096 - 2*32000*4096,
          d_model=4096, d_ffn=14336, n_layers=32, layer=1, row=2070,
          q1=0.9922047361077938, pr_spec=1.0157714240616442, frob_norm=0.38834723364706875,
          gated_evidence="gate_proj/up_proj/down_proj (MistralMLP SwiGLU)", dtype="float32",
-         source="results/e7_legacy_reanalysis.json"),
+         source="results/E7/e7_legacy_reanalysis.json"),
     dict(model="OLMo-7B-0724-hf", repo="allenai/OLMo-7B-0724-hf", revision="unpinned (E5/E6 original)",
          family="OLMo-v1", domain="text", architecture="decoder",
          total_params=6888095744, non_embed_params=6888095744 - 2*50304*4096,
          d_model=4096, d_ffn=11008, n_layers=32, layer=1, row=269,
          q1=0.964564665808712, pr_spec=1.07470169944751, frob_norm=0.9110752807676615,
          gated_evidence="gate_proj/up_proj/down_proj (OlmoMLP SwiGLU)", dtype="float32",
-         source="results/e7_legacy_reanalysis.json"),
+         source="results/E7/e7_legacy_reanalysis.json"),
     dict(model="Phi-3-mini-4k-instruct", repo="microsoft/Phi-3-mini-4k-instruct",
          revision="f39ac1d28e925b323eae81227eaba4464caced4e",
          family="Phi-3", domain="text", architecture="decoder",
@@ -83,7 +83,7 @@ CITED = [
          d_model=3584, d_ffn=18944, n_layers=28, layer=26, row=458,
          q1=0.9529104185966117, pr_spec=1.0995461100252455, frob_norm=29.68742128221388,
          gated_evidence="gate_proj/up_proj/down_proj (Qwen2MLP SwiGLU)", dtype="float32",
-         source="results/e7_phase1_detection_qwen25.json"),
+         source="results/E7/e7_phase1_detection_qwen25.json"),
     dict(model="MosaicBERT", repo="mosaicml/mosaic-bert-base", revision="c89bbadc24278928f22bcdd7de6b61a5a2d08553",
          family="MosaicBERT", domain="text", architecture="encoder",
          total_params=137400384, non_embed_params=137400384 - 23448576,
@@ -105,7 +105,7 @@ CITED = [
          d_model=1536, d_ffn=6144, n_layers=12, layer=11, row=1472,
          q1=0.38889396751753286, pr_spec=6.4803244910178845, frob_norm=441.5173190114778,
          gated_evidence="packed fc1 [12288,1536] (2x fc2's 6144 d_ffn), chunked", dtype="float32",
-         source="results/e7_legacy_reanalysis.json"),
+         source="results/E7/e7_legacy_reanalysis.json"),
     dict(model="DNABERT-2", repo="zhihan1996/DNABERT-2-117M",
          revision="7bce263b15377fc15361f52cfab88f8b586abda0",
          family="DNABERT-2", domain="genomic", architecture="encoder",
@@ -113,7 +113,7 @@ CITED = [
          d_model=768, d_ffn=3072, n_layers=12, layer=5, row=603,
          q1=0.7933113982887636, pr_spec=1.503287698117315, frob_norm=74.00855774610585,
          gated_evidence="packed Wqkvff-style gated MLP (bert_layers.py GLU)", dtype="float32",
-         source="results/e7_legacy_reanalysis.json"),
+         source="results/E7/e7_legacy_reanalysis.json"),
     dict(model="GENERator-EUK-3B", repo="GenerTeam/GENERator-v2-eukaryote-3b-base",
          revision="7dc01bccce5b65e15141170538afdc2ff09d8dde",
          family="GENERator-EUK", domain="genomic", architecture="decoder",
@@ -121,14 +121,14 @@ CITED = [
          d_model=3072, d_ffn=8448, n_layers=30, layer=4, row=2371,
          q1=0.9688691252375834, pr_spec=1.0652593586761891, frob_norm=522.1322102348346,
          gated_evidence="gate_proj/up_proj/down_proj (Llama-superset SwiGLU)", dtype="float32",
-         source="results/e7_legacy_reanalysis.json"),
+         source="results/E7/e7_legacy_reanalysis.json"),
     dict(model="GenomeOcean-4B", repo="DOEJGI/GenomeOcean-4B", revision="2bed2fc3ed47c5f6955ba3e64563512c9b338dfb",
          family="GenomeOcean", domain="genomic", architecture="decoder",
          total_params=4253174784, non_embed_params=4253174784 - 2*4096*3072,
          d_model=3072, d_ffn=16384, n_layers=24, layer=1, row=2604,
          q1=0.8989077166811766, pr_spec=1.2243008136348879, frob_norm=2.8832156466529963,
          gated_evidence="gate_proj/up_proj/down_proj (Mistral-arch SwiGLU)", dtype="float32",
-         source="results/e7_phase1_detection_genomeocean.json"),
+         source="results/E7/e7_phase1_detection_genomeocean.json"),
 ]
 for c in CITED:
     c["relative_depth"] = None

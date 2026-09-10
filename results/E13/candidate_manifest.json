@@ -65,7 +65,7 @@
       "frob_norm": 137.61641832032996,
       "layer_median_frob_norm": 4.205097956825915,
       "frob_ratio_to_layer_median": 29.40138041715147,
-      "source": "results/e7_legacy_reanalysis.json"
+      "source": "results/E7/e7_legacy_reanalysis.json"
     },
     {
       "model": "Mistral-7B",
@@ -78,7 +78,7 @@
       "frob_norm": 0.38834723364706875,
       "layer_median_frob_norm": 0.01397999823680717,
       "frob_ratio_to_layer_median": 26.83185497075223,
-      "source": "results/e7_legacy_reanalysis.json"
+      "source": "results/E7/e7_legacy_reanalysis.json"
     },
     {
       "model": "OLMo-7B-0724-hf",
@@ -91,7 +91,7 @@
       "frob_norm": 0.9110752807676615,
       "layer_median_frob_norm": 0.023241070761400518,
       "frob_ratio_to_layer_median": 39.201088887877,
-      "source": "results/e7_legacy_reanalysis.json"
+      "source": "results/E7/e7_legacy_reanalysis.json"
     },
     {
       "model": "Phi-3-mini-4k-instruct",
@@ -104,7 +104,7 @@
       "frob_norm": 120.77459257177593,
       "layer_median_frob_norm": 15.579189188998432,
       "frob_ratio_to_layer_median": 7.752302838519815,
-      "source": "results/e7_phi3_spectral.json"
+      "source": "results/E7/e7_phi3_spectral.json"
     },
     {
       "model": "Phi-3-mini-4k-instruct",
@@ -117,7 +117,7 @@
       "frob_norm": 105.85558346872463,
       "layer_median_frob_norm": 15.579189188998432,
       "frob_ratio_to_layer_median": 6.7946786051850685,
-      "source": "results/e7_phi3_spectral.json"
+      "source": "results/E7/e7_phi3_spectral.json"
     },
     {
       "model": "Phi-3-mini-4k-instruct",
@@ -130,7 +130,7 @@
       "frob_norm": 97.51920420321956,
       "layer_median_frob_norm": 15.579189188998432,
       "frob_ratio_to_layer_median": 6.259581485283963,
-      "source": "results/e7_phi3_spectral.json"
+      "source": "results/E7/e7_phi3_spectral.json"
     },
     {
       "model": "Phi-3-mini-4k-instruct",
@@ -143,7 +143,7 @@
       "frob_norm": 72.11570570033068,
       "layer_median_frob_norm": 16.43891946918779,
       "frob_ratio_to_layer_median": 4.3868884348171395,
-      "source": "results/e7_phi3_spectral.json"
+      "source": "results/E7/e7_phi3_spectral.json"
     },
     {
       "model": "Phi-3-mini-4k-instruct",
@@ -156,7 +156,7 @@
       "frob_norm": 61.70154919964694,
       "layer_median_frob_norm": 16.43891946918779,
       "frob_ratio_to_layer_median": 3.7533822898301,
-      "source": "results/e7_phi3_spectral.json"
+      "source": "results/E7/e7_phi3_spectral.json"
     },
     {
       "model": "Phi-3-mini-4k-instruct",
@@ -169,7 +169,7 @@
       "frob_norm": 46.49362134418052,
       "layer_median_frob_norm": 16.43891946918779,
       "frob_ratio_to_layer_median": 2.8282650469383475,
-      "source": "results/e7_phi3_spectral.json"
+      "source": "results/E7/e7_phi3_spectral.json"
     },
     {
       "model": "Qwen2.5-7B",
@@ -182,7 +182,7 @@
       "frob_norm": 29.68742128221388,
       "layer_median_frob_norm": 2.6271665824882557,
       "frob_ratio_to_layer_median": 9.28343928087795,
-      "source": "results/e7_phase1_detection_qwen25.json"
+      "source": "results/E7/e7_phase1_detection_qwen25.json"
     },
     {
       "model": "MosaicBERT",
@@ -221,7 +221,7 @@
       "frob_norm": 441.5173190114778,
       "layer_median_frob_norm": 108.79981978838849,
       "frob_ratio_to_layer_median": 3.612997884175097,
-      "source": "results/e7_legacy_reanalysis.json"
+      "source": "results/E7/e7_legacy_reanalysis.json"
     },
     {
       "model": "DNABERT-2",
@@ -234,7 +234,7 @@
       "frob_norm": 74.00855774610585,
       "layer_median_frob_norm": 10.350278730754415,
       "frob_ratio_to_layer_median": 5.018335080977002,
-      "source": "results/e7_legacy_reanalysis.json"
+      "source": "results/E7/e7_legacy_reanalysis.json"
     },
     {
       "model": "GENERator-EUK-3B",
@@ -247,7 +247,7 @@
       "frob_norm": 522.1322102348346,
       "layer_median_frob_norm": 17.62986778564838,
       "frob_ratio_to_layer_median": 12.244005701455277,
-      "source": "results/e7_legacy_reanalysis.json"
+      "source": "results/E7/e7_legacy_reanalysis.json"
     },
     {
       "model": "GenomeOcean-4B",
@@ -260,7 +260,7 @@
       "frob_norm": 2.8832156466529963,
       "layer_median_frob_norm": 0.10813996640762157,
       "frob_ratio_to_layer_median": 19.50444951690311,
-      "source": "results/e7_phase1_detection_genomeocean.json"
+      "source": "results/E7/e7_phase1_detection_genomeocean.json"
     },
     {
       "model": "Qwen/Qwen2.5-0.5B",

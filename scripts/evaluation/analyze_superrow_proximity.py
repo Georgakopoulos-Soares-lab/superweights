@@ -43,7 +43,7 @@ NUM_LAYERS   = 12
 NUM_ROWS     = 768          # out-channels of mlp.wo
 N_MONTE      = 50_000       # random control sets
 SEED         = 42
-INDEX_PATH   = Path("results/super_weight_index.json")
+INDEX_PATH   = Path("results/negative_results/super_weight_index.json")
 OUT_PNG      = Path("results/superrow_proximity.png")
 
 # ── Load super-rows ───────────────────────────────────────────────────────────

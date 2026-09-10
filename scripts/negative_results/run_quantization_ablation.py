@@ -44,7 +44,7 @@ Usage (GENERator, perplexity):
 Optional:
     --fracs 1 5 10 20 30   # quantization fractions for near_sw / random (pct of non-SW rows)
     --n_rand_seeds 10       # seeds for random condition
-    --sw_index results/super_weight_index.json
+    --sw_index results/negative_results/super_weight_index.json
     --device cuda
 """
 
@@ -587,7 +587,7 @@ def parse_args():
     p.add_argument("--ckpt_dir",  default=None,
                    help="Directory with model_state.pt from fine-tuning. "
                         "If omitted, script expects --task checkpoint auto-path.")
-    p.add_argument("--sw_index",  default="results/super_weight_index.json")
+    p.add_argument("--sw_index",  default="results/negative_results/super_weight_index.json")
     p.add_argument("--configs_dir", default="configs")
     p.add_argument("--fracs",    nargs="+", type=float,
                    default=[1.0, 5.0, 10.0, 20.0, 30.0],

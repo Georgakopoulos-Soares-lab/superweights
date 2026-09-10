@@ -94,7 +94,7 @@ def main():
     ap.add_argument("--model", default="dnabert2")
     ap.add_argument("--task", required=True)
     ap.add_argument("--ckpt_root", default="results/gue_checkpoints_multiseed")
-    ap.add_argument("--sw_index", default="results/super_weight_index.json",
+    ap.add_argument("--sw_index", default="results/negative_results/super_weight_index.json",
                     help="SW index JSON. Use results/mechanism/super_weight_index_ntv3_deep.json "
                          "for the unblocked NTv3 detection (30 rows vs the frozen index's 1).")
     ap.add_argument("--max_length", type=int, default=None,

@@ -30,7 +30,7 @@ answers a different question (direction-specificity vs. location-sensitivity) an
 essentially unchanged as candidate Supplementary Figure S2
 (figures/supplement/fig_s2_random_direction.py).
 
-Source: results/e7_legacy_reanalysis.json, results/mechanism/attention_sink_implicit_bias.json,
+Source: results/E7/e7_legacy_reanalysis.json, results/mechanism/attention_sink_implicit_bias.json,
 results/E_BOS_MEDIATION/bos_mediation_results.json.
 Output: figures/main/fig4_generator.{png,pdf}, figures/source_data/fig4_generator.json
 """

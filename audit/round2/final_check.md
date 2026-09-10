@@ -102,7 +102,7 @@ That section of the manuscript is empty. Draft it.
 First verify the claim you're about to make: clone the repository fresh into a temporary directory
 from the current HEAD, and check that every artifact cited in `audit/verification_table.csv` is
 present. Report anything missing — the round-2 hygiene pass force-added the results directories, but
-I want this tested rather than assumed. Confirm `results/e7_phase1_detection_evo2.json` is tracked.
+I want this tested rather than assumed. Confirm `results/E7/e7_phase1_detection_evo2.json` is tracked.
 
 Then draft the section: repository URL, commit hash, what is in it, which external resources are
 required (hg38, WikiText-2, the HF checkpoints with their pinned revisions), and how a reader

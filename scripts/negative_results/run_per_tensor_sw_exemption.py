@@ -121,7 +121,7 @@ def main():
     ap.add_argument("--task", required=True)
     ap.add_argument("--gue_root", required=True)
     ap.add_argument("--ckpt_root", required=True)
-    ap.add_argument("--sw_index", default="results/super_weight_index.json")
+    ap.add_argument("--sw_index", default="results/negative_results/super_weight_index.json")
     ap.add_argument("--bits", nargs="+", type=int, default=[4, 3, 2])
     ap.add_argument("--granularities", nargs="+",
                     default=["per_row", "group_64", "group_128", "per_tensor"])

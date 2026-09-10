@@ -78,7 +78,7 @@ def main():
     ap.add_argument("--model", default="dnabert2")
     ap.add_argument("--ckpt", default="results/gue_checkpoints_multiseed/"
                                       "dnabert2_reconstructed/seed_0/model_state.pt")
-    ap.add_argument("--sw_index", default="results/super_weight_index.json")
+    ap.add_argument("--sw_index", default="results/negative_results/super_weight_index.json")
     ap.add_argument("--bits", nargs="+", type=int, default=[8, 4, 3, 2])
     ap.add_argument("--M", nargs="+", type=int, default=[1, 4, 16])
     ap.add_argument("--groups", nargs="+", type=int, default=[64, 128])

@@ -692,7 +692,7 @@ def parse_args():
                    default=5,
                    help="Seeds for the random criterion.")
     p.add_argument("--sw_index",
-                   default="results/super_weight_index.json",
+                   default="results/negative_results/super_weight_index.json",
                    help="Path to super_weight_index.json.")
     p.add_argument("--configs_dir",
                    default="configs",

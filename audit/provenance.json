@@ -622,14 +622,14 @@
     "sha256": "6366a42531c7f6dacb21fcc28c78debd357d9e86962121b28b121ca182a33fa4",
     "size_bytes": 1455
   },
-  "results/e7_legacy_reanalysis.json": {
+  "results/E7/e7_legacy_reanalysis.json": {
     "git_last_commit": "e2490d53ccdbb91f13ce240c81dca88dab560969 2026-08-26 11:13:51 -0500",
     "git_status": "clean",
     "mtime": "2026-08-14T09:42:51",
     "sha256": "002e69603dfdc23e2379bbe52624dcdf59d96d03c3e3702dec204f1850edf984",
     "size_bytes": 2028
   },
-  "results/e7_phase1_detection_evo2.json": {
+  "results/E7/e7_phase1_detection_evo2.json": {
     "git_last_commit": "7dad5b6bee1317aca7785d4e64ee2d39114a36bf 2026-08-26 12:36:40 -0500",
     "git_status": "clean",
     "mtime": "2026-08-14T09:39:27",

@@ -290,7 +290,7 @@ def main():
                         help="GUE task (required for dnabert2/ntv3)")
     parser.add_argument("--gue_root", type=str, default="/home/nvidia/data/gue/GUE")
     parser.add_argument("--configs_dir", type=str, default=str(_ROOT / "configs"))
-    parser.add_argument("--sw_index", type=str, default=str(_ROOT / "results/super_weight_index.json"))
+    parser.add_argument("--sw_index", type=str, default=str(_ROOT / "results/negative_results/super_weight_index.json"))
     parser.add_argument("--fracs", type=float, nargs="+", default=[50.0])
     parser.add_argument("--n_seeds", type=int, default=5)
     parser.add_argument("--bits", type=int, default=2)

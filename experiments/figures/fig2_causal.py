@@ -17,8 +17,8 @@ Three panels, all loaded directly from raw E10 JSON:
      second-order model in this ladder can represent. Reported honestly as split,
      not forced into either class.
 
-Source: results/e10_decoder_concentration.json, results/e10_exact_uknorm_olmo.json,
-results/e10_encoder_fit_results.json, results/e10b_phi3_fit_results.json
+Source: results/E10/e10_decoder_concentration.json, results/E10/e10_exact_uknorm_olmo.json,
+results/E10/e10_encoder_fit_results.json, results/E10/e10b_phi3_fit_results.json
 (repo-root results/). See FIGURE_PROVENANCE.md.
 Output: figures/main/fig2_causal.{png,pdf}, figures/source_data/fig2_causal.json
 

@@ -109,7 +109,7 @@ def main():
     ap.add_argument("--task", required=True)
     ap.add_argument("--gue_root", required=True)
     ap.add_argument("--ckpt_root", required=True)
-    ap.add_argument("--sw_index", default="results/super_weight_index.json")
+    ap.add_argument("--sw_index", default="results/negative_results/super_weight_index.json")
     ap.add_argument("--pair", nargs=2, required=True,
                     help="two 'layer,row' coords, e.g. 9,264 9,294")
     ap.add_argument("--mode", choices=["zero", "int2", "int3", "int4", "int8"], default="int4")

@@ -728,7 +728,7 @@ def parse_args():
     p.add_argument("--gue_root", default="/home/nvidia/data/gue/GUE")
     p.add_argument("--ckpt_dir", default=None,
                    help="Dir with model_state.pt (dnabert2 only).")
-    p.add_argument("--sw_index", default="results/super_weight_index.json")
+    p.add_argument("--sw_index", default="results/negative_results/super_weight_index.json")
     p.add_argument("--configs_dir", default="configs")
     p.add_argument("--near_sw_frac", type=float, default=10.0,
                    help="Pct of non-SW rows to INT4 in near_sw + random conditions. "

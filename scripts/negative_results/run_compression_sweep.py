@@ -32,9 +32,9 @@ Run from repo root:
 Optional:
     --fracs 1 5 10 20        # override default sweep points (integers or floats, in %)
     --n_rand_seeds 10        # seeds for the random criterion (default 10)
-    --sw_index results/super_weight_index.json
-    --out    results/compression_sweep_dnabert2_prom_core_notata.json
-    --plot   results/compression_sweep_dnabert2_prom_core_notata.png
+    --sw_index results/negative_results/super_weight_index.json
+    --out    results/negative_results/compression_sweep_dnabert2_prom_core_notata.json
+    --plot   results/negative_results/compression_sweep_dnabert2_prom_core_notata.png
 """
 
 import argparse
@@ -467,7 +467,7 @@ def main():
     parser.add_argument("--task",     required=True)
     parser.add_argument("--gue_root", required=True)
     parser.add_argument("--ckpt_dir", default=None)
-    parser.add_argument("--sw_index", default="results/super_weight_index.json")
+    parser.add_argument("--sw_index", default="results/negative_results/super_weight_index.json")
     parser.add_argument("--evo2_sw_source", default=None,
                         help="For evo2: path to a JSON with candidate SW rows "
                              "(e.g. results/hydra_test_evo2.json). "

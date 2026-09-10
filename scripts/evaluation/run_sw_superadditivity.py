@@ -3,7 +3,7 @@ scripts/evaluation/run_sw_superadditivity.py
 ------------------------------------------------
 Is the super-weight effect an ENSEMBLE property?
 
-Single-seed data in results/gue_per_row_ablation.json showed something the
+Single-seed data in results/gue/gue_per_row_ablation.json showed something the
 manuscript never used: on DNABERT-2 splice, ablating each of the 10 SW rows
 individually costs -1.97 pp SUMMED, but ablating all 10 together costs
 -33.3 pp -- a ~17x superadditivity. On promoter it is ~187x (sum of parts
@@ -100,7 +100,7 @@ def main():
     pattern = cfg["down_proj_pattern"]
     max_length = _MAX_LEN.get(_task_key(args.task), 512)
 
-    sw_list = json.loads((ROOT / "results/super_weight_index.json").read_text())[args.model]["results"]
+    sw_list = json.loads((ROOT / "results/negative_results/super_weight_index.json").read_text())[args.model]["results"]
     # order by detection magnitude, descending -- the order a practitioner
     # would peel them off in
     sw_list = sorted(sw_list, key=lambda e: -(e.get("out_max") or 0))

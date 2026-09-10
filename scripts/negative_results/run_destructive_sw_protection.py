@@ -101,7 +101,7 @@ def main():
     ap.add_argument("--gue_root", default="/data/nvidia/data/gue/GUE")
     ap.add_argument("--ckpt", default="results/gue_checkpoints_multiseed/"
                                       "dnabert2_reconstructed/seed_0/model_state.pt")
-    ap.add_argument("--sw_index", default="results/super_weight_index.json")
+    ap.add_argument("--sw_index", default="results/negative_results/super_weight_index.json")
     ap.add_argument("--M", nargs="+", type=int, default=[1, 4, 16])
     ap.add_argument("--destructive", nargs="+",
                     default=["per_tensor:4", "per_tensor:3", "per_tensor:2", "per_row:2"])

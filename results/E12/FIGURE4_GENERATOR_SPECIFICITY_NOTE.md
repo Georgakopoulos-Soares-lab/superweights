@@ -22,7 +22,7 @@ The random-direction matching table marks the endpoint as a fallback because the
 
 ## Exact sources
 
-- `results/e7_legacy_reanalysis.json` — exact q1.
+- `results/E7/e7_legacy_reanalysis.json` — exact q1.
 - `results/mechanism/attention_sink_implicit_bias.json` — BOS attention and activation co-occurrence.
 - `results/E12/damage_matching.csv` — selected scales, native NLL, final GC means, reachability, and full tested grids.
 - `results/E12/raw/damage_evals.jsonl` — native-NLL measurements.
