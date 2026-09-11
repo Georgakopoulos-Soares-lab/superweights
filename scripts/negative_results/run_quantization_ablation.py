@@ -60,6 +60,8 @@ import yaml
 
 # ── Re-use helpers from run_gue_ablation / run_compression_sweep ─────────────
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+# run_gue_ablation lives in scripts/evaluation/, not beside this file
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "evaluation"))
 from run_gue_ablation import (
     GUEDataset,
     _NTv3Classifier,

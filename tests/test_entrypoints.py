@@ -49,3 +49,26 @@ def test_entry_point_starts(script):
     m = BREAKAGE.search(r.stderr)
     if m and m.group(1).split(".")[0] not in THIRD_PARTY:
         pytest.fail(f"{script} cannot start: {m.group(0)}")
+
+
+if __name__ == "__main__":
+    # Runnable without pytest: `python tests/test_entrypoints.py`
+    import os as _os
+    scripts = sorted(_entry_points())
+    failed, skipped = [], 0
+    for s in scripts:
+        try:
+            env = {**_os.environ, "PYTHONPATH": str(ROOT)}
+            r = subprocess.run([sys.executable, s, "--help"], capture_output=True,
+                               text=True, cwd=ROOT, timeout=60, env=env)
+        except subprocess.TimeoutExpired:
+            skipped += 1
+            continue
+        m = BREAKAGE.search(r.stderr)
+        if m and m.group(1).split(".")[0] not in THIRD_PARTY:
+            failed.append((s, m.group(0)))
+    print(f"{len(scripts)} entry points: {len(scripts) - len(failed) - skipped} ok, "
+          f"{skipped} skipped (load a model at import), {len(failed)} broken")
+    for s, e in failed:
+        print(f"  FAIL {s}: {e}")
+    sys.exit(1 if failed else 0)

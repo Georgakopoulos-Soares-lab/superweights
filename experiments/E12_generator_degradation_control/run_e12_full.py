@@ -39,7 +39,7 @@ import e12_lib as el  # noqa: E402
 SMOKE = os.environ.get("E12_SMOKE_TEST", "0") == "1"
 
 RESULTS_DIR = REPO_ROOT / ("results/E12_smoke" if SMOKE else "results/experiments/E12")
-FIG_DIR = REPO_ROOT / ("figures/E12_smoke" if SMOKE else "figures/E12")
+FIG_DIR = RESULTS_DIR / "figures"
 RAW_DIR = RESULTS_DIR / "raw"
 RAW_DIR.mkdir(parents=True, exist_ok=True)
 FIG_DIR.mkdir(parents=True, exist_ok=True)
