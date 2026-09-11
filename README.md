@@ -113,6 +113,70 @@ reproduction errors are 1e-9 to 1e-6 relative.
     detector** — reproducible and worth stating — and not as a claim about causal importance.
     Evidence: `results/analyses/detector_provenance/EXP2_LEGACY_DETECTOR_RESOLUTION.md`.
 
+## Reproducing the paper
+
+One row per object in the paper. Every artifact path below was verified to exist in this
+repository; where an input is gitignored and therefore absent from a clone, the row says so and
+names the command that regenerates it.
+
+**A note on filenames.** Moving the within-layer section ahead of the DNABERT-2 section shifted
+the figure numbers after it by one, but the *script filenames* were not renamed — renaming them
+risks breaking the literal-path `sys.path` inserts this repository depends on (see
+`tests/test_entrypoints.py`). So `fig3_dnabert.py` renders **Figure 4** and `fig4_generator.py`
+renders **Figure 5**. The offset is intentional and is flagged on each affected row.
+
+### Main figures
+
+| paper object | command | artifact | notes |
+|---|---|---|---|
+| **Figure 1** — structural panel | `python experiments/figures/fig1_structural.py` | `experiments/figures/main/fig1_structural.{pdf,png}` | Panel A is the retrospective diagonal-proxy calibration; B and C the exact operator metrics |
+| **Figure 2** — 22-model causal census | `python experiments/figures/fig2_causal.py` | `experiments/figures/main/fig2_causal.{pdf,png}` | Panels A/B effects, C the q₁ dissociation, D the top-norm control |
+| **Figure 3** — within-layer sweep | `bash pipelines/fig5_within_layer.sh` | `results/analyses/within_layer_sweep/fig_within_model_slope_2panel.{pdf,png}` | ⚠ pipeline filename retains the earlier figure number |
+| **Figure 4** — DNABERT-2 multi-row causal response | `python experiments/figures/fig3_dnabert.py` | `experiments/figures/main/fig3_dnabert.{pdf,png}` | ⚠ **script filename says `fig3`** |
+| **Figure 5** — GENERator BOS mediation | `python experiments/figures/fig4_generator.py` | `experiments/figures/main/fig4_generator.{pdf,png}` | ⚠ **script filename says `fig4`**; companion panel from `fig4_generator_specificity.py` |
+
+### Supplementary figures
+
+| paper object | command | artifact |
+|---|---|---|
+| **Fig S1** — structural/control detail | `python experiments/figures/supplement/fig_s1_structural_detail.py` | `experiments/figures/supplement/fig_s1_structural_detail.{pdf,png}` |
+| **Fig S2** — damage-matched random direction | `python experiments/figures/supplement/fig_s2_random_direction.py` | `experiments/figures/supplement/fig_s2_random_direction.{pdf,png}` |
+
+### Supplementary tables
+
+S2, S3 and S6–S8 are generated; S1, S4 and S5 are reformatted verbatim from the audit and are
+not rebuilt. One command produces all five generated tables.
+
+```bash
+python scripts/census_analysis/build_supplementary_tables.py
+```
+
+| table | artifact | rows |
+|---|---|---|
+| **S1** — model panel and provenance | `results/supplementary/S1_model_panel_provenance.{tsv,md,csv}` | 22 |
+| **S2** — structural metrics + 24-input stability | `results/supplementary/S2_structural_metrics_stability.{tsv,md}` | 22 |
+| **S3** — causal census + disagreement coordinates | `results/supplementary/S3_causal_census_disagreements.{tsv,md}` | 49 |
+| **S4** — structure–function correlations | `results/supplementary/S4_structure_function_correlations.{tsv,md,csv}` | 16 |
+| **S5** — GENERator conditions | `results/supplementary/S5_generator_conditions.{tsv,md,csv}` | 106 |
+| **S6** — DNABERT-2 tomography | `results/supplementary/S6_dnabert2_tomography.{tsv,md}` | 98 |
+| **S7** — within-layer sweep | `results/supplementary/S7_within_layer_sweep.{tsv,md}` | 72 |
+| **S8** — two critical rows + geometry | `results/supplementary/S8_two_critical_rows.{tsv,md}` | 13 |
+
+### Results in the text, not in a figure
+
+| claim | command | artifact |
+|---|---|---|
+| Two critical rows in one layer, and the masking interaction | `python scripts/within_layer_sweep/run_smollm2_second_row_epistasis.py` | `results/analyses/within_layer_sweep/smollm2_second_row_epistasis.json` |
+| Row geometry against a same-layer null (data-free, no GPU) | `python scripts/within_layer_sweep/run_smollm2_row_geometry.py` | `results/analyses/within_layer_sweep/smollm2_161_749_geometry.json` |
+| Selection-rule resolution for every legacy candidate | `bash pipelines/detector_provenance.sh` | `results/analyses/detector_provenance/EXP2_LEGACY_DETECTOR_RESOLUTION.md` |
+| Cohort structure–function correlations | `python scripts/census_analysis/run_activation_vs_causality.py` | `results/analyses/census_analysis/activation_vs_causality.tsv` |
+
+The authoritative, machine-checked mapping is [`docs/EXPERIMENT_MAP.md`](docs/EXPERIMENT_MAP.md)
+(21 experiments) and, panel by panel,
+[`experiments/figures/FIGURE_PROVENANCE.md`](experiments/figures/FIGURE_PROVENANCE.md). This
+table surfaces them; it does not replace them. `python scripts/build_experiment_map.py`
+re-verifies that every script and artifact named there still exists.
+
 ## Installation
 
 ```bash

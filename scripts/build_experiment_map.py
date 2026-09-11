@@ -104,21 +104,21 @@ M = [
   "22-model rho robust (0.766 -> 0.755); n=10 text subgroup falls to 0.673."),
 
  ("M1", "DNABERT-2 pretrained MLM pair L9/r264 + L9/r294; joint ablation and epistasis",
-  "Fig 3A,B",
+  "Fig 4A,B",
   ["experiments/E9_mechanistic_tomography/run_dnabert2_measurements.py",
    "scripts/mechanism/run_pretrained_epistasis.py"],
   ["experiments/figures/source_data/fig3_dnabert.json"],
   "Epistasis +2.0118 at eps=1.0 on the pretrained objective."),
 
  ("M2", "Finite-intervention tomography, observer families F0-F3 on a fixed 10-row basis",
-  "Fig 3C,D",
+  "Fig 4C,D",
   ["experiments/E9_mechanistic_tomography/run_fit_observers.py",
    "experiments/E9_mechanistic_tomography/run_baseline_regression.py"],
   ["experiments/figures/source_data/fig3_dnabert.json"],
   "Held-out R2 0.888 (F3) vs 0.517 (F2) at eps=0.5; 100 resplits."),
 
  ("M3", "GENERator L4/r2371 BOS mediation and position rescue",
-  "Fig 4",
+  "Fig 5",
   ["experiments/E12_generator_degradation_control/run_bos_mediation_main.py",
    "experiments/E12_generator_degradation_control/run_e12_full.py",
    "scripts/mechanism/run_generator_position_rescue.py",
@@ -145,7 +145,7 @@ M = [
   "Observational: attention was not causally manipulated."),
 
  ("W1", "Within-layer graded sweep, 36 rows log-spaced by ratio rank, two decoders",
-  "Fig 5",
+  "Fig 3",
   ["scripts/within_layer_sweep/run_within_model_slope.py",
    "scripts/within_layer_sweep/run_within_model_slope_text.py",
    "scripts/within_layer_sweep/plot_within_model_slope_2panel.py"],
