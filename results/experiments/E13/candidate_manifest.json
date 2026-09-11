@@ -104,7 +104,7 @@
       "frob_norm": 120.77459257177593,
       "layer_median_frob_norm": 15.579189188998432,
       "frob_ratio_to_layer_median": 7.752302838519815,
-      "source": "results/experiments/E7/e7_phi3_spectral.json"
+      "source": "results/e7_phi3_spectral.json"
     },
     {
       "model": "Phi-3-mini-4k-instruct",
@@ -117,7 +117,7 @@
       "frob_norm": 105.85558346872463,
       "layer_median_frob_norm": 15.579189188998432,
       "frob_ratio_to_layer_median": 6.7946786051850685,
-      "source": "results/experiments/E7/e7_phi3_spectral.json"
+      "source": "results/e7_phi3_spectral.json"
     },
     {
       "model": "Phi-3-mini-4k-instruct",
@@ -130,7 +130,7 @@
       "frob_norm": 97.51920420321956,
       "layer_median_frob_norm": 15.579189188998432,
       "frob_ratio_to_layer_median": 6.259581485283963,
-      "source": "results/experiments/E7/e7_phi3_spectral.json"
+      "source": "results/e7_phi3_spectral.json"
     },
     {
       "model": "Phi-3-mini-4k-instruct",
@@ -143,7 +143,7 @@
       "frob_norm": 72.11570570033068,
       "layer_median_frob_norm": 16.43891946918779,
       "frob_ratio_to_layer_median": 4.3868884348171395,
-      "source": "results/experiments/E7/e7_phi3_spectral.json"
+      "source": "results/e7_phi3_spectral.json"
     },
     {
       "model": "Phi-3-mini-4k-instruct",
@@ -156,7 +156,7 @@
       "frob_norm": 61.70154919964694,
       "layer_median_frob_norm": 16.43891946918779,
       "frob_ratio_to_layer_median": 3.7533822898301,
-      "source": "results/experiments/E7/e7_phi3_spectral.json"
+      "source": "results/e7_phi3_spectral.json"
     },
     {
       "model": "Phi-3-mini-4k-instruct",
@@ -169,7 +169,7 @@
       "frob_norm": 46.49362134418052,
       "layer_median_frob_norm": 16.43891946918779,
       "frob_ratio_to_layer_median": 2.8282650469383475,
-      "source": "results/experiments/E7/e7_phi3_spectral.json"
+      "source": "results/e7_phi3_spectral.json"
     },
     {
       "model": "Qwen2.5-7B",

@@ -55,3 +55,60 @@
 [2026-09-11T18:23:12Z]   damage[B_full_ablation_weight] pooled_mean=8.754320 elapsed=5.0s
 [2026-09-11T18:23:17Z]   damage[C_ablate_bos_only] pooled_mean=8.721829 elapsed=5.0s
 [2026-09-11T18:23:22Z]   damage[D_ablate_all_except_bos] pooled_mean=6.386261 elapsed=5.0s
+[2026-09-11T18:33:16Z] === Priority 3: GENERator-EUK L4/r2371 BOS causal mediation ===
+[2026-09-11T18:33:16Z] Loading model (revision pinned to 7dc01bccce5b65e15141170538afdc2ff09d8dde)...
+[2026-09-11T18:33:23Z] Loaded. resolved_commit_hash=7dc01bccce5b65e15141170538afdc2ff09d8dde load_seconds=6.9
+[2026-09-11T18:33:23Z] Corpora built: {'base_seed': 42, 'repartition_tries': 0, 'n_regions_total': 50000, 'partition_seed_used': 42, 'n_prompt': 96, 'n_damage': 100}
+[2026-09-11T18:33:23Z] --- Provenance check: reproduce historical E12 intact + full-ablation damage ---
+[2026-09-11T18:33:33Z]   measured intact damage  = 6.385380  (historical 6.385381)
+[2026-09-11T18:33:33Z]   measured ablated damage = 8.754320  (historical 8.754320)
+[2026-09-11T18:33:33Z] Provenance check PASSED -- checkpoint state reproduces historical E12 damage values within tolerance. Proceeding to smoke tests.
+[2026-09-11T18:33:36Z] Smoke test results:
+{
+  "1_noop_hook_eq_intact": {
+    "noop": 6.272226572036743,
+    "intact": 6.272226572036743,
+    "pass": true
+  },
+  "2_hook_ablation_eq_weight_ablation": {
+    "hook": 8.394883712132772,
+    "weight": 8.394883712132772,
+    "pass": true
+  },
+  "3_restore_everywhere_eq_intact": {
+    "restore_all": 6.272226572036743,
+    "intact": 6.272226572036743,
+    "pass": true
+  },
+  "4_bos_only_changes_only_position0": {
+    "differs_at_pos0": true,
+    "differs_elsewhere_count": 0,
+    "seq_len": 86,
+    "pass": true
+  },
+  "5_matched_nonbos_changes_only_target": {
+    "target_pos": 43,
+    "differs_at_target": true,
+    "total_positions_differing": 1,
+    "pass": true
+  },
+  "6_prefill_vs_decode_handling": {
+    "n_prefill_calls": 1,
+    "n_decode_calls": 4,
+    "zeroed_positions_at_prefill": [
+      0
+    ],
+    "zeroed_positions_at_decode_calls": [
+      [],
+      [],
+      [],
+      []
+    ],
+    "pass": true
+  }
+}
+[2026-09-11T18:33:36Z] ALL SMOKE TESTS PASSED. Proceeding immediately to the full experiment (no further permission stop, per instruction).
+[2026-09-11T18:33:41Z]   damage[A_intact] pooled_mean=6.385380 elapsed=5.0s
+[2026-09-11T18:33:46Z]   damage[B_full_ablation_weight] pooled_mean=8.754320 elapsed=5.0s
+[2026-09-11T18:33:51Z]   damage[C_ablate_bos_only] pooled_mean=8.721829 elapsed=5.0s
+[2026-09-11T18:33:56Z]   damage[D_ablate_all_except_bos] pooled_mean=6.386261 elapsed=5.0s

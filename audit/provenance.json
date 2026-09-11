@@ -13,9 +13,9 @@
     "error": "file not found at audit time"
   },
   "audit/census_master.csv": {
-    "git_last_commit": "2ab51f45ed536b753ca41dc3c06b120c0261c56b 2026-09-10 03:19:57 +0000",
-    "git_status": "dirty",
-    "mtime": "2026-09-11T18:21:12.911883",
+    "git_last_commit": "192e1d3cf5d588dcc60124c7bec76ec8ee384894 2026-09-11 18:31:02 +0000",
+    "git_status": "clean",
+    "mtime": "2026-09-11T18:31:12.494835",
     "sha256": "20a54d053ab6c20304d084266cea84822245e6586dc097e81f3b0b760ea69175",
     "size_bytes": 17632
   },
