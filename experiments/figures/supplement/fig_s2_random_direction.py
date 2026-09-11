@@ -36,7 +36,7 @@ FIGURES = HERE.parent
 PAPER_SALVAGE = FIGURES.parent
 REPO_ROOT = PAPER_SALVAGE.parent
 AUDIT2 = REPO_ROOT / "audit" / "round2"
-sys.path.insert(0, str(REPO_ROOT / "scripts" / "analysis"))
+sys.path.insert(0, str(REPO_ROOT / "experiments" / "figures"))
 sys.path.insert(0, str(FIGURES))
 from _figstyle import apply_style, panel_label  # noqa: E402
 from _paper_encoding import DOMAIN_COLOR  # noqa: E402

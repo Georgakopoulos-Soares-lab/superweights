@@ -27,8 +27,8 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[3]
-E9 = ROOT / "experiments/frozen/E9_mechanistic_tomography"
-OUT = ROOT / "audit/round2"
+E9 = ROOT / "experiments/E9_mechanistic_tomography"
+OUT = ROOT / "audit/rederivations"
 sys.path.insert(0, str(E9))
 import run_fit_observers as rfo  # noqa: E402
 

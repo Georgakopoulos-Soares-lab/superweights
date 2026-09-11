@@ -39,13 +39,13 @@ ROOT = HERE.parents[2]
 AUDIT2 = ROOT / "audit" / "round2"
 FIG_DIR = AUDIT2 / "figures"
 FIG_DIR.mkdir(parents=True, exist_ok=True)
-SRC_DIR2 = ROOT / "manuscript" / "figures" / "source_data"
+SRC_DIR2 = ROOT / "experiments" / "figures" / "source_data"
 SRC_DIR2.mkdir(parents=True, exist_ok=True)
 
-sys.path.insert(0, str(ROOT / "scripts" / "analysis"))
+sys.path.insert(0, str(ROOT / "experiments" / "figures"))
 from _figstyle import apply_style, panel_label  # noqa: E402
 
-sys.path.insert(0, str(ROOT / "manuscript" / "figures"))
+sys.path.insert(0, str(ROOT / "experiments" / "figures"))
 from _paper_encoding import DOMAIN_COLOR, ARCH_MARKER  # noqa: E402
 
 # same display-name / arch / domain mapping used in fig1_full22_two_panel.py

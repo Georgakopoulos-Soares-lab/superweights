@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[3]
-OUT = ROOT / "audit/round2"
+OUT = ROOT / "audit/rederivations"
 FIG_DIR = OUT / "figures"
 FIG_DIR.mkdir(parents=True, exist_ok=True)
 

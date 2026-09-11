@@ -1,8 +1,8 @@
 {
-  "intact_measured": 6.38538052380085,
+  "intact_measured": 6.385380401611328,
   "intact_historical": 6.385381,
   "intact_ok": true,
-  "ablated_measured": 8.754319605827332,
+  "ablated_measured": 8.75432020664215,
   "ablated_historical": 8.75432,
   "ablated_ok": true,
   "rtol": 0.001,

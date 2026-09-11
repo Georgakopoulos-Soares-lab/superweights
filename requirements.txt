@@ -1,31 +1,37 @@
-# Core scientific Python
+# Core runtime for the census, the structural metrics, and every analysis.
+# Audited 2026-09-11 against the actual imports: six packages that nothing imported were
+# removed (pandas, tqdm, accelerate, h5py, and two others) and two that are imported were
+# added (datasets, pyarrow).
+
+# Scientific Python
 numpy>=1.26
-pandas>=2.1
 scipy>=1.12
-scikit-learn>=1.4
-statsmodels>=0.14
-tqdm>=4.66
+scikit-learn>=1.4          # int4 benchmark, per-row ablation
+statsmodels>=0.14          # E11 scale-ladder regression
+pyyaml>=6.0
 
-# Deep learning
+# Torch and the HuggingFace stack
 torch>=2.2
-accelerate>=0.28
-
-# HuggingFace ecosystem
-transformers>=4.40
-tokenizers>=0.19
+transformers>=4.40         # see the environment note below: 4.29.x is required for DNABERT-2
 safetensors>=0.4
 huggingface_hub>=0.22
+datasets>=2.18             # frozen WikiText-2 windows (e10_lib.build_windows)
+pyarrow>=15.0              # offline read of the committed WikiText-2 parquet
 
-# Genomics / bioinformatics
-pyfaidx>=0.8
+# Genomics
+pyfaidx>=0.8               # hg38 window sampling
 
-# Config & IO
-pyyaml>=6.0
-h5py>=3.11
-
-# Plotting
+# Figures
 matplotlib>=3.8
 seaborn>=0.13
 
-# Dev / testing
+# Tests
 pytest>=8.0
+
+# ── Optional, model-specific ─────────────────────────────────────────────────
+# Needed only to run the models named; nothing else in the repository imports them, and the
+# paper's reported results do not depend on them (Evo2 appears only as an explicit null).
+#   evo2, transformer_engine   Evo2 / StripedHyena
+#   evo                        Evo1
+#   mamba_ssm                  Caduceus  (a shim in stubs/ lets the wrapper load without it)
+#   megaDNA                    megaDNA

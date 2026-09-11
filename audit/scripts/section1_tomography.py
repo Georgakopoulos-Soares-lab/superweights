@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Section 1 audit recomputation: DNABERT-2 tomography split/design/coefficient checks.
 
-Reads only stored artifacts under experiments/frozen/E9_mechanistic_tomography/.
+Reads only stored artifacts under experiments/E9_mechanistic_tomography/.
 Writes audit/tomography_splits.csv and audit/tomography_pair_coeffs.csv.
 Deterministic, no GPU, no re-execution of the measurement pipeline.
 """
@@ -15,7 +15,7 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
-E9 = ROOT / "experiments/frozen/E9_mechanistic_tomography"
+E9 = ROOT / "experiments/E9_mechanistic_tomography"
 OUT = ROOT / "audit"
 
 BASIS = [(5, 603), (3, 86), (3, 399), (9, 264), (9, 294),

@@ -5,7 +5,7 @@ from .base_wrapper import BaseGenomicWrapper
 # Pinned remote-code revision (the Hub's default/latest NTv3 code has since
 # drifted and breaks the forward pass with internal shape mismatches).
 # Matches the pin used in scripts/evaluation/run_gue_multiseed.py and
-# scripts/analysis/run_ntv3_uk_per_layer.py.
+# experiments/figures/run_ntv3_uk_per_layer.py.
 _NTV3_CODE_REVISION = "0ecff3637f0d3ba5b686d1095083218157c2ca34"
 
 

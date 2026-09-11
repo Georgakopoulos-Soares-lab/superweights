@@ -23,7 +23,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.lines as ml
 
-HERE=Path(__file__).resolve().parent; ROOT=HERE.parent.parent; RESULTS=ROOT/'results'; AUDIT2=ROOT/'audit'/'round2'
+HERE=Path(__file__).resolve().parent; ROOT=HERE.parent.parent; RESULTS=ROOT/'results'; AUDIT2=ROOT/'audit'/'rederivations'
 sys.path.insert(0,str(ROOT/'scripts'/'analysis')); sys.path.insert(0,str(HERE))
 from _figstyle import apply_style, panel_label
 from _paper_encoding import DOMAIN_COLOR, ARCH_MARKER
@@ -45,7 +45,7 @@ def display(name):
             'Qwen/Qwen2.5-7B':'Qwen2.5-7B'}.get(name,key(name))
 
 def rows(name):
-    with (RESULTS/'E11'/name).open() as f: return list(csv.DictReader(f))
+    with (RESULTS/'experiments'/'E11'/name).open() as f: return list(csv.DictReader(f))
 
 # ---- full-22 display-name map for panel C (round-2 extension) --------------------------
 DISPLAY22 = {
@@ -68,7 +68,7 @@ def load_panel_c22():
     assert len(summary) == 22
     meta = {r['model']: r for r in summary}
     random_ctrl = defaultdict(list)
-    for r in csv.DictReader(open(RESULTS/'E11'/'scale_ladder_controls.csv')):
+    for r in csv.DictReader(open(RESULTS/'experiments'/'E11'/'scale_ladder_controls.csv')):
         random_ctrl[r['model']].append(float(r['q1']))
     for r in csv.DictReader(open(AUDIT2/'section2_random_control_q1_batch2.csv')):
         random_ctrl[r['model']].append(float(r['q1']))

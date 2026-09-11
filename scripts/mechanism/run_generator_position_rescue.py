@@ -30,7 +30,7 @@ import numpy as np
 import torch
 
 ROOT = Path("/home/nvidia/superweights")
-D = ROOT / "experiments/frozen/E12_generator_degradation_control"
+D = ROOT / "experiments/E12_generator_degradation_control"
 sys.path.insert(0, str(D))
 import run_bos_mediation as bm   # noqa: E402
 import e12_lib as e12            # noqa: E402

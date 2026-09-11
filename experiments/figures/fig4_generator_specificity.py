@@ -18,12 +18,12 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 RESULTS = ROOT / "results"
-E12 = RESULTS / "E12"
+E12 = RESULTS/"experiments"/"E12"
 OUT = HERE / "main" / "fig4_generator_specificity"
 PANEL_C_CSV = E12 / "figure4_generator_specificity_panel_c.csv"
 NOTE = E12 / "FIGURE4_GENERATOR_SPECIFICITY_NOTE.md"
 
-sys.path.insert(0, str(ROOT / "scripts" / "analysis"))
+sys.path.insert(0, str(ROOT / "experiments" / "figures"))
 from _figstyle import apply_style, panel_label  # noqa: E402
 from _paper_encoding import DOMAIN_COLOR  # noqa: E402
 
@@ -277,7 +277,7 @@ def write_note(rows: list[dict], anchors: dict, structural: dict, sink: dict) ->
         "- `results/experiments/E12/raw/damage_evals.jsonl` — native-NLL measurements.",
         "- `results/experiments/E12/raw/gen_records.jsonl` — per-seed, per-prompt generated GC measurements.",
         "- `results/experiments/E12/E12_summary.md` — final interpretation and paired-difference bootstrap results.",
-        "- `experiments/frozen/E12_generator_degradation_control/run_e12_full.py` and `e12_lib.py` — intervention, damage, generation, and bootstrap implementation.", "",
+        "- `experiments/E12_generator_degradation_control/run_e12_full.py` and `e12_lib.py` — intervention, damage, generation, and bootstrap implementation.", "",
         "## Caption", "", caption, "",
         "## Outputs", "",
         "- `experiments/figures/main/fig4_generator_specificity.png`",

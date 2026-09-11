@@ -1,17 +1,17 @@
 {
   "1_noop_hook_eq_intact": {
-    "noop": 6.272225618362427,
-    "intact": 6.272225618362427,
+    "noop": 6.272226572036743,
+    "intact": 6.272226572036743,
     "pass": true
   },
   "2_hook_ablation_eq_weight_ablation": {
-    "hook": 8.39488410949707,
-    "weight": 8.39488410949707,
+    "hook": 8.394883712132772,
+    "weight": 8.394883712132772,
     "pass": true
   },
   "3_restore_everywhere_eq_intact": {
-    "restore_all": 6.272225618362427,
-    "intact": 6.272225618362427,
+    "restore_all": 6.272226572036743,
+    "intact": 6.272226572036743,
     "pass": true
   },
   "4_bos_only_changes_only_position0": {

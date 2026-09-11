@@ -44,7 +44,7 @@ from pathlib import Path
 import numpy as np, torch
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "experiments/frozen/E10_nlp_architecture_causal"))
+sys.path.insert(0, str(ROOT / "experiments/E10_nlp_architecture_causal"))
 import e10_lib as L  # noqa: E402
 
 OUT = ROOT / "results/analyses/within_layer_sweep"

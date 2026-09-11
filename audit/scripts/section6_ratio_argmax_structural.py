@@ -17,8 +17,8 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "experiments/frozen/E7_exact_dimensionality"))
-sys.path.insert(0, str(ROOT / "experiments/frozen/E13_full_cohort_causal_census"))
+sys.path.insert(0, str(ROOT / "experiments/E7_exact_dimensionality"))
+sys.path.insert(0, str(ROOT / "experiments/E13_full_cohort_causal_census"))
 
 from spectral_lib import row_spectral_metrics  # noqa: E402
 from dnabert2_compat import load_dnabert2_patched  # noqa: E402

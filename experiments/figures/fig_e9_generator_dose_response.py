@@ -18,8 +18,8 @@ import matplotlib.pyplot as plt
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
-E9 = HERE.parents[0] / "experiments" / "E9_mechanistic_tomography"
-sys.path.insert(0, str(ROOT / "scripts" / "analysis"))
+E9 = HERE.parents[0] / "E9_mechanistic_tomography"
+sys.path.insert(0, str(ROOT / "experiments" / "figures"))
 from _figstyle import apply_style, panel_label  # noqa: E402
 
 ALPHAS = [0.0, 0.5, 1.0]

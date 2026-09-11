@@ -119,7 +119,7 @@ def s3():
 
 # ── S6: DNABERT-2 finite-intervention tomography ─────────────────────────────
 def s6():
-    fit = json.loads((ROOT / "experiments/frozen/E9_mechanistic_tomography/"
+    fit = json.loads((ROOT / "experiments/E9_mechanistic_tomography/"
                              "fit_results_dnabert2.json").read_text())["by_epsilon"]
     stab = list(csv.DictReader((ROOT / "audit/rederivations/tomography_split_stability.csv").open()))
     fam_hdr = ["epsilon", "observer_family", "held_out_r2", "held_out_mae", "rmse",
@@ -146,7 +146,7 @@ def s6():
           "contribution but stays additive; F3 adds all 45 pairwise interaction terms. "
           "Resplit columns are the median and 95% interval over 100 alternative "
           "fit/calibration/held-out partitions. Sources: "
-          "`experiments/frozen/E9_mechanistic_tomography/fit_results_dnabert2.json`, "
+          "`experiments/E9_mechanistic_tomography/fit_results_dnabert2.json`, "
           "`audit/rederivations/tomography_split_stability.csv`, `audit/tomography_pair_coeffs.csv`.",
           fam_hdr, fam_rows,
           sections=[("A — Observer families, held-out performance", fam_hdr, fam_rows),

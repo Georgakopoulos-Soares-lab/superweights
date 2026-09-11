@@ -48,7 +48,7 @@ HERE = Path(__file__).resolve().parent
 PAPER_SALVAGE = HERE.parent
 REPO_ROOT = PAPER_SALVAGE.parent
 E9 = PAPER_SALVAGE / "experiments" / "E9_mechanistic_tomography"
-sys.path.insert(0, str(REPO_ROOT / "scripts" / "analysis"))
+sys.path.insert(0, str(REPO_ROOT / "experiments" / "figures"))
 from _figstyle import apply_style, panel_label  # noqa: E402
 
 N = 10

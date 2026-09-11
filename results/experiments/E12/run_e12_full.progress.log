@@ -1,0 +1,18 @@
+[2026-09-11 18:23:28] === E12 run start (SMOKE=False) ===
+[2026-09-11 18:23:28] loading GENERator EUK 3B ...
+[2026-09-11 18:23:37] model loaded in 9.1s
+[2026-09-11 18:23:37] down_proj shape = (3072, 8448) (nrows=3072, intermediate_size=8448)
+[2026-09-11 18:23:37] control rows (C-045-reproducing): [2621, 456, 102, 3039, 1126]
+[2026-09-11 18:23:37] reusing cached corpora: {'base_seed': 42, 'repartition_tries': 0, 'n_regions_total': 50000, 'partition_seed_used': 42, 'n_prompt': 96, 'n_damage': 100}
+[2026-09-11 18:23:37] === B3 step 1-3: damage measurement + matching ===
+[2026-09-11 18:23:37] damage target D(2371, alpha=0) = 8.754320
+[2026-09-11 18:23:37] === B1/B2/B3-step4: generation work plan ===
+[2026-09-11 18:23:37] gen plan: 90 conditions total, 93 already checkpointed
+[2026-09-11 18:23:37] === building outputs ===
+[2026-09-11 18:23:37] wrote /home/nvidia/superweights/results/experiments/E12/dose_response_extended.csv
+[2026-09-11 18:23:37] wrote /home/nvidia/superweights/results/experiments/E12/damage_matching.csv
+[2026-09-11 18:23:37] wrote /home/nvidia/superweights/results/experiments/E12/kmer_attribution.csv (fraction attributable to longest homopolymer = 0.039282148311121534)
+[2026-09-11 18:23:38] wrote /home/nvidia/superweights/figures/E12/gc_vs_damage.pdf
+[2026-09-11 18:23:38] wrote /home/nvidia/superweights/figures/E12/generation_quality.pdf
+[2026-09-11 18:23:39] wrote /home/nvidia/superweights/results/experiments/E12/E12_summary.md
+[2026-09-11 18:23:39] === E12 run COMPLETE ===

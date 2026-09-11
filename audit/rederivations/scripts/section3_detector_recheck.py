@@ -25,7 +25,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "experiments/frozen/E7_exact_dimensionality"))
+sys.path.insert(0, str(ROOT / "experiments/E7_exact_dimensionality"))
 from spectral_lib import row_spectral_metrics  # noqa: E402
 
 RATIO_THRESHOLD = 5.0
@@ -132,7 +132,7 @@ def load_generator_euk():
 
 
 _NTV3_CODE_REV = "0ecff3637f0d3ba5b686d1095083218157c2ca34"  # pinned code_revision, matches
-                                                              # scripts/analysis/run_ntv3_uk_audit.py
+                                                              # experiments/figures/run_ntv3_uk_audit.py
 
 
 def load_ntv3():

@@ -43,13 +43,13 @@ RESULTS = ROOT / "results"
 AUDIT2 = ROOT / "audit" / "round2"
 FIG_DIR = AUDIT2 / "figures"
 FIG_DIR.mkdir(parents=True, exist_ok=True)
-SRC_DIR2 = ROOT / "manuscript" / "figures" / "source_data"
+SRC_DIR2 = ROOT / "experiments" / "figures" / "source_data"
 SRC_DIR2.mkdir(parents=True, exist_ok=True)
 
-sys.path.insert(0, str(ROOT / "scripts" / "analysis"))
+sys.path.insert(0, str(ROOT / "experiments" / "figures"))
 from _figstyle import apply_style, panel_label  # noqa: E402
 
-sys.path.insert(0, str(ROOT / "manuscript" / "figures"))
+sys.path.insert(0, str(ROOT / "experiments" / "figures"))
 from _paper_encoding import DOMAIN_COLOR, ARCH_MARKER  # noqa: E402
 
 # ---- display-name mapping, extended to the full 22-model cohort --------------------
@@ -96,7 +96,7 @@ def main():
 
     # 5 random controls per model (original 12 + batch2 10)
     random_ctrl = defaultdict(list)
-    for r in csv.DictReader(open(RESULTS / "E11" / "scale_ladder_controls.csv")):
+    for r in csv.DictReader(open(RESULTS/"experiments"/"E11" / "scale_ladder_controls.csv")):
         random_ctrl[r["model"]].append(float(r["q1"]))
     for r in csv.DictReader(open(AUDIT2 / "section2_random_control_q1_batch2.csv")):
         random_ctrl[r["model"]].append(float(r["q1"]))

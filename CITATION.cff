@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+title: "Structure is not mechanism: high-gain gated-FFN rows across text and genomic foundation models"
+message: "If you use this code or data, please cite the paper."
+type: software
+authors:
+  - family-names: Tzanakakis
+    given-names: Alexandros
+    affiliation: "Division of Pharmacology and Toxicology, College of Pharmacy, The University of Texas at Austin"
+  - family-names: Karatzikos
+    given-names: Aris
+    affiliation: "Department of Computer Science, College of Natural Sciences, The University of Texas at Austin"
+  - family-names: Georgakopoulos-Soares
+    given-names: Ilias
+    affiliation: "Division of Pharmacology and Toxicology, College of Pharmacy, The University of Texas at Austin"
+    email: ilias@austin.utexas.edu
+license: MIT
+repository-code: "https://github.com/Georgakopoulos-Soares-lab/superweights"
+keywords:
+  - mechanistic interpretability
+  - super weights
+  - genomic language models
+  - gated feed-forward networks

@@ -46,7 +46,7 @@ HERE = Path(__file__).resolve().parent
 PAPER_SALVAGE = HERE.parent
 REPO_ROOT = PAPER_SALVAGE.parent
 RESULTS = REPO_ROOT / "results"
-sys.path.insert(0, str(REPO_ROOT / "scripts" / "analysis"))
+sys.path.insert(0, str(REPO_ROOT / "experiments" / "figures"))
 from _figstyle import apply_style, panel_label  # noqa: E402
 from _paper_encoding import DOMAIN_COLOR  # noqa: E402
 
@@ -77,7 +77,7 @@ def main():
     apply_style()
     legacy = json.loads((RESULTS / "e7_legacy_reanalysis.json").read_text())["GENERator EUK"]
     sink = json.loads((RESULTS / "mechanism" / "attention_sink_implicit_bias.json").read_text())["generator"]
-    bos = json.loads((RESULTS / "E_BOS_MEDIATION" / "bos_mediation_results.json").read_text())
+    bos = json.loads((RESULTS/"experiments"/"E_BOS_MEDIATION" / "bos_mediation_results.json").read_text())
 
     # verify every plotted number directly against the artifact before plotting anything
     for key, _ in BOS_CONDITIONS:

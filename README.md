@@ -1,38 +1,46 @@
 # Structure is not mechanism
 
-### Code and data for *"High-gain gated-FFN rows across text and genomic foundation models"*
+### High-gain gated-FFN rows across text and genomic foundation models
 
-This repository is the computational companion to the paper. It contains the code that
-produced every reported number, the artifacts those runs emitted, the figure pipeline, and
-the preregistrations — but **not the manuscript text**, which lives with the publication.
+Code, artifacts and preregistrations for the paper of this title. The manuscript itself is not
+in this repository; it ships with the publication.
 
-The project asks whether the "super weight" phenomenon reported in text LLMs recurs in
-genomic foundation models, and — the sharper question — whether a high-gain row's
-**structural** prominence tells you anything about its **causal** importance. Across a frozen
-22-model census and focused mechanistic case studies, the answer is that structural geometry,
-functional criticality, and causal response complexity are three different things.
+**The question.** A handful of "super weights" in text LLMs can be catastrophically important.
+Do analogous structures recur in genomic foundation models — and, more sharply, does a
+high-gain row's *structural* prominence tell you anything about its *causal* importance?
+
+**The answer**, across a preregistered 22-model causal census and focused mechanistic case
+studies, is that three quantities routinely conflated in this literature are distinct:
 
 ```
-STRUCTURAL GEOMETRY  !=  FUNCTIONAL CRITICALITY  !=  CAUSAL RESPONSE COMPLEXITY
+STRUCTURAL GEOMETRY  ≠  FUNCTIONAL CRITICALITY  ≠  CAUSAL RESPONSE COMPLEXITY
 ```
 
 ---
 
 ## Start here
 
-| what | where |
+| | |
 |---|---|
-| **Every experiment → its code → its artifacts** | [`docs/EXPERIMENT_MAP.md`](docs/EXPERIMENT_MAP.md) — 20 experiments |
-| **Verify that map against this tree** | `python scripts/build_experiment_map.py` — exits non-zero if any script is missing |
+| **Every claim → its code → its artifacts** | [`docs/EXPERIMENT_MAP.md`](docs/EXPERIMENT_MAP.md) — 21 experiments, machine-checked |
+| **Reproduce anything** | [`pipelines/`](pipelines/) — idempotent, GPU-parallel runners |
 | **Panel-by-panel figure provenance** | [`experiments/figures/FIGURE_PROVENANCE.md`](experiments/figures/FIGURE_PROVENANCE.md) |
-| **Reproduce anything** | [`pipelines/`](pipelines/) — idempotent runners, GPU-parallel |
 | **Supplementary tables S1–S8** | [`results/supplementary/`](results/supplementary/) |
-| **Preregistrations (12, content-locked)** | [`experiments/docs/prereg/`](experiments/docs/prereg/) — `python experiments/tools/prereg_lock.py verify --all` |
-| **What we withdrew and why** | [Retractions and rescopes](#retractions-and-rescopes) — please read before citing any older number |
+| **Preregistrations (12, content-locked)** | [`docs/prereg/`](docs/prereg/) — `python src/prereg_lock.py verify --all` |
+| **What we withdrew, and why** | [Retractions and rescopes](#retractions-and-rescopes) — read before citing any earlier number |
 
-Every plotted number in Figures 1–4 is loaded programmatically from a raw artifact at render
-time; none is transcribed from prose. Where a narratively interesting number had no raw
-artifact, the panel was not rendered rather than approximated.
+Two properties of this repository are worth stating up front, because they are unusual and
+they are deliberate.
+
+**Every plotted number is loaded from a raw artifact at render time.** None is transcribed
+from prose. Where a narratively interesting number had no raw artifact, the panel was not
+rendered rather than approximated — `FIGURE_PROVENANCE.md` lists those cases.
+
+**The reproduction scripts gate themselves against stored values.** Each re-derives quantities
+already recorded in `audit/census_master.csv` — baseline loss, candidate effect at both
+intervention strengths, the seeded control rows — and *aborts* on mismatch, on the principle
+that a failed gate means the harness is wrong rather than that the science changed. Observed
+reproduction errors are 1e-9 to 1e-6 relative.
 
 ## What the paper establishes
 
@@ -105,137 +113,126 @@ artifact, the panel was not rendered rather than approximated.
     detector** — reproducible and worth stating — and not as a claim about causal importance.
     Evidence: `results/analyses/detector_provenance/EXP2_LEGACY_DETECTOR_RESOLUTION.md`.
 
-## Reproducing
-
-### Environments
-
-Three conda environments, because the model families pin incompatible `transformers`:
-
-| env | `transformers` | used for |
-|---|---|---|
-| `generator` | 5.5.0 | GENERator, NTv3, all text decoders, the census, everything in `scripts/mechanism/` |
-| `dnabert` | 4.29.2 | DNABERT-2 (its remote code predates the Transformers 5 config API) |
-| `evo` | 4.48.1 | Evo1 |
-
-`pip install -r requirements.txt` covers the shared dependencies. Running DNABERT-2 jobs under
-`generator` fails with `BertConfig has no attribute pad_token_id` — that is the wrong-env
-signature, not a code bug.
-
-### Data
-
-* **WikiText-2** — committed at [`frozen_inputs/`](frozen_inputs/) (sha256 `5f1bea06…`), so text
-  endpoints run offline. This is the same file the census resolved through `datasets`, not a
-  substitute corpus; see [`frozen_inputs/README.md`](frozen_inputs/README.md).
-* **hg38** — not committed (size). Place or symlink at `data/reference/hg38/hg38.fa`.
-* **GUE** — not committed. Point `$GUE_ROOT` at it.
-* Other large public inputs are documented rather than vendored: see [`data/README.md`](data/README.md).
-* **Checkpoints** — pinned Hugging Face revisions, listed per model in `audit/census_master.csv`.
-
-### Commands
-
-Prefer the pipelines. Each skips stages whose output already exists, so an interrupted run
-resumes and a finished one costs nothing; set `FORCE=1` to recompute.
+## Installation
 
 ```bash
-bash pipelines/fig5_within_layer.sh      # Fig 5: both within-layer sweeps, second row, geometry, plot
-bash pipelines/detector_provenance.sh    # positive control first, then the three 7B decoders
-bash pipelines/census.sh                 # the frozen 22-model census (restartable)
-bash pipelines/census.sh dnabert2 ntv3   # ...or just these
+git clone https://github.com/Georgakopoulos-Soares-lab/superweights.git
+cd superweights
+pip install -r requirements.txt
+export PYTHONPATH=.          # required: scripts import the shared library as `src.*`
+```
+
+All commands below assume `PYTHONPATH=.` and the repository root as the working directory.
+
+Three environments are needed, because the model families pin incompatible `transformers`:
+
+| environment | `transformers` | used for |
+|---|---|---|
+| main | ≥ 4.40 (tested 5.5.0) | GENERator, NTv3, all text decoders, the census, every analysis |
+| `dnabert` | 4.29.2 | DNABERT-2 — its remote code predates the Transformers-5 config API |
+| `evo` | 4.48.1 | Evo1 |
+
+Running DNABERT-2 under the main environment fails with
+`BertConfig has no attribute pad_token_id`. That is the wrong-environment signature, not a bug.
+
+## Data
+
+| input | status |
+|---|---|
+| **WikiText-2** (text endpoints) | **Committed** at [`frozen_inputs/`](frozen_inputs/), sha256 `5f1bea06…`. The same file the census resolved through `datasets`, so text endpoints run offline. |
+| **hg38** (genomic endpoints) | Not committed. Place or symlink at `data/reference/hg38/hg38.fa`. |
+| **GUE** (downstream tasks) | Not committed. Point `$GUE_ROOT` at the extracted tree. |
+| **Checkpoints** | Pinned Hugging Face revisions, one per model, in `audit/census_master.csv`. |
+
+Other large public inputs are documented rather than vendored — see [`data/README.md`](data/README.md).
+
+## Reproducing
+
+Prefer the pipelines. Each skips stages whose output already exists, so an interrupted run
+resumes and a finished one costs nothing; `FORCE=1` recomputes.
+
+```bash
+bash pipelines/census.sh                 # the preregistered 22-model causal census (restartable)
+bash pipelines/census.sh dnabert2 ntv3   # ...or a subset
+bash pipelines/detector_provenance.sh    # selection-rule resolution; runs its positive control first
+bash pipelines/fig5_within_layer.sh      # the within-layer sweeps, second critical row, Figure 5
 ```
 
 Individual stages:
 
 ```bash
-# structural panel and the causal census
-python experiments/frozen/E11_scale_ladder/run_model.py --model <slug>
-python experiments/frozen/E13_full_cohort_causal_census/run_singleton_census.py --model <slug>
-
-# detector provenance (self-validating: 4 gates from census_master.csv)
-python scripts/detection/run_uniform_detector_text.py --model smollm2-1.7b   # harness check
-python scripts/detection/run_detector_published_protocol.py --model olmo
-
-# within-layer sweeps
-python scripts/within_layer_sweep/run_within_model_slope_text.py        # SmolLM2-1.7B, ~7 min, 1 GPU
-python scripts/within_layer_sweep/run_smollm2_second_row_epistasis.py   # second critical row + masking
-python scripts/within_layer_sweep/run_smollm2_row_geometry.py           # data-free, no GPU needed
+# structural panel and causal census
+python experiments/E11_scale_ladder/run_model.py --model <slug>
+python experiments/E13_full_cohort_causal_census/run_singleton_census.py --model <slug>
 
 # mechanism case studies
-python experiments/frozen/E9_mechanistic_tomography/run_fit_observers.py
-python experiments/frozen/E12_generator_degradation_control/run_bos_mediation_main.py
+python experiments/E9_mechanistic_tomography/run_fit_observers.py
+python experiments/E12_generator_degradation_control/run_bos_mediation_main.py
+
+# within-layer sweeps
+python scripts/within_layer_sweep/run_within_model_slope_text.py     # SmolLM2-1.7B, ~7 min, 1 GPU
+python scripts/within_layer_sweep/run_smollm2_row_geometry.py        # data-free, no GPU
+
+# supplementary tables S2, S3, S6-S8 (rebuilt from committed artifacts)
+python scripts/census_analysis/build_supplementary_tables.py
 
 # two flags that are REQUIRED and silently wrong if omitted
 python scripts/detection/run_detection.py --model ntv3 --pad_to_multiple 256   # stride-256 U-Net
 python scripts/evaluation/run_gue_multiseed.py --model ntv3 --max_length 400   # nucleotide tokenizer
 ```
 
-The paper-closing scripts validate themselves before reporting: each reproduces stored census
-quantities (`baseline_loss`, `R_cand` at both ε, and the seeded control rows) and **aborts** on
-mismatch, on the principle that a gate failure means the harness is wrong rather than that the
-science changed. Observed reproduction errors are 1e-9 to 1e-6 relative.
+Verify the repository's own invariants:
 
-## Repository layout
+```bash
+python scripts/build_experiment_map.py    # every claim's code and artifacts exist
+python src/prereg_lock.py verify --all    # 12 preregistrations, content-locked
+pytest tests/                             # unit tests + every CLI entry point starts
+```
+
+## Repository map
 
 | path | contents |
 |---|---|
-| `experiments/frozen/E1`–`E13` | The **frozen** experiment harnesses — the code that produced the census and the case studies. *Frozen* means not edited to make later results come out differently. |
-| `experiments/figures/` | The figure pipeline: render scripts, output, `source_data/` (the exact plotted values), and `FIGURE_PROVENANCE.md` |
-| `experiments/docs/prereg/` | 12 content-locked preregistrations, with the ledger and verifier |
-| `experiments/tools/` | `prereg_lock.py` |
-| `experiments/results/keep/` | Provenance-locked artifacts for E1 and E2 |
-| `pipelines/` | One idempotent runner per experiment group. **Start here to reproduce anything.** |
-| `scripts/mechanism/` | Detector provenance, within-layer sweeps, BOS and attention analyses |
-| `scripts/mechanism/` | Mechanism follow-ups: BOS mediation, attention sink, special-token dependence, matched replacements |
-| `scripts/negative_results/` | The experiments whose only result is a null — quantisation exemption, norm-matched controls, the super-row health check. See [`scripts/negative_results/README.md`](scripts/negative_results/README.md). |
-| `experiments/figures/_figstyle.py` | The codified figure style, applied by every render script |
-| `scripts/detection/` | Super-row detection and detector-provenance resolution |
+| `experiments/E1`–`E13` | The **preregistered harnesses**, one directory per experiment line, each with the prereg it was run under. Not edited after the fact to make later results come out differently. |
+| `experiments/figures/` | Figure render scripts, output, `source_data/` (the exact plotted values), and `FIGURE_PROVENANCE.md` |
+| `scripts/detection/` | Super-row detection and selection-rule resolution |
+| `scripts/mechanism/` | BOS mediation, attention sink, special-token dependence, matched replacements |
+| `scripts/within_layer_sweep/` | The graded within-layer sweeps, the second critical row, Figure 5 |
+| `scripts/census_analysis/` | Cohort structure–function correlations; the supplementary-table builder |
+| `scripts/negative_results/` | Experiments whose only result is a null — see its [README](scripts/negative_results/README.md) |
 | `scripts/evaluation/` | GUE downstream evaluation |
-| `scripts/within_layer_sweep/` | The graded within-layer sweeps, the second critical row, and Figure 5 |
-| `scripts/census_analysis/` | Cohort structure–function correlations and sensitivity analyses |
-| `src/` | Shared libraries: activation capture, ablation, spike detection, DNA probes |
-| `models/`, `configs/` | Per-model wrapper classes and YAML, loaded dynamically via `WRAPPER_MAP` |
-| `stubs/` | Import shims so models with heavy optional dependencies load without them (`mamba_ssm` for Caduceus, a HybriDNA config). Put on `sys.path` at runtime by `scripts/evaluation/run_gue_ablation.py`; not type stubs, despite the name. |
-| `audit/` | The verification record across three adversarial rounds. `census_master.csv` is the canonical census table (22 models × 44 columns); See [`audit/README.md`](audit/README.md). |
-| `results/` | Artifacts, in four groups: `experiments/` (one subdirectory per frozen harness), `analyses/` (derived analyses), `negative_results/`, `supplementary/` (the eight tables). Gitignored by default; files backing a reported number are force-added. See [`results/README.md`](results/README.md). |
-| `data/` | Small region and reference files. Large public inputs are documented, not vendored — see [`data/README.md`](data/README.md) |
-| `frozen_inputs/` | Content-hashed evaluation inputs |
-| `docs/` | The experiment map |
-| `tests/` | Includes a test that fails if the experiment map goes stale |
+| `pipelines/` | Reproduction runners |
+| `src/` | Shared library: activation capture, ablation, spike detection, DNA probes, the prereg lock |
+| `models/`, `configs/` | Per-model wrappers and YAML, loaded dynamically via `WRAPPER_MAP` |
+| `stubs/` | Import shims so models with heavy optional dependencies load without them (`mamba_ssm`, a HybriDNA config). Not type stubs, despite the name. |
+| `audit/` | The verification record: `census_master.csv` (22 models × 44 columns) is the canonical table. Three adversarial passes; see its [README](audit/README.md). |
+| `results/` | Artifacts in four groups — `experiments/` (per harness), `analyses/` (derived), `negative_results/`, `supplementary/` (S1–S8). Gitignored by default; files backing a reported number are force-added. See its [README](results/README.md). |
+| `docs/` | The experiment map and the 12 locked preregistrations |
+| `frozen_inputs/`, `data/`, `tests/` | Content-hashed inputs, small reference files, tests |
 
-## Provenance and known gaps
+## Provenance and known limitations
 
-Stated plainly, because a reader will find them anyway:
+Stated plainly, because a reader will find them anyway.
 
-1. **Some raw artifacts are not committed.** Several were produced on a TACC cluster and never
+1. **Some raw artifacts are not committed.** Several were produced on a cluster and never
    transferred. For every affected item the committed figure source-data snapshot under
    `experiments/figures/source_data/` carries the plotted values, so each reported number
    remains inspectable.
 2. **NTv3's original weight revision was not recorded** and is not recoverable. Resolved Hub
    commits exist for 21 of 22 models.
 3. **One n=10 subgroup is fragile.** The text-decoder correlation moves from ρ=0.770 to 0.673
-   under an OLMo coordinate substitution, with a CI lower bound of +0.032. It should not be
-   reported as independently robust; the 22-model result is insensitive.
-4. **The manuscript text is not in this repository.** Earlier revisions of it, and the internal
-   process documents, decision logs and session reports that accompanied its preparation, were
-   removed on 2026-09-09 to leave a repository that is only code, data, and provenance. All of
-   it remains in git history.
-5. **Some retained notes cite documents that are no longer here.** A number of per-experiment
-   `RESULTS.md` files and the figure-provenance manifest reference internal decision logs
-   (`DECISIONS.md`, `CLAIMS_LEDGER.md`) and manuscript drafts that were removed in the same
-   cleanup. They were kept because the figure manifest cites them as evidence; their onward
-   references are stale. Everything they point at is in git history.
-6. **Superseded experiment lines were removed, not just their prose.** E2 (Evo1 broadcast),
-   E4 (quantisation granularity), E5 and E6 (both superseded by E7's exact operator), the
-   sparse-autoencoder package, and the exploratory `scripts/analysis`/`scripts/interpretability`
-   trees are gone from the working tree. None is cited by the figure-provenance manifest or the
-   experiment map. `E5_dimensionality/dimensionality_lib.py` was retained because three
-   surviving audit table-builders import it. All of it is in git history.
-7. **Directories were renamed for clarity on 2026-09-10**, so paths in older commits differ:
-   `scripts/paper_closing/` was split by function into `detection/`, `within_layer_sweep/`,
-   `mechanism/` and `census_analysis/`; `scripts/compression/` and the health check became
-   `scripts/negative_results/`; `results/paper_closing/` was split to match.
-8. **No licence file yet.** Add one before publication; the appropriate choice is the authors'.
+   under an OLMo coordinate substitution, with a 95% lower bound of +0.032. It should not be
+   read as independently robust; the 22-model result is insensitive to the substitution.
+4. **Superseded experiment lines were removed from the working tree**, not merely unreported:
+   E2 (Evo1 broadcast), E4 (quantisation granularity), E6 (cross-geometry), the
+   sparse-autoencoder package, and the exploratory interpretability trees. None is cited by the
+   figure-provenance manifest or the experiment map. All remain in git history.
+5. **The preregistrations record what was planned**, including paths that predate later
+   directory renames. They are content-locked and were deliberately never rewritten to match.
 
-## Reference
+## Citation
 
-Yu M, Wang D, Shan Q, Reed CJ, Wan A. *The Super Weight in Large Language Models.*
-[arXiv:2411.07191](https://arxiv.org/abs/2411.07191) (2024).
+See [`CITATION.cff`](CITATION.cff). Released under the MIT License ([`LICENSE`](LICENSE)).
+
+Prior work this builds on: Yu M, Wang D, Shan Q, Reed CJ, Wan A. *The Super Weight in Large
+Language Models.* [arXiv:2411.07191](https://arxiv.org/abs/2411.07191) (2024).
