@@ -35,7 +35,7 @@ HERE = Path(__file__).resolve().parent
 FIGURES = HERE.parent
 PAPER_SALVAGE = FIGURES.parent
 REPO_ROOT = PAPER_SALVAGE.parent
-AUDIT2 = REPO_ROOT / "audit" / "round2"
+AUDIT2 = REPO_ROOT / "audit" / "rederivations"
 sys.path.insert(0, str(REPO_ROOT / "scripts" / "analysis"))
 sys.path.insert(0, str(FIGURES))
 from _figstyle import apply_style, panel_label  # noqa: E402

@@ -136,3 +136,76 @@ Figure 4 therefore cannot render. The gate missed it because `fig4_generator.py`
 
 This is a one-line data-path fix in an authoritative figure script, and it should be made before
 Task 4 claims Figure 4 is reproducible. Flagged for Checkpoint 1.
+
+---
+
+# Task 2 (revised per ruling) + Issue 8 — executed
+
+## Issue 8 — HIGH PRIORITY, and it was not one bug but six
+
+`experiments/figures/fig4_generator.py` was the symptom. Generalising it into a gate
+(`tests/test_figure_inputs.py`) found that **5 of 10 figure scripts could not render** from the
+committed tree:
+
+| script | input it could not find | now |
+|---|---|---|
+| `fig2_causal.py` | `results/e10_exact_uknorm_olmo.json`, `results/e10b_phi3_fit_results.json` | `results/experiments/E10/…` |
+| `fig4_generator.py` | `results/mechanism/attention_sink_implicit_bias.json`, `results/e7_legacy_reanalysis.json` | `results/analyses/mechanism_generator/…`, `results/experiments/E7/…` |
+| `fig4_generator_specificity.py` | both of the above | same |
+| `supplement/fig_s2_random_direction.py` | `audit/round2/generator_random_direction_full.csv` | `audit/rederivations/…` |
+
+All 10 now resolve every declared input. The gate was itself validated by injecting a wrong
+path, confirming it fails, and reverting.
+
+Two rounds of false positives in the gate were fixed rather than worked around: it originally
+guessed the base directory, and then could not follow a chained base
+(`E12 = RESULTS/"experiments"/"E12"`). It now parses base assignments and resolves them to a
+fixed point, so `fig4_generator_specificity.py`'s inputs resolve correctly.
+
+**This is why Task 4 could not have honestly claimed reproducibility beforehand.** Figures 2
+and 4 and Supplementary Fig. S2 would all have been listed as reproducible while being
+unrenderable.
+
+## Task 2 — corrected scope
+
+Removed, as the only two pure leftovers (0 tracked files, 0 files on disk, referenced by
+nothing — each contained one empty subdirectory, which is why `rmdir` initially refused):
+
+* `audit/round2/` (held an empty `figures/`)
+* `results/E13/` (held an empty `priority1_robustness/`)
+
+**Not removed**, per the ruling and Task 2's own live-output-target rule: `results/mechanism/`,
+`results/sae/`, `results/prokaryote/`, `results/compression/`, `results/gue_checkpoints{,_multiseed}/`,
+`results/paper_closing/`, `results/svd_spectral_plots{,_smoketest}/`, `results/pipeline_logs/`.
+None is tracked, so none reaches a clone; four are live `--out`/checkpoint/log targets named in
+tracked code; together they hold 185 gitignored local files belonging to the authors.
+
+### Reviewer-facing scope check (the replacement for directory deletion)
+
+Grepped all tracked markdown for the dead lines. Result: **no dangling reference a reviewer
+would read.**
+
+* `README.md` — mentions E2/E4/E6, the SAE withdrawal and shadow redundancy **deliberately**, in
+  the retractions and known-limitations sections. That is the transparency the ruling asks for.
+* `data/README.md` "prokaryote" — the committed *E. coli* region files, which are live.
+* `README.md` "hybridna" — the `stubs/` description, live.
+* `experiments/E7_exact_dimensionality/{RESULTS,MODEL_PANEL}.md` — refer to "E5/E6" as
+  historical context for the panel's own construction. Left as provenance prose; README item 4
+  now explains what happened to those lines, and E5's surviving library is called out there.
+* `experiments/E9_*/RESULTS.md`, `experiments/E10b_*/E10B_SYNTHESIS.md` "SAE" — false positives:
+  both discuss an SAE-derived *basis* as a methodological alternative considered, not the
+  removed package.
+
+## E4 — removed all three, per ruling
+
+`results/experiments/keep/E4_granularity/{PROVENANCE.md, e4_granularity.json,
+e4_ntv3_shared_adapter.json}`. Checked first, as instructed: the only tracked references to
+either JSON were in this audit document, and the string `E4` appears **0 times** in both
+`docs/EXPERIMENT_MAP.tsv` and `experiments/figures/FIGURE_PROVENANCE.md`. No live reader.
+
+## Gate status after these changes
+
+```
+50 CLI entry points: 50 ok, 0 skipped, 0 broken     (unchanged from baseline)
+10 figure scripts checked, 0 missing input path(s)  (was 6 missing)
+```

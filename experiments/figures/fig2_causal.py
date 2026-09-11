@@ -58,9 +58,9 @@ DECISION_COLOR = {"SINGLE_COMPONENT_DOMINANT": "#4C72B0", "MULTI_COMPONENT_CANDI
 
 def load_all():
     conc = json.loads((RESULTS / "e10_decoder_concentration.json").read_text())
-    olmo_struct = json.loads((RESULTS / "e10_exact_uknorm_olmo.json").read_text())
+    olmo_struct = json.loads((RESULTS / "experiments" / "E10" / "e10_exact_uknorm_olmo.json").read_text())
     enc = json.loads((RESULTS / "e10_encoder_fit_results.json").read_text())
-    phi3b = json.loads((RESULTS / "e10b_phi3_fit_results.json").read_text())
+    phi3b = json.loads((RESULTS / "experiments" / "E10" / "e10b_phi3_fit_results.json").read_text())
     return conc, olmo_struct, enc, phi3b
 
 

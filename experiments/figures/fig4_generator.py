@@ -30,7 +30,7 @@ answers a different question (direction-specificity vs. location-sensitivity) an
 essentially unchanged as candidate Supplementary Figure S2
 (figures/supplement/fig_s2_random_direction.py).
 
-Source: results/experiments/E7/e7_legacy_reanalysis.json, results/mechanism/attention_sink_implicit_bias.json,
+Source: results/experiments/E7/e7_legacy_reanalysis.json, results/analyses/mechanism_generator/attention_sink_implicit_bias.json,
 results/experiments/E_BOS_MEDIATION/bos_mediation_results.json.
 Output: figures/main/fig4_generator.{png,pdf}, figures/source_data/fig4_generator.json
 """
@@ -75,8 +75,8 @@ EXPECTED_GC = {
 
 def main():
     apply_style()
-    legacy = json.loads((RESULTS / "e7_legacy_reanalysis.json").read_text())["GENERator EUK"]
-    sink = json.loads((RESULTS / "mechanism" / "attention_sink_implicit_bias.json").read_text())["generator"]
+    legacy = json.loads((RESULTS / "experiments" / "E7" / "e7_legacy_reanalysis.json").read_text())["GENERator EUK"]
+    sink = json.loads((RESULTS / "analyses" / "mechanism_generator" / "attention_sink_implicit_bias.json").read_text())["generator"]
     bos = json.loads((RESULTS/"experiments"/"E_BOS_MEDIATION" / "bos_mediation_results.json").read_text())
 
     # verify every plotted number directly against the artifact before plotting anything

@@ -151,8 +151,8 @@ def write_csv(rows: list[dict]) -> None:
 
 def make_figure(rows: list[dict], anchors: dict) -> tuple[dict, dict]:
     apply_style()
-    structural = json.loads((RESULTS / "e7_legacy_reanalysis.json").read_text())["GENERator EUK"]
-    sink = json.loads((RESULTS / "mechanism" / "attention_sink_implicit_bias.json").read_text())["generator"]
+    structural = json.loads((RESULTS / "experiments" / "E7" / "e7_legacy_reanalysis.json").read_text())["GENERator EUK"]
+    sink = json.loads((RESULTS / "analyses" / "mechanism_generator" / "attention_sink_implicit_bias.json").read_text())["generator"]
     assert np.isclose(structural["q1"], 0.9688691252375834)
     att = sink["attention"]
     bias = sink["implicit_bias"]
@@ -272,7 +272,7 @@ def write_note(rows: list[dict], anchors: dict, structural: dict, sink: dict) ->
         "`run_e12_full.py::write_damage_matching_csv` filters generation records by `label` but not by the selected `value`. After the direction-fix rerun left both `c=0` and `c=0.0125` records under `matched_random_direction`, the CSV pooled all six condition records. Its value `0.3066722728587963` is exactly the mean of the scale-specific `c=0` GC (`0.3064959490740741`) and `c=0.0125` GC (`0.3068485966435185`). Figure 4 and its plotting CSV use only the three stored `c=0.0125` records (seeds 42, 43, and 44). The original E12 artifacts are not altered.", "",
         "## Exact sources", "",
         "- `results/experiments/E7/e7_legacy_reanalysis.json` — exact q1.",
-        "- `results/mechanism/attention_sink_implicit_bias.json` — BOS attention and activation co-occurrence.",
+        "- `results/analyses/mechanism_generator/attention_sink_implicit_bias.json` — BOS attention and activation co-occurrence.",
         "- `results/experiments/E12/damage_matching.csv` — selected scales, native NLL, final GC means, reachability, and full tested grids.",
         "- `results/experiments/E12/raw/damage_evals.jsonl` — native-NLL measurements.",
         "- `results/experiments/E12/raw/gen_records.jsonl` — per-seed, per-prompt generated GC measurements.",

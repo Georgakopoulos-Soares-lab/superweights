@@ -226,7 +226,10 @@ Stated plainly, because a reader will find them anyway.
 4. **Superseded experiment lines were removed from the working tree**, not merely unreported:
    E2 (Evo1 broadcast), E4 (quantisation granularity), E6 (cross-geometry), the
    sparse-autoencoder package, and the exploratory interpretability trees. None is cited by the
-   figure-provenance manifest or the experiment map. All remain in git history.
+   figure-provenance manifest or the experiment map, and their preregistrations are retained in
+   `docs/prereg/` with an explicit disposition rather than deleted (see
+   [`docs/prereg/README.md`](docs/prereg/README.md)). `E5_dimensionality/` retains one file, a
+   library three surviving audit builders import. All removed code remains in git history.
 5. **The preregistrations record what was planned**, including paths that predate later
    directory renames. They are content-locked and were deliberately never rewritten to match.
 
