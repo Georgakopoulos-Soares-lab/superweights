@@ -37,6 +37,8 @@ nothing imports.
 | `rederivations/section3_*_detector_recheck.json` | Independent detector re-checks for NTv3 and GENERator-EUK |
 
 `scripts/` holds the builders for the top-level tables; `rederivations/scripts/` holds pass 2's.
+`rederivations/` is **archival** — see [`rederivations/README.md`](rederivations/README.md) for
+why its scripts are retained while the figures they produced are not.
 
 ## Convention
 

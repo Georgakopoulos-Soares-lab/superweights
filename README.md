@@ -155,7 +155,8 @@ resumes and a finished one costs nothing; `FORCE=1` recomputes.
 bash pipelines/census.sh                 # the preregistered 22-model causal census (restartable)
 bash pipelines/census.sh dnabert2 ntv3   # ...or a subset
 bash pipelines/detector_provenance.sh    # selection-rule resolution; runs its positive control first
-bash pipelines/fig5_within_layer.sh      # the within-layer sweeps, second critical row, Figure 5
+bash pipelines/fig5_within_layer.sh      # the within-layer sweeps and second critical row
+                                         # (filename retains an earlier figure number)
 ```
 
 Individual stages:
@@ -191,9 +192,14 @@ pytest tests/                             # unit tests + every CLI entry point s
 
 ## Repository map
 
+**`experiments/` contains the preregistered harnesses** (E1–E13, each with the preregistration
+it was run under in [`docs/prereg/`](docs/prereg/)); **`scripts/` contains analyses developed
+after preregistration.** The split is deliberate: it lets a reader see at a glance which
+analyses were locked in advance and which came later.
+
 | path | contents |
 |---|---|
-| `experiments/E1`–`E13` | The **preregistered harnesses**, one directory per experiment line, each with the prereg it was run under. Not edited after the fact to make later results come out differently. |
+| `experiments/E1`–`E13` | The **preregistered harnesses**, one directory per experiment line. Not edited after the fact to make later results come out differently. `E5_dimensionality/` is a cut line whose library is still imported by three audit builders — see [its README](experiments/E5_dimensionality/README.md). |
 | `experiments/figures/` | Figure render scripts, output, `source_data/` (the exact plotted values), and `FIGURE_PROVENANCE.md` |
 | `scripts/detection/` | Super-row detection and selection-rule resolution |
 | `scripts/mechanism/` | BOS mediation, attention sink, special-token dependence, matched replacements |
@@ -204,7 +210,7 @@ pytest tests/                             # unit tests + every CLI entry point s
 | `pipelines/` | Reproduction runners |
 | `src/` | Shared library: activation capture, ablation, spike detection, DNA probes, the prereg lock |
 | `models/`, `configs/` | Per-model wrappers and YAML, loaded dynamically via `WRAPPER_MAP` |
-| `stubs/` | Import shims so models with heavy optional dependencies load without them (`mamba_ssm`, a HybriDNA config). Not type stubs, despite the name. |
+| `stubs/` | **Import shims, not PEP 484 type stubs** — they let wrappers for models outside the paper's panel import without heavy optional dependencies. See [`stubs/README.md`](stubs/README.md). |
 | `audit/` | The verification record: `census_master.csv` (22 models × 44 columns) is the canonical table. Three adversarial passes; see its [README](audit/README.md). |
 | `results/` | Artifacts in four groups — `experiments/` (per harness), `analyses/` (derived), `negative_results/`, `supplementary/` (S1–S8). Gitignored by default; files backing a reported number are force-added. See its [README](results/README.md). |
 | `docs/` | The experiment map and the 12 locked preregistrations |
