@@ -209,7 +209,6 @@ analyses were locked in advance and which came later.
 | `frozen_inputs/`, `data/`, `tests/` | Content-hashed inputs, small reference files, tests |
 
 ## Provenance and known limitations
-
 Stated plainly, because a reader will find them anyway.
 
 1. **Some raw artifacts are not committed.** Several were produced on a cluster and never
